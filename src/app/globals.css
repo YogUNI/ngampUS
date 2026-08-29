@@ -68,6 +68,21 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inse
 .feature-card:nth-child(2):hover { transform: translateY(.9rem) rotate(.7deg); }
 .feature-card:nth-child(3)::before { content: "FIELD NOTE / 03"; position: absolute; right: 1.2rem; bottom: 1rem; font-size: .6rem; font-weight: 800; letter-spacing: .14em; color: var(--muted); }
 
+.atlas-page { background-image: radial-gradient(circle at 10% 8%, rgba(200,239,112,.13), transparent 18rem), linear-gradient(90deg, rgba(16,54,38,.025) 1px, transparent 1px), linear-gradient(rgba(16,54,38,.025) 1px, transparent 1px); background-size: auto, 44px 44px, 44px 44px; }
+.atlas-hero { background-image: linear-gradient(115deg, rgba(8,34,24,.92), rgba(16,54,38,.9)); }
+.atlas-grain { pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.45'/%3E%3C/svg%3E"); }
+.atlas-sun { background: radial-gradient(circle, rgba(200,239,112,.35), rgba(200,239,112,0) 68%); filter: blur(1px); }
+.atlas-accent { color: #c8ef70; text-shadow: 3px 3px 0 rgba(16,54,38,.8); }
+.atlas-arc { border: 1px dashed rgba(200,239,112,.55); animation: orbit-slow 18s linear infinite; }
+.atlas-board::before { content: ""; position: absolute; right: 22px; top: -7px; height: 18px; width: 70px; transform: rotate(7deg); background: rgba(200,239,112,.72); box-shadow: 0 1px 8px rgba(0,0,0,.12); }
+.atlas-note { box-shadow: 7px 7px 0 rgba(7,27,19,.28); }
+.atlas-ticker > div { animation: ticker-shift 22s linear infinite; }
+.atlas-card { transition: transform .25s ease, box-shadow .25s ease; }
+.atlas-card:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: 0 22px 34px rgba(16,54,38,.12); }
+@keyframes orbit-slow { to { transform: rotate(360deg); } }
+@keyframes ticker-shift { to { transform: translateX(-33%); } }
+@media (prefers-reduced-motion: reduce) { .atlas-arc, .atlas-ticker > div { animation: none; } }
+
 .ngampus-calendar .fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-today-bg-color: #eef7f0; --fc-button-bg-color: #f7f8f5; --fc-button-border-color: var(--line); --fc-button-text-color: var(--ink); --fc-button-hover-bg-color: #dcefe4; --fc-button-hover-border-color: #b9ddc6; --fc-event-text-color: white; font-size: .875rem; }
 .ngampus-calendar .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; }
 .ngampus-calendar .fc .fc-button { border-radius: .65rem; box-shadow: none; font-weight: 700; text-transform: capitalize; }
