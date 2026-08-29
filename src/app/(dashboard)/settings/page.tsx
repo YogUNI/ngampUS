@@ -10,9 +10,7 @@ export default async function SettingsPage() {
   ]);
 
   return <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8 lg:px-10">
-    <p className="text-sm font-bold text-[var(--brand)]">PERSONAL WORKSPACE</p>
-    <h1 className="font-display mt-1 text-4xl font-extrabold tracking-[-.045em]">Profil & pengaturan</h1>
-    <p className="mt-2 text-[var(--muted)]">Data ini membuat workspace nGampUS benar-benar terasa milikmu.</p>
+    <header><p className="text-sm font-bold text-[var(--brand)]">PERSONAL WORKSPACE</p><h1 className="font-display mt-1 text-4xl font-extrabold tracking-[-.045em]">Profil & pengaturan</h1><p className="mt-2 text-[var(--muted)]">Data ini membuat workspace nGampUS benar-benar terasa milikmu.</p></header>
 
     <section className="mt-8 rounded-2xl border border-[var(--line)] bg-[#173f32] p-6 text-white">
       <div className="flex items-start gap-4"><div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/15 text-lg font-extrabold">{(profile?.full_name || user?.email || "M").slice(0, 1).toUpperCase()}</div><div className="min-w-0"><h2 className="font-display text-xl font-extrabold">{profile?.full_name || "Mahasiswa nGampUS"}</h2><p className="mt-1 truncate text-sm text-white/70">{user?.email || profile?.email || "Email belum tersedia"}</p><p className="mt-2 text-sm text-white/80">{profile?.major || "Program studi belum diisi"} · {profile?.university || "Universitas belum diisi"}</p></div></div>

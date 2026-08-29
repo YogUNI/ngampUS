@@ -83,6 +83,39 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inse
 @keyframes ticker-shift { to { transform: translateX(-33%); } }
 @media (prefers-reduced-motion: reduce) { .atlas-arc, .atlas-ticker > div { animation: none; } }
 
+/* Auth Atlas — a focused, editorial login experience. */
+main.grid.min-h-screen { background: radial-gradient(circle at 92% 10%, rgba(200,239,112,.18), transparent 22rem), #eff2eb; }
+main.grid.min-h-screen > aside { border-right: 1px solid rgba(200,239,112,.12); background-image: radial-gradient(circle at 85% 20%, rgba(200,239,112,.14), transparent 20rem), linear-gradient(135deg, #0b2c1e, #174932); }
+main.grid.min-h-screen > section { position: relative; background-image: linear-gradient(rgba(16,54,38,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(16,54,38,.03) 1px, transparent 1px); background-size: 34px 34px; }
+main.grid.min-h-screen > section::before { content: "SECURE CAMPUS ACCESS / 2026"; position: absolute; right: 2rem; top: 1.75rem; font-size: .62rem; font-weight: 900; letter-spacing: .16em; color: rgba(16,54,38,.42); }
+main.grid.min-h-screen > section > div { position: relative; border-color: #d5dfd6 !important; background: rgba(250,252,248,.86) !important; box-shadow: 16px 18px 0 rgba(16,54,38,.06), 0 22px 60px rgba(16,54,38,.11) !important; }
+main.grid.min-h-screen > section > div::after { content: "nG / ACCESS"; position: absolute; right: 1.5rem; top: 1.5rem; font-size: .58rem; font-weight: 900; letter-spacing: .16em; color: rgba(15,104,73,.38); }
+main.grid.min-h-screen input { background-color: #fbfdf9; }
+.auth-atlas-card > form { margin-top: 2rem; }
+.auth-atlas-card > form > button[type="submit"] { border-radius: 1rem; background: #103626; box-shadow: 0 6px 0 #0a261a; }
+.auth-atlas-card > form > button[type="submit"]:hover { background: #0f6849; }
+.auth-atlas-card [class*="bg-[var(--brand-soft)]"] { background-color: rgba(223,243,229,.72); }
+
+/* Campus Console — shared dashboard composition and depth. */
+.dashboard-content { position: relative; background-color: #eff2eb; background-image: radial-gradient(circle at 96% 5%, rgba(200,239,112,.22), transparent 20rem), linear-gradient(rgba(16,54,38,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(16,54,38,.028) 1px, transparent 1px); background-size: auto, 42px 42px, 42px 42px; }
+.dashboard-content > div { position: relative; }
+.dashboard-content > div > header { position: relative; padding: 1.25rem 1.4rem; border: 1px solid #d6e1d8; border-radius: 1.5rem; background: rgba(255,255,255,.67); box-shadow: 0 12px 32px rgba(16,54,38,.045); backdrop-filter: blur(10px); }
+.dashboard-content > div > header::after { content: "CAMPUS CONSOLE"; position: absolute; right: 1.35rem; top: 1.2rem; font-size: .58rem; font-weight: 900; letter-spacing: .15em; color: rgba(15,104,73,.34); }
+.dashboard-content > div > header h1 { max-width: calc(100% - 7rem); }
+.dashboard-hero { overflow: hidden; }
+.dashboard-hero::before { content: "FOCUS MAP / LIVE"; display: block; margin-bottom: .8rem; font-size: .6rem; font-weight: 900; letter-spacing: .17em; color: rgba(15,104,73,.54); }
+.console-stat { position: relative; overflow: hidden; }
+.console-stat::after { content: ""; position: absolute; right: -1.2rem; top: -1.5rem; height: 5rem; width: 5rem; border: 13px solid rgba(15,104,73,.06); border-radius: 999px; }
+.dashboard-content article[class*="rounded-2xl"], .dashboard-content section[class*="rounded-2xl"] { border-color: #d8e2da; }
+.dashboard-content article[class*="bg-white"], .dashboard-content section[class*="bg-white"] { background-color: rgba(255,255,255,.88); backdrop-filter: blur(10px); }
+.dashboard-content form select, .dashboard-content form input, .dashboard-content form textarea { background-color: #fcfdfb; }
+.dashboard-content [class*="bg-[#173f"], .dashboard-content [class*="bg-[#173f2c"] { position: relative; overflow: hidden; }
+.dashboard-content [class*="bg-[#173f"]::after { content: ""; position: absolute; right: -2.5rem; top: -3.5rem; width: 12rem; height: 12rem; border: 26px solid rgba(200,239,112,.1); border-radius: 999px; pointer-events: none; }
+.dashboard-sidebar { background-image: linear-gradient(180deg, rgba(255,255,255,.96), rgba(239,245,238,.9)); }
+.dashboard-sidebar nav a { border: 1px solid transparent; }
+.dashboard-sidebar nav a:hover { border-color: #c8dbcc; }
+@media (max-width: 639px) { main.grid.min-h-screen > section::before, main.grid.min-h-screen > section > div::after, .dashboard-content > div > header::after { display: none; } .dashboard-content > div > header h1 { max-width: 100%; } }
+
 .ngampus-calendar .fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-today-bg-color: #eef7f0; --fc-button-bg-color: #f7f8f5; --fc-button-border-color: var(--line); --fc-button-text-color: var(--ink); --fc-button-hover-bg-color: #dcefe4; --fc-button-hover-border-color: #b9ddc6; --fc-event-text-color: white; font-size: .875rem; }
 .ngampus-calendar .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; }
 .ngampus-calendar .fc .fc-button { border-radius: .65rem; box-shadow: none; font-weight: 700; text-transform: capitalize; }
