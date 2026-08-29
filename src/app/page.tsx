@@ -3,7 +3,7 @@ import { ArrowRight, CalendarDays, CheckCircle2, Compass, LayoutDashboard, ListC
 
 export default function Home() {
   return (
-    <main className="noise-overlay min-h-screen overflow-hidden text-[var(--ink)]">
+    <main className="noise-overlay landing-canvas min-h-screen overflow-hidden text-[var(--ink)]">
       <section className="grid-paper relative min-h-screen px-5 pb-12 pt-5 sm:px-8 lg:px-12">
         <nav className="surface-lift mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 backdrop-blur sm:px-5">
           <span className="font-display text-xl font-extrabold tracking-tight">nGamp<span className="text-[var(--brand)]">US</span></span>
@@ -13,9 +13,10 @@ export default function Home() {
           </div>
         </nav>
 
-        <div className="mx-auto grid max-w-7xl gap-12 pb-10 pt-20 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:pt-28">
+        <div className="relative mx-auto grid max-w-7xl gap-12 pb-10 pt-20 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:pt-28">
+          <div className="landing-coordinate absolute -left-5 top-10 hidden text-[10px] font-black uppercase tracking-[.25em] text-[var(--muted)] lg:block">04°S / 106°E</div>
           <div>
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-1.5 text-sm font-semibold text-[var(--brand-dark)]"><Sparkles size={15}/> Ruang kendali untuk hidup kampusmu</div>
+            <div className="sticker mb-7 inline-flex items-center gap-2 rounded-full border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-1.5 text-sm font-semibold text-[var(--brand-dark)]"><Sparkles size={15}/> Ruang kendali untuk hidup kampusmu</div>
             <h1 className="font-display max-w-3xl text-5xl font-extrabold leading-[.98] tracking-[-.055em] sm:text-6xl lg:text-7xl">Kuliah jalan.<br/><span className="text-[var(--brand)]">Ambis tetap</span> terarah.</h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-[var(--muted)]">Satukan tugas, organisasi, dan deadline dalam satu workspace yang tenang, visual, dan dibuat mengikuti ritme mahasiswa aktif.</p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -35,7 +36,7 @@ export default function Home() {
                 <div className="mt-5"><p className="mb-3 text-sm font-bold">Hari ini</p><Task label="Revisi desain publikasi" tone="bg-[#f6e5c5]"/><Task label="Rapat divisi acara" tone="bg-[#dcefe4]"/></div>
               </div>
             </div>
-            <div className="absolute -bottom-7 -left-7 rounded-2xl border border-[#eadbc0] bg-[#fff7e8] px-4 py-3 shadow-lg"><div className="flex items-center gap-2 text-sm font-bold"><CheckCircle2 size={17} className="text-[var(--brand)]"/> Kamu on track!</div><p className="mt-0.5 text-xs text-[var(--muted)]">8 aktivitas selesai minggu ini</p></div>
+            <div className="sticker absolute -bottom-7 -left-7 rounded-2xl border border-[#eadbc0] bg-[#fff7e8] px-4 py-3 shadow-lg"><div className="flex items-center gap-2 text-sm font-bold"><CheckCircle2 size={17} className="text-[var(--brand)]"/> Kamu on track!</div><p className="mt-0.5 text-xs text-[var(--muted)]">8 aktivitas selesai minggu ini</p></div>
           </div>
         </div>
       </section>
@@ -50,6 +51,6 @@ export default function Home() {
 
 function Metric({ value, label, urgent = false }: { value: string; label: string; urgent?: boolean }) { return <div className={`rounded-xl p-3 ${urgent ? "bg-[#fff0ec]" : "bg-white"}`}><b className={`font-display text-xl ${urgent ? "text-[#c94e32]" : "text-[var(--ink)]"}`}>{value}</b><p className="mt-0.5 text-xs text-[var(--muted)]">{label}</p></div>; }
 function Task({ label, tone }: { label: string; tone: string }) { return <div className="mb-2 flex items-center gap-3 rounded-xl bg-white p-3"><span className={`h-2.5 w-2.5 rounded-full ${tone}`}/><span className="text-sm font-semibold">{label}</span></div>; }
-function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <article className="surface-lift rounded-2xl border border-[var(--line)] bg-white p-6"><div className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">{icon}</div><h3 className="font-display mt-5 text-xl font-bold">{title}</h3><p className="mt-2 leading-7 text-[var(--muted)]">{text}</p></article>; }
+function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <article className="feature-card surface-lift rounded-2xl border border-[var(--line)] bg-white p-6"><div className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">{icon}</div><h3 className="font-display mt-5 text-xl font-bold">{title}</h3><p className="mt-2 leading-7 text-[var(--muted)]">{text}</p></article>; }
 function MiniPanel({ icon, label, value, tone }: { icon: React.ReactNode; label: string; value: string; tone: string }) { return <div className="rounded-xl border border-[var(--line)] bg-[#fbfdfb] p-3"><div className={`grid h-7 w-7 place-items-center rounded-lg ${tone}`}>{icon}</div><p className="mt-3 text-[10px] font-semibold text-[var(--muted)]">{label}</p><p className="mt-1 text-sm font-extrabold text-[var(--ink)]">{value}</p></div>; }
 function Step({ number, title, text }: { number: string; title: string; text: string }) { return <div className="flex gap-4"><span className="font-display text-3xl font-extrabold text-[var(--brand)]/35">{number}</span><div><h3 className="font-display text-xl font-bold">{title}</h3><p className="mt-2 leading-7 text-[var(--muted)]">{text}</p></div></div>; }

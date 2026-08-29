@@ -56,6 +56,17 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inse
   background-image: linear-gradient(rgba(23, 37, 30, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 37, 30, .045) 1px, transparent 1px);
   background-size: 28px 28px;
 }
+.landing-canvas { background: radial-gradient(circle at 78% 28%, rgba(217,238,114,.18), transparent 18rem), var(--background); }
+.landing-canvas nav { transform: rotate(-.35deg); }
+.landing-canvas h1 { text-wrap: balance; }
+.landing-coordinate { writing-mode: vertical-rl; transform: rotate(180deg); }
+.sticker { box-shadow: 4px 5px 0 rgba(16,38,27,.1); transform: rotate(-1.5deg); }
+.feature-card { position: relative; overflow: hidden; }
+.feature-card::after { content: "↗"; position: absolute; right: 1.25rem; top: 1.1rem; font-size: 1.4rem; font-weight: 800; color: rgba(15,104,73,.28); }
+.feature-card:nth-child(2) { transform: translateY(1.25rem) rotate(.7deg); background: #f2f7e9; }
+.feature-card:nth-child(3) { transform: rotate(-.5deg); }
+.feature-card:nth-child(2):hover { transform: translateY(.9rem) rotate(.7deg); }
+.feature-card:nth-child(3)::before { content: "FIELD NOTE / 03"; position: absolute; right: 1.2rem; bottom: 1rem; font-size: .6rem; font-weight: 800; letter-spacing: .14em; color: var(--muted); }
 
 .ngampus-calendar .fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-today-bg-color: #eef7f0; --fc-button-bg-color: #f7f8f5; --fc-button-border-color: var(--line); --fc-button-text-color: var(--ink); --fc-button-hover-bg-color: #dcefe4; --fc-button-hover-border-color: #b9ddc6; --fc-event-text-color: white; font-size: .875rem; }
 .ngampus-calendar .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; }
