@@ -1,0 +1,45 @@
+<svg width="1440" height="780" viewBox="0 0 1440 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1440" height="780" rx="32" fill="#103626"/>
+  <path d="M0 0H1440V780H0V0Z" fill="url(#noise)" opacity=".18"/>
+  <circle cx="1250" cy="130" r="290" fill="#C8EF70" fill-opacity=".12"/>
+  <rect x="46" y="40" width="1348" height="70" rx="35" fill="white" fill-opacity=".08" stroke="white" stroke-opacity=".16"/>
+  <rect x="71" y="57" width="36" height="36" rx="12" fill="#C8EF70"/>
+  <text x="83" y="81" fill="#103626" font-family="Arial, sans-serif" font-size="17" font-weight="800">n</text>
+  <text x="119" y="83" fill="#F7FAF5" font-family="Arial, sans-serif" font-size="28" font-weight="800">nGamp<tspan fill="#C8EF70">US</tspan></text>
+  <text x="1104" y="81" fill="#C7DBCE" font-family="Arial, sans-serif" font-size="14" font-weight="700">Dashboard</text>
+  <rect x="1218" y="56" width="144" height="38" rx="19" fill="#C8EF70"/>
+  <text x="1244" y="80" fill="#103626" font-family="Arial, sans-serif" font-size="14" font-weight="800">Buat ruangmu</text>
+  <text x="85" y="214" fill="#C8EF70" font-family="Arial, sans-serif" font-size="13" font-weight="800" letter-spacing="2">CAMPUS ATLAS / 01</text>
+  <text x="81" y="307" fill="#F7FAF5" font-family="Arial, sans-serif" font-size="76" font-weight="800">Kuliah jalan.</text>
+  <text x="81" y="390" fill="#C8EF70" font-family="Arial, sans-serif" font-size="76" font-weight="800">Ambis tetap</text>
+  <text x="81" y="473" fill="#F7FAF5" font-family="Arial, sans-serif" font-size="76" font-weight="800">terarah.</text>
+  <text x="85" y="536" fill="#C7DBCE" font-family="Arial, sans-serif" font-size="19">Satu ruang untuk tugas, peran, dan deadline.</text>
+  <rect x="84" y="574" width="242" height="58" rx="18" fill="#F7FAF5"/>
+  <text x="111" y="610" fill="#103626" font-family="Arial, sans-serif" font-size="16" font-weight="800">Mulai petakan semester  →</text>
+  <g transform="rotate(3 1010 410)">
+    <rect x="730" y="175" width="570" height="470" rx="34" fill="#F7FAF5"/>
+    <rect x="748" y="193" width="534" height="434" rx="28" fill="#E8EEE7"/>
+    <text x="778" y="235" fill="#738077" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="1.7">FRIDAY / WEEK 05</text>
+    <text x="778" y="275" fill="#103626" font-family="Arial, sans-serif" font-size="29" font-weight="800">Your focus map.</text>
+    <circle cx="1230" cy="252" r="20" fill="#103626"/>
+    <path d="M1225 252L1229 246L1235 248L1232 254L1225 252Z" fill="#C8EF70"/>
+    <rect x="778" y="307" width="294" height="172" rx="22" fill="#103626"/>
+    <text x="798" y="336" fill="#BDD0C2" font-family="Arial, sans-serif" font-size="11" font-weight="800">PRIORITAS UTAMA</text>
+    <rect x="994" y="320" width="53" height="24" rx="12" fill="#D9684E"/>
+    <text x="1007" y="336" fill="white" font-family="Arial, sans-serif" font-size="9" font-weight="800">BESOK</text>
+    <text x="798" y="386" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="800">Finalisasi proposal</text>
+    <text x="798" y="414" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="800">Pengmas</text>
+    <rect x="798" y="440" width="236" height="8" rx="4" fill="white" fill-opacity=".16"/>
+    <rect x="798" y="440" width="181" height="8" rx="4" fill="#C8EF70"/>
+    <rect x="1090" y="307" width="160" height="172" rx="22" fill="white" stroke="#C9D9CC"/>
+    <text x="1110" y="336" fill="#738077" font-family="Arial, sans-serif" font-size="11" font-weight="800">MINGGU INI</text>
+    <text x="1110" y="394" fill="#103626" font-family="Arial, sans-serif" font-size="45" font-weight="800">04</text>
+    <text x="1168" y="394" fill="#758279" font-family="Arial, sans-serif" font-size="20" font-weight="800">/07</text>
+    <text x="1110" y="421" fill="#68766D" font-family="Arial, sans-serif" font-size="11" font-weight="700">komitmen selesai</text>
+    <rect x="778" y="496" width="472" height="105" rx="18" fill="white" stroke="#C9D9CC"/>
+    <text x="797" y="522" fill="#103626" font-family="Arial, sans-serif" font-size="11" font-weight="800">HARI INI</text>
+    <circle cx="800" cy="547" r="6" fill="#3D84C6"/><text x="818" y="552" fill="#103626" font-family="Arial, sans-serif" font-size="14" font-weight="700">Revisi desain publikasi</text>
+    <circle cx="800" cy="575" r="6" fill="#0F6849"/><text x="818" y="580" fill="#103626" font-family="Arial, sans-serif" font-size="14" font-weight="700">Rapat divisi acara</text>
+  </g>
+  <defs><radialGradient id="noise"><stop stop-color="#C8EF70"/><stop offset="1" stop-color="#103626" stop-opacity="0"/></radialGradient></defs>
+</svg>
