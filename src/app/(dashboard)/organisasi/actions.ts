@@ -12,8 +12,31 @@ const organizationSchema = z.object({
   catatan: z.string().trim().max(3000),
 }).refine((value) => !value.periode_mulai || !value.periode_selesai || value.periode_selesai >= value.periode_mulai, { path: ["periode_selesai"], message: "Tanggal selesai harus setelah tanggal mulai." });
 
+const roleTypeSchema = z.enum(["ketua_umum", "wakil_ketua_umum", "sekretaris", "bendahara", "kepala_departemen", "anggota", "lainnya"]);
+const departmentRoles = new Set(["kepala_departemen", "anggota"]);
+const roleLabels: Record<z.infer<typeof roleTypeSchema>, string> = {
+  ketua_umum: "Ketua Umum",
+  wakil_ketua_umum: "Wakil Ketua Umum",
+  sekretaris: "Sekretaris",
+  bendahara: "Bendahara",
+  kepala_departemen: "Kepala Departemen",
+  anggota: "Anggota",
+  lainnya: "",
+};
+
+const initialRoleSchema = z.object({
+  role_type: roleTypeSchema,
+  divisi: z.string().trim().max(120),
+  jabatan_lainnya: z.string().trim().max(120),
+}).superRefine((value, context) => {
+  if (departmentRoles.has(value.role_type) && !value.divisi) context.addIssue({ code: z.ZodIssueCode.custom, path: ["divisi"], message: "Nama departemen wajib diisi." });
+  if (departmentRoles.has(value.role_type) && !/^[A-Z]/.test(value.divisi)) context.addIssue({ code: z.ZodIssueCode.custom, path: ["divisi"], message: "Nama departemen harus diawali huruf kapital." });
+  if (value.role_type === "lainnya" && !value.jabatan_lainnya) context.addIssue({ code: z.ZodIssueCode.custom, path: ["jabatan_lainnya"], message: "Tulis nama jabatanmu." });
+});
+
 const positionSchema = z.object({
   organization_id: z.string().uuid(),
+  role_type: roleTypeSchema,
   divisi: z.string().trim().max(120),
   jabatan: z.string().trim().min(1).max(120),
   mulai: z.string().date().or(z.literal("")),
@@ -46,10 +69,20 @@ function refreshOrganizationPages(organizationId?: string) {
 
 export async function createOrganization(formData: FormData) {
   const data = organizationSchema.parse({ nama_organisasi: formData.get("nama_organisasi"), tipe: formData.get("tipe"), periode_mulai: formData.get("periode_mulai"), periode_selesai: formData.get("periode_selesai"), catatan: formData.get("catatan") || "" });
-  const { supabase, user } = await getSignedInClient();
-  const { error } = await supabase.from("organizations").insert({ ...data, periode_mulai: data.periode_mulai || null, periode_selesai: data.periode_selesai || null, catatan: data.catatan || null, user_id: user.id });
+  const role = initialRoleSchema.parse({ role_type: formData.get("role_type"), divisi: formData.get("divisi") || "", jabatan_lainnya: formData.get("jabatan_lainnya") || "" });
+  const { supabase } = await getSignedInClient();
+  const { data: organizationId, error } = await supabase.rpc("create_organization_with_position", {
+    p_nama_organisasi: data.nama_organisasi,
+    p_tipe: data.tipe,
+    p_periode_mulai: data.periode_mulai || null,
+    p_periode_selesai: data.periode_selesai || null,
+    p_catatan: data.catatan || null,
+    p_role_type: role.role_type,
+    p_jabatan: role.role_type === "lainnya" ? role.jabatan_lainnya : roleLabels[role.role_type],
+    p_divisi: role.divisi || null,
+  });
   if (error) throw new Error(error.message);
-  refreshOrganizationPages();
+  refreshOrganizationPages(organizationId ?? undefined);
 }
 
 export async function updateOrganization(formData: FormData) {
@@ -70,8 +103,11 @@ export async function deleteOrganization(formData: FormData) {
 }
 
 export async function createPosition(formData: FormData) {
-  const data = positionSchema.parse({ organization_id: formData.get("organization_id"), divisi: formData.get("divisi") || "", jabatan: formData.get("jabatan"), mulai: formData.get("mulai"), selesai: formData.get("selesai") });
+  const roleType = roleTypeSchema.parse(formData.get("role_type") || "lainnya");
+  const data = positionSchema.parse({ organization_id: formData.get("organization_id"), role_type: roleType, divisi: formData.get("divisi") || "", jabatan: roleType === "lainnya" ? formData.get("jabatan") : roleLabels[roleType], mulai: formData.get("mulai"), selesai: formData.get("selesai") });
   const { supabase, user } = await getSignedInClient();
+  if (departmentRoles.has(data.role_type) && !data.divisi) throw new Error("Nama departemen wajib diisi untuk role ini.");
+  if (departmentRoles.has(data.role_type) && !/^[A-Z]/.test(data.divisi)) throw new Error("Nama departemen harus diawali huruf kapital.");
   const { error } = await supabase.from("organization_positions").insert({ ...data, divisi: data.divisi || null, mulai: data.mulai || null, selesai: data.selesai || null, user_id: user.id });
   if (error) throw new Error(error.message);
   refreshOrganizationPages(data.organization_id);

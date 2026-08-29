@@ -32,7 +32,7 @@ Personal activity, organization, and program tracker untuk mahasiswa aktif. nGam
 
 2. Buat project baru di Supabase, lalu buka **SQL Editor** dan jalankan seluruh isi [supabase/schema.sql](./supabase/schema.sql).
 
-   Jika project Supabase sudah dibuat menggunakan schema versi awal, jalankan juga migration yang sesuai, misalnya [20260829_expand_profiles.sql](./supabase/migrations/20260829_expand_profiles.sql). Migration ini menambahkan profil yang lengkap dan mengisi email dari `auth.users` untuk akun yang sudah ada.
+   Jika project Supabase sudah dibuat menggunakan schema versi awal, jalankan juga migration yang sesuai secara berurutan: [20260829_expand_profiles.sql](./supabase/migrations/20260829_expand_profiles.sql), lalu [20260830_add_organization_position_roles.sql](./supabase/migrations/20260830_add_organization_position_roles.sql). Migration kedua menambahkan role terstruktur dan fungsi transaksi untuk membuat organisasi beserta jabatan awalnya.
 
 3. Salin `.env.example` menjadi `.env.local`, lalu isi dua credential browser dari **Supabase Dashboard → Connect**.
 

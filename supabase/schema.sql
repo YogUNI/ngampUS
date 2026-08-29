@@ -47,6 +47,7 @@ create table public.organization_positions (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null,
   user_id uuid not null references auth.users(id) on delete cascade,
+  role_type text not null default 'lainnya' check (role_type in ('ketua_umum', 'wakil_ketua_umum', 'sekretaris', 'bendahara', 'kepala_departemen', 'anggota', 'lainnya')),
   divisi text,
   jabatan text not null default 'Anggota' check (char_length(trim(jabatan)) between 1 and 120),
   mulai date,
@@ -103,6 +104,7 @@ create index idx_activities_user_deadline on public.activities (user_id, deadlin
 create index idx_activities_user_semester on public.activities (user_id, semester_id);
 create index idx_activities_user_organization on public.activities (user_id, organization_id);
 create index idx_positions_org on public.organization_positions (organization_id);
+create index idx_positions_role_type on public.organization_positions (role_type);
 create index idx_programs_org on public.programs (organization_id);
 
 create or replace function public.set_updated_at() returns trigger language plpgsql set search_path = public as $$
@@ -118,6 +120,30 @@ create or replace function public.enforce_single_active_semester() returns trigg
 begin
   if new.is_active then update public.semesters set is_active = false where user_id = new.user_id and id <> new.id and is_active; end if;
   return new;
+end; $$;
+
+create or replace function public.create_organization_with_position(
+  p_nama_organisasi text,
+  p_tipe text,
+  p_periode_mulai date,
+  p_periode_selesai date,
+  p_catatan text,
+  p_role_type text,
+  p_jabatan text,
+  p_divisi text
+) returns uuid language plpgsql security invoker set search_path = public as $$
+declare organization_uuid uuid;
+begin
+  if auth.uid() is null then raise exception 'Sesi tidak ditemukan.'; end if;
+  if p_role_type in ('kepala_departemen', 'anggota') and nullif(trim(p_divisi), '') is null then
+    raise exception 'Nama departemen wajib diisi untuk role ini.';
+  end if;
+  insert into public.organizations (user_id, nama_organisasi, tipe, periode_mulai, periode_selesai, catatan)
+  values (auth.uid(), p_nama_organisasi, p_tipe, p_periode_mulai, p_periode_selesai, nullif(trim(p_catatan), ''))
+  returning id into organization_uuid;
+  insert into public.organization_positions (organization_id, user_id, role_type, jabatan, divisi)
+  values (organization_uuid, auth.uid(), p_role_type, p_jabatan, nullif(trim(p_divisi), ''));
+  return organization_uuid;
 end; $$;
 
 create trigger trg_profiles_updated before update on public.profiles for each row execute function public.set_updated_at();
