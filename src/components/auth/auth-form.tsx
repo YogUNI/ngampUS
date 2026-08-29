@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Eye, EyeOff, LoaderCircle, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { login, register as registerUser, type AuthState } from "@/app/(auth)/actions";
+import { createClient } from "@/lib/supabase/client";
 
 const schema = z.object({
   fullName: z.string().trim().min(2, "Masukkan nama lengkap minimal 2 karakter.").max(100).optional(),
@@ -17,18 +18,35 @@ type FormValues = z.infer<typeof schema>;
 
 export function AuthForm({ mode }: { mode: "login" | "register" }) {
   const isRegister = mode === "register";
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const action = isRegister ? registerUser : login;
-  const [state, formAction, isPending] = useActionState(action, {} as AuthState);
-  const { register, formState: { errors } } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const [serverError, setServerError] = useState("");
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(schema) });
+
+  async function onSubmit(values: FormValues) {
+    setServerError("");
+    const supabase = createClient();
+    if (isRegister) {
+      const { data, error } = await supabase.auth.signUp({ email: values.email, password: values.password, options: { data: { full_name: values.fullName } } });
+      if (error) return setServerError(error.message);
+      if (!data.session) return setServerError("Akun dibuat. Konfirmasi email dulu sebelum masuk.");
+      router.replace("/dashboard");
+      router.refresh();
+      return;
+    }
+    const { data, error } = await supabase.auth.signInWithPassword({ email: values.email, password: values.password });
+    if (error || !data.session) return setServerError(error?.message || "Sesi login tidak berhasil dibuat. Coba lagi.");
+    router.replace("/dashboard");
+    router.refresh();
+  }
 
   return (
-    <form className="mt-8 space-y-5" action={formAction} noValidate>
+    <form className="mt-8 space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
       {isRegister && <Field label="Nama lengkap" error={errors.fullName?.message}><input autoComplete="name" placeholder="Contoh: Axi Pratama" {...register("fullName")} /></Field>}
       <Field label="Email kampus atau personal" error={errors.email?.message}><input autoComplete="email" placeholder="kamu@email.com" type="email" {...register("email")} /></Field>
       <Field label="Password" error={errors.password?.message}><div className="relative"><input autoComplete={isRegister ? "new-password" : "current-password"} placeholder="Minimal 8 karakter" type={showPassword ? "text" : "password"} {...register("password")} /><button className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}>{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></div></Field>
-      {state.error && <p className="rounded-xl bg-[#fff0ec] px-3 py-2.5 text-sm font-medium text-[#b93c21]">{state.error}</p>}
-      <button disabled={isPending} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3.5 font-bold text-white transition hover:bg-[var(--brand-dark)] disabled:cursor-not-allowed disabled:opacity-70" type="submit">{isPending ? <LoaderCircle className="animate-spin" size={18}/> : <>{isRegister ? "Buat workspace" : "Masuk ke workspace"} <ArrowRight size={18}/></>}</button>
+      {serverError && <p className="rounded-xl bg-[#fff0ec] px-3 py-2.5 text-sm font-medium text-[#b93c21]">{serverError}</p>}
+      <button disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3.5 font-bold text-white transition hover:bg-[var(--brand-dark)] disabled:cursor-not-allowed disabled:opacity-70" type="submit">{isSubmitting ? <LoaderCircle className="animate-spin" size={18}/> : <>{isRegister ? "Buat workspace" : "Masuk ke workspace"} <ArrowRight size={18}/></>}</button>
       <p className="text-center text-sm text-[var(--muted)]">{isRegister ? "Sudah punya akun?" : "Belum punya akun?"} <Link className="font-bold text-[var(--brand)] hover:underline" href={isRegister ? "/login" : "/register"}>{isRegister ? "Masuk" : "Daftar sekarang"}</Link></p>
     </form>
   );
