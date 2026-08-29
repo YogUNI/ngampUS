@@ -9,7 +9,7 @@ alter table public.organization_positions
 
 alter table public.organization_positions
   add constraint organization_positions_role_type_check
-  check (role_type in ('ketua_umum', 'wakil_ketua_umum', 'sekretaris', 'bendahara', 'kepala_departemen', 'anggota', 'lainnya'));
+  check (role_type in ('ketua_umum', 'wakil_ketua_umum', 'sekretaris', 'bendahara', 'kepala_departemen', 'wakil_kepala_departemen', 'anggota', 'lainnya'));
 
 create index if not exists idx_positions_role_type on public.organization_positions (role_type);
 
@@ -26,7 +26,7 @@ create or replace function public.create_organization_with_position(
 declare organization_uuid uuid;
 begin
   if auth.uid() is null then raise exception 'Sesi tidak ditemukan.'; end if;
-  if p_role_type in ('kepala_departemen', 'anggota') and nullif(trim(p_divisi), '') is null then
+  if p_role_type in ('kepala_departemen', 'wakil_kepala_departemen', 'anggota') and nullif(trim(p_divisi), '') is null then
     raise exception 'Nama departemen wajib diisi untuk role ini.';
   end if;
 

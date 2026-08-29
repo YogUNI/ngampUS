@@ -12,14 +12,15 @@ const organizationSchema = z.object({
   catatan: z.string().trim().max(3000),
 }).refine((value) => !value.periode_mulai || !value.periode_selesai || value.periode_selesai >= value.periode_mulai, { path: ["periode_selesai"], message: "Tanggal selesai harus setelah tanggal mulai." });
 
-const roleTypeSchema = z.enum(["ketua_umum", "wakil_ketua_umum", "sekretaris", "bendahara", "kepala_departemen", "anggota", "lainnya"]);
-const departmentRoles = new Set(["kepala_departemen", "anggota"]);
+const roleTypeSchema = z.enum(["ketua_umum", "wakil_ketua_umum", "sekretaris", "bendahara", "kepala_departemen", "wakil_kepala_departemen", "anggota", "lainnya"]);
+const departmentRoles = new Set(["kepala_departemen", "wakil_kepala_departemen", "anggota"]);
 const roleLabels: Record<z.infer<typeof roleTypeSchema>, string> = {
   ketua_umum: "Ketua Umum",
   wakil_ketua_umum: "Wakil Ketua Umum",
   sekretaris: "Sekretaris",
   bendahara: "Bendahara",
   kepala_departemen: "Kepala Departemen",
+  wakil_kepala_departemen: "Wakil Kepala Departemen",
   anggota: "Anggota",
   lainnya: "",
 };
@@ -67,6 +68,21 @@ function refreshOrganizationPages(organizationId?: string) {
   if (organizationId) revalidatePath(`/organisasi/${organizationId}`);
 }
 
+function parsePosition(formData: FormData) {
+  const roleType = roleTypeSchema.parse(formData.get("role_type") || "lainnya");
+  const data = positionSchema.parse({
+    organization_id: formData.get("organization_id"),
+    role_type: roleType,
+    divisi: formData.get("divisi") || "",
+    jabatan: roleType === "lainnya" ? formData.get("jabatan") : roleLabels[roleType],
+    mulai: formData.get("mulai"),
+    selesai: formData.get("selesai"),
+  });
+  if (departmentRoles.has(data.role_type) && !data.divisi) throw new Error("Nama departemen wajib diisi untuk role ini.");
+  if (departmentRoles.has(data.role_type) && !/^[A-Z]/.test(data.divisi)) throw new Error("Nama departemen harus diawali huruf kapital.");
+  return data;
+}
+
 export async function createOrganization(formData: FormData) {
   const data = organizationSchema.parse({ nama_organisasi: formData.get("nama_organisasi"), tipe: formData.get("tipe"), periode_mulai: formData.get("periode_mulai"), periode_selesai: formData.get("periode_selesai"), catatan: formData.get("catatan") || "" });
   const role = initialRoleSchema.parse({ role_type: formData.get("role_type"), divisi: formData.get("divisi") || "", jabatan_lainnya: formData.get("jabatan_lainnya") || "" });
@@ -103,12 +119,18 @@ export async function deleteOrganization(formData: FormData) {
 }
 
 export async function createPosition(formData: FormData) {
-  const roleType = roleTypeSchema.parse(formData.get("role_type") || "lainnya");
-  const data = positionSchema.parse({ organization_id: formData.get("organization_id"), role_type: roleType, divisi: formData.get("divisi") || "", jabatan: roleType === "lainnya" ? formData.get("jabatan") : roleLabels[roleType], mulai: formData.get("mulai"), selesai: formData.get("selesai") });
+  const data = parsePosition(formData);
   const { supabase, user } = await getSignedInClient();
-  if (departmentRoles.has(data.role_type) && !data.divisi) throw new Error("Nama departemen wajib diisi untuk role ini.");
-  if (departmentRoles.has(data.role_type) && !/^[A-Z]/.test(data.divisi)) throw new Error("Nama departemen harus diawali huruf kapital.");
   const { error } = await supabase.from("organization_positions").insert({ ...data, divisi: data.divisi || null, mulai: data.mulai || null, selesai: data.selesai || null, user_id: user.id });
+  if (error) throw new Error(error.message);
+  refreshOrganizationPages(data.organization_id);
+}
+
+export async function updatePosition(formData: FormData) {
+  const id = z.string().uuid().parse(formData.get("id"));
+  const data = parsePosition(formData);
+  const { supabase, user } = await getSignedInClient();
+  const { error } = await supabase.from("organization_positions").update({ ...data, divisi: data.divisi || null, mulai: data.mulai || null, selesai: data.selesai || null }).eq("id", id).eq("organization_id", data.organization_id).eq("user_id", user.id);
   if (error) throw new Error(error.message);
   refreshOrganizationPages(data.organization_id);
 }

@@ -47,7 +47,7 @@ create table public.organization_positions (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null,
   user_id uuid not null references auth.users(id) on delete cascade,
-  role_type text not null default 'lainnya' check (role_type in ('ketua_umum', 'wakil_ketua_umum', 'sekretaris', 'bendahara', 'kepala_departemen', 'anggota', 'lainnya')),
+  role_type text not null default 'lainnya' check (role_type in ('ketua_umum', 'wakil_ketua_umum', 'sekretaris', 'bendahara', 'kepala_departemen', 'wakil_kepala_departemen', 'anggota', 'lainnya')),
   divisi text,
   jabatan text not null default 'Anggota' check (char_length(trim(jabatan)) between 1 and 120),
   mulai date,
@@ -135,7 +135,7 @@ create or replace function public.create_organization_with_position(
 declare organization_uuid uuid;
 begin
   if auth.uid() is null then raise exception 'Sesi tidak ditemukan.'; end if;
-  if p_role_type in ('kepala_departemen', 'anggota') and nullif(trim(p_divisi), '') is null then
+  if p_role_type in ('kepala_departemen', 'wakil_kepala_departemen', 'anggota') and nullif(trim(p_divisi), '') is null then
     raise exception 'Nama departemen wajib diisi untuk role ini.';
   end if;
   insert into public.organizations (user_id, nama_organisasi, tipe, periode_mulai, periode_selesai, catatan)
