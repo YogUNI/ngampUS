@@ -38,6 +38,8 @@ button, a, input, select, textarea { transition: border-color .2s ease, backgrou
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(15, 104, 73, .2); outline-offset: 2px; }
 
 .dashboard-content { background: linear-gradient(135deg, rgba(255,255,255,.42), transparent 32%), var(--background); }
+.auth-form-card { border: 1px solid var(--line); background: rgba(255,255,255,.72); box-shadow: 0 18px 55px rgba(16,38,27,.07); }
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inset; -webkit-text-fill-color: var(--ink); transition: background-color 5000s ease-in-out 0s; }
 .dashboard-content { min-height: 100vh; }
 .dashboard-content h1, .dashboard-content h2 { letter-spacing: -.04em; overflow-wrap: anywhere; }
 .dashboard-content article[class*="rounded-2xl"][class*="bg-white"], .dashboard-content section[class*="rounded-2xl"][class*="bg-white"] { box-shadow: 0 10px 30px rgba(16, 38, 27, .045); }
