@@ -4,8 +4,13 @@ create extension if not exists "pgcrypto";
 create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text,
+  email text not null unique,
   university text default 'Universitas Mercu Buana',
   major text default 'Teknik Informatika',
+  student_id text,
+  phone text,
+  bio text check (bio is null or char_length(bio) <= 280),
+  avatar_url text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -104,7 +109,10 @@ create or replace function public.set_updated_at() returns trigger language plpg
 begin new.updated_at = now(); return new; end; $$;
 
 create or replace function public.handle_new_user() returns trigger language plpgsql security definer set search_path = public as $$
-begin insert into public.profiles (id, full_name) values (new.id, new.raw_user_meta_data ->> 'full_name'); return new; end; $$;
+begin insert into public.profiles (id, full_name, email) values (new.id, new.raw_user_meta_data ->> 'full_name', new.email); return new; end; $$;
+
+create or replace function public.sync_profile_email() returns trigger language plpgsql security definer set search_path = public as $$
+begin update public.profiles set email = new.email where id = new.id; return new; end; $$;
 
 create or replace function public.enforce_single_active_semester() returns trigger language plpgsql set search_path = public as $$
 begin
@@ -119,6 +127,7 @@ create trigger trg_positions_updated before update on public.organization_positi
 create trigger trg_programs_updated before update on public.programs for each row execute function public.set_updated_at();
 create trigger trg_activities_updated before update on public.activities for each row execute function public.set_updated_at();
 create trigger trg_on_auth_user_created after insert on auth.users for each row execute function public.handle_new_user();
+create trigger trg_on_auth_user_email_updated after update of email on auth.users for each row execute function public.sync_profile_email();
 create trigger trg_single_active_semester before insert or update on public.semesters for each row execute function public.enforce_single_active_semester();
 
 alter table public.profiles enable row level security;
