@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f8f5;
+  --foreground: #17251e;
+  --ink: #17251e;
+  --muted: #647067;
+  --line: #dfe5dc;
+  --brand: #1f6a48;
+  --brand-dark: #154c34;
+  --brand-soft: #dcefe4;
+  --cream: #f4f0e7;
+  --coral: #e87152;
+  --yellow: #f3c84b;
+  --font-body: "Aptos", "Segoe UI", Arial, sans-serif;
+  --font-display: "Aptos Display", "Segoe UI", Arial, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), Arial, sans-serif;
+}
+
+::selection { background: #b9ddc6; color: var(--ink); }
+
+.font-display { font-family: var(--font-display), Arial, sans-serif; }
+
+.grid-paper {
+  background-image: linear-gradient(rgba(23, 37, 30, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 37, 30, .045) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.ngampus-calendar .fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-today-bg-color: #eef7f0; --fc-button-bg-color: #f7f8f5; --fc-button-border-color: var(--line); --fc-button-text-color: var(--ink); --fc-button-hover-bg-color: #dcefe4; --fc-button-hover-border-color: #b9ddc6; --fc-event-text-color: white; font-size: .875rem; }
+.ngampus-calendar .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; }
+.ngampus-calendar .fc .fc-button { border-radius: .65rem; box-shadow: none; font-weight: 700; text-transform: capitalize; }
+.ngampus-calendar .fc .fc-event { border-radius: .45rem; border: 0; padding: 2px 4px; font-weight: 700; }
