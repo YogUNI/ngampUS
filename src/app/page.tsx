@@ -3,9 +3,9 @@ import { ArrowRight, CalendarDays, CheckCircle2, Compass, Sparkles } from "lucid
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f7f8f5] text-[var(--ink)]">
+    <main className="noise-overlay min-h-screen overflow-hidden text-[var(--ink)]">
       <section className="grid-paper relative min-h-screen px-5 pb-12 pt-5 sm:px-8 lg:px-12">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 backdrop-blur sm:px-5">
+        <nav className="surface-lift mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 backdrop-blur sm:px-5">
           <span className="font-display text-xl font-extrabold tracking-tight">nGamp<span className="text-[var(--brand)]">US</span></span>
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Link className="hidden px-3 py-2 text-[var(--muted)] sm:block" href="/login">Masuk</Link>
@@ -26,8 +26,8 @@ export default function Home() {
           </div>
 
           <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute -right-4 -top-6 h-32 w-32 rounded-full bg-[var(--yellow)]/45 blur-2xl"/>
-            <div className="relative rounded-[2rem] border border-[#cbd8cf] bg-[#183c2a] p-4 shadow-2xl shadow-[#183c2a]/20 sm:p-5">
+            <div className="hero-orb absolute -right-10 -top-12 h-44 w-44 rounded-full"/>
+            <div className="surface-lift relative rounded-[2rem] border border-[#cbd8cf] bg-[#183c2a] p-4 shadow-2xl shadow-[#183c2a]/20 sm:p-5">
               <div className="rounded-[1.4rem] bg-[#f7f8f5] p-5">
                 <div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-[var(--muted)]">Jumat, 29 Agustus</p><h2 className="font-display mt-1 text-2xl font-extrabold">Good morning, Axi!</h2></div><div className="grid h-10 w-10 place-items-center rounded-full bg-[var(--brand-soft)] text-[var(--brand)]"><Compass size={19}/></div></div>
                 <div className="mt-5 rounded-2xl bg-[var(--brand)] p-4 text-white"><div className="flex items-center justify-between text-sm text-[#d8eddf]"><span>Deadline terdekat</span><span>Besok</span></div><p className="mt-3 font-display text-lg font-bold">Finalisasi proposal Pengmas</p><div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/25"><div className="h-full w-4/5 rounded-full bg-[var(--yellow)]"/></div></div>
@@ -46,4 +46,4 @@ export default function Home() {
 
 function Metric({ value, label, urgent = false }: { value: string; label: string; urgent?: boolean }) { return <div className={`rounded-xl p-3 ${urgent ? "bg-[#fff0ec]" : "bg-white"}`}><b className={`font-display text-xl ${urgent ? "text-[#c94e32]" : "text-[var(--ink)]"}`}>{value}</b><p className="mt-0.5 text-xs text-[var(--muted)]">{label}</p></div>; }
 function Task({ label, tone }: { label: string; tone: string }) { return <div className="mb-2 flex items-center gap-3 rounded-xl bg-white p-3"><span className={`h-2.5 w-2.5 rounded-full ${tone}`}/><span className="text-sm font-semibold">{label}</span></div>; }
-function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <article className="rounded-2xl border border-[var(--line)] bg-white p-6"><div className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">{icon}</div><h3 className="font-display mt-5 text-xl font-bold">{title}</h3><p className="mt-2 leading-7 text-[var(--muted)]">{text}</p></article>; }
+function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <article className="surface-lift rounded-2xl border border-[var(--line)] bg-white p-6"><div className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">{icon}</div><h3 className="font-display mt-5 text-xl font-bold">{title}</h3><p className="mt-2 leading-7 text-[var(--muted)]">{text}</p></article>; }
