@@ -75,7 +75,14 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
           </form>
         </div>
 
-        {calendar ? <CalendarView activities={activities ?? []}/> : <div className="rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
+        {calendar ? (
+          <CalendarView
+            activities={activities ?? []}
+            semesters={(semesters ?? []).map((s) => ({ id: s.id, name: s.nama_semester, active: s.is_active }))}
+            organizations={(organizations ?? []).map((o) => ({ id: o.id, name: o.nama_organisasi }))}
+            programs={mappedPrograms}
+          />
+        ) : <div className="rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
           <div className="flex items-center justify-between"><div><h2 className="font-display text-xl font-extrabold">Daftar kegiatan</h2><p className="mt-1 text-sm text-[var(--muted)]">Kelola progres tanpa kehilangan konteks.</p></div><span className="rounded-full bg-[#f7f8f5] px-2.5 py-1 text-xs font-bold">{activities?.length || 0} item</span></div>
           <div className="mt-5 space-y-2">{activities?.length ? activities.map((activity) => <article key={activity.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6] sm:flex-nowrap">
             <form action={completeActivity}><input name="id" type="hidden" value={activity.id}/><button title="Tandai selesai" className="text-[var(--muted)] transition hover:text-[var(--brand)]">{activity.status === "selesai" ? <CheckCircle2 className="text-[var(--brand)]"/> : <Circle/>}</button></form>
