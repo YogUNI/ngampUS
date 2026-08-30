@@ -4,18 +4,18 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
 const schema = z.object({
-  judul: z.string().trim().min(1).max(180),
-  deskripsi: z.string().trim().max(3000),
+  judul: z.string().trim().min(1, "Judul wajib diisi.").max(180),
+  deskripsi: z.string().trim().max(3000).default(""),
   kategori: z.enum(["kuliah", "organisasi", "lomba", "event", "lainnya"]),
   jenis_item: z.enum(["tugas", "reminder", "catatan"]),
   prioritas: z.enum(["rendah", "sedang", "tinggi"]),
-  tanggal_mulai: z.string().date().or(z.literal("")),
+  tanggal_mulai: z.string().date().or(z.literal("")).nullable().optional(),
   deadline_status: z.enum(["terjadwal", "belum_ditentukan"]),
-  deadline: z.string().date().or(z.literal("")),
-  jam_deadline: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Jam deadline tidak valid.").or(z.literal("")),
-  semester_id: z.string().uuid().or(z.literal("")),
-  organization_id: z.string().uuid().or(z.literal("")),
-  program_id: z.string().uuid().or(z.literal("")),
+  deadline: z.string().date().or(z.literal("")).nullable().optional(),
+  jam_deadline: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Jam deadline tidak valid.").or(z.literal("")).nullable().optional(),
+  semester_id: z.string().uuid().or(z.literal("")).nullable().optional(),
+  organization_id: z.string().uuid().or(z.literal("")).nullable().optional(),
+  program_id: z.string().uuid().or(z.literal("")).nullable().optional(),
 }).superRefine((value, context) => {
   if (value.deadline_status === "terjadwal" && !value.deadline) context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline"], message: "Tanggal deadline wajib diisi." });
   if (value.deadline_status === "belum_ditentukan" && (value.deadline || value.jam_deadline)) context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline_status"], message: "Item tanpa deadline tidak boleh memiliki tanggal atau jam deadline." });
@@ -24,7 +24,20 @@ const schema = z.object({
 const statusSchema = z.enum(["belum_mulai", "on_progress", "selesai"]);
 
 function parseActivity(formData: FormData) {
-  return schema.parse({ judul: formData.get("judul"), deskripsi: formData.get("deskripsi") || "", kategori: formData.get("kategori"), jenis_item: formData.get("jenis_item"), prioritas: formData.get("prioritas"), tanggal_mulai: formData.get("tanggal_mulai"), deadline_status: formData.get("deadline_status"), deadline: formData.get("deadline") || "", jam_deadline: formData.get("jam_deadline") || "", semester_id: formData.get("semester_id"), organization_id: formData.get("organization_id"), program_id: formData.get("program_id") });
+  return schema.parse({
+    judul: formData.get("judul"),
+    deskripsi: formData.get("deskripsi") || "",
+    kategori: formData.get("kategori"),
+    jenis_item: formData.get("jenis_item"),
+    prioritas: formData.get("prioritas"),
+    tanggal_mulai: formData.get("tanggal_mulai") || "",
+    deadline_status: formData.get("deadline_status"),
+    deadline: formData.get("deadline") || "",
+    jam_deadline: formData.get("jam_deadline") || "",
+    semester_id: formData.get("semester_id") || "",
+    organization_id: formData.get("organization_id") || "",
+    program_id: formData.get("program_id") || "",
+  });
 }
 
 async function resolveOrganizationId(item: z.infer<typeof schema>, supabase: Awaited<ReturnType<typeof createClient>>) {
