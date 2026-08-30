@@ -52,19 +52,17 @@ export function CalendarView({
           }))}
       />
 
-      {/* Hidden triggered Form when date is clicked */}
+      {/* Auto opened Form modal when date is clicked */}
       {selectedDate && (
-        <div className="mt-4 flex justify-end">
-          <ActivityForm
-            key={selectedDate}
-            semesters={semesters}
-            organizations={organizations}
-            programs={programs}
-            defaultDate={selectedDate}
-            triggerText={`Jadwalkan di ${selectedDate}`}
-            triggerClass="inline-flex items-center gap-2 rounded-xl bg-[#0f6849] px-4 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0a432f]"
-          />
-        </div>
+        <ActivityForm
+          key={selectedDate}
+          semesters={semesters}
+          organizations={organizations}
+          programs={programs}
+          defaultDate={selectedDate}
+          initialOpen={true}
+          onClose={() => setSelectedDate(null)}
+        />
       )}
     </div>
   );

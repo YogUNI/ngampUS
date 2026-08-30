@@ -15,6 +15,8 @@ export function ActivityForm({
   defaultDate,
   triggerText,
   triggerClass,
+  initialOpen = false,
+  onClose,
 }: {
   semesters: Option[];
   organizations: Option[];
@@ -22,8 +24,10 @@ export function ActivityForm({
   defaultDate?: string;
   triggerText?: string;
   triggerClass?: string;
+  initialOpen?: boolean;
+  onClose?: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialOpen);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"agenda" | "tugas" | "catatan">("agenda");
   const [kategori, setKategori] = useState<string>("organisasi");
@@ -60,6 +64,7 @@ export function ActivityForm({
         "success"
       );
       setOpen(false);
+      onClose?.();
       setSelectedOrgId("");
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : "Gagal menyimpan kegiatan.";
@@ -102,7 +107,10 @@ export function ActivityForm({
               <button
                 type="button"
                 aria-label="Tutup"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  onClose?.();
+                }}
                 className="rounded-xl p-2 text-[var(--muted)] hover:bg-[#f7f8f5] hover:text-[var(--ink)]"
               >
                 <X size={19}/>
@@ -341,7 +349,10 @@ export function ActivityForm({
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    onClose?.();
+                  }}
                   className="rounded-xl px-4 py-3 text-sm font-bold hover:bg-[#f7f8f5]"
                 >
                   Batal
