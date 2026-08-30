@@ -1,20 +1,24 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import {
   BadgeCheck,
   BookOpen,
+  Camera,
   ExternalLink,
   GraduationCap,
   Hash,
   Mail,
   MessageSquare,
   Phone,
+  QrCode,
   Save,
   Shield,
   Sparkles,
   User,
   UserRound,
+  IdCard,
 } from "lucide-react";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
@@ -29,14 +33,25 @@ type Profile = {
   angkatan?: string | null;
   linkedin?: string | null;
   github?: string | null;
+  avatar_url?: string | null;
 };
 
 export function ProfileForm({ profile, email }: { profile: Profile | null; email: string }) {
   const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
-  const [charCount, setCharCount] = useState((profile?.bio ?? "").length);
 
-  const initial = (profile?.full_name || email || "M").slice(0, 1).toUpperCase();
+  // Live preview state synced with inputs
+  const [fullName, setFullName] = useState(profile?.full_name || "");
+  const [university, setUniversity] = useState(profile?.university || "");
+  const [major, setMajor] = useState(profile?.major || "");
+  const [studentId, setStudentId] = useState(profile?.student_id || "");
+  const [angkatan, setAngkatan] = useState(profile?.angkatan || "");
+  const [phone, setPhone] = useState(profile?.phone || "");
+  const [bio, setBio] = useState(profile?.bio || "");
+  const [linkedin, setLinkedin] = useState(profile?.linkedin || "");
+  const [github, setGithub] = useState(profile?.github || "");
+
+  const initial = (fullName || email || "M").slice(0, 1).toUpperCase();
 
   async function handleSubmit(formData: FormData) {
     startTransition(async () => {
@@ -51,287 +66,331 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8 lg:px-10">
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
 
       {/* ── Page Header ── */}
-      <header>
+      <header className="mb-7">
         <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERSONAL WORKSPACE</p>
-        <h1 className="font-display mt-2 text-4xl font-black tracking-tight">Profil & pengaturan</h1>
-        <p className="mt-2 text-sm text-[var(--muted)]">
-          Data ini membuat workspace ngampUS benar-benar terasa milikmu.
+        <h1 className="font-display mt-2 text-3xl sm:text-4xl font-black tracking-tight">Profil & Identitas Mahasiswa</h1>
+        <p className="mt-1.5 text-sm text-[var(--muted)]">
+          Kelola data pribadi dan lihat kartu KTM digital interaktifmu secara langsung.
         </p>
       </header>
 
-      {/* ── Campus Passport Card ── */}
-      <section className="relative mt-8 overflow-hidden rounded-3xl border border-[#0f6849]/30 bg-gradient-to-br from-[#103828] via-[#174633] to-[#0a291d] p-7 text-white shadow-xl shadow-[#0a291d]/20">
-        {/* Decorative orbs */}
-        <div className="pointer-events-none absolute right-0 top-0 h-56 w-56 -translate-y-14 translate-x-14 rounded-full bg-[#d9ee72]/10 blur-2xl" />
-        <div className="pointer-events-none absolute bottom-0 left-1/3 h-32 w-32 translate-y-12 rounded-full bg-[#0f6849]/30 blur-xl" />
+      {/* ── 2-Column Responsive Layout: Left (Form) & Right (Digital KTM Card) ── */}
+      <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] items-start">
 
-        <div className="relative flex flex-wrap items-start justify-between gap-4">
-          <div className="flex items-start gap-4">
-            {/* Avatar */}
-            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-white/10 text-2xl font-black text-[#d9ee72] ring-1 ring-white/20">
-              {initial}
-            </div>
-            <div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-[#d9ee72]">
-                <Sparkles size={10} /> Campus Passport
+        {/* ── LEFT COLUMN: EDIT FORM ── */}
+        <form action={handleSubmit} className="space-y-6">
+
+          {/* Section 1: Identitas */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)]">
+                <UserRound size={18} />
               </span>
-              <h2 className="font-display mt-1.5 text-2xl font-extrabold">
-                {profile?.full_name || "Mahasiswa ngampUS"}
-              </h2>
-              <p className="mt-0.5 text-sm text-white/70">{email}</p>
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-white/90">
-                {profile?.major && (
-                  <span className="flex items-center gap-1.5">
-                    <BookOpen size={13} className="text-[#c8ef70]" />
-                    {profile.major}
+              <div>
+                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Identitas Mahasiswa</h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Data utama yang tercantum di kartu identitas kampus.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <FormField icon={<User size={15} />} label="Nama Lengkap" className="sm:col-span-2">
+                <input
+                  required
+                  name="full_name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Nama lengkap kamu"
+                />
+              </FormField>
+
+              <FormField icon={<Mail size={15} />} label="Email Akun" className="sm:col-span-2">
+                <input
+                  disabled
+                  value={email}
+                  className="cursor-not-allowed !bg-[#f7f8f5] !text-[var(--muted)]"
+                />
+                <p className="mt-1.5 text-xs text-[var(--muted)]">
+                  <Shield size={11} className="mr-1 inline text-[var(--brand)]" />
+                  Email terikat dengan otentikasi akun Supabase.
+                </p>
+              </FormField>
+
+              <FormField icon={<GraduationCap size={15} />} label="Universitas / Kampus">
+                <input
+                  name="university"
+                  value={university}
+                  onChange={(e) => setUniversity(e.target.value)}
+                  placeholder="Contoh: Universitas Mercu Buana"
+                />
+              </FormField>
+
+              <FormField icon={<BookOpen size={15} />} label="Program Studi / Jurusan">
+                <input
+                  name="major"
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                  placeholder="Contoh: Teknik Informatika"
+                />
+              </FormField>
+
+              <FormField icon={<Hash size={15} />} label="NIM / ID Mahasiswa">
+                <input
+                  name="student_id"
+                  value={studentId}
+                  onChange={(e) => setStudentId(e.target.value)}
+                  placeholder="Contoh: 41523110001"
+                />
+              </FormField>
+
+              <FormField icon={<BadgeCheck size={15} />} label="Tahun Angkatan">
+                <input
+                  name="angkatan"
+                  value={angkatan}
+                  onChange={(e) => setAngkatan(e.target.value)}
+                  placeholder="Contoh: 2023"
+                  maxLength={4}
+                />
+              </FormField>
+
+              <FormField icon={<Phone size={15} />} label="Nomor WhatsApp" className="sm:col-span-2">
+                <input
+                  name="phone"
+                  inputMode="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Contoh: 081234567890"
+                />
+              </FormField>
+
+              <FormField icon={<MessageSquare size={15} />} label="Bio Singkat / Motto" className="sm:col-span-2">
+                <textarea
+                  name="bio"
+                  maxLength={280}
+                  rows={3}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Contoh: Mahasiswa aktif yang menyeimbangkan kuliah, organisasi, dan inovasi."
+                />
+                <p className="mt-1.5 flex justify-between text-xs text-[var(--muted)]">
+                  <span>Akan tampil di kartu KTM & passport.</span>
+                  <span className={bio.length > 250 ? "font-bold text-[#c53e1c]" : ""}>
+                    {bio.length}/280
                   </span>
+                </p>
+              </FormField>
+            </div>
+          </div>
+
+          {/* Section 2: Social Links */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#e8e1fa] text-[#5c3a9c]">
+                <ExternalLink size={18} />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Tautan & Jejaring</h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Tautan profil profesional dan portofolio.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <FormField label="URL LinkedIn">
+                <input
+                  name="linkedin"
+                  type="url"
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                  placeholder="https://linkedin.com/in/username"
+                />
+              </FormField>
+              <FormField label="URL GitHub">
+                <input
+                  name="github"
+                  type="url"
+                  value={github}
+                  onChange={(e) => setGithub(e.target.value)}
+                  placeholder="https://github.com/username"
+                />
+              </FormField>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex items-center justify-between rounded-3xl border border-[var(--line)] bg-white p-5 shadow-sm">
+            <p className="text-xs text-[var(--muted)] font-medium">
+              Perubahan otomatis tersimpan ke cloud.
+            </p>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3.5 text-sm font-black text-white shadow-md shadow-[#0f6849]/20 transition hover:bg-[var(--brand-dark)] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {isPending ? (
+                <>
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                  Menyimpan...
+                </>
+              ) : (
+                <>
+                  <Save size={16} /> Simpan Perubahan
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+
+        {/* ── RIGHT COLUMN: DIGITAL KTM (KARTU TANDA MAHASISWA) ── */}
+        <aside className="lg:sticky lg:top-8 space-y-6">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#dff3e5] text-[var(--brand)]">
+                <IdCard size={15} strokeWidth={2.5}/>
+              </span>
+              <p className="text-xs font-black uppercase tracking-wider text-[var(--brand)]">KARTU MAHASISWA DIGITAL (KTM)</p>
+            </div>
+            <span className="rounded-full bg-[#d9ee72]/30 px-2 py-0.5 text-[10px] font-black text-[#103626]">LIVE PREVIEW</span>
+          </div>
+
+          {/* Premium Digital ID Card / KTM */}
+          <div className="relative overflow-hidden rounded-[2rem] border border-[#0f6849]/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-6 sm:p-7 text-white shadow-2xl shadow-[#0c2e20]/40">
+            {/* Holographic / Metallic background glow */}
+            <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#d9ee72]/15 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-[#0f6849]/40 blur-xl" />
+            
+            {/* Card Chip & Header */}
+            <div className="relative flex items-center justify-between border-b border-white/15 pb-4">
+              <div className="flex items-center gap-2.5">
+                <Image
+                  src="/logo_ngampUS.png"
+                  alt="ngampUS Logo"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 object-contain drop-shadow"
+                />
+                <div>
+                  <span className="font-display block text-lg font-black tracking-tight leading-none text-white">
+                    ngamp<span className="text-[#c8ef70]">US</span>
+                  </span>
+                  <span className="text-[8px] font-black tracking-[0.2em] text-[#b4d8c1]">STUDENT DIGITAL PASS</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 rounded-lg border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-2.5 py-1 text-[10px] font-black text-[#d8f89a]">
+                <Sparkles size={11} className="text-[#c8ef70]" /> AKTIF
+              </div>
+            </div>
+
+            {/* Photo & Main Details */}
+            <div className="relative mt-5 flex items-start gap-4">
+              {/* Photo Frame / Avatar */}
+              <div className="relative group shrink-0">
+                <div className="grid h-20 w-20 sm:h-22 sm:w-22 place-items-center rounded-2xl bg-gradient-to-tr from-[#1b533c] to-[#2a7a58] text-3xl font-black text-[#d9ee72] shadow-inner ring-2 ring-[#c8ef70]/40">
+                  {initial}
+                </div>
+                <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#c8ef70] text-[#103626] shadow-sm">
+                  <BadgeCheck size={14} strokeWidth={2.5}/>
+                </div>
+              </div>
+
+              {/* Bio & Identification Info */}
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-xl sm:text-2xl font-black leading-snug tracking-tight text-white truncate">
+                  {fullName || "Nama Mahasiswa"}
+                </h3>
+                <p className="font-mono text-xs font-bold text-[#c8ef70] tracking-wider mt-0.5">
+                  {studentId ? `NIM: ${studentId}` : "NIM: Belum diisi"}
+                </p>
+                <p className="mt-2 text-xs font-semibold text-white/90 leading-tight">
+                  {major || "Program Studi"}
+                </p>
+                <p className="text-[11px] text-[#b4d8c1] font-medium leading-tight">
+                  {university || "Universitas"} {angkatan ? `(Angkatan ${angkatan})` : ""}
+                </p>
+              </div>
+            </div>
+
+            {/* Bio Quote */}
+            {bio && (
+              <div className="relative mt-4 rounded-xl bg-white/[0.06] p-3 border border-white/10">
+                <p className="text-xs italic text-white/80 line-clamp-2 leading-relaxed">
+                  &ldquo;{bio}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {/* Bottom Card Footer: Barcode / QR & Contact */}
+            <div className="relative mt-5 pt-4 border-t border-white/10 flex items-end justify-between gap-4">
+              <div className="space-y-1 text-[11px] text-white/70">
+                <p className="truncate max-w-[200px]">✉️ {email}</p>
+                {phone && <p>📱 {phone}</p>}
+              </div>
+
+              {/* Simulated Micro QR / Security Seal */}
+              <div className="flex flex-col items-center">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/15 p-1 text-[#c8ef70] ring-1 ring-white/20">
+                  <QrCode size={24} strokeWidth={1.75} />
+                </div>
+                <span className="mt-1 text-[8px] font-mono text-white/50 tracking-widest">VERIFIED ID</span>
+              </div>
+            </div>
+
+            {/* Social Links on KTM */}
+            {(linkedin || github) && (
+              <div className="relative mt-4 flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                {linkedin && (
+                  <a
+                    href={linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/90 transition hover:bg-white/20"
+                  >
+                    <ExternalLink size={11} /> LinkedIn
+                  </a>
                 )}
-                {profile?.major && profile?.university && <span className="text-white/30">·</span>}
-                {profile?.university && <span>{profile.university}</span>}
-                {profile?.angkatan && (
-                  <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[11px] font-bold">
-                    Angkatan {profile.angkatan}
-                  </span>
+                {github && (
+                  <a
+                    href={github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/90 transition hover:bg-white/20"
+                  >
+                    <ExternalLink size={11} /> GitHub
+                  </a>
                 )}
               </div>
-              {profile?.bio && (
-                <p className="mt-3 max-w-md text-xs leading-relaxed text-white/60 italic">
-                  &ldquo;{profile.bio}&rdquo;
+            )}
+          </div>
+
+          {/* Security & System Info note card */}
+          <div className="rounded-3xl border border-[var(--line)] bg-white p-5 shadow-xs">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
+                <Shield size={16} />
+              </span>
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Kartu Identitas Terintegrasi</h4>
+                <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
+                  Data ini disinkronkan secara realtime dengan akun workspace ngampUS dan siap digunakan untuk laporan keaktifan organisasi maupun evaluasi semester.
                 </p>
-              )}
+              </div>
             </div>
           </div>
-
-          {/* NIM Badge */}
-          {profile?.student_id && (
-            <div className="rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-right backdrop-blur-sm">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-white/60">NIM / ID</p>
-              <p className="font-mono text-sm font-bold text-white">{profile.student_id}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Social Links Preview */}
-        {(profile?.linkedin || profile?.github) && (
-          <div className="relative mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
-            {profile.linkedin && (
-              <a
-                href={profile.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:bg-white/20"
-              >
-                <ExternalLink size={12} /> LinkedIn
-              </a>
-            )}
-            {profile.github && (
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:bg-white/20"
-              >
-                <ExternalLink size={12} /> GitHub
-              </a>
-            )}
-          </div>
-        )}
-      </section>
-
-      {/* ── Form ── */}
-      <form
-        action={handleSubmit}
-        className="mt-6 space-y-5"
-      >
-        {/* Section: Identitas */}
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-6 shadow-sm sm:p-7">
-          <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)]">
-              <UserRound size={18} />
-            </span>
-            <div>
-              <h2 className="font-display text-lg font-extrabold">Identitas mahasiswa</h2>
-              <p className="text-xs text-[var(--muted)]">
-                Lengkapi sekali, lalu siap dipakai di seluruh aplikasi.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <FormField
-              icon={<User size={15} />}
-              label="Nama lengkap"
-              className="sm:col-span-2"
-            >
-              <input
-                required
-                name="full_name"
-                defaultValue={profile?.full_name ?? ""}
-                placeholder="Nama lengkap kamu"
-              />
-            </FormField>
-
-            <FormField icon={<Mail size={15} />} label="Email akun" className="sm:col-span-2">
-              <input
-                disabled
-                value={email}
-                className="cursor-not-allowed !bg-[#f7f8f5] !text-[var(--muted)]"
-              />
-              <p className="mt-1.5 text-xs text-[var(--muted)]">
-                <Shield size={11} className="mr-1 inline" />
-                Email dikelola oleh autentikasi Supabase dan tidak bisa diubah di sini.
-              </p>
-            </FormField>
-
-            <FormField icon={<GraduationCap size={15} />} label="Universitas">
-              <input
-                name="university"
-                defaultValue={profile?.university ?? ""}
-                placeholder="Contoh: Universitas Mercu Buana"
-              />
-            </FormField>
-
-            <FormField icon={<BookOpen size={15} />} label="Program studi">
-              <input
-                name="major"
-                defaultValue={profile?.major ?? ""}
-                placeholder="Contoh: Teknik Informatika"
-              />
-            </FormField>
-
-            <FormField icon={<Hash size={15} />} label="NIM">
-              <input
-                name="student_id"
-                defaultValue={profile?.student_id ?? ""}
-                placeholder="Contoh: 41523110001"
-              />
-            </FormField>
-
-            <FormField icon={<BadgeCheck size={15} />} label="Angkatan">
-              <input
-                name="angkatan"
-                defaultValue={profile?.angkatan ?? ""}
-                placeholder="Contoh: 2023"
-                maxLength={4}
-              />
-            </FormField>
-
-            <FormField icon={<Phone size={15} />} label="Nomor WhatsApp" className="sm:col-span-2">
-              <input
-                name="phone"
-                inputMode="tel"
-                defaultValue={profile?.phone ?? ""}
-                placeholder="Contoh: 081234567890"
-              />
-            </FormField>
-
-            <FormField
-              icon={<MessageSquare size={15} />}
-              label="Bio singkat"
-              className="sm:col-span-2"
-            >
-              <textarea
-                name="bio"
-                maxLength={280}
-                rows={3}
-                defaultValue={profile?.bio ?? ""}
-                placeholder="Contoh: Mahasiswa aktif yang menyeimbangkan kuliah, organisasi, dan riset."
-                onChange={(e) => setCharCount(e.target.value.length)}
-              />
-              <p className="mt-1.5 flex justify-between text-xs text-[var(--muted)]">
-                <span>Muncul di Campus Passport-mu.</span>
-                <span className={charCount > 250 ? "font-bold text-[#c53e1c]" : ""}>
-                  {charCount}/280
-                </span>
-              </p>
-            </FormField>
-          </div>
-        </div>
-
-        {/* Section: Social & Links */}
-        <div className="rounded-3xl border border-[var(--line)] bg-white p-6 shadow-sm sm:p-7">
-          <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#e8e1fa] text-[#5c3a9c]">
-              <ExternalLink size={18} />
-            </span>
-            <div>
-              <h2 className="font-display text-lg font-extrabold">Tautan & jejaring</h2>
-              <p className="text-xs text-[var(--muted)]">
-                Tambahkan profil LinkedIn atau GitHub untuk ditampilkan di passport.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <FormField label="URL LinkedIn">
-              <input
-                name="linkedin"
-                type="url"
-                defaultValue={profile?.linkedin ?? ""}
-                placeholder="https://linkedin.com/in/username"
-              />
-            </FormField>
-            <FormField label="URL GitHub">
-              <input
-                name="github"
-                type="url"
-                defaultValue={profile?.github ?? ""}
-                placeholder="https://github.com/username"
-              />
-            </FormField>
-          </div>
-        </div>
-
-        {/* Section: Account Security Info */}
-        <div className="rounded-3xl border border-[var(--line)] bg-[#f9fbf9] p-5 sm:p-6">
-          <div className="flex items-start gap-3">
-            <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#fff0cc] text-[#8a5d00]">
-              <Shield size={16} />
-            </span>
-            <div>
-              <h3 className="text-sm font-extrabold">Keamanan akun</h3>
-              <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">
-                Password dan email autentikasi dikelola secara aman melalui Supabase Auth. 
-                Untuk mengubah password, gunakan fitur reset password yang dikirim ke email kamu.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Save Button */}
-        <div className="flex items-center justify-between rounded-3xl border border-[var(--line)] bg-white p-5 shadow-sm">
-          <p className="text-xs text-[var(--muted)]">
-            Perubahanmu tersimpan secara aman di cloud.
-          </p>
-          <button
-            type="submit"
-            disabled={isPending}
-            className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-5 py-3 text-sm font-black text-white shadow-md shadow-[#0f6849]/20 transition hover:bg-[var(--brand-dark)] disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isPending ? (
-              <>
-                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                </svg>
-                Menyimpan...
-              </>
-            ) : (
-              <>
-                <Save size={16} /> Simpan profil
-              </>
-            )}
-          </button>
-        </div>
-      </form>
+        </aside>
+      </div>
     </div>
   );
 }
 
-// ── Reusable Field wrapper ──
+// ── Reusable Field Wrapper ──
 function FormField({
   label,
   icon,
