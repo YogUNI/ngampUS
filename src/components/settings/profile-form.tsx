@@ -20,7 +20,6 @@ import {
   UserRound,
   IdCard,
   Trash2,
-  Image as ImageIcon,
 } from "lucide-react";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
@@ -84,7 +83,6 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
     };
     reader.readAsDataURL(file);
 
-    // reset input value so re-selecting same file triggers change
     e.target.value = "";
   };
 
@@ -117,7 +115,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
 
       {/* ── Hidden File Input ── */}
       <input
@@ -137,21 +135,168 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
       />
 
       {/* ── Page Header ── */}
-      <header className="mb-7">
+      <header className="mb-6">
         <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERSONAL WORKSPACE</p>
-        <h1 className="font-display mt-2 text-3xl sm:text-4xl font-black tracking-tight text-[var(--ink)]">
+        <h1 className="font-display mt-1 text-3xl sm:text-4xl font-black tracking-tight text-[var(--ink)]">
           Profil & Identitas Mahasiswa
         </h1>
-        <p className="mt-1.5 text-sm text-[var(--muted)]">
+        <p className="mt-1 text-sm text-[var(--muted)]">
           Kelola data pribadi, upload & sesuaikan foto profil, serta nikmati kartu KTM digital interaktif.
         </p>
       </header>
 
-      {/* ── 2-Column Responsive Layout: Left (Form) & Right (Digital KTM Card) ── */}
-      <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] items-start">
+      {/* ── 2-Column Responsive Layout: Mobile shows KTM on top (order-1), Desktop shows Form Left & KTM Right ── */}
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.15fr_0.85fr] items-start">
 
-        {/* ── LEFT COLUMN: EDIT FORM ── */}
-        <form action={handleSubmit} className="space-y-6">
+        {/* ── RIGHT COLUMN: DIGITAL KTM (On Mobile: ORDER-1 Top; On Desktop: ORDER-2 Right) ── */}
+        <aside className="order-1 lg:order-2 lg:sticky lg:top-6 space-y-5">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#dff3e5] text-[var(--brand)]">
+                <IdCard size={15} strokeWidth={2.5}/>
+              </span>
+              <p className="text-xs font-black uppercase tracking-wider text-[var(--brand)]">KARTU MAHASISWA DIGITAL (KTM)</p>
+            </div>
+            <span className="rounded-full bg-[#d9ee72]/30 px-2 py-0.5 text-[10px] font-black text-[#103626]">LIVE PREVIEW</span>
+          </div>
+
+          {/* Premium Digital ID Card / KTM */}
+          <div className="relative overflow-hidden rounded-[2rem] border border-[#0f6849]/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-6 text-white shadow-2xl shadow-[#0c2e20]/40">
+            {/* Holographic / Metallic background glow */}
+            <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#d9ee72]/15 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-[#0f6849]/40 blur-xl" />
+            
+            {/* Card Header */}
+            <div className="relative flex items-center justify-between border-b border-white/15 pb-4">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/logo_ngampUS.png"
+                  alt="ngampUS Logo"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 object-contain drop-shadow"
+                />
+                <div>
+                  <span className="font-display block text-lg font-black tracking-tight leading-none text-white">
+                    ngamp<span className="text-[#c8ef70]">US</span>
+                  </span>
+                  <span className="text-[8px] font-black tracking-[0.2em] text-[#b4d8c1]">STUDENT DIGITAL PASS</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 rounded-lg border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-2.5 py-1 text-[10px] font-black text-[#d8f89a]">
+                <Sparkles size={11} className="text-[#c8ef70]" /> AKTIF
+              </div>
+            </div>
+
+            {/* Photo & Main Details */}
+            <div className="relative mt-5 flex items-start gap-4">
+              {/* Photo Frame / Avatar */}
+              <div className="relative group shrink-0">
+                <div className="relative h-20 w-20 sm:h-22 sm:w-22 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#1b533c] to-[#2a7a58] ring-2 ring-[#c8ef70]/40 shadow-inner flex items-center justify-center">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={fullName}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-3xl font-black text-[#d9ee72]">
+                      {initial}
+                    </span>
+                  )}
+                </div>
+                <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#c8ef70] text-[#103626] shadow-sm">
+                  <BadgeCheck size={14} strokeWidth={2.5}/>
+                </div>
+              </div>
+
+              {/* Bio & Identification Info */}
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-xl sm:text-2xl font-black leading-snug tracking-tight text-white truncate">
+                  {fullName || "Nama Mahasiswa"}
+                </h3>
+                <p className="font-mono text-xs font-bold text-[#c8ef70] tracking-wider mt-0.5">
+                  {studentId ? `NIM: ${studentId}` : "NIM: Belum diisi"}
+                </p>
+                <p className="mt-2 text-xs font-semibold text-white/90 leading-tight">
+                  {major || "Program Studi"}
+                </p>
+                <p className="text-[11px] text-[#b4d8c1] font-medium leading-tight">
+                  {university || "Universitas"} {angkatan ? `(Angkatan ${angkatan})` : ""}
+                </p>
+              </div>
+            </div>
+
+            {/* Bio Quote */}
+            {bio && (
+              <div className="relative mt-4 rounded-xl bg-white/[0.06] p-3 border border-white/10">
+                <p className="text-xs italic text-white/80 line-clamp-2 leading-relaxed">
+                  &ldquo;{bio}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {/* Bottom Card Footer: Barcode / QR & Contact */}
+            <div className="relative mt-5 pt-4 border-t border-white/10 flex items-end justify-between gap-4">
+              <div className="space-y-1 text-[11px] text-white/70">
+                <p className="truncate max-w-[200px]">✉️ {email}</p>
+                {phone && <p>📱 {phone}</p>}
+              </div>
+
+              {/* Simulated Micro QR / Security Seal */}
+              <div className="flex flex-col items-center">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/15 p-1 text-[#c8ef70] ring-1 ring-white/20">
+                  <QrCode size={24} strokeWidth={1.75} />
+                </div>
+                <span className="mt-1 text-[8px] font-mono text-white/50 tracking-widest">VERIFIED ID</span>
+              </div>
+            </div>
+
+            {/* Social Links on KTM */}
+            {(linkedin || github) && (
+              <div className="relative mt-4 flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                {linkedin && (
+                  <a
+                    href={linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/90 transition hover:bg-white/20"
+                  >
+                    <ExternalLink size={11} /> LinkedIn
+                  </a>
+                )}
+                {github && (
+                  <a
+                    href={github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/90 transition hover:bg-white/20"
+                  >
+                    <ExternalLink size={11} /> GitHub
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Security & System Info note card */}
+          <div className="rounded-3xl border border-[var(--line)] bg-white p-5 shadow-xs">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
+                <Shield size={16} />
+              </span>
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Kartu Identitas Terintegrasi</h4>
+                <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
+                  Foto dan data ini disinkronkan secara realtime dengan akun workspace ngampUS dan langsung terpasang di kartu KTM digitalmu.
+                </p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* ── LEFT COLUMN: EDIT FORM (On Mobile: ORDER-2 Bottom; On Desktop: ORDER-1 Left) ── */}
+        <form action={handleSubmit} className="order-2 lg:order-1 space-y-6">
 
           {/* Section: Upload & Edit Foto Profil */}
           <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
@@ -378,153 +523,6 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             </button>
           </div>
         </form>
-
-        {/* ── RIGHT COLUMN: DIGITAL KTM (KARTU TANDA MAHASISWA) ── */}
-        <aside className="lg:sticky lg:top-8 space-y-6">
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center gap-2">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#dff3e5] text-[var(--brand)]">
-                <IdCard size={15} strokeWidth={2.5}/>
-              </span>
-              <p className="text-xs font-black uppercase tracking-wider text-[var(--brand)]">KARTU MAHASISWA DIGITAL (KTM)</p>
-            </div>
-            <span className="rounded-full bg-[#d9ee72]/30 px-2 py-0.5 text-[10px] font-black text-[#103626]">LIVE PREVIEW</span>
-          </div>
-
-          {/* Premium Digital ID Card / KTM */}
-          <div className="relative overflow-hidden rounded-[2rem] border border-[#0f6849]/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-6 sm:p-7 text-white shadow-2xl shadow-[#0c2e20]/40">
-            {/* Holographic / Metallic background glow */}
-            <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#d9ee72]/15 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-[#0f6849]/40 blur-xl" />
-            
-            {/* Card Header */}
-            <div className="relative flex items-center justify-between border-b border-white/15 pb-4">
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/logo_ngampUS.png"
-                  alt="ngampUS Logo"
-                  width={28}
-                  height={28}
-                  className="h-7 w-7 object-contain drop-shadow"
-                />
-                <div>
-                  <span className="font-display block text-lg font-black tracking-tight leading-none text-white">
-                    ngamp<span className="text-[#c8ef70]">US</span>
-                  </span>
-                  <span className="text-[8px] font-black tracking-[0.2em] text-[#b4d8c1]">STUDENT DIGITAL PASS</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5 rounded-lg border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-2.5 py-1 text-[10px] font-black text-[#d8f89a]">
-                <Sparkles size={11} className="text-[#c8ef70]" /> AKTIF
-              </div>
-            </div>
-
-            {/* Photo & Main Details */}
-            <div className="relative mt-5 flex items-start gap-4">
-              {/* Photo Frame / Avatar */}
-              <div className="relative group shrink-0">
-                <div className="relative h-20 w-20 sm:h-22 sm:w-22 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#1b533c] to-[#2a7a58] ring-2 ring-[#c8ef70]/40 shadow-inner flex items-center justify-center">
-                  {avatarUrl ? (
-                    <img
-                      src={avatarUrl}
-                      alt={fullName}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-3xl font-black text-[#d9ee72]">
-                      {initial}
-                    </span>
-                  )}
-                </div>
-                <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#c8ef70] text-[#103626] shadow-sm">
-                  <BadgeCheck size={14} strokeWidth={2.5}/>
-                </div>
-              </div>
-
-              {/* Bio & Identification Info */}
-              <div className="min-w-0 flex-1">
-                <h3 className="font-display text-xl sm:text-2xl font-black leading-snug tracking-tight text-white truncate">
-                  {fullName || "Nama Mahasiswa"}
-                </h3>
-                <p className="font-mono text-xs font-bold text-[#c8ef70] tracking-wider mt-0.5">
-                  {studentId ? `NIM: ${studentId}` : "NIM: Belum diisi"}
-                </p>
-                <p className="mt-2 text-xs font-semibold text-white/90 leading-tight">
-                  {major || "Program Studi"}
-                </p>
-                <p className="text-[11px] text-[#b4d8c1] font-medium leading-tight">
-                  {university || "Universitas"} {angkatan ? `(Angkatan ${angkatan})` : ""}
-                </p>
-              </div>
-            </div>
-
-            {/* Bio Quote */}
-            {bio && (
-              <div className="relative mt-4 rounded-xl bg-white/[0.06] p-3 border border-white/10">
-                <p className="text-xs italic text-white/80 line-clamp-2 leading-relaxed">
-                  &ldquo;{bio}&rdquo;
-                </p>
-              </div>
-            )}
-
-            {/* Bottom Card Footer: Barcode / QR & Contact */}
-            <div className="relative mt-5 pt-4 border-t border-white/10 flex items-end justify-between gap-4">
-              <div className="space-y-1 text-[11px] text-white/70">
-                <p className="truncate max-w-[200px]">✉️ {email}</p>
-                {phone && <p>📱 {phone}</p>}
-              </div>
-
-              {/* Simulated Micro QR / Security Seal */}
-              <div className="flex flex-col items-center">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/15 p-1 text-[#c8ef70] ring-1 ring-white/20">
-                  <QrCode size={24} strokeWidth={1.75} />
-                </div>
-                <span className="mt-1 text-[8px] font-mono text-white/50 tracking-widest">VERIFIED ID</span>
-              </div>
-            </div>
-
-            {/* Social Links on KTM */}
-            {(linkedin || github) && (
-              <div className="relative mt-4 flex flex-wrap gap-2 pt-3 border-t border-white/10">
-                {linkedin && (
-                  <a
-                    href={linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/90 transition hover:bg-white/20"
-                  >
-                    <ExternalLink size={11} /> LinkedIn
-                  </a>
-                )}
-                {github && (
-                  <a
-                    href={github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-bold text-white/90 transition hover:bg-white/20"
-                  >
-                    <ExternalLink size={11} /> GitHub
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Security & System Info note card */}
-          <div className="rounded-3xl border border-[var(--line)] bg-white p-5 shadow-xs">
-            <div className="flex items-start gap-3">
-              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
-                <Shield size={16} />
-              </span>
-              <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Kartu Identitas Terintegrasi</h4>
-                <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
-                  Foto dan data ini disinkronkan secara realtime dengan akun workspace ngampUS dan langsung terpasang di kartu KTM digitalmu.
-                </p>
-              </div>
-            </div>
-          </div>
-        </aside>
       </div>
     </div>
   );

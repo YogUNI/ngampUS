@@ -255,15 +255,17 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
           >
             <Menu size={20} />
           </button>
-          <Link href="/dashboard" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em]">
+          <Link href="/dashboard" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em] leading-none">
             <Image
               src="/logo_ngampUS.png"
               alt="ngampUS Logo"
-              width={30}
-              height={30}
-              className="h-7 w-7 object-contain"
+              width={28}
+              height={28}
+              className="h-7 w-7 shrink-0 object-contain"
             />
-            ngamp<span className="text-[var(--brand)]">US</span>
+            <span className="inline-flex items-center">
+              ngamp<span className="text-[var(--brand)]">US</span>
+            </span>
           </Link>
         </div>
         <Link
@@ -380,21 +382,27 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
       </div>
 
       {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around border-t border-[#d8e2da] bg-[#f7faf5]/95 py-2 backdrop-blur-xl md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around border-t border-[#d8e2da] bg-[#f7faf5]/95 px-2 py-2 backdrop-blur-xl md:hidden">
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
           return (
             <Link
               key={href}
               href={href}
-              className={`flex flex-col items-center gap-0.5 px-2.5 py-1 text-[10px] font-extrabold transition ${
-                active ? "text-[var(--brand)]" : "text-[var(--muted)] hover:text-[#103626]"
+              className={`flex flex-col items-center justify-center gap-1 px-2 py-1 text-[10px] font-extrabold transition ${
+                active ? "text-[var(--brand)] font-black" : "text-[var(--muted)] hover:text-[#103626]"
               }`}
             >
-              <div className={`grid h-8 w-8 place-items-center rounded-xl transition ${active ? "bg-[#dff3e5] text-[var(--brand)] shadow-sm" : ""}`}>
+              <div
+                className={`grid h-8 w-8 place-items-center rounded-xl transition ${
+                  active
+                    ? "bg-[#dff3e5] text-[var(--brand)] shadow-xs"
+                    : "text-[var(--muted)]"
+                }`}
+              >
                 <Icon size={18} />
               </div>
-              <span>{label}</span>
+              <span className="leading-none">{label}</span>
             </Link>
           );
         })}

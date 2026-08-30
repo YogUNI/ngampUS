@@ -84,15 +84,124 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
           />
         ) : <div className="rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
           <div className="flex items-center justify-between"><div><h2 className="font-display text-xl font-extrabold">Daftar kegiatan</h2><p className="mt-1 text-sm text-[var(--muted)]">Kelola progres tanpa kehilangan konteks.</p></div><span className="rounded-full bg-[#f7f8f5] px-2.5 py-1 text-xs font-bold">{activities?.length || 0} item</span></div>
-          <div className="mt-5 space-y-2">{activities?.length ? activities.map((activity) => <article key={activity.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6] sm:flex-nowrap">
-            <form action={completeActivity}><input name="id" type="hidden" value={activity.id}/><button title="Tandai selesai" className="text-[var(--muted)] transition hover:text-[var(--brand)]">{activity.status === "selesai" ? <CheckCircle2 className="text-[var(--brand)]"/> : <Circle/>}</button></form>
-            <div className="min-w-0 flex-1"><p className={`font-bold ${activity.status === "selesai" ? "text-[var(--muted)] line-through" : ""}`}>{activity.judul}</p><p className="mt-1 text-xs text-[var(--muted)]">{activity.kategori} · {activity.deadline || "Tanpa deadline"}</p></div>
-            <span className={`order-3 rounded-lg px-2 py-1 text-xs font-bold sm:order-none ${categoryClass(activity.kategori)}`}>{activity.kategori}</span>
-            <span className={`order-4 rounded-lg px-2 py-1 text-xs font-bold sm:order-none ${statusClass(activity.status)}`}>{activity.status === "on_progress" ? "Berjalan" : activity.status === "belum_mulai" ? "Belum mulai" : "Selesai"}</span>
-            <form action={updateActivityStatus} className="order-5 flex items-center gap-2 sm:order-none"><input name="id" type="hidden" value={activity.id}/><select aria-label={`Status ${activity.judul}`} name="status" defaultValue={activity.status} className="min-w-[125px] rounded-lg border border-[var(--line)] bg-white px-2 py-1.5 text-xs font-semibold"><option value="belum_mulai">Belum mulai</option><option value="on_progress">Berjalan</option><option value="selesai">Selesai</option></select><button className="rounded-lg px-2.5 py-1.5 text-xs font-bold text-[var(--brand)] hover:bg-[#dcefe4]">Simpan</button></form>
-            <ActivityEditForm activity={activity} semesters={(semesters ?? []).map((semester) => ({ id: semester.id, name: semester.nama_semester }))} organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))} programs={mappedPrograms}/>
-            <ConfirmDeleteForm action={deleteActivity} id={activity.id} itemName={`kegiatan “${activity.judul}”`}/>
-          </article>) : <div className="py-14 text-center"><ListTodo className="mx-auto text-[var(--brand)]"/><p className="mt-3 font-bold">Belum ada kegiatan sesuai filter</p><p className="mt-1 text-sm text-[var(--muted)]">Tambah kegiatan baru atau ubah filter pencarian.</p></div>}</div>
+          <div className="mt-5 space-y-3">
+            {activities?.length ? (
+              activities.map((activity) => (
+                <article
+                  key={activity.id}
+                  className="flex flex-col gap-3 rounded-2xl border border-[var(--line)] bg-white p-4 transition hover:border-[#b9ddc6] sm:flex-row sm:items-center"
+                >
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    <form action={completeActivity} className="mt-0.5 shrink-0">
+                      <input name="id" type="hidden" value={activity.id} />
+                      <button
+                        title="Tandai selesai"
+                        className="text-[var(--muted)] transition hover:text-[var(--brand)]"
+                      >
+                        {activity.status === "selesai" ? (
+                          <CheckCircle2 className="text-[var(--brand)]" size={20} />
+                        ) : (
+                          <Circle size={20} />
+                        )}
+                      </button>
+                    </form>
+
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className={`font-bold text-sm sm:text-base leading-snug break-words ${
+                          activity.status === "selesai" ? "text-[var(--muted)] line-through" : ""
+                        }`}
+                      >
+                        {activity.judul}
+                      </p>
+                      <p className="mt-1 text-xs text-[var(--muted)] flex flex-wrap items-center gap-1.5">
+                        <span className="font-semibold">{activity.kategori}</span>
+                        <span>·</span>
+                        <span>{activity.deadline || "Tanpa deadline"}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 sm:hidden">
+                      <ActivityEditForm
+                        activity={activity}
+                        semesters={(semesters ?? []).map((semester) => ({
+                          id: semester.id,
+                          name: semester.nama_semester,
+                        }))}
+                        organizations={(organizations ?? []).map((organization) => ({
+                          id: organization.id,
+                          name: organization.nama_organisasi,
+                        }))}
+                        programs={mappedPrograms}
+                      />
+                      <ConfirmDeleteForm
+                        action={deleteActivity}
+                        id={activity.id}
+                        itemName={`kegiatan “${activity.judul}”`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Badges & Actions */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#f0f4f1] pt-2.5 sm:border-t-0 sm:pt-0">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className={`rounded-lg px-2.5 py-1 text-xs font-bold ${categoryClass(activity.kategori)}`}>
+                        {activity.kategori}
+                      </span>
+                      <span className={`rounded-lg px-2.5 py-1 text-xs font-bold ${statusClass(activity.status)}`}>
+                        {activity.status === "on_progress" ? "Berjalan" : activity.status === "belum_mulai" ? "Belum mulai" : "Selesai"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <form action={updateActivityStatus} className="flex items-center gap-1.5">
+                        <input name="id" type="hidden" value={activity.id} />
+                        <select
+                          aria-label={`Status ${activity.judul}`}
+                          name="status"
+                          defaultValue={activity.status}
+                          className="rounded-lg border border-[var(--line)] bg-white px-2 py-1 text-xs font-semibold outline-none"
+                        >
+                          <option value="belum_mulai">Belum mulai</option>
+                          <option value="on_progress">Berjalan</option>
+                          <option value="selesai">Selesai</option>
+                        </select>
+                        <button className="rounded-lg px-2 py-1 text-xs font-bold text-[var(--brand)] hover:bg-[#dcefe4] transition">
+                          Simpan
+                        </button>
+                      </form>
+
+                      <div className="hidden sm:flex sm:items-center sm:gap-1">
+                        <ActivityEditForm
+                          activity={activity}
+                          semesters={(semesters ?? []).map((semester) => ({
+                            id: semester.id,
+                            name: semester.nama_semester,
+                          }))}
+                          organizations={(organizations ?? []).map((organization) => ({
+                            id: organization.id,
+                            name: organization.nama_organisasi,
+                          }))}
+                          programs={mappedPrograms}
+                        />
+                        <ConfirmDeleteForm
+                          action={deleteActivity}
+                          id={activity.id}
+                          itemName={`kegiatan “${activity.judul}”`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="py-14 text-center">
+                <ListTodo className="mx-auto text-[var(--brand)]" />
+                <p className="mt-3 font-bold">Belum ada kegiatan sesuai filter</p>
+                <p className="mt-1 text-sm text-[var(--muted)]">Tambah kegiatan baru atau ubah filter pencarian.</p>
+              </div>
+            )}
+          </div>
         </div>}
       </div>
     </section>

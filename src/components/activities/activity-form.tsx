@@ -81,8 +81,8 @@ export function ActivityForm({
   }, []);
 
   const modalContent = open ? (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="relative my-auto w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-2xl">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 overflow-y-auto">
+      <div className="relative w-full max-w-xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto rounded-t-[2rem] sm:rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-2xl pb-24 sm:pb-7">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -90,7 +90,7 @@ export function ActivityForm({
               <span className="grid h-9 w-9 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">
                 <Plus size={18}/>
               </span>
-              <h2 className="font-display text-2xl font-extrabold">Jadwalkan / Catat Kegiatan</h2>
+              <h2 className="font-display text-xl sm:text-2xl font-extrabold">Jadwalkan / Catat Kegiatan</h2>
             </div>
             <p className="mt-1 text-xs text-[var(--muted)]">
               Pilih tipe kegiatan agar form menyesuaikan kebutuhanmu secara otomatis.
