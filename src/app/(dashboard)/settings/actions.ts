@@ -14,6 +14,7 @@ export async function updateProfile(formData: FormData) {
     bio:        z.string().trim().max(280).optional().nullable(),
     linkedin:   z.string().trim().max(300).optional().nullable(),
     github:     z.string().trim().max(300).optional().nullable(),
+    avatar_url: z.string().optional().nullable(),
   }).parse({
     full_name:  formData.get("full_name"),
     university: formData.get("university") || null,
@@ -24,6 +25,7 @@ export async function updateProfile(formData: FormData) {
     bio:        formData.get("bio") || null,
     linkedin:   formData.get("linkedin") || null,
     github:     formData.get("github") || null,
+    avatar_url: formData.get("avatar_url") || null,
   });
 
   const supabase = await createClient();

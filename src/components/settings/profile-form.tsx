@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useRef, useTransition } from "react";
 import Image from "next/image";
 import {
   BadgeCheck,
@@ -19,9 +19,12 @@ import {
   User,
   UserRound,
   IdCard,
+  Trash2,
+  Image as ImageIcon,
 } from "lucide-react";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
+import { ImageCropModal } from "@/components/settings/image-crop-modal";
 
 type Profile = {
   full_name?: string | null;
@@ -40,6 +43,12 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
 
+  // Photo & Crop states
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(profile?.avatar_url || null);
+  const [rawImageSrc, setRawImageSrc] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   // Live preview state synced with inputs
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [university, setUniversity] = useState(profile?.university || "");
@@ -53,11 +62,53 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
 
   const initial = (fullName || email || "M").slice(0, 1).toUpperCase();
 
+  // Handle file select
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Harap pilih file gambar (JPG, PNG, WebP).", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Ukuran file maksimal 5MB.", "error");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setRawImageSrc(reader.result as string);
+      setIsCropModalOpen(true);
+    };
+    reader.readAsDataURL(file);
+
+    // reset input value so re-selecting same file triggers change
+    e.target.value = "";
+  };
+
+  // Crop save handler
+  const handleSaveCroppedImage = (croppedDataUrl: string) => {
+    setAvatarUrl(croppedDataUrl);
+    showToast("Foto profil disesuaikan! Klik 'Simpan Perubahan' untuk mengunci.", "success");
+  };
+
+  const handleRemovePhoto = () => {
+    setAvatarUrl(null);
+    showToast("Foto profil dihapus.", "success");
+  };
+
   async function handleSubmit(formData: FormData) {
     startTransition(async () => {
       try {
+        if (avatarUrl) {
+          formData.set("avatar_url", avatarUrl);
+        } else {
+          formData.delete("avatar_url");
+        }
         await updateProfile(formData);
-        showToast("Profil berhasil disimpan! ✨", "success");
+        showToast("Profil dan foto berhasil disimpan! ✨", "success");
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : "Gagal menyimpan profil.";
         showToast(msg, "error");
@@ -68,12 +119,31 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
 
+      {/* ── Hidden File Input ── */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png, image/jpeg, image/webp"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
+      {/* ── Image Crop / Adjustment Modal ── */}
+      <ImageCropModal
+        isOpen={isCropModalOpen}
+        imageSrc={rawImageSrc}
+        onClose={() => setIsCropModalOpen(false)}
+        onSave={handleSaveCroppedImage}
+      />
+
       {/* ── Page Header ── */}
       <header className="mb-7">
         <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERSONAL WORKSPACE</p>
-        <h1 className="font-display mt-2 text-3xl sm:text-4xl font-black tracking-tight">Profil & Identitas Mahasiswa</h1>
+        <h1 className="font-display mt-2 text-3xl sm:text-4xl font-black tracking-tight text-[var(--ink)]">
+          Profil & Identitas Mahasiswa
+        </h1>
         <p className="mt-1.5 text-sm text-[var(--muted)]">
-          Kelola data pribadi dan lihat kartu KTM digital interaktifmu secara langsung.
+          Kelola data pribadi, upload & sesuaikan foto profil, serta nikmati kartu KTM digital interaktif.
         </p>
       </header>
 
@@ -83,7 +153,67 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         {/* ── LEFT COLUMN: EDIT FORM ── */}
         <form action={handleSubmit} className="space-y-6">
 
-          {/* Section 1: Identitas */}
+          {/* Section: Upload & Edit Foto Profil */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)]">
+                <Camera size={18} />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Foto Profil</h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Sesuaikan posisi, zoom, dan rotasi agar pas di kartu KTM.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-5">
+              {/* Photo Preview Thumbnail */}
+              <div className="relative group shrink-0">
+                <div className="relative h-20 w-20 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#103626] to-[#246145] ring-2 ring-[var(--brand)]/30 shadow-inner flex items-center justify-center">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt="Avatar"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl font-black text-[#d9ee72]">
+                      {initial}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95"
+                >
+                  <Camera size={15} />
+                  {avatarUrl ? "Ganti & Edit Foto" : "Upload Foto Baru"}
+                </button>
+
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    className="flex items-center gap-1.5 rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3.5 py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95"
+                  >
+                    <Trash2 size={14} />
+                    Hapus Foto
+                  </button>
+                )}
+              </div>
+            </div>
+            <p className="mt-3 text-[11px] text-[var(--muted)]">
+              Format: JPG, PNG, atau WebP (maks. 5MB). Kamu bisa zoom & geser posisi setelah memilih foto.
+            </p>
+          </div>
+
+          {/* Section: Identitas */}
           <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
             <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
               <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)]">
@@ -186,7 +316,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             </div>
           </div>
 
-          {/* Section 2: Social Links */}
+          {/* Section: Social Links */}
           <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
             <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
               <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#e8e1fa] text-[#5c3a9c]">
@@ -267,9 +397,9 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#d9ee72]/15 blur-2xl" />
             <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-[#0f6849]/40 blur-xl" />
             
-            {/* Card Chip & Header */}
+            {/* Card Header */}
             <div className="relative flex items-center justify-between border-b border-white/15 pb-4">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
                 <Image
                   src="/logo_ngampUS.png"
                   alt="ngampUS Logo"
@@ -293,8 +423,18 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             <div className="relative mt-5 flex items-start gap-4">
               {/* Photo Frame / Avatar */}
               <div className="relative group shrink-0">
-                <div className="grid h-20 w-20 sm:h-22 sm:w-22 place-items-center rounded-2xl bg-gradient-to-tr from-[#1b533c] to-[#2a7a58] text-3xl font-black text-[#d9ee72] shadow-inner ring-2 ring-[#c8ef70]/40">
-                  {initial}
+                <div className="relative h-20 w-20 sm:h-22 sm:w-22 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#1b533c] to-[#2a7a58] ring-2 ring-[#c8ef70]/40 shadow-inner flex items-center justify-center">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={fullName}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-3xl font-black text-[#d9ee72]">
+                      {initial}
+                    </span>
+                  )}
                 </div>
                 <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#c8ef70] text-[#103626] shadow-sm">
                   <BadgeCheck size={14} strokeWidth={2.5}/>
@@ -379,7 +519,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
               <div>
                 <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Kartu Identitas Terintegrasi</h4>
                 <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
-                  Data ini disinkronkan secara realtime dengan akun workspace ngampUS dan siap digunakan untuk laporan keaktifan organisasi maupun evaluasi semester.
+                  Foto dan data ini disinkronkan secara realtime dengan akun workspace ngampUS dan langsung terpasang di kartu KTM digitalmu.
                 </p>
               </div>
             </div>
