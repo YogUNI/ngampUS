@@ -527,7 +527,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   );
 }
 
-// ── Reusable Field Wrapper dengan Indikator Ikon Edit Pensil ──
+// ── Reusable Field Wrapper dengan Tombol Edit yang Interaktif & Bisa Diklik ──
 function FormField({
   label,
   icon,
@@ -541,20 +541,38 @@ function FormField({
   isEditable?: boolean;
   children: React.ReactNode;
 }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleFocusInput = () => {
+    if (!containerRef.current) return;
+    const target = containerRef.current.querySelector("input, textarea") as HTMLInputElement | HTMLTextAreaElement | null;
+    if (target && !target.disabled) {
+      target.focus();
+    }
+  };
+
   return (
-    <div className={`block text-sm font-bold text-[var(--ink)] ${className}`}>
-      <span className="flex items-center justify-between gap-1.5 mb-1.5">
-        <span className="flex items-center gap-1.5">
+    <div ref={containerRef} className={`block text-sm font-bold text-[var(--ink)] ${className}`}>
+      <div className="flex items-center justify-between gap-1.5 mb-1.5">
+        <label
+          onClick={handleFocusInput}
+          className="flex items-center gap-1.5 cursor-pointer select-none"
+        >
           {icon && <span className="text-[var(--muted)]">{icon}</span>}
           {label}
-        </span>
+        </label>
         {isEditable && (
-          <span className="flex items-center gap-1 text-[10px] font-semibold text-[var(--muted)] opacity-70">
-            <Pencil size={11} className="text-[var(--brand)]" />
-            Edit
-          </span>
+          <button
+            type="button"
+            onClick={handleFocusInput}
+            className="group flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-bold text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)] transition active:scale-90"
+            title={`Edit ${label}`}
+          >
+            <Pencil size={11} className="text-[var(--brand)] transition group-hover:scale-110" />
+            <span>Edit</span>
+          </button>
         )}
-      </span>
+      </div>
       <div className="relative [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-[#fcfdfb] [&_input]:px-3.5 [&_input]:py-2.5 [&_input]:text-sm [&_input]:outline-none [&_input]:transition [&_input]:focus:border-[var(--brand)] [&_input]:focus:bg-white [&_input]:focus:ring-2 [&_input]:focus:ring-[var(--brand)]/10 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-[#fcfdfb] [&_textarea]:px-3.5 [&_textarea]:py-2.5 [&_textarea]:text-sm [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:focus:border-[var(--brand)] [&_textarea]:focus:bg-white [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-[var(--brand)]/10">
         {children}
       </div>
