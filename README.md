@@ -1,6 +1,6 @@
 <div align="center">
 
-# nGampUS
+# ngampUS
 
 ### Your campus command center
 
@@ -17,15 +17,15 @@ Untuk handoff ke AI agent atau maintainer baru, baca [Project Context for Antigr
 
 <br/>
 
-![Preview nGampUS](./public/ngampus-preview.svg)
+![Preview ngampUS](./public/ngampus-preview.svg)
 
 </div>
 
 ---
 
-## Tentang nGampUS
+## Tentang ngampUS
 
-nGampUS bukan sekadar to-do list. Aplikasi ini dibuat sebagai **campus atlas**: satu tempat untuk menangkap semua komitmen mahasiswa, menautkannya dengan semester dan organisasi, lalu mengubahnya menjadi fokus harian yang lebih jelas.
+ngampUS bukan sekadar to-do list. Aplikasi ini dibuat sebagai **campus atlas**: satu tempat untuk menangkap semua komitmen mahasiswa, menautkannya dengan semester dan organisasi, lalu mengubahnya menjadi fokus harian yang lebih jelas.
 
 Desainnya memakai konsep **Campus Atlas / Campus Console**—nuansa hijau tua, mint, dan papan fokus yang membuat data terasa seperti peta kerja personal, bukan tabel administrasi.
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, createContext, useContext } from "react";
 import {
   ArrowUpRight, BarChart3, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
@@ -45,15 +46,22 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
       <div className="flex items-center justify-between px-1">
         <Link
           href="/dashboard"
-          className={`flex items-center gap-3 overflow-hidden ${collapsed ? "justify-center" : ""}`}
+          className={`flex items-center gap-2.5 overflow-hidden ${collapsed ? "justify-center" : ""}`}
         >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#103626] font-display text-base font-black text-[#c8ef70] shadow-[3px_3px_0_#c8ef70]">
-            n
-          </span>
+          <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#103626] p-1.5 shadow-[2px_2px_0_#c8ef70]">
+            <Image
+              src="/logo_ngampUS.png"
+              alt="ngampUS Logo"
+              width={26}
+              height={26}
+              className="object-contain"
+              priority
+            />
+          </div>
           {!collapsed && (
             <span>
               <span className="font-display block text-2xl font-black tracking-[-.07em]">
-                nGamp<span className="text-[var(--brand)]">US</span>
+                ngamp<span className="text-[var(--brand)]">US</span>
               </span>
               <span className="mt-0.5 block text-[9px] font-black tracking-[.16em] text-[var(--muted)]">
                 CAMPUS CONSOLE
@@ -250,8 +258,16 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
             <Menu size={20} />
           </button>
           <Link href="/dashboard" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em]">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#103626] text-xs text-[#c8ef70] shadow-[2px_2px_0_#c8ef70]">n</span>
-            nGamp<span className="text-[var(--brand)]">US</span>
+            <div className="relative grid h-7 w-7 place-items-center rounded-lg bg-[#103626] p-1 shadow-[2px_2px_0_#c8ef70]">
+              <Image
+                src="/logo_ngampUS.png"
+                alt="ngampUS Logo"
+                width={20}
+                height={20}
+                className="object-contain"
+              />
+            </div>
+            ngamp<span className="text-[var(--brand)]">US</span>
           </Link>
         </div>
         <Link
@@ -281,9 +297,17 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
         >
           <div className="flex items-center justify-between border-b border-[#d8e2da] pb-4">
             <Link href="/dashboard" className="flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#103626] font-display text-sm font-black text-[#c8ef70]">n</span>
+              <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-[#103626] p-1.5 shadow-[2px_2px_0_#c8ef70]">
+                <Image
+                  src="/logo_ngampUS.png"
+                  alt="ngampUS Logo"
+                  width={22}
+                  height={22}
+                  className="object-contain"
+                />
+              </div>
               <div>
-                <span className="font-display block text-xl font-black tracking-[-.06em]">nGamp<span className="text-[var(--brand)]">US</span></span>
+                <span className="font-display block text-xl font-black tracking-[-.06em]">ngamp<span className="text-[var(--brand)]">US</span></span>
                 <span className="block text-[8px] font-black tracking-[.16em] text-[var(--muted)]">CAMPUS CONSOLE</span>
               </div>
             </Link>

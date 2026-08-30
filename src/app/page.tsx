@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Check, CircleDotDashed, Clock3, Compass, Layers3, MoveUpRight, Target, Zap, Shield } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -31,8 +32,20 @@ export default function Home() {
 
         {/* Nav */}
         <nav className="hero-stagger-1 relative z-20 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/15 bg-white/[.06] px-4 py-3 backdrop-blur-xl sm:px-5">
-          <Link href="/" className="font-display text-xl font-black tracking-[-.06em]">
-            nGamp<span className="text-[#c8ef70]">US</span>
+          <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-black tracking-[-.06em]">
+            <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-white/10 p-1.5 ring-1 ring-white/20">
+              <Image
+                src="/logo_ngampUS.png"
+                alt="ngampUS Logo"
+                width={22}
+                height={22}
+                className="object-contain"
+                priority
+              />
+            </div>
+            <span>
+              ngamp<span className="text-[#c8ef70]">US</span>
+            </span>
           </Link>
           <div className="flex items-center gap-1.5 text-sm font-bold">
             <Link href="/login" className="hidden rounded-full px-4 py-2 text-[#c9dbce] hover:bg-white/10 hover:text-white sm:block">
@@ -170,7 +183,7 @@ export default function Home() {
               Bukan cuma to-do list.<br/>Ini peta hidup kampusmu.
             </h2>
             <p className="mt-6 max-w-sm leading-7 text-[#64746a]">
-              Kamu tidak perlu mengingat semuanya. Cukup beri konteks, lalu nGampUS membantu memperlihatkan arah berikutnya.
+              Kamu tidak perlu mengingat semuanya. Cukup beri konteks, lalu ngampUS membantu memperlihatkan arah berikutnya.
             </p>
             <Link href="/register" className="mt-8 inline-flex items-center gap-2 rounded-xl border border-[#c0d9c7] bg-[#f0f9f2] px-4 py-3 font-extrabold text-[#0f6849] transition hover:bg-[#dff3e5] hover:border-[#0f6849]">
               Bangun peta pertamamu <MoveUpRight size={17}/>
@@ -237,8 +250,19 @@ export default function Home() {
       {/* ── FOOTER ───────────────────────────────────────── */}
       <footer className="border-t border-[#d3ddd4] bg-[#f6f8f1]">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-sm text-[#65746a] sm:px-8 lg:px-12">
-          <Link href="/" className="font-display text-xl font-black tracking-[-.06em] text-[#103626]">
-            nGamp<span className="text-[#0f6849]">US</span>
+          <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-black tracking-[-.06em] text-[#103626]">
+            <div className="relative grid h-7 w-7 place-items-center rounded-lg bg-[#103626] p-1 shadow-[1.5px_1.5px_0_#c8ef70]">
+              <Image
+                src="/logo_ngampUS.png"
+                alt="ngampUS Logo"
+                width={18}
+                height={18}
+                className="object-contain"
+              />
+            </div>
+            <span>
+              ngamp<span className="text-[#0f6849]">US</span>
+            </span>
           </Link>
           <span>Personal workspace for campus life.</span>
           <div className="flex gap-4 font-bold">

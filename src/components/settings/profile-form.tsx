@@ -58,7 +58,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERSONAL WORKSPACE</p>
         <h1 className="font-display mt-2 text-4xl font-black tracking-tight">Profil & pengaturan</h1>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          Data ini membuat workspace nGampUS benar-benar terasa milikmu.
+          Data ini membuat workspace ngampUS benar-benar terasa milikmu.
         </p>
       </header>
 
@@ -79,7 +79,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 <Sparkles size={10} /> Campus Passport
               </span>
               <h2 className="font-display mt-1.5 text-2xl font-extrabold">
-                {profile?.full_name || "Mahasiswa nGampUS"}
+                {profile?.full_name || "Mahasiswa ngampUS"}
               </h2>
               <p className="mt-0.5 text-sm text-white/70">{email}</p>
               <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-white/90">

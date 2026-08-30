@@ -3,8 +3,8 @@ import { ToastProvider } from "@/components/ui/toast-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "nGampUS | Your campus command center",
-  description: "Personal activity, organization, and program tracker for students.",
+  title: "ngampUS | Your campus command center",
+  description: "Bantu mahasiswa menjaga ritme kuliah, tugas, organisasi, dan ambisi dalam satu sistem yang tenang.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
