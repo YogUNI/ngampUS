@@ -13,6 +13,8 @@ _Personal workspace untuk mahasiswa aktif yang ingin menjaga kuliah, organisasi,
 
 [Mulai lokal](#menjalankan-secara-lokal) · [Fitur](#fitur-utama) · [Setup Supabase](#setup-supabase) · [Arsitektur](#arsitektur)
 
+Untuk handoff ke AI agent atau maintainer baru, baca [Project Context for Antigravity](./docs/ANTIGRAVITY_PROJECT_CONTEXT.md).
+
 <br/>
 
 ![Preview nGampUS](./public/ngampus-preview.svg)
