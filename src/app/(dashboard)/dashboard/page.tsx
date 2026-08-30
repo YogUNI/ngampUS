@@ -73,44 +73,62 @@ export default async function DashboardPage() {
     .eq("deadline_status", "terjadwal")
     .lte("deadline", threeDaysFromNow)
     .order("deadline", { ascending: true })
-    .limit(5);
-
-  let todayQuery = supabase
-    .from("activities")
-    .select("id,judul,tanggal_mulai,jam_pelaksanaan,kategori,jenis_item,status")
-    .eq("tanggal_mulai", today)
-    .order("jam_pelaksanaan", { ascending: true })
     .limit(4);
 
-  let activeCountQuery = supabase.from("activities").select("*", { count: "exact", head: true }).neq("status", "selesai");
-  let completeCountQuery = supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "selesai");
-  let overdueCountQuery = supabase.from("activities").select("*", { count: "exact", head: true })
+  let activeCountQuery = supabase
+    .from("activities")
+    .select("*", { count: "exact", head: true })
+    .neq("status", "selesai");
+
+  let completeCountQuery = supabase
+    .from("activities")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "selesai");
+
+  let overdueCountQuery = supabase
+    .from("activities")
+    .select("*", { count: "exact", head: true })
     .neq("status", "selesai")
-    .eq("deadline_status", "terjadwal")
     .lt("deadline", today);
 
   if (semesterId) {
     upcomingQuery = upcomingQuery.eq("semester_id", semesterId);
-    todayQuery = todayQuery.eq("semester_id", semesterId);
     activeCountQuery = activeCountQuery.eq("semester_id", semesterId);
     completeCountQuery = completeCountQuery.eq("semester_id", semesterId);
     overdueCountQuery = overdueCountQuery.eq("semester_id", semesterId);
   }
 
+  // Today's schedule
+  let todayQuery = supabase
+    .from("activities")
+    .select("id,judul,kategori,jenis_item,jam_pelaksanaan,deadline,prioritas")
+    .neq("status", "selesai")
+    .or(`deadline.eq.${today},tanggal_mulai.eq.${today}`)
+    .order("jam_pelaksanaan", { ascending: true })
+    .limit(4);
+
+  if (semesterId) todayQuery = todayQuery.eq("semester_id", semesterId);
+
   const [
-    { data: upcoming },
-    { data: todayItems },
+    { data: upcomingActivities },
+    { data: todayActivities },
     { count: activeCount },
     { count: completeCount },
     { count: overdueCount },
-  ] = await Promise.all([upcomingQuery, todayQuery, activeCountQuery, completeCountQuery, overdueCountQuery]);
+  ] = await Promise.all([
+    upcomingQuery,
+    todayQuery,
+    activeCountQuery,
+    completeCountQuery,
+    overdueCountQuery,
+  ]);
 
-  const upcomingItems = upcoming ?? [];
-  const todaySchedule = todayItems ?? [];
+  const upcomingItems = upcomingActivities ?? [];
+  const todaySchedule = todayActivities ?? [];
   const totalItems = (activeCount ?? 0) + (completeCount ?? 0);
   const completionRate = totalItems > 0 ? Math.round(((completeCount ?? 0) / totalItems) * 100) : 0;
 
-  // Semester progress
+  // Semester progress calculation
   let semesterProgress = 0;
   if (activeSemester?.tanggal_mulai && activeSemester?.tanggal_selesai) {
     const start = differenceInCalendarDays(parseISO(activeSemester.tanggal_mulai), new Date());
@@ -139,17 +157,17 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 lg:px-10 overflow-hidden sm:overflow-visible">
+    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 lg:px-10">
 
       {/* ── Hero Header ── */}
       <header className="dashboard-hero">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)] opacity-70">{dateHeading}</p>
-            <h1 className="font-display mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+            <h1 className="font-display mt-2 text-2xl font-black tracking-tight sm:text-4xl">
               {greeting}, <span className="text-[var(--brand)]">{firstName}.</span> 👋
             </h1>
-            <p className="mt-2 text-sm text-[var(--muted)]">
+            <p className="mt-2 text-xs sm:text-sm text-[var(--muted)]">
               {(overdueCount ?? 0) > 0
                 ? `⚠️ Ada ${overdueCount} item lewat deadline — yuk diselesaikan dulu.`
                 : todaySchedule.length > 0
@@ -163,7 +181,7 @@ export default async function DashboardPage() {
           {/* Quick add button */}
           <Link
             href="/kegiatan"
-            className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-[#1f6a48]/15 hover:bg-[var(--brand-dark)]"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[#1f6a48]/15 hover:bg-[var(--brand-dark)] transition active:scale-95"
           >
             <Plus size={16} /> Tambah kegiatan
           </Link>
@@ -174,7 +192,7 @@ export default async function DashboardPage() {
       {!activeSemester && (
         <Link
           href="/semester"
-          className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-[#ead8a3] bg-[#fff9e6] px-4 py-3 text-sm text-[#765800]"
+          className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-[#ead8a3] bg-[#fff9e6] p-4 text-xs sm:text-sm text-[#765800]"
         >
           <span><b>Belum ada semester aktif.</b> Semua kegiatanmu ditampilkan bersama.</span>
           <span className="shrink-0 font-bold">Pilih semester →</span>
@@ -183,11 +201,11 @@ export default async function DashboardPage() {
 
       {/* ── Overdue Alert ── */}
       {(overdueCount ?? 0) > 0 && (
-        <div className="mt-5 flex items-center gap-3 rounded-2xl border border-[#f8c6b9] bg-[#fff4f2] px-4 py-3">
+        <div className="mt-5 flex items-center gap-3 rounded-2xl border border-[#f8c6b9] bg-[#fff4f2] p-4">
           <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#feece7] text-[#c53e1c]">
             <AlertTriangle size={16} strokeWidth={2.5} />
           </span>
-          <p className="flex-1 text-sm font-semibold text-[#a33218]">
+          <p className="min-w-0 flex-1 text-xs sm:text-sm font-semibold text-[#a33218]">
             <b>{overdueCount} kegiatan</b> sudah melewati deadline tanpa ditandai selesai.
           </p>
           <Link href={`/kegiatan${semesterFilter}`} className="shrink-0 text-xs font-black text-[#b93c21] hover:underline">
@@ -231,21 +249,21 @@ export default async function DashboardPage() {
           <Link
             key={action.label}
             href={action.href}
-            className="group surface-lift flex flex-col gap-3 rounded-2xl border border-[var(--line)] bg-white p-4 transition hover:border-[#b9ddc6]"
+            className="group surface-lift flex flex-col gap-2.5 rounded-2xl border border-[var(--line)] bg-white p-3.5 sm:p-4 transition hover:border-[#b9ddc6]"
           >
-            <span className={`grid h-10 w-10 place-items-center rounded-xl transition ${action.color}`}>
+            <span className={`grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl transition ${action.color}`}>
               {action.icon}
             </span>
-            <div>
-              <p className="text-sm font-black text-[var(--ink)]">{action.label}</p>
-              <p className="text-xs text-[var(--muted)]">{action.sub}</p>
+            <div className="min-w-0">
+              <p className="truncate text-xs sm:text-sm font-black text-[var(--ink)]">{action.label}</p>
+              <p className="truncate text-[11px] sm:text-xs text-[var(--muted)]">{action.sub}</p>
             </div>
           </Link>
         ))}
       </section>
 
       {/* ── Stats Row ── */}
-      <section className="mt-5 grid gap-4 sm:grid-cols-3">
+      <section className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         <StatCard
           icon={<CalendarDays size={18} />}
           label="Kegiatan aktif"
@@ -271,64 +289,68 @@ export default async function DashboardPage() {
       </section>
 
       {/* ── Main Content Grid ── */}
-      <section className="mt-5 grid gap-5 lg:grid-cols-[1.4fr_.6fr]">
+      <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_.6fr]">
 
         {/* Left Column */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col min-w-0 gap-5">
 
           {/* Today's Schedule */}
-          <div className="surface-lift rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">HARI INI</p>
-                <h2 className="font-display mt-1 text-xl font-extrabold">Agenda & jadwal hari ini</h2>
+          <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+              <div className="min-w-0">
+                <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)]">HARI INI</p>
+                <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+                  Agenda & jadwal hari ini
+                </h2>
               </div>
-              <Link href={`/kegiatan?view=calendar${semesterId ? `&semester_id=${semesterId}` : ""}`} className="inline-flex items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
+              <Link href={`/kegiatan?view=calendar${semesterId ? `&semester_id=${semesterId}` : ""}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
                 Kalender <ArrowUpRight size={14} />
               </Link>
             </div>
 
-            <div className="mt-4 space-y-2.5">
+            <div className="mt-3.5 space-y-2.5">
               {todaySchedule.length ? (
                 todaySchedule.map((item) => (
-                  <article key={item.id} className="flex items-center gap-3.5 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6]">
-                    <span className="text-xl">{categoryEmoji[item.kategori] ?? "📎"}</span>
+                  <article key={item.id} className="flex items-center gap-3 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6]">
+                    <span className="text-lg shrink-0">{categoryEmoji[item.kategori] ?? "📎"}</span>
                     <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-sm font-bold text-[var(--ink)]">{item.judul}</h3>
-                      <p className="text-xs text-[var(--muted)]">
+                      <h3 className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{item.judul}</h3>
+                      <p className="text-[11px] sm:text-xs text-[var(--muted)] truncate">
                         {item.jam_pelaksanaan ? `🕐 ${item.jam_pelaksanaan}` : "Sepanjang hari"} · {item.kategori}
                       </p>
                     </div>
-                    <span className={`rounded-lg px-2 py-1 text-[10px] font-black uppercase tracking-wide ${jenisColor[item.jenis_item] ?? "bg-[#f7f8f5] text-[var(--muted)]"}`}>
+                    <span className={`shrink-0 rounded-lg px-2 py-1 text-[10px] font-black uppercase tracking-wide ${jenisColor[item.jenis_item] ?? "bg-[#f7f8f5] text-[var(--muted)]"}`}>
                       {item.jenis_item}
                     </span>
                   </article>
                 ))
               ) : (
-                <div className="rounded-xl bg-[#f7f8f5] px-5 py-8 text-center">
+                <div className="rounded-xl bg-[#f7f8f5] px-4 py-7 text-center">
                   <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
                     <Sparkles size={17} />
                   </div>
-                  <p className="mt-2.5 text-sm font-bold">Tidak ada agenda hari ini</p>
-                  <p className="mt-1 text-xs text-[var(--muted)]">Waktu yang baik untuk merencanakan ke depan.</p>
+                  <p className="mt-2 text-xs sm:text-sm font-bold">Tidak ada agenda hari ini</p>
+                  <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)]">Waktu yang baik untuk merencanakan ke depan.</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Upcoming Deadlines */}
-          <div className="surface-lift rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERLU PERHATIAN</p>
-                <h2 className="font-display mt-1 text-xl font-extrabold">Deadline & komitmen mendesak</h2>
+          <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+              <div className="min-w-0">
+                <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERLU PERHATIAN</p>
+                <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+                  Deadline & komitmen mendesak
+                </h2>
               </div>
-              <Link href={`/kegiatan${semesterFilter}`} className="inline-flex items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
+              <Link href={`/kegiatan${semesterFilter}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
                 Lihat semua <ArrowUpRight size={14} />
               </Link>
             </div>
 
-            <div className="mt-4 space-y-2.5">
+            <div className="mt-3.5 space-y-2.5">
               {upcomingItems.length ? (
                 upcomingItems.map((item) => {
                   const days = differenceInCalendarDays(parseISO(item.deadline!), new Date());
@@ -337,7 +359,7 @@ export default async function DashboardPage() {
                   return (
                     <article
                       key={item.id}
-                      className={`flex items-center gap-3.5 rounded-xl border p-3.5 ${
+                      className={`flex items-center gap-3 rounded-xl border p-3 ${
                         isOverdue
                           ? "border-[#f8c6b9] bg-[#fff9f8]"
                           : isUrgent
@@ -351,14 +373,14 @@ export default async function DashboardPage() {
                         }`}
                       />
                       <div className="min-w-0 flex-1">
-                        <h3 className="truncate text-sm font-bold">{item.judul}</h3>
-                        <p className="mt-0.5 text-xs text-[var(--muted)]">
+                        <h3 className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{item.judul}</h3>
+                        <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)] truncate">
                           {categoryEmoji[item.kategori] ?? "📎"} {item.kategori} · {item.deadline}
                           {item.jam_deadline ? ` · ${item.jam_deadline}` : ""}
                         </p>
                       </div>
                       <span
-                        className={`shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-black ${
+                        className={`shrink-0 rounded-lg px-2 py-1 text-[11px] font-black ${
                           isOverdue
                             ? "bg-[#feece7] text-[#b93c21]"
                             : days === 0
@@ -374,12 +396,12 @@ export default async function DashboardPage() {
                   );
                 })
               ) : (
-                <div className="rounded-xl bg-[#f7f8f5] px-5 py-8 text-center">
+                <div className="rounded-xl bg-[#f7f8f5] px-4 py-7 text-center">
                   <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
                     <Target size={17} />
                   </div>
-                  <p className="mt-2.5 text-sm font-bold">Tidak ada deadline dalam 3 hari ke depan</p>
-                  <p className="mt-1 text-xs text-[var(--muted)]">Great job! Kamu sudah on track.</p>
+                  <p className="mt-2 text-xs sm:text-sm font-bold">Tidak ada deadline dalam 3 hari ke depan</p>
+                  <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)]">Great job! Kamu sudah on track.</p>
                 </div>
               )}
             </div>
@@ -387,21 +409,21 @@ export default async function DashboardPage() {
         </div>
 
         {/* Right Column */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col min-w-0 gap-5">
 
           {/* Weekly Pulse / Motivation */}
-          <aside className="surface-lift flex flex-col justify-between rounded-2xl bg-[#173f2c] p-6 text-white">
+          <aside className="surface-lift min-w-0 flex flex-col justify-between rounded-2xl bg-[#173f2c] p-5 sm:p-6 text-white">
             <div>
               <Zap className="text-[#c8ef70]" size={22} />
-              <p className="mt-6 text-xs font-black uppercase tracking-widest text-[#b4d8c1]">Weekly Pulse</p>
-              <h2 className="font-display mt-2 text-xl font-extrabold leading-tight">
+              <p className="mt-4 text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#b4d8c1]">Weekly Pulse</p>
+              <h2 className="font-display mt-1.5 text-lg sm:text-xl font-extrabold leading-snug">
                 {(overdueCount ?? 0) > 0
                   ? `${overdueCount} tugas lewat tenggat — butuh perhatianmu sekarang.`
                   : (activeCount ?? 0) > 0
                   ? "Ritme akademikmu berjalan baik. Pertahankan momentum! 🔥"
                   : "Semua ambisi besar dimulai dari langkah kecil pertama."}
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#c7dbce]">
+              <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-[#c7dbce]">
                 {(overdueCount ?? 0) > 0
                   ? "Selesaikan atau jadwalkan ulang agar beban pikiranmu lebih ringan."
                   : "Pilih satu kegiatan yang paling penting dan selesaikan hari ini."}
@@ -409,24 +431,24 @@ export default async function DashboardPage() {
 
               {/* Completion mini bar */}
               {totalItems > 0 && (
-                <div className="mt-5">
+                <div className="mt-4 pt-3 border-t border-white/10">
                   <div className="flex justify-between text-xs font-bold text-[#b4d8c1]">
                     <span>Progress semester ini</span>
                     <span>{completionRate}%</span>
                   </div>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/15">
+                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/15">
                     <div
                       className="h-full rounded-full bg-[#c8ef70] transition-all duration-700"
                       style={{ width: `${completionRate}%` }}
                     />
                   </div>
-                  <p className="mt-1.5 text-[11px] text-white/50">{completeCount} dari {totalItems} item selesai</p>
+                  <p className="mt-1 text-[10px] sm:text-[11px] text-white/50">{completeCount} dari {totalItems} item selesai</p>
                 </div>
               )}
             </div>
             <Link
               href={`/kegiatan${semesterFilter}`}
-              className="mt-6 inline-flex items-center gap-2 text-sm font-black text-[#c8ef70] hover:underline"
+              className="mt-5 inline-flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#c8ef70] hover:underline"
             >
               Atur fokusmu <ArrowUpRight size={15} />
             </Link>
@@ -434,18 +456,18 @@ export default async function DashboardPage() {
 
           {/* Semester Progress */}
           {activeSemester && (
-            <div className="surface-lift rounded-2xl border border-[var(--line)] bg-white p-5">
-              <div className="flex items-center gap-2">
-                <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
+            <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+              <div className="flex items-center gap-2.5 border-b border-[var(--line)] pb-3">
+                <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)] shrink-0">
                   <BookOpen size={16} strokeWidth={2.5} />
                 </span>
-                <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-[var(--muted)]">Semester Aktif</p>
-                  <p className="text-sm font-extrabold text-[var(--ink)]">{activeSemester.nama_semester}</p>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-wide text-[var(--muted)]">Semester Aktif</p>
+                  <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">{activeSemester.nama_semester}</p>
                 </div>
               </div>
               {activeSemester.tanggal_mulai && activeSemester.tanggal_selesai && (
-                <div className="mt-4">
+                <div className="mt-3.5">
                   <div className="flex justify-between text-xs font-bold text-[var(--muted)]">
                     <span>Sudah berjalan</span>
                     <span className="text-[var(--brand)]">{semesterProgress}%</span>
@@ -456,7 +478,7 @@ export default async function DashboardPage() {
                       style={{ width: `${semesterProgress}%` }}
                     />
                   </div>
-                  <p className="mt-1.5 text-[11px] text-[var(--muted)]">
+                  <p className="mt-1 text-[10px] sm:text-[11px] text-[var(--muted)] truncate">
                     {format(parseISO(activeSemester.tanggal_mulai), "d MMM", { locale: id })} –{" "}
                     {format(parseISO(activeSemester.tanggal_selesai), "d MMM yyyy", { locale: id })}
                   </p>
@@ -467,29 +489,36 @@ export default async function DashboardPage() {
 
           {/* Organization Snapshot */}
           {(organizations?.length ?? 0) > 0 && (
-            <div className="surface-lift rounded-2xl border border-[var(--line)] bg-white p-5">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-widest text-[var(--muted)]">Organisasi Aktif</p>
-                <Link href="/organisasi" className="text-xs font-black text-[var(--brand)] hover:underline">
+            <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+              <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#e8e1fa] text-[#5c3a9c] shrink-0">
+                    <Building2 size={16} strokeWidth={2.5} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-[var(--muted)]">Organisasi</p>
+                    <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">Ruang Kontribusi</p>
+                  </div>
+                </div>
+                <Link href="/organisasi" className="shrink-0 text-xs font-black text-[var(--brand)] hover:underline">
                   Semua →
                 </Link>
               </div>
-              <div className="mt-3 space-y-2.5">
+
+              <div className="mt-3 space-y-2">
                 {organizations!.map((org) => {
-                  const orgPrograms = programs?.filter((p) => p.organization_id === org.id) ?? [];
-                  const activeProker = orgPrograms.filter((p) => p.status === "berjalan").length;
+                  const activeProker = (programs ?? []).filter(
+                    (p) => p.organization_id === org.id && p.status === "berjalan"
+                  ).length;
                   return (
                     <Link
                       key={org.id}
                       href={`/organisasi/${org.id}`}
-                      className="flex items-center gap-3 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6] hover:bg-[#f9fbf9]"
+                      className="flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] p-2.5 transition hover:border-[#b9ddc6]"
                     >
-                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#eef7f2] text-[var(--brand)]">
-                        <Building2 size={15} />
-                      </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-[var(--ink)]">{org.nama_organisasi}</p>
-                        <p className="text-xs text-[var(--muted)]">
+                        <p className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{org.nama_organisasi}</p>
+                        <p className="text-[10px] sm:text-xs text-[var(--muted)] truncate">
                           {activeProker > 0 ? `${activeProker} proker aktif` : org.tipe}
                         </p>
                       </div>
@@ -522,13 +551,13 @@ function StatCard({
   href: string;
 }) {
   return (
-    <Link href={href} className="console-stat surface-lift block rounded-2xl border border-[var(--line)] bg-white p-5 transition hover:border-[#b9ddc6]">
-      <div className={`grid h-10 w-10 place-items-center rounded-xl ${color}`}>{icon}</div>
-      <p className="mt-5 text-sm font-semibold text-[var(--muted)]">{label}</p>
-      <p className="font-display mt-1 text-3xl font-extrabold">
+    <Link href={href} className="console-stat surface-lift block min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5 transition hover:border-[#b9ddc6]">
+      <div className={`grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl ${color}`}>{icon}</div>
+      <p className="mt-4 text-xs sm:text-sm font-semibold text-[var(--muted)]">{label}</p>
+      <p className="font-display mt-0.5 text-2xl sm:text-3xl font-extrabold">
         {value.toString().padStart(2, "0")}{suffix}
       </p>
-      {value === 0 && <p className="mt-1 text-xs font-semibold text-[var(--muted)]">Belum ada</p>}
+      {value === 0 && <p className="mt-0.5 text-[10px] sm:text-xs font-semibold text-[var(--muted)]">Belum ada</p>}
     </Link>
   );
 }
