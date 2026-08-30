@@ -20,6 +20,8 @@ import {
   UserRound,
   IdCard,
   Trash2,
+  Pencil,
+  CheckCircle2,
 } from "lucide-react";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
@@ -89,7 +91,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   // Crop save handler
   const handleSaveCroppedImage = (croppedDataUrl: string) => {
     setAvatarUrl(croppedDataUrl);
-    showToast("Foto profil disesuaikan! Klik 'Simpan Perubahan' untuk mengunci.", "success");
+    showToast("Foto profil disesuaikan! Klik 'Simpan Perubahan' di atas.", "success");
   };
 
   const handleRemovePhoto = () => {
@@ -149,7 +151,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
       <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.15fr_0.85fr] items-start">
 
         {/* ── RIGHT COLUMN: DIGITAL KTM (On Mobile: ORDER-1 Top; On Desktop: ORDER-2 Right) ── */}
-        <aside className="order-1 lg:order-2 lg:sticky lg:top-6 space-y-5">
+        <aside className="order-1 lg:order-2 lg:sticky lg:top-6 space-y-5 min-w-0">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
               <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#dff3e5] text-[var(--brand)]">
@@ -161,7 +163,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Premium Digital ID Card / KTM */}
-          <div className="relative overflow-hidden rounded-[2rem] border border-[#0f6849]/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-6 text-white shadow-2xl shadow-[#0c2e20]/40">
+          <div className="relative overflow-hidden rounded-[2rem] border border-[#0f6849]/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-5 sm:p-6 text-white shadow-2xl shadow-[#0c2e20]/40">
             {/* Holographic / Metallic background glow */}
             <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#d9ee72]/15 blur-2xl" />
             <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-[#0f6849]/40 blur-xl" />
@@ -212,13 +214,13 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
 
               {/* Bio & Identification Info */}
               <div className="min-w-0 flex-1">
-                <h3 className="font-display text-xl sm:text-2xl font-black leading-snug tracking-tight text-white truncate">
+                <h3 className="font-display text-lg sm:text-2xl font-black leading-snug tracking-tight text-white truncate">
                   {fullName || "Nama Mahasiswa"}
                 </h3>
                 <p className="font-mono text-xs font-bold text-[#c8ef70] tracking-wider mt-0.5">
                   {studentId ? `NIM: ${studentId}` : "NIM: Belum diisi"}
                 </p>
-                <p className="mt-2 text-xs font-semibold text-white/90 leading-tight">
+                <p className="mt-1.5 text-xs font-semibold text-white/90 leading-tight">
                   {major || "Program Studi"}
                 </p>
                 <p className="text-[11px] text-[#b4d8c1] font-medium leading-tight">
@@ -238,13 +240,13 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
 
             {/* Bottom Card Footer: Barcode / QR & Contact */}
             <div className="relative mt-5 pt-4 border-t border-white/10 flex items-end justify-between gap-4">
-              <div className="space-y-1 text-[11px] text-white/70">
-                <p className="truncate max-w-[200px]">✉️ {email}</p>
-                {phone && <p>📱 {phone}</p>}
+              <div className="space-y-1 text-[11px] text-white/70 min-w-0 flex-1">
+                <p className="truncate">✉️ {email}</p>
+                {phone && <p className="truncate">📱 {phone}</p>}
               </div>
 
               {/* Simulated Micro QR / Security Seal */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center shrink-0">
                 <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/15 p-1 text-[#c8ef70] ring-1 ring-white/20">
                   <QrCode size={24} strokeWidth={1.75} />
                 </div>
@@ -280,7 +282,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Security & System Info note card */}
-          <div className="rounded-3xl border border-[var(--line)] bg-white p-5 shadow-xs">
+          <div className="rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-5 shadow-xs">
             <div className="flex items-start gap-3">
               <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
                 <Shield size={16} />
@@ -296,80 +298,43 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         </aside>
 
         {/* ── LEFT COLUMN: EDIT FORM (On Mobile: ORDER-2 Bottom; On Desktop: ORDER-1 Left) ── */}
-        <form action={handleSubmit} className="order-2 lg:order-1 space-y-6">
+        <form action={handleSubmit} className="order-2 lg:order-1 space-y-6 min-w-0">
 
-          {/* Section: Upload & Edit Foto Profil */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)]">
-                <Camera size={18} />
-              </span>
-              <div>
-                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Foto Profil</h2>
-                <p className="text-xs text-[var(--muted)]">
-                  Sesuaikan posisi, zoom, dan rotasi agar pas di kartu KTM.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-wrap items-center gap-5">
-              {/* Photo Preview Thumbnail */}
-              <div className="relative group shrink-0">
-                <div className="relative h-20 w-20 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#103626] to-[#246145] ring-2 ring-[var(--brand)]/30 shadow-inner flex items-center justify-center">
-                  {avatarUrl ? (
-                    <img
-                      src={avatarUrl}
-                      alt="Avatar"
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-2xl font-black text-[#d9ee72]">
-                      {initial}
-                    </span>
-                  )}
+          {/* Section: Identitas + Action Simpan di Header */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)] shrink-0">
+                  <UserRound size={18} />
+                </span>
+                <div>
+                  <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Identitas Mahasiswa</h2>
+                  <p className="text-xs text-[var(--muted)]">
+                    Data utama yang tercantum di kartu kampus.
+                  </p>
                 </div>
               </div>
 
-              {/* Action buttons */}
-              <div className="flex flex-wrap items-center gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95"
-                >
-                  <Camera size={15} />
-                  {avatarUrl ? "Ganti & Edit Foto" : "Upload Foto Baru"}
-                </button>
-
-                {avatarUrl && (
-                  <button
-                    type="button"
-                    onClick={handleRemovePhoto}
-                    className="flex items-center gap-1.5 rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3.5 py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95"
-                  >
-                    <Trash2 size={14} />
-                    Hapus Foto
-                  </button>
+              {/* Tombol Simpan langsung di Header Card */}
+              <button
+                type="submit"
+                disabled={isPending}
+                className="inline-flex items-center gap-1.5 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-black text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                {isPending ? (
+                  <>
+                    <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    Menyimpan...
+                  </>
+                ) : (
+                  <>
+                    <Save size={14} /> Simpan Perubahan
+                  </>
                 )}
-              </div>
-            </div>
-            <p className="mt-3 text-[11px] text-[var(--muted)]">
-              Format: JPG, PNG, atau WebP (maks. 5MB). Kamu bisa zoom & geser posisi setelah memilih foto.
-            </p>
-          </div>
-
-          {/* Section: Identitas */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)]">
-                <UserRound size={18} />
-              </span>
-              <div>
-                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Identitas Mahasiswa</h2>
-                <p className="text-xs text-[var(--muted)]">
-                  Data utama yang tercantum di kartu identitas kampus.
-                </p>
-              </div>
+              </button>
             </div>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -383,7 +348,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 />
               </FormField>
 
-              <FormField icon={<Mail size={15} />} label="Email Akun" className="sm:col-span-2">
+              <FormField icon={<Mail size={15} />} label="Email Akun" className="sm:col-span-2" isEditable={false}>
                 <input
                   disabled
                   value={email}
@@ -461,10 +426,70 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             </div>
           </div>
 
-          {/* Section: Social Links */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-sm">
+          {/* Section: Upload & Edit Foto Profil */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
             <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#e8e1fa] text-[#5c3a9c]">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)] shrink-0">
+                <Camera size={18} />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Foto Profil</h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Sesuaikan posisi, zoom, dan rotasi agar pas di kartu KTM.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-5">
+              {/* Photo Preview Thumbnail */}
+              <div className="relative group shrink-0">
+                <div className="relative h-20 w-20 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#103626] to-[#246145] ring-2 ring-[var(--brand)]/30 shadow-inner flex items-center justify-center">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt="Avatar"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl font-black text-[#d9ee72]">
+                      {initial}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95"
+                >
+                  <Camera size={14} />
+                  {avatarUrl ? "Ganti & Edit Foto" : "Upload Foto Baru"}
+                </button>
+
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    className="flex items-center gap-1.5 rounded-xl sm:rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95"
+                  >
+                    <Trash2 size={14} />
+                    Hapus Foto
+                  </button>
+                )}
+              </div>
+            </div>
+            <p className="mt-3 text-[11px] text-[var(--muted)]">
+              Format: JPG, PNG, atau WebP (maks. 5MB). Kamu bisa zoom & geser posisi setelah memilih foto.
+            </p>
+          </div>
+
+          {/* Section: Social Links */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#e8e1fa] text-[#5c3a9c] shrink-0">
                 <ExternalLink size={18} />
               </span>
               <div>
@@ -496,59 +521,43 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
               </FormField>
             </div>
           </div>
-
-          {/* Submit Button */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-2xl sm:rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-5 shadow-sm">
-            <p className="text-xs text-[var(--muted)] font-medium text-center sm:text-left">
-              Perubahan otomatis tersimpan ke cloud.
-            </p>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-black text-white shadow-md shadow-[#0f6849]/15 transition hover:bg-[var(--brand-dark)] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
-            >
-              {isPending ? (
-                <>
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                  </svg>
-                  Menyimpan...
-                </>
-              ) : (
-                <>
-                  <Save size={15} /> Simpan Perubahan
-                </>
-              )}
-            </button>
-          </div>
         </form>
       </div>
     </div>
   );
 }
 
-// ── Reusable Field Wrapper ──
+// ── Reusable Field Wrapper dengan Indikator Ikon Edit Pensil ──
 function FormField({
   label,
   icon,
   className = "",
+  isEditable = true,
   children,
 }: {
   label: string;
   icon?: React.ReactNode;
   className?: string;
+  isEditable?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <label
-      className={`block text-sm font-bold text-[var(--ink)] ${className} [&_input]:mt-1.5 [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:px-3.5 [&_input]:py-2.5 [&_input]:text-sm [&_input]:outline-none [&_input]:transition [&_input]:focus:border-[var(--brand)] [&_input]:focus:ring-2 [&_input]:focus:ring-[var(--brand)]/10 [&_textarea]:mt-1.5 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:px-3.5 [&_textarea]:py-2.5 [&_textarea]:text-sm [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:focus:border-[var(--brand)] [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-[var(--brand)]/10`}
-    >
-      <span className="flex items-center gap-1.5">
-        {icon && <span className="text-[var(--muted)]">{icon}</span>}
-        {label}
+    <div className={`block text-sm font-bold text-[var(--ink)] ${className}`}>
+      <span className="flex items-center justify-between gap-1.5 mb-1.5">
+        <span className="flex items-center gap-1.5">
+          {icon && <span className="text-[var(--muted)]">{icon}</span>}
+          {label}
+        </span>
+        {isEditable && (
+          <span className="flex items-center gap-1 text-[10px] font-semibold text-[var(--muted)] opacity-70">
+            <Pencil size={11} className="text-[var(--brand)]" />
+            Edit
+          </span>
+        )}
       </span>
-      {children}
-    </label>
+      <div className="relative [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-[#fcfdfb] [&_input]:px-3.5 [&_input]:py-2.5 [&_input]:text-sm [&_input]:outline-none [&_input]:transition [&_input]:focus:border-[var(--brand)] [&_input]:focus:bg-white [&_input]:focus:ring-2 [&_input]:focus:ring-[var(--brand)]/10 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-[#fcfdfb] [&_textarea]:px-3.5 [&_textarea]:py-2.5 [&_textarea]:text-sm [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:focus:border-[var(--brand)] [&_textarea]:focus:bg-white [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-[var(--brand)]/10">
+        {children}
+      </div>
+    </div>
   );
 }
