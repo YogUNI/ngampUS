@@ -147,15 +147,13 @@ export function AuthAside() {
     <aside className="relative hidden overflow-x-hidden overflow-y-auto bg-[#173f2c] p-10 text-white lg:flex lg:flex-col">
       <div className="absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#c8ef70]/10 blur-3xl"/>
       <Link className="relative flex items-center gap-2.5 font-display text-2xl font-extrabold" href="/">
-        <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-white/10 p-1.5 ring-1 ring-white/20">
-          <Image
-            src="/logo_ngampUS.png"
-            alt="ngampUS Logo"
-            width={22}
-            height={22}
-            className="object-contain"
-          />
-        </div>
+        <Image
+          src="/logo_ngampUS.png"
+          alt="ngampUS Logo"
+          width={36}
+          height={36}
+          className="h-9 w-9 object-contain"
+        />
         <span>
           ngamp<span className="text-[#a6dabb]">US</span>
         </span>

@@ -33,16 +33,14 @@ export default function Home() {
         {/* Nav */}
         <nav className="hero-stagger-1 relative z-20 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/15 bg-white/[.06] px-4 py-3 backdrop-blur-xl sm:px-5">
           <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-black tracking-[-.06em]">
-            <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-white/10 p-1.5 ring-1 ring-white/20">
-              <Image
-                src="/logo_ngampUS.png"
-                alt="ngampUS Logo"
-                width={22}
-                height={22}
-                className="object-contain"
-                priority
-              />
-            </div>
+            <Image
+              src="/logo_ngampUS.png"
+              alt="ngampUS Logo"
+              width={34}
+              height={34}
+              className="h-8 w-8 object-contain"
+              priority
+            />
             <span>
               ngamp<span className="text-[#c8ef70]">US</span>
             </span>
@@ -250,16 +248,14 @@ export default function Home() {
       {/* ── FOOTER ───────────────────────────────────────── */}
       <footer className="border-t border-[#d3ddd4] bg-[#f6f8f1]">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-sm text-[#65746a] sm:px-8 lg:px-12">
-          <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-black tracking-[-.06em] text-[#103626]">
-            <div className="relative grid h-7 w-7 place-items-center rounded-lg bg-[#103626] p-1 shadow-[1.5px_1.5px_0_#c8ef70]">
-              <Image
-                src="/logo_ngampUS.png"
-                alt="ngampUS Logo"
-                width={18}
-                height={18}
-                className="object-contain"
-              />
-            </div>
+          <Link href="/" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em] text-[#103626]">
+            <Image
+              src="/logo_ngampUS.png"
+              alt="ngampUS Logo"
+              width={28}
+              height={28}
+              className="h-7 w-7 object-contain"
+            />
             <span>
               ngamp<span className="text-[#0f6849]">US</span>
             </span>

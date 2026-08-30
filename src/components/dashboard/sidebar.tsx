@@ -46,18 +46,16 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
       <div className="flex items-center justify-between px-1">
         <Link
           href="/dashboard"
-          className={`flex items-center gap-2.5 overflow-hidden ${collapsed ? "justify-center" : ""}`}
+          className={`flex items-center gap-2 overflow-hidden ${collapsed ? "justify-center" : ""}`}
         >
-          <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#103626] p-1.5 shadow-[2px_2px_0_#c8ef70]">
-            <Image
-              src="/logo_ngampUS.png"
-              alt="ngampUS Logo"
-              width={26}
-              height={26}
-              className="object-contain"
-              priority
-            />
-          </div>
+          <Image
+            src="/logo_ngampUS.png"
+            alt="ngampUS Logo"
+            width={38}
+            height={38}
+            className="h-9 w-9 shrink-0 object-contain drop-shadow-xs"
+            priority
+          />
           {!collapsed && (
             <span>
               <span className="font-display block text-2xl font-black tracking-[-.07em]">
@@ -258,15 +256,13 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
             <Menu size={20} />
           </button>
           <Link href="/dashboard" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em]">
-            <div className="relative grid h-7 w-7 place-items-center rounded-lg bg-[#103626] p-1 shadow-[2px_2px_0_#c8ef70]">
-              <Image
-                src="/logo_ngampUS.png"
-                alt="ngampUS Logo"
-                width={20}
-                height={20}
-                className="object-contain"
-              />
-            </div>
+            <Image
+              src="/logo_ngampUS.png"
+              alt="ngampUS Logo"
+              width={30}
+              height={30}
+              className="h-7 w-7 object-contain"
+            />
             ngamp<span className="text-[var(--brand)]">US</span>
           </Link>
         </div>
@@ -297,15 +293,13 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
         >
           <div className="flex items-center justify-between border-b border-[#d8e2da] pb-4">
             <Link href="/dashboard" className="flex items-center gap-2.5">
-              <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-[#103626] p-1.5 shadow-[2px_2px_0_#c8ef70]">
-                <Image
-                  src="/logo_ngampUS.png"
-                  alt="ngampUS Logo"
-                  width={22}
-                  height={22}
-                  className="object-contain"
-                />
-              </div>
+              <Image
+                src="/logo_ngampUS.png"
+                alt="ngampUS Logo"
+                width={34}
+                height={34}
+                className="h-8 w-8 object-contain"
+              />
               <div>
                 <span className="font-display block text-xl font-black tracking-[-.06em]">ngamp<span className="text-[var(--brand)]">US</span></span>
                 <span className="block text-[8px] font-black tracking-[.16em] text-[var(--muted)]">CAMPUS CONSOLE</span>

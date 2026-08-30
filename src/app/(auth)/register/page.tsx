@@ -6,15 +6,13 @@ export default function RegisterPage() {
   return (
     <div className="auth-atlas-card w-full max-w-md">
       <Link className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em] lg:hidden" href="/">
-        <div className="relative grid h-7 w-7 place-items-center rounded-lg bg-[#103626] p-1 shadow-[2px_2px_0_#c8ef70]">
-          <Image
-            src="/logo_ngampUS.png"
-            alt="ngampUS Logo"
-            width={20}
-            height={20}
-            className="object-contain"
-          />
-        </div>
+        <Image
+          src="/logo_ngampUS.png"
+          alt="ngampUS Logo"
+          width={30}
+          height={30}
+          className="h-7 w-7 object-contain"
+        />
         <span>
           ngamp<span className="text-[var(--brand)]">US</span>
         </span>
