@@ -139,7 +139,7 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 lg:px-10 overflow-hidden sm:overflow-visible">
 
       {/* ── Hero Header ── */}
       <header className="dashboard-hero">

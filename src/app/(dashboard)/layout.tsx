@@ -17,7 +17,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="hidden md:block">
           <Sidebar name={userName} activeSemester={semesterName}/>
         </div>
-        <section className="dashboard-content min-w-0 flex-1 pb-20 md:pb-0">{children}</section>
+        <section className="dashboard-content min-w-0 flex-1 overflow-x-hidden pb-20 md:pb-0">{children}</section>
       </div>
     </main>
   );
