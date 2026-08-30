@@ -53,7 +53,7 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
         <div className="flex items-center gap-3">
           <button
             onClick={() => setOpen(true)}
-            className="grid h-10 w-10 place-items-center rounded-xl border border-[#d8e2da] bg-white text-[#103626] shadow-sm hover:bg-[#eaf5eb]"
+            className="grid h-10 w-10 place-items-center rounded-xl border border-[#d8e2da] bg-white text-[#103626] shadow-sm active:scale-95 transition hover:bg-[#eaf5eb]"
             aria-label="Buka Menu"
           >
             <Menu size={20}/>
@@ -66,7 +66,7 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
 
         <div className="flex items-center gap-2">
           <Link
-            className="flex items-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2 text-xs font-black text-[#103626] shadow-[0_3px_0_#84a839]"
+            className="flex items-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2 text-xs font-black text-[#103626] shadow-[0_3px_0_#84a839] active:scale-95 transition"
             href="/kegiatan?new=1"
           >
             <Plus size={15}/> Catat
@@ -74,19 +74,28 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
         </div>
       </header>
 
-      {/* Mobile Drawer Backdrop & Sidebar */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in"
-            onClick={() => setOpen(false)}
-          />
+      {/* Mobile Drawer Container */}
+      <div
+        className={`fixed inset-0 z-50 md:hidden transition-all duration-300 ${
+          open ? "pointer-events-auto visible" : "pointer-events-none invisible"
+        }`}
+      >
+        {/* Smooth Backdrop */}
+        <div
+          className={`fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-300 ease-out ${
+            open ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setOpen(false)}
+        />
 
-          {/* Drawer Content */}
-          <aside className="relative flex h-full w-[82%] max-w-[320px] flex-col overflow-y-auto bg-[#f8faf6] p-5 shadow-2xl transition-transform animate-in slide-in-from-left duration-300">
-            {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-[#d8e2da] pb-4">
+        {/* Smooth Sliding Drawer */}
+        <aside
+          className={`relative flex h-full w-[82%] max-w-[320px] flex-col overflow-y-auto bg-[#f8faf6] p-5 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between border-b border-[#d8e2da] pb-4">
               <Link href="/dashboard" className="flex items-center gap-2.5">
                 <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#103626] font-display text-sm font-black text-[#c8ef70]">n</span>
                 <div>
@@ -182,7 +191,6 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
             </div>
           </aside>
         </div>
-      )}
 
       {/* Bottom Quick Navigation Bar for Mobile */}
       <nav className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around border-t border-[#d8e2da] bg-[#f7faf5]/95 py-2 backdrop-blur-xl md:hidden">
