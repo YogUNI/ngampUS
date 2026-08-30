@@ -32,6 +32,36 @@ body {
 
 ::selection { background: #b9ddc6; color: var(--ink); }
 
+/* ─── Toast / Success Overlay Animations ─── */
+@keyframes toast-in {
+  0%   { opacity: 0; transform: translateY(20px) scale(.9); filter: blur(6px); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes toast-out {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(10px) scale(.92); filter: blur(4px); }
+}
+@keyframes toast-icon-pop {
+  0%   { transform: scale(0) rotate(-20deg); }
+  65%  { transform: scale(1.28) rotate(8deg); }
+  80%  { transform: scale(.91) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes toast-glow-pulse {
+  0%, 100% { opacity: .2; transform: scale(1); }
+  50%       { opacity: .5; transform: scale(1.5); }
+}
+@keyframes toast-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.toast-animate-in  { animation: toast-in  .48s cubic-bezier(.22,1,.36,1) both; }
+.toast-animate-out { animation: toast-out .32s cubic-bezier(.55,0,1,.45) both; }
+.toast-icon-pop    { animation: toast-icon-pop .52s cubic-bezier(.22,1,.36,1) .04s both; }
+.toast-glow        { animation: toast-glow-pulse 2.4s ease-in-out infinite; }
+
 .font-display { font-family: var(--font-display), Arial, sans-serif; }
 
 button, a, input, select, textarea { transition: border-color .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease; }
@@ -80,8 +110,75 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inse
 .atlas-card { transition: transform .25s ease, box-shadow .25s ease; }
 .atlas-card:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: 0 22px 34px rgba(16,54,38,.12); }
 @keyframes orbit-slow { to { transform: rotate(360deg); } }
-@keyframes ticker-shift { to { transform: translateX(-33%); } }
+@keyframes ticker-shift { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .atlas-arc, .atlas-ticker > div { animation: none; } }
+
+/* ─── Landing Page Animation System ─── */
+
+/* Hero staggered entrance */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(22px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+.hero-stagger-1 { animation: hero-fade-up .7s cubic-bezier(.22,1,.36,1) .05s both; }
+.hero-stagger-2 { animation: hero-fade-up .7s cubic-bezier(.22,1,.36,1) .18s both; }
+.hero-stagger-3 { animation: hero-fade-up .7s cubic-bezier(.22,1,.36,1) .32s both; }
+.hero-stagger-4 { animation: hero-fade-up .7s cubic-bezier(.22,1,.36,1) .46s both; }
+.hero-stagger-5 { animation: hero-fade-up .7s cubic-bezier(.22,1,.36,1) .6s  both; }
+.hero-stagger-6 { animation: hero-fade-up .7s cubic-bezier(.22,1,.36,1) .74s both; }
+
+/* Floating orbs in hero background */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+  33%       { transform: translateY(-18px) translateX(8px) scale(1.05); }
+  66%       { transform: translateY(10px) translateX(-6px) scale(.97); }
+}
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-24px) scale(1.08); }
+}
+.orb-float-1 { animation: float-slow   9s ease-in-out infinite; }
+.orb-float-2 { animation: float-medium 7s ease-in-out 1.5s infinite; }
+.orb-float-3 { animation: float-slow   11s ease-in-out 3s infinite; }
+
+/* Mock-up pulse for badge / progress */
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(217,104,78,.45); }
+  50%       { opacity: .85; box-shadow: 0 0 0 6px rgba(217,104,78,0); }
+}
+@keyframes bar-grow {
+  from { width: 0; }
+  to   { width: 78%; }
+}
+.mockup-badge-pulse { animation: badge-pulse 2.2s ease-in-out infinite; }
+.mockup-bar-grow   { animation: bar-grow 1.4s cubic-bezier(.22,1,.36,1) .9s both; }
+
+/* Scroll reveal */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; }
+.reveal.visible { animation: reveal-up .65s cubic-bezier(.22,1,.36,1) both; }
+.reveal-d1.visible { animation-delay: .08s; }
+.reveal-d2.visible { animation-delay: .18s; }
+.reveal-d3.visible { animation-delay: .28s; }
+.reveal-d4.visible { animation-delay: .38s; }
+
+/* CTA shimmer ring */
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer-drift {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.cta-ring-spin { animation: ring-spin 22s linear infinite; }
+.cta-badge-shimmer {
+  background: linear-gradient(90deg, rgba(200,239,112,.15) 0%, rgba(200,239,112,.55) 50%, rgba(200,239,112,.15) 100%);
+  background-size: 200% auto;
+  animation: shimmer-drift 3s linear infinite;
+}
 
 /* Auth Atlas — a focused, editorial login experience. */
 main.grid.min-h-screen { background: radial-gradient(circle at 92% 10%, rgba(200,239,112,.18), transparent 22rem), #eff2eb; }
@@ -99,7 +196,7 @@ main.grid.min-h-screen input { background-color: #fbfdf9; }
 /* Campus Console — shared dashboard composition and depth. */
 .dashboard-content { position: relative; background-color: #eff2eb; background-image: radial-gradient(circle at 96% 5%, rgba(200,239,112,.22), transparent 20rem), linear-gradient(rgba(16,54,38,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(16,54,38,.028) 1px, transparent 1px); background-size: auto, 42px 42px, 42px 42px; }
 .dashboard-content > div { position: relative; }
-.dashboard-content > div > header { position: relative; padding: 1.25rem 1.4rem; border: 1px solid #d6e1d8; border-radius: 1.5rem; background: rgba(255,255,255,.67); box-shadow: 0 12px 32px rgba(16,54,38,.045); backdrop-filter: blur(10px); }
+.dashboard-content > div > header { position: relative; padding: 1.25rem 1.4rem; border: 1px solid #d6e1d8; border-radius: 1.5rem; background: rgba(255,255,255,.92); box-shadow: 0 12px 32px rgba(16,54,38,.045); }
 .dashboard-content > div > header::after { content: "CAMPUS CONSOLE"; position: absolute; right: 1.35rem; top: 1.2rem; font-size: .58rem; font-weight: 900; letter-spacing: .15em; color: rgba(15,104,73,.34); }
 .dashboard-content > div > header h1 { max-width: calc(100% - 7rem); }
 .dashboard-hero { overflow: hidden; }
