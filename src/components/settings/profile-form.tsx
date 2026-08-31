@@ -527,7 +527,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   );
 }
 
-// ── Reusable Field Wrapper dengan Tombol Edit yang Interaktif & Bisa Diklik ──
+// ── Reusable Field Wrapper dengan Mode Read-Only & Animasi Unlocked saat Edit Diklik ──
 function FormField({
   label,
   icon,
@@ -541,21 +541,32 @@ function FormField({
   isEditable?: boolean;
   children: React.ReactNode;
 }) {
+  const [isEditing, setIsEditing] = useState(!isEditable);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleFocusInput = () => {
-    if (!containerRef.current) return;
-    const target = containerRef.current.querySelector("input, textarea") as HTMLInputElement | HTMLTextAreaElement | null;
-    if (target && !target.disabled) {
-      target.focus();
-    }
+  const handleToggleEdit = () => {
+    if (!isEditable) return;
+    setIsEditing(true);
+    setTimeout(() => {
+      if (!containerRef.current) return;
+      const target = containerRef.current.querySelector("input:not([disabled]), textarea:not([disabled])") as HTMLInputElement | HTMLTextAreaElement | null;
+      if (target) {
+        target.removeAttribute("readonly");
+        target.focus();
+        // Place cursor at the end
+        if (target.value) {
+          const len = target.value.length;
+          target.setSelectionRange(len, len);
+        }
+      }
+    }, 50);
   };
 
   return (
     <div ref={containerRef} className={`block text-sm font-bold text-[var(--ink)] ${className}`}>
       <div className="flex items-center justify-between gap-1.5 mb-1.5">
         <label
-          onClick={handleFocusInput}
+          onClick={handleToggleEdit}
           className="flex items-center gap-1.5 cursor-pointer select-none"
         >
           {icon && <span className="text-[var(--muted)]">{icon}</span>}
@@ -564,16 +575,44 @@ function FormField({
         {isEditable && (
           <button
             type="button"
-            onClick={handleFocusInput}
-            className="group flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-bold text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)] transition active:scale-90"
-            title={`Edit ${label}`}
+            onClick={handleToggleEdit}
+            className={`group flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold transition active:scale-90 ${
+              isEditing
+                ? "bg-[#dcefe4] text-[var(--brand)] ring-1 ring-[var(--brand)]/30"
+                : "text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)]"
+            }`}
+            title={isEditing ? `${label} sedang aktif diedit` : `Buka kunci & edit ${label}`}
           >
-            <Pencil size={11} className="text-[var(--brand)] transition group-hover:scale-110" />
-            <span>Edit</span>
+            {isEditing ? (
+              <>
+                <CheckCircle2 size={11} className="text-[var(--brand)] animate-in zoom-in-75 duration-200" />
+                <span className="text-[var(--brand)] font-black">Aktif Diedit</span>
+              </>
+            ) : (
+              <>
+                <Pencil size={11} className="text-[var(--brand)] transition group-hover:scale-110" />
+                <span>Edit</span>
+              </>
+            )}
           </button>
         )}
       </div>
-      <div className="relative [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-[#fcfdfb] [&_input]:px-3.5 [&_input]:py-2.5 [&_input]:text-sm [&_input]:outline-none [&_input]:transition [&_input]:focus:border-[var(--brand)] [&_input]:focus:bg-white [&_input]:focus:ring-2 [&_input]:focus:ring-[var(--brand)]/10 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-[#fcfdfb] [&_textarea]:px-3.5 [&_textarea]:py-2.5 [&_textarea]:text-sm [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:focus:border-[var(--brand)] [&_textarea]:focus:bg-white [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-[var(--brand)]/10">
+      <div
+        onClick={handleToggleEdit}
+        className={`relative transition-all duration-300 rounded-xl ${
+          isEditing && isEditable
+            ? "ring-2 ring-[var(--brand)]/40 shadow-sm animate-in fade-in-50 zoom-in-[0.99] duration-200"
+            : ""
+        } [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] ${
+          !isEditing && isEditable
+            ? "[&_input]:bg-[#f8faf7] [&_input]:cursor-pointer [&_input]:text-[var(--ink)]/85 hover:[&_input]:border-[var(--brand)]/50"
+            : "[&_input]:bg-white [&_input]:border-[var(--brand)] [&_input]:cursor-text"
+        } [&_input]:px-3.5 [&_input]:py-2.5 [&_input]:text-sm [&_input]:outline-none [&_input]:transition [&_input]:focus:border-[var(--brand)] [&_input]:focus:bg-white [&_input]:focus:ring-2 [&_input]:focus:ring-[var(--brand)]/10 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] ${
+          !isEditing && isEditable
+            ? "[&_textarea]:bg-[#f8faf7] [&_textarea]:cursor-pointer [&_textarea]:text-[var(--ink)]/85 hover:[&_textarea]:border-[var(--brand)]/50"
+            : "[&_textarea]:bg-white [&_textarea]:border-[var(--brand)] [&_textarea]:cursor-text"
+        } [&_textarea]:px-3.5 [&_textarea]:py-2.5 [&_textarea]:text-sm [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:focus:border-[var(--brand)] [&_textarea]:focus:bg-white [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-[var(--brand)]/10`}
+      >
         {children}
       </div>
     </div>
