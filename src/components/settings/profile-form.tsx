@@ -21,7 +21,9 @@ import {
   IdCard,
   Trash2,
   Pencil,
-  CheckCircle2,
+  Check,
+  X,
+  Lock,
 } from "lucide-react";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
@@ -50,6 +52,9 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Exclusive single-field editing state
+  const [activeEditingField, setActiveEditingField] = useState<string | null>(null);
+
   // Live preview state synced with inputs
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [university, setUniversity] = useState(profile?.university || "");
@@ -61,10 +66,28 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   const [linkedin, setLinkedin] = useState(profile?.linkedin || "");
   const [github, setGithub] = useState(profile?.github || "");
 
+  // Backup values for cancelling edit
+  const [backupValues, setBackupValues] = useState<Record<string, string>>({
+    full_name: profile?.full_name || "",
+    university: profile?.university || "",
+    major: profile?.major || "",
+    student_id: profile?.student_id || "",
+    angkatan: profile?.angkatan || "",
+    phone: profile?.phone || "",
+    bio: profile?.bio || "",
+    linkedin: profile?.linkedin || "",
+    github: profile?.github || "",
+  });
+
   const initial = (fullName || email || "M").slice(0, 1).toUpperCase();
 
   // Handle file select
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (activeEditingField) {
+      showToast("Selesaikan atau simpan pengeditan data terlebih dahulu.", "error");
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -91,15 +114,73 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   // Crop save handler
   const handleSaveCroppedImage = (croppedDataUrl: string) => {
     setAvatarUrl(croppedDataUrl);
-    showToast("Foto profil disesuaikan! Klik 'Simpan Perubahan' di atas.", "success");
+    showToast("Foto profil disesuaikan! Klik 'Simpan Semua' di atas untuk mengunci ke server.", "success");
   };
 
   const handleRemovePhoto = () => {
+    if (activeEditingField) {
+      showToast("Selesaikan atau simpan pengeditan data terlebih dahulu.", "error");
+      return;
+    }
     setAvatarUrl(null);
     showToast("Foto profil dihapus.", "success");
   };
 
+  // Handler to start editing a field
+  const handleStartEdit = (fieldKey: string) => {
+    if (activeEditingField && activeEditingField !== fieldKey) {
+      showToast("Selesaikan atau simpan perubahan data yang sedang aktif terlebih dahulu.", "error");
+      return;
+    }
+
+    // Save current backup
+    setBackupValues({
+      full_name: fullName,
+      university,
+      major,
+      student_id: studentId,
+      angkatan,
+      phone,
+      bio,
+      linkedin,
+      github,
+    });
+
+    setActiveEditingField(fieldKey);
+  };
+
+  // Handler to cancel editing
+  const handleCancelEdit = (fieldKey: string) => {
+    // Restore value
+    if (fieldKey === "full_name") setFullName(backupValues.full_name || "");
+    if (fieldKey === "university") setUniversity(backupValues.university || "");
+    if (fieldKey === "major") setMajor(backupValues.major || "");
+    if (fieldKey === "student_id") setStudentId(backupValues.student_id || "");
+    if (fieldKey === "angkatan") setAngkatan(backupValues.angkatan || "");
+    if (fieldKey === "phone") setPhone(backupValues.phone || "");
+    if (fieldKey === "bio") setBio(backupValues.bio || "");
+    if (fieldKey === "linkedin") setLinkedin(backupValues.linkedin || "");
+    if (fieldKey === "github") setGithub(backupValues.github || "");
+
+    setActiveEditingField(null);
+  };
+
+  // Handler to confirm single field edit
+  const handleConfirmEdit = (fieldKey: string) => {
+    if (fieldKey === "full_name" && !fullName.trim()) {
+      showToast("Nama lengkap tidak boleh kosong.", "error");
+      return;
+    }
+    setActiveEditingField(null);
+    showToast("Perubahan data diperbarui! Klik 'Simpan Semua' untuk mengunci ke server.", "success");
+  };
+
   async function handleSubmit(formData: FormData) {
+    if (activeEditingField) {
+      showToast("Konfirmasi atau batalkan pengeditan data yang aktif terlebih dahulu.", "error");
+      return;
+    }
+
     startTransition(async () => {
       try {
         if (avatarUrl) {
@@ -108,7 +189,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           formData.delete("avatar_url");
         }
         await updateProfile(formData);
-        showToast("Profil dan foto berhasil disimpan! ✨", "success");
+        showToast("Seluruh data profil dan foto berhasil disimpan! ✨", "success");
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : "Gagal menyimpan profil.";
         showToast(msg, "error");
@@ -143,7 +224,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           Profil & Identitas Mahasiswa
         </h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Kelola data pribadi, upload & sesuaikan foto profil, serta nikmati kartu KTM digital interaktif.
+          Kelola data pribadi dengan mode edit terproteksi serta nikmati kartu KTM digital interaktif.
         </p>
       </header>
 
@@ -288,9 +369,9 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 <Shield size={16} />
               </span>
               <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Kartu Identitas Terintegrasi</h4>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Proteksi Data Terisolasi</h4>
                 <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
-                  Foto dan data ini disinkronkan secara realtime dengan akun workspace ngampUS dan langsung terpasang di kartu KTM digitalmu.
+                  Setiap data terkunci secara aman. Tekan tombol edit untuk membuka input field, lalu simpan perubahan ke server.
                 </p>
               </div>
             </div>
@@ -300,7 +381,18 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         {/* ── LEFT COLUMN: EDIT FORM (On Mobile: ORDER-2 Bottom; On Desktop: ORDER-1 Left) ── */}
         <form action={handleSubmit} className="order-2 lg:order-1 space-y-6 min-w-0">
 
-          {/* Section: Identitas + Action Simpan di Header */}
+          {/* Hidden inputs to pass data to Server Action */}
+          <input type="hidden" name="full_name" value={fullName} />
+          <input type="hidden" name="university" value={university} />
+          <input type="hidden" name="major" value={major} />
+          <input type="hidden" name="student_id" value={studentId} />
+          <input type="hidden" name="angkatan" value={angkatan} />
+          <input type="hidden" name="phone" value={phone} />
+          <input type="hidden" name="bio" value={bio} />
+          <input type="hidden" name="linkedin" value={linkedin} />
+          <input type="hidden" name="github" value={github} />
+
+          {/* Section: Identitas + Action Simpan Semua di Header */}
           <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
               <div className="flex items-center gap-3">
@@ -315,11 +407,12 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 </div>
               </div>
 
-              {/* Tombol Simpan langsung di Header Card */}
+              {/* Tombol Simpan Semua ke Server */}
               <button
                 type="submit"
-                disabled={isPending}
-                className="inline-flex items-center gap-1.5 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-black text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+                disabled={isPending || !!activeEditingField}
+                className="inline-flex items-center gap-1.5 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-black text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                title={activeEditingField ? "Selesaikan edit data terlebih dahulu" : "Simpan seluruh perubahan profil"}
               >
                 {isPending ? (
                   <>
@@ -331,98 +424,207 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                   </>
                 ) : (
                   <>
-                    <Save size={14} /> Simpan Perubahan
+                    <Save size={14} /> Simpan Semua
                   </>
                 )}
               </button>
             </div>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <FormField icon={<User size={15} />} label="Nama Lengkap" className="sm:col-span-2">
-                <input
-                  required
-                  name="full_name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Nama lengkap kamu"
-                />
-              </FormField>
+              
+              {/* Field: Nama Lengkap */}
+              <SingleEditableField
+                fieldKey="full_name"
+                label="Nama Lengkap"
+                icon={<User size={15} />}
+                value={fullName}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                className="sm:col-span-2"
+                placeholder="Nama lengkap kamu"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Nama lengkap kamu"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
 
-              <FormField icon={<Mail size={15} />} label="Email Akun" className="sm:col-span-2" isEditable={false}>
-                <input
-                  disabled
-                  value={email}
-                  className="cursor-not-allowed !bg-[#f7f8f5] !text-[var(--muted)]"
-                />
-                <p className="mt-1.5 text-xs text-[var(--muted)]">
+              {/* Field: Email Akun (Non-editable) */}
+              <div className="sm:col-span-2 block text-sm font-bold text-[var(--ink)]">
+                <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <span className="flex items-center gap-1.5">
+                    <Mail size={15} className="text-[var(--muted)]" />
+                    Email Akun
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] font-bold text-[var(--muted)]">
+                    <Lock size={10} /> Terkunci
+                  </span>
+                </div>
+                <div className="rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3.5 py-2.5 text-sm font-medium text-[var(--muted)] cursor-not-allowed">
+                  {email}
+                </div>
+                <p className="mt-1 text-[11px] text-[var(--muted)]">
                   <Shield size={11} className="mr-1 inline text-[var(--brand)]" />
                   Email terikat dengan otentikasi akun Supabase.
                 </p>
-              </FormField>
+              </div>
 
-              <FormField icon={<GraduationCap size={15} />} label="Universitas / Kampus">
-                <input
-                  name="university"
-                  value={university}
-                  onChange={(e) => setUniversity(e.target.value)}
-                  placeholder="Contoh: Universitas Mercu Buana"
-                />
-              </FormField>
+              {/* Field: Universitas */}
+              <SingleEditableField
+                fieldKey="university"
+                label="Universitas / Kampus"
+                icon={<GraduationCap size={15} />}
+                value={university}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                placeholder="Contoh: Universitas Mercu Buana"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="text"
+                    value={university}
+                    onChange={(e) => setUniversity(e.target.value)}
+                    placeholder="Contoh: Universitas Mercu Buana"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
 
-              <FormField icon={<BookOpen size={15} />} label="Program Studi / Jurusan">
-                <input
-                  name="major"
-                  value={major}
-                  onChange={(e) => setMajor(e.target.value)}
-                  placeholder="Contoh: Teknik Informatika"
-                />
-              </FormField>
+              {/* Field: Program Studi */}
+              <SingleEditableField
+                fieldKey="major"
+                label="Program Studi / Jurusan"
+                icon={<BookOpen size={15} />}
+                value={major}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                placeholder="Contoh: Teknik Informatika"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="text"
+                    value={major}
+                    onChange={(e) => setMajor(e.target.value)}
+                    placeholder="Contoh: Teknik Informatika"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
 
-              <FormField icon={<Hash size={15} />} label="NIM / ID Mahasiswa">
-                <input
-                  name="student_id"
-                  value={studentId}
-                  onChange={(e) => setStudentId(e.target.value)}
-                  placeholder="Contoh: 41523110001"
-                />
-              </FormField>
+              {/* Field: NIM */}
+              <SingleEditableField
+                fieldKey="student_id"
+                label="NIM / ID Mahasiswa"
+                icon={<Hash size={15} />}
+                value={studentId}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                placeholder="Contoh: 41523110001"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="text"
+                    value={studentId}
+                    onChange={(e) => setStudentId(e.target.value)}
+                    placeholder="Contoh: 41523110001"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
 
-              <FormField icon={<BadgeCheck size={15} />} label="Tahun Angkatan">
-                <input
-                  name="angkatan"
-                  value={angkatan}
-                  onChange={(e) => setAngkatan(e.target.value)}
-                  placeholder="Contoh: 2023"
-                  maxLength={4}
-                />
-              </FormField>
+              {/* Field: Tahun Angkatan */}
+              <SingleEditableField
+                fieldKey="angkatan"
+                label="Tahun Angkatan"
+                icon={<BadgeCheck size={15} />}
+                value={angkatan}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                placeholder="Contoh: 2023"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="text"
+                    maxLength={4}
+                    value={angkatan}
+                    onChange={(e) => setAngkatan(e.target.value)}
+                    placeholder="Contoh: 2023"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
 
-              <FormField icon={<Phone size={15} />} label="Nomor WhatsApp" className="sm:col-span-2">
-                <input
-                  name="phone"
-                  inputMode="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Contoh: 081234567890"
-                />
-              </FormField>
+              {/* Field: Nomor WhatsApp */}
+              <SingleEditableField
+                fieldKey="phone"
+                label="Nomor WhatsApp"
+                icon={<Phone size={15} />}
+                value={phone}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                className="sm:col-span-2"
+                placeholder="Contoh: 081234567890"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Contoh: 081234567890"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
 
-              <FormField icon={<MessageSquare size={15} />} label="Bio Singkat / Motto" className="sm:col-span-2">
-                <textarea
-                  name="bio"
-                  maxLength={280}
-                  rows={3}
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Contoh: Mahasiswa aktif yang menyeimbangkan kuliah, organisasi, dan inovasi."
-                />
-                <p className="mt-1.5 flex justify-between text-xs text-[var(--muted)]">
-                  <span>Akan tampil di kartu KTM & passport.</span>
-                  <span className={bio.length > 250 ? "font-bold text-[#c53e1c]" : ""}>
-                    {bio.length}/280
-                  </span>
-                </p>
-              </FormField>
+              {/* Field: Bio */}
+              <SingleEditableField
+                fieldKey="bio"
+                label="Bio Singkat / Motto"
+                icon={<MessageSquare size={15} />}
+                value={bio}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                className="sm:col-span-2"
+                placeholder="Contoh: Mahasiswa aktif yang menyeimbangkan kuliah, organisasi, dan inovasi."
+                renderInput={(ref) => (
+                  <div className="space-y-1.5">
+                    <textarea
+                      ref={ref as React.RefObject<HTMLTextAreaElement>}
+                      rows={3}
+                      maxLength={280}
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      placeholder="Contoh: Mahasiswa aktif yang menyeimbangkan kuliah, organisasi, dan inovasi."
+                      className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                    />
+                    <p className="flex justify-between text-xs text-[var(--muted)]">
+                      <span>Akan tampil di kartu KTM.</span>
+                      <span className={bio.length > 250 ? "font-bold text-[#c53e1c]" : ""}>
+                        {bio.length}/280
+                      </span>
+                    </p>
+                  </div>
+                )}
+              />
             </div>
           </div>
 
@@ -463,7 +665,8 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-2 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95"
+                  disabled={!!activeEditingField}
+                  className="flex items-center gap-2 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Camera size={14} />
                   {avatarUrl ? "Ganti & Edit Foto" : "Upload Foto Baru"}
@@ -473,7 +676,8 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                   <button
                     type="button"
                     onClick={handleRemovePhoto}
-                    className="flex items-center gap-1.5 rounded-xl sm:rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95"
+                    disabled={!!activeEditingField}
+                    className="flex items-center gap-1.5 rounded-xl sm:rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Trash2 size={14} />
                     Hapus Foto
@@ -501,24 +705,47 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             </div>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <FormField label="URL LinkedIn">
-                <input
-                  name="linkedin"
-                  type="url"
-                  value={linkedin}
-                  onChange={(e) => setLinkedin(e.target.value)}
-                  placeholder="https://linkedin.com/in/username"
-                />
-              </FormField>
-              <FormField label="URL GitHub">
-                <input
-                  name="github"
-                  type="url"
-                  value={github}
-                  onChange={(e) => setGithub(e.target.value)}
-                  placeholder="https://github.com/username"
-                />
-              </FormField>
+              <SingleEditableField
+                fieldKey="linkedin"
+                label="URL LinkedIn"
+                value={linkedin}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                placeholder="https://linkedin.com/in/username"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="url"
+                    value={linkedin}
+                    onChange={(e) => setLinkedin(e.target.value)}
+                    placeholder="https://linkedin.com/in/username"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
+
+              <SingleEditableField
+                fieldKey="github"
+                label="URL GitHub"
+                value={github}
+                activeField={activeEditingField}
+                onStartEdit={handleStartEdit}
+                onCancel={handleCancelEdit}
+                onConfirm={handleConfirmEdit}
+                placeholder="https://github.com/username"
+                renderInput={(ref) => (
+                  <input
+                    ref={ref as React.RefObject<HTMLInputElement>}
+                    type="url"
+                    value={github}
+                    onChange={(e) => setGithub(e.target.value)}
+                    placeholder="https://github.com/username"
+                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                  />
+                )}
+              />
             </div>
           </div>
         </form>
@@ -527,94 +754,128 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   );
 }
 
-// ── Reusable Field Wrapper dengan Mode Read-Only & Animasi Unlocked saat Edit Diklik ──
-function FormField({
+// ── Exclusive Single Editable Field Component ──
+function SingleEditableField({
+  fieldKey,
   label,
   icon,
+  value,
+  placeholder,
+  activeField,
   className = "",
-  isEditable = true,
-  children,
+  onStartEdit,
+  onCancel,
+  onConfirm,
+  renderInput,
 }: {
+  fieldKey: string;
   label: string;
   icon?: React.ReactNode;
+  value: string;
+  placeholder?: string;
+  activeField: string | null;
   className?: string;
-  isEditable?: boolean;
-  children: React.ReactNode;
+  onStartEdit: (fieldKey: string) => void;
+  onCancel: (fieldKey: string) => void;
+  onConfirm: (fieldKey: string) => void;
+  renderInput: (ref: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>) => React.ReactNode;
 }) {
-  const [isEditing, setIsEditing] = useState(!isEditable);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const isEditing = activeField === fieldKey;
+  const isBlockedByOther = activeField !== null && activeField !== fieldKey;
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
 
-  const handleToggleEdit = () => {
-    if (!isEditable) return;
-    setIsEditing(true);
+  // Auto focus when editing starts
+  const handleEditClick = () => {
+    if (isBlockedByOther) {
+      return;
+    }
+    onStartEdit(fieldKey);
     setTimeout(() => {
-      if (!containerRef.current) return;
-      const target = containerRef.current.querySelector("input:not([disabled]), textarea:not([disabled])") as HTMLInputElement | HTMLTextAreaElement | null;
-      if (target) {
-        target.removeAttribute("readonly");
-        target.focus();
-        // Place cursor at the end
-        if (target.value) {
-          const len = target.value.length;
-          target.setSelectionRange(len, len);
+      if (inputRef.current) {
+        inputRef.current.focus();
+        if (inputRef.current.value) {
+          const len = inputRef.current.value.length;
+          inputRef.current.setSelectionRange(len, len);
         }
       }
     }, 50);
   };
 
   return (
-    <div ref={containerRef} className={`block text-sm font-bold text-[var(--ink)] ${className}`}>
+    <div
+      className={`block text-sm font-bold text-[var(--ink)] transition-opacity duration-200 ${
+        isBlockedByOther ? "opacity-45" : "opacity-100"
+      } ${className}`}
+    >
+      {/* Label and Action Header */}
       <div className="flex items-center justify-between gap-1.5 mb-1.5">
-        <label
-          onClick={handleToggleEdit}
-          className="flex items-center gap-1.5 cursor-pointer select-none"
-        >
+        <span className="flex items-center gap-1.5">
           {icon && <span className="text-[var(--muted)]">{icon}</span>}
           {label}
-        </label>
-        {isEditable && (
+        </span>
+
+        {/* Edit / Confirm / Cancel Actions */}
+        {!isEditing ? (
           <button
             type="button"
-            onClick={handleToggleEdit}
-            className={`group flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold transition active:scale-90 ${
-              isEditing
-                ? "bg-[#dcefe4] text-[var(--brand)] ring-1 ring-[var(--brand)]/30"
-                : "text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)]"
+            onClick={handleEditClick}
+            disabled={isBlockedByOther}
+            className={`flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold transition ${
+              isBlockedByOther
+                ? "text-[var(--muted)] cursor-not-allowed"
+                : "text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)] active:scale-90"
             }`}
-            title={isEditing ? `${label} sedang aktif diedit` : `Buka kunci & edit ${label}`}
+            title={isBlockedByOther ? "Selesaikan field yang sedang diedit dahulu" : `Edit ${label}`}
           >
-            {isEditing ? (
-              <>
-                <CheckCircle2 size={11} className="text-[var(--brand)] animate-in zoom-in-75 duration-200" />
-                <span className="text-[var(--brand)] font-black">Aktif Diedit</span>
-              </>
-            ) : (
-              <>
-                <Pencil size={11} className="text-[var(--brand)] transition group-hover:scale-110" />
-                <span>Edit</span>
-              </>
-            )}
+            <Pencil size={11} className={isBlockedByOther ? "text-[var(--muted)]" : "text-[var(--brand)]"} />
+            <span>Edit</span>
           </button>
+        ) : (
+          <div className="flex items-center gap-1.5 animate-in fade-in zoom-in-90 duration-200">
+            <button
+              type="button"
+              onClick={() => onCancel(fieldKey)}
+              className="flex items-center gap-1 rounded-lg border border-[#f0c8c8] bg-[#fff5f5] px-2 py-0.5 text-[11px] font-black text-[#b93c21] hover:bg-[#ffebee] transition active:scale-90"
+              title="Batal ubah data"
+            >
+              <X size={12} /> Batal
+            </button>
+            <button
+              type="button"
+              onClick={() => onConfirm(fieldKey)}
+              className="flex items-center gap-1 rounded-lg bg-[var(--brand)] px-2.5 py-0.5 text-[11px] font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-90"
+              title="Selesai ubah data"
+            >
+              <Check size={12} /> Selesai
+            </button>
+          </div>
         )}
       </div>
-      <div
-        onClick={handleToggleEdit}
-        className={`relative transition-all duration-300 rounded-xl ${
-          isEditing && isEditable
-            ? "ring-2 ring-[var(--brand)]/40 shadow-sm animate-in fade-in-50 zoom-in-[0.99] duration-200"
-            : ""
-        } [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] ${
-          !isEditing && isEditable
-            ? "[&_input]:bg-[#f8faf7] [&_input]:cursor-pointer [&_input]:text-[var(--ink)]/85 hover:[&_input]:border-[var(--brand)]/50"
-            : "[&_input]:bg-white [&_input]:border-[var(--brand)] [&_input]:cursor-text"
-        } [&_input]:px-3.5 [&_input]:py-2.5 [&_input]:text-sm [&_input]:outline-none [&_input]:transition [&_input]:focus:border-[var(--brand)] [&_input]:focus:bg-white [&_input]:focus:ring-2 [&_input]:focus:ring-[var(--brand)]/10 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] ${
-          !isEditing && isEditable
-            ? "[&_textarea]:bg-[#f8faf7] [&_textarea]:cursor-pointer [&_textarea]:text-[var(--ink)]/85 hover:[&_textarea]:border-[var(--brand)]/50"
-            : "[&_textarea]:bg-white [&_textarea]:border-[var(--brand)] [&_textarea]:cursor-text"
-        } [&_textarea]:px-3.5 [&_textarea]:py-2.5 [&_textarea]:text-sm [&_textarea]:outline-none [&_textarea]:transition [&_textarea]:focus:border-[var(--brand)] [&_textarea]:focus:bg-white [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-[var(--brand)]/10`}
-      >
-        {children}
-      </div>
+
+      {/* Field Display Mode: Clean Plain Text when NOT editing, Animated Input Box when EDITING */}
+      {!isEditing ? (
+        <div
+          onClick={handleEditClick}
+          className={`min-h-[42px] flex items-center justify-between rounded-xl border border-transparent px-3.5 py-2 transition-all ${
+            isBlockedByOther
+              ? "cursor-not-allowed"
+              : "cursor-pointer hover:border-[var(--brand)]/40 hover:bg-[#f2f7f3]/60 group"
+          }`}
+        >
+          <span className={`text-sm font-semibold truncate ${value ? "text-[var(--ink)]" : "text-[var(--muted)]/60 italic"}`}>
+            {value || placeholder || "Belum diisi"}
+          </span>
+          {!isBlockedByOther && (
+            <span className="text-[10px] font-bold text-[var(--muted)] opacity-0 group-hover:opacity-80 transition shrink-0 ml-2">
+              Klik untuk edit
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="animate-in fade-in zoom-in-[0.98] duration-200 pt-0.5">
+          {renderInput(inputRef)}
+        </div>
+      )}
     </div>
   );
 }
