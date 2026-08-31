@@ -13,7 +13,6 @@ import {
   MessageSquare,
   Phone,
   QrCode,
-  Save,
   Shield,
   Sparkles,
   User,
@@ -55,7 +54,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   // Exclusive single-field editing state
   const [activeEditingField, setActiveEditingField] = useState<string | null>(null);
 
-  // Live preview state synced with inputs
+  // Live profile state synced with inputs
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [university, setUniversity] = useState(profile?.university || "");
   const [major, setMajor] = useState(profile?.major || "");
@@ -80,6 +79,36 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   });
 
   const initial = (fullName || email || "M").slice(0, 1).toUpperCase();
+
+  // Save specific field directly to server
+  const saveFieldToServer = (updatedValues: Record<string, string | null>) => {
+    const formData = new FormData();
+    formData.set("full_name", updatedValues.full_name ?? fullName);
+    formData.set("university", updatedValues.university ?? university);
+    formData.set("major", updatedValues.major ?? major);
+    formData.set("student_id", updatedValues.student_id ?? studentId);
+    formData.set("angkatan", updatedValues.angkatan ?? angkatan);
+    formData.set("phone", updatedValues.phone ?? phone);
+    formData.set("bio", updatedValues.bio ?? bio);
+    formData.set("linkedin", updatedValues.linkedin ?? linkedin);
+    formData.set("github", updatedValues.github ?? github);
+    
+    if (updatedValues.avatar_url !== undefined) {
+      if (updatedValues.avatar_url) formData.set("avatar_url", updatedValues.avatar_url);
+    } else if (avatarUrl) {
+      formData.set("avatar_url", avatarUrl);
+    }
+
+    startTransition(async () => {
+      try {
+        await updateProfile(formData);
+        showToast("Perubahan data berhasil disimpan! ✨", "success");
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "Gagal menyimpan perubahan.";
+        showToast(msg, "error");
+      }
+    });
+  };
 
   // Handle file select
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,10 +140,10 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
     e.target.value = "";
   };
 
-  // Crop save handler
+  // Crop save handler (auto save to server)
   const handleSaveCroppedImage = (croppedDataUrl: string) => {
     setAvatarUrl(croppedDataUrl);
-    showToast("Foto profil disesuaikan! Klik 'Simpan Semua' di atas untuk mengunci ke server.", "success");
+    saveFieldToServer({ avatar_url: croppedDataUrl });
   };
 
   const handleRemovePhoto = () => {
@@ -123,7 +152,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
       return;
     }
     setAvatarUrl(null);
-    showToast("Foto profil dihapus.", "success");
+    saveFieldToServer({ avatar_url: null });
   };
 
   // Handler to start editing a field
@@ -151,7 +180,6 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
 
   // Handler to cancel editing
   const handleCancelEdit = (fieldKey: string) => {
-    // Restore value
     if (fieldKey === "full_name") setFullName(backupValues.full_name || "");
     if (fieldKey === "university") setUniversity(backupValues.university || "");
     if (fieldKey === "major") setMajor(backupValues.major || "");
@@ -165,37 +193,28 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
     setActiveEditingField(null);
   };
 
-  // Handler to confirm single field edit
+  // Handler to confirm single field edit and auto-save directly
   const handleConfirmEdit = (fieldKey: string) => {
     if (fieldKey === "full_name" && !fullName.trim()) {
       showToast("Nama lengkap tidak boleh kosong.", "error");
       return;
     }
+
     setActiveEditingField(null);
-    showToast("Perubahan data diperbarui! Klik 'Simpan Semua' untuk mengunci ke server.", "success");
+
+    const updated: Record<string, string> = {};
+    if (fieldKey === "full_name") updated.full_name = fullName;
+    if (fieldKey === "university") updated.university = university;
+    if (fieldKey === "major") updated.major = major;
+    if (fieldKey === "student_id") updated.student_id = studentId;
+    if (fieldKey === "angkatan") updated.angkatan = angkatan;
+    if (fieldKey === "phone") updated.phone = phone;
+    if (fieldKey === "bio") updated.bio = bio;
+    if (fieldKey === "linkedin") updated.linkedin = linkedin;
+    if (fieldKey === "github") updated.github = github;
+
+    saveFieldToServer(updated);
   };
-
-  async function handleSubmit(formData: FormData) {
-    if (activeEditingField) {
-      showToast("Konfirmasi atau batalkan pengeditan data yang aktif terlebih dahulu.", "error");
-      return;
-    }
-
-    startTransition(async () => {
-      try {
-        if (avatarUrl) {
-          formData.set("avatar_url", avatarUrl);
-        } else {
-          formData.delete("avatar_url");
-        }
-        await updateProfile(formData);
-        showToast("Seluruh data profil dan foto berhasil disimpan! ✨", "success");
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : "Gagal menyimpan profil.";
-        showToast(msg, "error");
-      }
-    });
-  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
@@ -224,7 +243,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           Profil & Identitas Mahasiswa
         </h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Kelola data pribadi dengan mode edit terproteksi serta nikmati kartu KTM digital interaktif.
+          Klik tombol edit pada data yang ingin diubah, simpan, dan data akan otomatis terupdate secara instan.
         </p>
       </header>
 
@@ -365,13 +384,13 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           {/* Security & System Info note card */}
           <div className="rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-5 shadow-xs">
             <div className="flex items-start gap-3">
-              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
+              <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
                 <Shield size={16} />
               </span>
               <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Proteksi Data Terisolasi</h4>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Simpan Otomatis Terintegrasi</h4>
                 <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
-                  Setiap data terkunci secara aman. Tekan tombol edit untuk membuka input field, lalu simpan perubahan ke server.
+                  Cukup klik tombol simpan di kotak edit yang sedang kamu ubah. Data otomatis tersimpan dan terpasang di kartu KTM digitalmu.
                 </p>
               </div>
             </div>
@@ -379,55 +398,20 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         </aside>
 
         {/* ── LEFT COLUMN: EDIT FORM (On Mobile: ORDER-2 Bottom; On Desktop: ORDER-1 Left) ── */}
-        <form action={handleSubmit} className="order-2 lg:order-1 space-y-6 min-w-0">
+        <div className="order-2 lg:order-1 space-y-6 min-w-0">
 
-          {/* Hidden inputs to pass data to Server Action */}
-          <input type="hidden" name="full_name" value={fullName} />
-          <input type="hidden" name="university" value={university} />
-          <input type="hidden" name="major" value={major} />
-          <input type="hidden" name="student_id" value={studentId} />
-          <input type="hidden" name="angkatan" value={angkatan} />
-          <input type="hidden" name="phone" value={phone} />
-          <input type="hidden" name="bio" value={bio} />
-          <input type="hidden" name="linkedin" value={linkedin} />
-          <input type="hidden" name="github" value={github} />
-
-          {/* Section: Identitas + Action Simpan Semua di Header */}
+          {/* Section: Identitas */}
           <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)] shrink-0">
-                  <UserRound size={18} />
-                </span>
-                <div>
-                  <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Identitas Mahasiswa</h2>
-                  <p className="text-xs text-[var(--muted)]">
-                    Data utama yang tercantum di kartu kampus.
-                  </p>
-                </div>
+            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)] shrink-0">
+                <UserRound size={18} />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Identitas Mahasiswa</h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Data utama yang tercantum di kartu kampus.
+                </p>
               </div>
-
-              {/* Tombol Simpan Semua ke Server */}
-              <button
-                type="submit"
-                disabled={isPending || !!activeEditingField}
-                className="inline-flex items-center gap-1.5 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-black text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                title={activeEditingField ? "Selesaikan edit data terlebih dahulu" : "Simpan seluruh perubahan profil"}
-              >
-                {isPending ? (
-                  <>
-                    <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                    </svg>
-                    Menyimpan...
-                  </>
-                ) : (
-                  <>
-                    <Save size={14} /> Simpan Semua
-                  </>
-                )}
-              </button>
             </div>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -439,6 +423,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<User size={15} />}
                 value={fullName}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -485,6 +470,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<GraduationCap size={15} />}
                 value={university}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -508,6 +494,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<BookOpen size={15} />}
                 value={major}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -531,6 +518,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<Hash size={15} />}
                 value={studentId}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -554,6 +542,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<BadgeCheck size={15} />}
                 value={angkatan}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -578,6 +567,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<Phone size={15} />}
                 value={phone}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -602,6 +592,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 icon={<MessageSquare size={15} />}
                 value={bio}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -667,7 +658,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={!!activeEditingField}
+                  disabled={!!activeEditingField || isPending}
                   className="flex items-center gap-2 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Camera size={14} />
@@ -678,7 +669,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                   <button
                     type="button"
                     onClick={handleRemovePhoto}
-                    disabled={!!activeEditingField}
+                    disabled={!!activeEditingField || isPending}
                     className="flex items-center gap-1.5 rounded-xl sm:rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Trash2 size={14} />
@@ -688,7 +679,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
               </div>
             </div>
             <p className="mt-3 text-[11px] text-[var(--muted)]">
-              Format: JPG, PNG, atau WebP (maks. 5MB). Kamu bisa zoom & geser posisi setelah memilih foto.
+              Format: JPG, PNG, atau WebP (maks. 5MB). Foto yang diubah akan otomatis tersimpan langsung ke cloud.
             </p>
           </div>
 
@@ -712,6 +703,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 label="URL LinkedIn"
                 value={linkedin}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -733,6 +725,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 label="URL GitHub"
                 value={github}
                 activeField={activeEditingField}
+                isSaving={isPending}
                 onStartEdit={handleStartEdit}
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
@@ -750,13 +743,13 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
               />
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 }
 
-// ── Exclusive Single Editable Field Component ──
+// ── Exclusive Single Editable Field Component dengan Tombol Simpan Instan ──
 function SingleEditableField({
   fieldKey,
   label,
@@ -764,6 +757,7 @@ function SingleEditableField({
   value,
   placeholder,
   activeField,
+  isSaving,
   className = "",
   onStartEdit,
   onCancel,
@@ -776,6 +770,7 @@ function SingleEditableField({
   value: string;
   placeholder?: string;
   activeField: string | null;
+  isSaving?: boolean;
   className?: string;
   onStartEdit: (fieldKey: string) => void;
   onCancel: (fieldKey: string) => void;
@@ -788,7 +783,7 @@ function SingleEditableField({
 
   // Auto focus when editing starts
   const handleEditClick = () => {
-    if (isBlockedByOther) {
+    if (isBlockedByOther || isSaving) {
       return;
     }
     onStartEdit(fieldKey);
@@ -806,7 +801,7 @@ function SingleEditableField({
   return (
     <div
       className={`block text-sm font-bold text-[var(--ink)] transition-opacity duration-200 ${
-        isBlockedByOther ? "opacity-45" : "opacity-100"
+        isBlockedByOther || (isSaving && !isEditing) ? "opacity-45" : "opacity-100"
       } ${className}`}
     >
       {/* Label and Action Header */}
@@ -816,14 +811,14 @@ function SingleEditableField({
           {label}
         </span>
 
-        {/* Edit / Confirm / Cancel Actions */}
+        {/* Edit / Simpan / Batal Actions */}
         {!isEditing ? (
           <button
             type="button"
             onClick={handleEditClick}
-            disabled={isBlockedByOther}
+            disabled={isBlockedByOther || isSaving}
             className={`flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold transition ${
-              isBlockedByOther
+              isBlockedByOther || isSaving
                 ? "text-[var(--muted)] cursor-not-allowed"
                 : "text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)] active:scale-90"
             }`}
@@ -837,7 +832,8 @@ function SingleEditableField({
             <button
               type="button"
               onClick={() => onCancel(fieldKey)}
-              className="flex items-center gap-1 rounded-lg border border-[#f0c8c8] bg-[#fff5f5] px-2 py-0.5 text-[11px] font-black text-[#b93c21] hover:bg-[#ffebee] transition active:scale-90"
+              disabled={isSaving}
+              className="flex items-center gap-1 rounded-lg border border-[#f0c8c8] bg-[#fff5f5] px-2 py-0.5 text-[11px] font-black text-[#b93c21] hover:bg-[#ffebee] transition active:scale-90 disabled:opacity-50"
               title="Batal ubah data"
             >
               <X size={12} /> Batal
@@ -845,10 +841,24 @@ function SingleEditableField({
             <button
               type="button"
               onClick={() => onConfirm(fieldKey)}
-              className="flex items-center gap-1 rounded-lg bg-[var(--brand)] px-2.5 py-0.5 text-[11px] font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-90"
-              title="Selesai ubah data"
+              disabled={isSaving}
+              className="flex items-center gap-1 rounded-lg bg-[var(--brand)] px-2.5 py-0.5 text-[11px] font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-90 disabled:opacity-50"
+              title="Simpan perubahan langsung ke database"
             >
-              <Check size={12} /> Selesai
+              {isSaving ? (
+                <>
+                  <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <Check size={12} />
+                  <span>Simpan</span>
+                </>
+              )}
             </button>
           </div>
         )}
@@ -859,7 +869,7 @@ function SingleEditableField({
         <div
           onClick={handleEditClick}
           className={`min-h-[42px] flex items-center justify-between rounded-xl border border-transparent px-3.5 py-2 transition-all ${
-            isBlockedByOther
+            isBlockedByOther || isSaving
               ? "cursor-not-allowed"
               : "cursor-pointer hover:border-[var(--brand)]/40 hover:bg-[#f2f7f3]/60 group"
           }`}
@@ -867,7 +877,7 @@ function SingleEditableField({
           <span className={`text-sm font-semibold truncate ${value ? "text-[var(--ink)]" : "text-[var(--muted)]/60 italic"}`}>
             {value || placeholder || "Belum diisi"}
           </span>
-          {!isBlockedByOther && (
+          {!isBlockedByOther && !isSaving && (
             <span className="text-[10px] font-bold text-[var(--muted)] opacity-0 group-hover:opacity-80 transition shrink-0 ml-2">
               Klik untuk edit
             </span>
