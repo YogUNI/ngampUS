@@ -23,6 +23,7 @@ import {
   FileText,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
 
 function deadlineLabel(deadline: string) {
   const days = differenceInCalendarDays(parseISO(deadline), new Date());
@@ -46,6 +47,11 @@ export default async function DashboardPage() {
   const jakartaHour = new Date().getUTCHours() + 7; // WIB offset
 
   const { data: { user } } = await supabase.auth.getUser();
+
+  // Auto sync activity progress status when scheduled time arrives
+  if (user) {
+    await syncActivityProgressStatuses(supabase, user.id);
+  }
   const [
     { data: profile },
     { data: activeSemester },

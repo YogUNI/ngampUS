@@ -65,6 +65,7 @@ async function getSignedInClient() {
 function refreshActivityPages() {
   revalidatePath("/kegiatan");
   revalidatePath("/dashboard");
+  revalidatePath("/rekap");
 }
 
 export async function createActivity(formData: FormData) {
@@ -86,10 +87,28 @@ export async function updateActivity(formData: FormData) {
   refreshActivityPages();
 }
 
+/**
+ * Toggle status antara selesai dan status sebelumnya (atau belum_mulai/on_progress)
+ */
 export async function completeActivity(formData: FormData) {
   const id = z.string().uuid().parse(formData.get("id"));
   const { supabase, user } = await getSignedInClient();
-  const { error } = await supabase.from("activities").update({ status: "selesai" }).eq("id", id).eq("user_id", user.id);
+  
+  const { data: currentItem } = await supabase
+    .from("activities")
+    .select("status")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single();
+
+  const nextStatus = currentItem?.status === "selesai" ? "belum_mulai" : "selesai";
+
+  const { error } = await supabase
+    .from("activities")
+    .update({ status: nextStatus })
+    .eq("id", id)
+    .eq("user_id", user.id);
+
   if (error) throw new Error(error.message);
   refreshActivityPages();
 }
