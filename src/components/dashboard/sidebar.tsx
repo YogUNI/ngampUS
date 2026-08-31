@@ -20,7 +20,7 @@ const nav = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DESKTOP SIDEBAR (Fits viewport 100vh without scrolling, neat and proportional)
+// DESKTOP SIDEBAR (Well-proportioned, comfortably filled height, zero scrolling)
 // ─────────────────────────────────────────────────────────────────────────────
 export function Sidebar({ name, activeSemester }: { name: string; activeSemester?: string }) {
   const router   = useRouter();
@@ -35,11 +35,11 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
 
   return (
     <aside
-      className={`dashboard-sidebar sticky top-0 flex h-screen shrink-0 flex-col justify-between overflow-hidden border-r border-[#d8e2da] px-3.5 py-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`dashboard-sidebar sticky top-0 flex h-screen shrink-0 flex-col justify-between overflow-hidden border-r border-[#d8e2da] px-3.5 py-5 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         collapsed ? "w-[72px]" : "w-72"
       }`}
     >
-      {/* ── TOP SECTION: Logo, Semester, Nav, CTA ── */}
+      {/* ── TOP & MIDDLE SECTION: Logo, Semester, Nav, CTA ── */}
       <div className="flex flex-col min-w-0">
         
         {/* Logo */}
@@ -51,17 +51,17 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
             <Image
               src="/logo_ngampUS.png"
               alt="ngampUS Logo"
-              width={34}
-              height={34}
-              className="h-8 w-8 shrink-0 object-contain drop-shadow-xs"
+              width={38}
+              height={38}
+              className="h-9 w-9 shrink-0 object-contain drop-shadow-xs"
               priority
             />
             {!collapsed && (
               <span>
-                <span className="font-display block text-xl font-black tracking-[-.06em] leading-tight">
+                <span className="font-display block text-2xl font-black tracking-[-.06em] leading-tight">
                   ngamp<span className="text-[var(--brand)]">US</span>
                 </span>
-                <span className="block text-[8.5px] font-black tracking-[.16em] text-[var(--muted)] leading-none mt-0.5">
+                <span className="block text-[9px] font-black tracking-[.16em] text-[var(--muted)] leading-none mt-0.5">
                   CAMPUS CONSOLE
                 </span>
               </span>
@@ -74,7 +74,7 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
             title={collapsed ? "Perluas sidebar" : "Ciutkan sidebar"}
             className={`rounded-xl p-1.5 text-[var(--muted)] transition hover:bg-[#eaf5eb] hover:text-[#103626] ${collapsed ? "mx-auto mt-1" : ""}`}
           >
-            {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
@@ -82,17 +82,17 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
         {!collapsed ? (
           <Link
             href="/semester"
-            className="mt-3.5 rounded-2xl border border-[#d7e3d9] bg-white/85 p-2.5 text-left shadow-xs transition hover:border-[#a9cdb2]"
+            className="mt-4 rounded-2xl border border-[#d7e3d9] bg-white/85 p-3 text-left shadow-xs transition hover:border-[#a9cdb2]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <span className="block text-[9px] font-black tracking-[.14em] text-[var(--muted)]">AKTIF SEKARANG</span>
-                <b className="mt-0.5 block truncate text-xs font-extrabold text-[var(--ink)]">{activeSemester || "Pilih semester"}</b>
+                <span className="block text-[9.5px] font-black tracking-[.14em] text-[var(--muted)]">AKTIF SEKARANG</span>
+                <b className="mt-0.5 block truncate text-sm font-extrabold text-[var(--ink)]">{activeSemester || "Pilih semester"}</b>
               </div>
-              <ChevronDown className="shrink-0 text-[var(--brand)]" size={15} />
+              <ChevronDown className="shrink-0 text-[var(--brand)]" size={16} />
             </div>
-            <div className="mt-1.5 flex items-center gap-1.5 text-[9.5px] font-bold text-[var(--brand)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] shadow-[0_0_0_2px_#dff3e5]" />
+            <div className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-[var(--brand)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] shadow-[0_0_0_2.5px_#dff3e5]" />
               Semester control
             </div>
           </Link>
@@ -100,21 +100,21 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
           <Link
             href="/semester"
             title={activeSemester || "Pilih semester"}
-            className="mx-auto mt-3 grid h-8 w-8 place-items-center rounded-xl border border-[#d7e3d9] bg-white text-[var(--brand)] shadow-xs transition hover:border-[#a9cdb2]"
+            className="mx-auto mt-4 grid h-9 w-9 place-items-center rounded-xl border border-[#d7e3d9] bg-white text-[var(--brand)] shadow-xs transition hover:border-[#a9cdb2]"
           >
-            <GraduationCap size={15} />
+            <GraduationCap size={16} />
           </Link>
         )}
 
         {/* Main Navigation Links */}
-        <nav className="mt-3 space-y-1">
+        <nav className="mt-4 space-y-1.5">
           {nav.map(({ href, label, note, icon: Icon }) => {
             const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
             return (
               <Link
                 key={href}
                 title={collapsed ? label : undefined}
-                className={`group flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition ${
+                className={`group flex items-center gap-3 rounded-2xl px-3 py-2.5 transition ${
                   active
                     ? "bg-[#103626] text-white shadow-md shadow-[#103626]/15"
                     : "text-[var(--muted)] hover:bg-white hover:text-[#103626]"
@@ -122,23 +122,23 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
                 href={href}
               >
                 <span
-                  className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${
+                  className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${
                     active
                       ? "bg-[#c8ef70] text-[#103626]"
                       : "bg-[#e7eee7] text-[#50705e] group-hover:bg-[#dff3e5] group-hover:text-[#0f6849]"
                   }`}
                 >
-                  <Icon size={16} />
+                  <Icon size={17} />
                 </span>
                 {!collapsed && (
                   <>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-xs sm:text-sm font-extrabold leading-tight">{label}</span>
-                      <span className={`block truncate text-[9.5px] ${active ? "text-[#bdd0c2]" : "text-[#829187]"}`}>
+                      <span className="block text-sm font-extrabold leading-tight">{label}</span>
+                      <span className={`block truncate text-[10.5px] ${active ? "text-[#bdd0c2]" : "text-[#829187]"}`}>
                         {note}
                       </span>
                     </span>
-                    {active && <ArrowUpRight size={13} className="text-[#c8ef70]" />}
+                    {active && <ArrowUpRight size={14} className="text-[#c8ef70]" />}
                   </>
                 )}
               </Link>
@@ -149,72 +149,72 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
         {/* CTA Catat Kegiatan */}
         {!collapsed ? (
           <Link
-            className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_4px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839]"
+            className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-[#c8ef70] px-3.5 py-3 text-sm font-black text-[#103626] shadow-[0_4px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839]"
             href="/kegiatan?new=1"
           >
-            <Plus size={15} strokeWidth={3} /> Catat kegiatan
+            <Plus size={17} strokeWidth={3} /> Catat kegiatan
           </Link>
         ) : (
           <Link
             href="/kegiatan?new=1"
             title="Catat kegiatan"
-            className="mx-auto mt-3 grid h-8 w-8 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_3px_0_#84a839] transition hover:-translate-y-0.5"
+            className="mx-auto mt-4 grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_3px_0_#84a839] transition hover:-translate-y-0.5"
           >
-            <Plus size={16} strokeWidth={3} />
+            <Plus size={17} strokeWidth={3} />
           </Link>
         )}
       </div>
 
       {/* ── BOTTOM SECTION: User Card Footer ── */}
-      <div className="pt-2">
+      <div className="pt-3">
         {!collapsed ? (
-          <div className="rounded-2xl border border-[#d8e2da] bg-white/80 p-2.5 shadow-xs">
-            <div className="flex items-center gap-2">
-              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
+          <div className="rounded-2xl border border-[#d8e2da] bg-white/80 p-3 shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
                 {name.slice(0, 1).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-extrabold text-[var(--ink)]">{name}</p>
-                <p className="text-[9.5px] font-bold text-[var(--muted)]">Personal workspace</p>
+                <p className="truncate text-xs sm:text-sm font-extrabold text-[var(--ink)]">{name}</p>
+                <p className="text-[10px] font-bold text-[var(--muted)]">Personal workspace</p>
               </div>
               <button
                 onClick={signOut}
                 title="Keluar"
                 className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21] transition"
               >
-                <LogOut size={15} />
+                <LogOut size={16} />
               </button>
             </div>
-            <div className="mt-2 flex gap-1 border-t border-[#e3ebe4] pt-1.5">
+            <div className="mt-2.5 flex gap-1.5 border-t border-[#e3ebe4] pt-2">
               <Link
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-[10.5px] font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
                 href="/settings"
               >
-                <Settings size={13} /> Profil
+                <Settings size={14} /> Profil
               </Link>
               <Link
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-[10.5px] font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
                 href="#"
               >
-                <CircleHelp size={13} /> Bantuan
+                <CircleHelp size={14} /> Bantuan
               </Link>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-1.5">
+          <div className="flex flex-col items-center gap-2">
             <Link
               href="/settings"
               title="Profil & Pengaturan"
-              className="grid h-8 w-8 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] hover:ring-2 hover:ring-[#c8ef70]/50 transition"
+              className="grid h-9 w-9 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] hover:ring-2 hover:ring-[#c8ef70]/50 transition"
             >
               {name.slice(0, 1).toUpperCase()}
             </Link>
             <button
               onClick={signOut}
               title="Keluar"
-              className="rounded-xl p-1.5 text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21] transition"
+              className="rounded-xl p-2 text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21] transition"
             >
-              <LogOut size={15} />
+              <LogOut size={16} />
             </button>
           </div>
         )}
