@@ -456,21 +456,23 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 )}
               />
 
-              {/* Field: Email Akun (Non-editable) */}
+              {/* Field: Email Akun (Non-editable clean text) */}
               <div className="sm:col-span-2 block text-sm font-bold text-[var(--ink)]">
-                <div className="flex items-center justify-between gap-1.5 mb-1">
+                <div className="flex items-center justify-between gap-1.5 mb-1.5">
                   <span className="flex items-center gap-1.5">
                     <Mail size={15} className="text-[var(--muted)]" />
                     Email Akun
                   </span>
-                  <span className="flex items-center gap-1 text-[10px] font-bold text-[var(--muted)]">
-                    <Lock size={10} /> Terkunci
+                  <span className="inline-flex items-center gap-1 rounded-md bg-[#f0f4f1] px-2 py-0.5 text-[10px] font-bold text-[var(--muted)]">
+                    <Lock size={10} /> Terikat Auth
                   </span>
                 </div>
-                <div className="rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3.5 py-2.5 text-sm font-medium text-[var(--muted)] cursor-not-allowed">
-                  {email}
+                <div className="min-h-[42px] flex items-center px-3.5 py-2">
+                  <span className="text-sm font-semibold text-[var(--ink)]/85">
+                    {email}
+                  </span>
                 </div>
-                <p className="mt-1 text-[11px] text-[var(--muted)]">
+                <p className="mt-0.5 px-3.5 text-[11px] text-[var(--muted)]">
                   <Shield size={11} className="mr-1 inline text-[var(--brand)]" />
                   Email terikat dengan otentikasi akun Supabase.
                 </p>
