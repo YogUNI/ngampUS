@@ -2,6 +2,7 @@
 
 import { useState, useRef, useTransition } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   BadgeCheck,
   BookOpen,
@@ -23,6 +24,9 @@ import {
   Check,
   X,
   Lock,
+  KeyRound,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
@@ -64,6 +68,13 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   const [bio, setBio] = useState(profile?.bio || "");
   const [linkedin, setLinkedin] = useState(profile?.linkedin || "");
   const [github, setGithub] = useState(profile?.github || "");
+
+  // Password update states
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   // Backup values for cancelling edit
   const [backupValues, setBackupValues] = useState<Record<string, string>>({
@@ -214,6 +225,36 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
     if (fieldKey === "github") updated.github = github;
 
     saveFieldToServer(updated);
+  };
+
+  // Handler to update password directly from settings
+  const handlePasswordUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 8) {
+      showToast("Password baru minimal 8 karakter.", "error");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showToast("Konfirmasi password tidak cocok.", "error");
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const supabase = (await import("@/lib/supabase/client")).createClient();
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+
+      showToast("Kata sandi berhasil diperbarui! 🔒", "success");
+      setNewPassword("");
+      setConfirmPassword("");
+      setIsChangingPassword(false);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal memperbarui kata sandi.";
+      showToast(msg, "error");
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   return (
@@ -742,6 +783,112 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 )}
               />
             </div>
+          </div>
+
+          {/* Section: Keamanan Akun / Ganti Password */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#feece7] text-[#c53e1c] shrink-0">
+                  <KeyRound size={18} />
+                </span>
+                <div>
+                  <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Keamanan Akun</h2>
+                  <p className="text-xs text-[var(--muted)]">
+                    Kelola kata sandi untuk melindungi akses workspace kamu.
+                  </p>
+                </div>
+              </div>
+
+              {!isChangingPassword ? (
+                <button
+                  type="button"
+                  onClick={() => setIsChangingPassword(true)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3.5 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition active:scale-95"
+                >
+                  <Pencil size={12} /> Ubah Password
+                </button>
+              ) : null}
+            </div>
+
+            {!isChangingPassword ? (
+              <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#fafbf9] px-4 py-3 border border-[var(--line)]">
+                <div className="flex items-center gap-2">
+                  <Lock size={15} className="text-[var(--muted)]" />
+                  <span className="text-xs font-semibold text-[var(--muted)]">
+                    Kata sandi aktif terlindungi enkripsi end-to-end.
+                  </span>
+                </div>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-bold text-[var(--brand)] hover:underline"
+                >
+                  Lupa password?
+                </Link>
+              </div>
+            ) : (
+              <form onSubmit={handlePasswordUpdate} className="mt-5 space-y-4 animate-in fade-in zoom-in-[0.98] duration-200">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="block text-xs font-bold text-[var(--ink)]">
+                    <span className="mb-1.5 block">Password Baru</span>
+                    <div className="relative">
+                      <input
+                        required
+                        type={showNewPassword ? "text" : "password"}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="Minimal 8 karakter"
+                        minLength={8}
+                        className="w-full rounded-xl border border-[var(--line)] bg-[#fcfdfb] px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--brand)] focus:bg-white focus:ring-2 focus:ring-[var(--brand)]/10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"
+                      >
+                        {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </label>
+
+                  <label className="block text-xs font-bold text-[var(--ink)]">
+                    <span className="mb-1.5 block">Konfirmasi Password Baru</span>
+                    <div className="relative">
+                      <input
+                        required
+                        type={showNewPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Ulangi password baru"
+                        minLength={8}
+                        className="w-full rounded-xl border border-[var(--line)] bg-[#fcfdfb] px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--brand)] focus:bg-white focus:ring-2 focus:ring-[var(--brand)]/10"
+                      />
+                    </div>
+                  </label>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsChangingPassword(false);
+                      setNewPassword("");
+                      setConfirmPassword("");
+                    }}
+                    className="rounded-xl px-3.5 py-2 text-xs font-bold text-[var(--muted)] hover:bg-[#f7f8f5] transition"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={passwordLoading}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-4 py-2 text-xs font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-60"
+                  >
+                    {passwordLoading ? "Menyimpan..." : "Perbarui Password"}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>

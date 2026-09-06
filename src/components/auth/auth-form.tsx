@@ -81,7 +81,20 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <input autoComplete="email" placeholder="kamu@email.com" type="email" {...register("email")} />
       </Field>
 
-      <Field label="Password" error={errors.password?.message}>
+      <Field
+        label="Password"
+        error={errors.password?.message}
+        rightAction={
+          !isRegister ? (
+            <Link
+              href="/forgot-password"
+              className="text-xs font-bold text-[var(--brand)] hover:underline"
+            >
+              Lupa password?
+            </Link>
+          ) : undefined
+        }
+      >
         <div className="relative">
           <input
             autoComplete={isRegister ? "new-password" : "current-password"}
@@ -130,10 +143,23 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  rightAction,
+  children,
+}: {
+  label: string;
+  error?: string;
+  rightAction?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold">{label}</span>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="block text-sm font-bold">{label}</span>
+        {rightAction}
+      </div>
       <div className="[&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-white [&_input]:px-3.5 [&_input]:py-3 [&_input]:outline-none [&_input]:transition [&_input]:placeholder:text-[#99a39d] [&_input]:focus:border-[var(--brand)] [&_input]:focus:ring-4 [&_input]:focus:ring-[#dcefe4]">
         {children}
       </div>
