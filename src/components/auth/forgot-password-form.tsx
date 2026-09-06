@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowLeft, ArrowRight, CheckCircle2, LoaderCircle, Mail } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const forgotSchema = z.object({
@@ -28,9 +28,9 @@ export function ForgotPasswordForm() {
   async function onSubmit(values: ForgotFormValues) {
     setServerError("");
     const supabase = createClient();
-    
-    // Construct redirect URL to reset-password page
-    const redirectUrl = `${window.location.origin}/reset-password`;
+
+    // Redirect to /auth/callback with next=/reset-password so server exchanges code and creates authenticated session
+    const redirectUrl = `${window.location.origin}/auth/callback?next=/reset-password`;
 
     const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
       redirectTo: redirectUrl,
