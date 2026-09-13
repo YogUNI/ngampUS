@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Check, CircleDotDashed, Clock3, Compass, Layers3, MoveUpRight, Target, Zap, Shield } from "lucide-react";
+import { ArrowRight, Check, CircleDotDashed, Clock3, Compass, Layers3, MoveUpRight, Target, Zap, Shield, Heart } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
 export default function Home() {
@@ -247,23 +247,57 @@ export default function Home() {
 
       {/* ── FOOTER ───────────────────────────────────────── */}
       <footer className="border-t border-[#d3ddd4] bg-[#f6f8f1]">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 text-sm text-[#65746a] sm:px-8 lg:px-12">
-          <Link href="/" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em] text-[#103626]">
-            <Image
-              src="/logo_ngampUS.png"
-              alt="ngampUS Logo"
-              width={28}
-              height={28}
-              className="h-7 w-7 object-contain"
-            />
-            <span>
-              ngamp<span className="text-[#0f6849]">US</span>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 px-5 py-8 text-sm text-[#65746a] sm:px-8 lg:px-12">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em] text-[#103626]">
+              <Image
+                src="/logo_ngampUS.png"
+                alt="ngampUS Logo"
+                width={28}
+                height={28}
+                className="h-7 w-7 object-contain"
+              />
+              <span>
+                ngamp<span className="text-[#0f6849]">US</span>
+              </span>
+            </Link>
+            <span className="hidden sm:inline text-xs text-[#95a49a]">|</span>
+            <span className="text-xs text-[#738378]">Personal workspace for campus life.</span>
+          </div>
+
+          {/* Developer credit with Instagram */}
+          <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+            <span className="flex items-center gap-1.5 text-[#526357]">
+              Developed with <Heart size={13} className="fill-[#e11d48] text-[#e11d48]" /> by{" "}
+              <a
+                href="https://www.instagram.com/gusrchmd_/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 font-bold text-[#103626] ring-1 ring-[#d3ddd4] transition hover:bg-[#eaf5eb] hover:text-[#0f6849] hover:ring-[#b8d6bf]"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#e1306c]"
+                >
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                </svg>
+                @gusrchmd_
+              </a>
             </span>
-          </Link>
-          <span>Personal workspace for campus life.</span>
-          <div className="flex gap-4 font-bold">
-            <Link href="/login" className="hover:text-[#0f6849] transition">Masuk</Link>
-            <Link href="/register" className="hover:text-[#0f6849] transition">Daftar</Link>
+
+            <div className="flex items-center gap-3 font-bold border-l border-[#d3ddd4] pl-4">
+              <Link href="/login" className="hover:text-[#0f6849] transition">Masuk</Link>
+              <Link href="/register" className="hover:text-[#0f6849] transition">Daftar</Link>
+            </div>
           </div>
         </div>
       </footer>
