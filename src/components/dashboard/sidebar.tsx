@@ -23,7 +23,7 @@ const nav = [
 // ─────────────────────────────────────────────────────────────────────────────
 // DESKTOP SIDEBAR (Well-proportioned, comfortably filled height, zero scrolling)
 // ─────────────────────────────────────────────────────────────────────────────
-export function Sidebar({ name, activeSemester }: { name: string; activeSemester?: string }) {
+export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; avatarUrl?: string | null; activeSemester?: string }) {
   const router   = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -197,9 +197,19 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
         {!collapsed ? (
           <div className="rounded-2xl border border-[#d8e2da] bg-white/95 p-3 shadow-xs">
             <div className="flex items-center gap-2.5">
-              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
-                {name.slice(0, 1).toUpperCase()}
-              </div>
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt={name}
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-[var(--line)] shadow-xs"
+                />
+              ) : (
+                <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
+                  {name.slice(0, 1).toUpperCase()}
+                </div>
+              )}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-extrabold text-[var(--ink)] leading-snug">{name}</p>
                 <p className="text-[10px] font-bold text-[var(--muted)] leading-none mt-0.5">Personal workspace</p>
@@ -232,9 +242,21 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
             <Link
               href="/settings"
               title={`Profil: ${name}`}
-              className="grid h-10 w-10 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] ring-2 ring-transparent hover:ring-[#c8ef70]/50 transition"
+              className="grid h-10 w-10 place-items-center rounded-full ring-2 ring-transparent hover:ring-[#c8ef70]/50 transition overflow-hidden"
             >
-              {name.slice(0, 1).toUpperCase()}
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt={name}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-full object-cover shadow-xs"
+                />
+              ) : (
+                <div className="grid h-10 w-10 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
+                  {name.slice(0, 1).toUpperCase()}
+                </div>
+              )}
             </Link>
             <button
               onClick={signOut}
@@ -253,7 +275,7 @@ export function Sidebar({ name, activeSemester }: { name: string; activeSemester
 // ─────────────────────────────────────────────────────────────────────────────
 // MOBILE TOPBAR + DRAWER
 // ─────────────────────────────────────────────────────────────────────────────
-export function MobileTopbar({ name, activeSemester }: { name: string; activeSemester?: string }) {
+export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string; avatarUrl?: string | null; activeSemester?: string }) {
   const [open, setOpen] = useState(false);
   const router   = useRouter();
   const pathname = usePathname();
@@ -363,9 +385,19 @@ export function MobileTopbar({ name, activeSemester }: { name: string; activeSem
             <div className="border-t border-[var(--line)] pt-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-bold text-[#c8ef70]">
-                    {name.slice(0, 1).toUpperCase()}
-                  </div>
+                  {avatarUrl ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={name}
+                      width={32}
+                      height={32}
+                      className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-[var(--line)] shadow-xs"
+                    />
+                  ) : (
+                    <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-bold text-[#c8ef70]">
+                      {name.slice(0, 1).toUpperCase()}
+                    </div>
+                  )}
                   <div className="min-w-0">
                     <p className="truncate text-xs font-bold">{name}</p>
                     <Link href="/settings" className="text-[10px] font-bold text-[var(--brand)] hover:underline">
