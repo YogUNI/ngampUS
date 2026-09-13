@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import {
-  ArrowUpRight, BarChart3, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
+  ArrowUpRight, BarChart3, BookOpen, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, GraduationCap, LayoutDashboard, LogOut, Menu, Plus,
   Settings, Sparkles, UsersRound, X,
 } from "lucide-react";
@@ -12,11 +12,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const nav = [
-  { href: "/dashboard",   label: "Dashboard",  note: "Peta fokus",       icon: LayoutDashboard },
-  { href: "/kegiatan",    label: "Kegiatan",   note: "Semua komitmen",    icon: CalendarDays    },
-  { href: "/organisasi",  label: "Organisasi", note: "Ruang kontribusi",  icon: UsersRound      },
-  { href: "/semester",    label: "Semester",   note: "Konteks akademik",  icon: GraduationCap   },
-  { href: "/rekap",       label: "Rekap",      note: "Jejak progres",     icon: BarChart3       },
+  { href: "/dashboard",   label: "Dashboard",     note: "Peta fokus",       icon: LayoutDashboard },
+  { href: "/kegiatan",    label: "Kegiatan",      note: "Semua komitmen",    icon: CalendarDays    },
+  { href: "/jadwal",      label: "Jadwal Kuliah", note: "Kelas mingguan",   icon: BookOpen        },
+  { href: "/organisasi",  label: "Organisasi",    note: "Ruang kontribusi",  icon: UsersRound      },
+  { href: "/semester",    label: "Semester",      note: "Konteks akademik",  icon: GraduationCap   },
+  { href: "/rekap",       label: "Rekap",         note: "Jejak progres",     icon: BarChart3       },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

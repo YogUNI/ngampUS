@@ -247,6 +247,11 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                             <span className={`rounded-lg px-2.5 py-1 text-xs font-bold ${statusClass(activity.status)}`}>
                               {activity.status === "on_progress" ? "Berjalan" : activity.status === "belum_mulai" ? "Belum mulai" : "Selesai"}
                             </span>
+                            {activity.is_portfolio && (
+                              <span className="rounded-lg bg-[#f4fbe8] px-2 py-1 text-[10px] font-black text-[#456a1e] border border-[#c8ef70]">
+                                ⭐ Portfolio
+                              </span>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-2">

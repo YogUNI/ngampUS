@@ -34,7 +34,16 @@ export function ActivityForm({
   const [kategori, setKategori] = useState<string>("organisasi");
   const [prioritas, setPrioritas] = useState<string>("sedang");
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  // Portfolio toggle — defaults to true for lomba/event/organisasi categories
+  const PORTFOLIO_CATEGORIES = ["lomba", "event", "organisasi"];
+  const [isPortfolio, setIsPortfolio] = useState(true); // default true because default kategori is "organisasi"
   const { showToast } = useToast();
+
+  function handleKategoriChange(value: string) {
+    setKategori(value);
+    // Smart auto-default: set portfolio based on category
+    setIsPortfolio(PORTFOLIO_CATEGORIES.includes(value));
+  }
 
   const availablePrograms = selectedOrgId
     ? programs.filter((p) => p.organization_id === selectedOrgId)
@@ -115,7 +124,7 @@ export function ActivityForm({
             type="button"
             onClick={() => {
               setMode("agenda");
-              if (kategori === "kuliah") setKategori("organisasi");
+              if (kategori === "kuliah") handleKategoriChange("organisasi");
             }}
             className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-black transition ${
               mode === "agenda"
@@ -130,7 +139,7 @@ export function ActivityForm({
             type="button"
             onClick={() => {
               setMode("tugas");
-              setKategori("kuliah");
+              handleKategoriChange("kuliah");
             }}
             className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-black transition ${
               mode === "tugas"
@@ -191,7 +200,7 @@ export function ActivityForm({
               <select
                 name="kategori"
                 value={kategori}
-                onChange={(e) => setKategori(e.target.value)}
+                onChange={(e) => handleKategoriChange(e.target.value)}
                 className="mt-1"
               >
                 <option value="organisasi">Organisasi</option>
@@ -218,6 +227,54 @@ export function ActivityForm({
               </select>
             </div>
           </div>
+
+          {/* Portfolio Toggle */}
+          <input type="hidden" name="is_portfolio" value={isPortfolio ? "true" : "false"} />
+          <div
+            className={`flex items-start justify-between gap-3 rounded-2xl border px-3.5 py-3 cursor-pointer transition ${
+              isPortfolio
+                ? "border-[#c8ef70] bg-[#f4fbe8]"
+                : "border-[var(--line)] bg-[#fafbf9]"
+            }`}
+            onClick={() => setIsPortfolio((v) => !v)}
+          >
+            <div className="min-w-0">
+              <p className={`text-xs font-black ${isPortfolio ? "text-[#456a1e]" : "text-[var(--muted)]"}`}>
+                {isPortfolio ? "⭐ Masuk ke Portofolio Semester" : "📋 Tidak Masuk Portofolio"}
+              </p>
+              <p className="mt-0.5 text-[10.5px] text-[var(--muted)] leading-snug">
+                {isPortfolio
+                  ? "Kegiatan ini akan ditampilkan di CV / rekap prestasi semester kamu."
+                  : "Kegiatan ini bersifat internal/pribadi dan tidak akan masuk rekap CV."}
+              </p>
+            </div>
+            <div
+              className={`relative mt-0.5 h-5 w-9 shrink-0 rounded-full transition-colors ${
+                isPortfolio ? "bg-[#6aaa17]" : "bg-[#d0d5c8]"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${
+                  isPortfolio ? "left-[18px]" : "left-0.5"
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Peran / Pencapaian — hanya tampil kalau is_portfolio aktif */}
+          {isPortfolio && (
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-[var(--muted)]">
+                Peran / Pencapaian (Opsional)
+              </label>
+              <input
+                name="peran_portfolio"
+                placeholder="Contoh: Ketua Pelaksana, Juara 2 Nasional, Peserta Aktif"
+                maxLength={120}
+                className="mt-1"
+              />
+            </div>
+          )}
 
           {/* Tanggal & Waktu Section */}
           {mode === "agenda" && (

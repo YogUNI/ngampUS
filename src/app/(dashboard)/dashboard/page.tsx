@@ -21,6 +21,8 @@ import {
   Zap,
   CalendarPlus,
   FileText,
+  MapPin,
+  Video,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
@@ -115,15 +117,31 @@ export default async function DashboardPage() {
 
   if (semesterId) todayQuery = todayQuery.eq("semester_id", semesterId);
 
+  // Calculate day of week (1: Senin, ..., 7: Minggu) based on Jakarta timezone (UTC+7)
+  const nowUtc = new Date();
+  const jktTime = new Date(nowUtc.getTime() + 7 * 60 * 60 * 1000);
+  const jsDay = jktTime.getUTCDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+  const todayDayNumber = jsDay === 0 ? 7 : jsDay;
+
+  let todayCoursesQuery = supabase
+    .from("courses")
+    .select("id,nama_matkul,kode_matkul,sks,jam_mulai,jam_selesai,ruangan,tipe_pertemuan,link_pertemuan,link_materi,dosen_pengampu,warna_label")
+    .eq("hari", todayDayNumber)
+    .order("jam_mulai", { ascending: true });
+
+  if (semesterId) todayCoursesQuery = todayCoursesQuery.eq("semester_id", semesterId);
+
   const [
     { data: upcomingActivities },
     { data: todayActivities },
+    { data: todayCourses },
     { count: activeCount },
     { count: completeCount },
     { count: overdueCount },
   ] = await Promise.all([
     upcomingQuery,
     todayQuery,
+    todayCoursesQuery,
     activeCountQuery,
     completeCountQuery,
     overdueCountQuery,
@@ -131,6 +149,7 @@ export default async function DashboardPage() {
 
   const upcomingItems = upcomingActivities ?? [];
   const todaySchedule = todayActivities ?? [];
+  const todayClasses = todayCourses ?? [];
   const totalItems = (activeCount ?? 0) + (completeCount ?? 0);
   const completionRate = totalItems > 0 ? Math.round(((completeCount ?? 0) / totalItems) * 100) : 0;
 
@@ -299,6 +318,97 @@ export default async function DashboardPage() {
 
         {/* Left Column */}
         <div className="flex flex-col min-w-0 gap-5">
+
+          {/* Today's Classes Widget */}
+          <div className="surface-lift min-w-0 rounded-2xl border border-[#b9ddc6] bg-[#f4faf6] p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-2 border-b border-[#b9ddc6] pb-3">
+              <div className="min-w-0">
+                <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)] flex items-center gap-1.5">
+                  <BookOpen size={13} /> KULIAH HARI INI
+                </p>
+                <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+                  Jadwal kelas perkuliahan
+                </h2>
+              </div>
+              <Link
+                href={`/jadwal${semesterFilter}`}
+                className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline"
+              >
+                Semua jadwal <ArrowUpRight size={14} />
+              </Link>
+            </div>
+
+            <div className="mt-3.5 space-y-2.5">
+              {todayClasses.length ? (
+                todayClasses.map((c) => (
+                  <article
+                    key={c.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-white p-3.5 shadow-xs transition hover:border-[var(--brand)]"
+                    style={{ borderLeftColor: c.warna_label || "var(--brand)", borderLeftWidth: "4px" }}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">
+                          {c.kode_matkul ? `${c.kode_matkul} · ` : ""}{c.sks} SKS
+                        </span>
+                        <span
+                          className={`rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider ${
+                            c.tipe_pertemuan === "online"
+                              ? "bg-[#e0e7ff] text-[#3730a3]"
+                              : c.tipe_pertemuan === "hybrid"
+                              ? "bg-[#fef3c7] text-[#92400e]"
+                              : "bg-[#dcfce7] text-[#166534]"
+                          }`}
+                        >
+                          {c.tipe_pertemuan}
+                        </span>
+                      </div>
+                      <h3 className="mt-1 font-bold text-sm text-[var(--ink)] truncate">{c.nama_matkul}</h3>
+                      <div className="mt-1 flex flex-wrap items-center gap-2.5 text-xs text-[var(--muted)]">
+                        <span className="font-bold text-[var(--brand)] flex items-center gap-1">
+                          <Clock3 size={12} /> {c.jam_mulai.slice(0, 5)} - {c.jam_selesai.slice(0, 5)} WIB
+                        </span>
+                        {c.ruangan && (
+                          <span className="flex items-center gap-1">
+                            <MapPin size={12} /> {c.ruangan}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Action buttons (Zoom / Drive) */}
+                    <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-[#f0f4f1] sm:border-t-0">
+                      {c.link_pertemuan && (
+                        <a
+                          href={c.link_pertemuan}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#1d5034] transition"
+                        >
+                          <Video size={13} /> Masuk Kelas
+                        </a>
+                      )}
+                      {c.link_materi && (
+                        <a
+                          href={c.link_materi}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] transition"
+                        >
+                          <FileText size={13} /> Materi
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="rounded-xl bg-white/70 px-4 py-5 text-center border border-dashed border-[#b9ddc6]">
+                  <p className="text-xs font-bold text-[var(--brand)]">🎉 Tidak ada kelas kuliah hari ini</p>
+                  <p className="mt-0.5 text-[11px] text-[var(--muted)]">Hari ini bebas dari jadwal tatap muka/daring. Manfaatkan untuk istirahat atau cicil tugas!</p>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Today's Schedule */}
           <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">

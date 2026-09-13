@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, CalendarClock, CheckCircle2, CircleDashed, ListTodo } from "lucide-react";
+import { BarChart3, CalendarClock, CheckCircle2, CircleDashed, ListTodo, Sparkles } from "lucide-react";
 import { ExportCsv } from "@/components/recap/export-csv";
 import { createClient } from "@/lib/supabase/server";
 import { categoryClass } from "@/lib/activity-styles";
@@ -49,6 +49,8 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
     { priority: "rendah", label: "Prioritas Rendah", count: items.filter((i) => i.prioritas === "rendah").length, color: "#8a9b8f" },
   ];
 
+  const portfolioHref = `/rekap/portfolio${filters.semester_id ? `?semester_id=${filters.semester_id}` : ""}`;
+
   return <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
     <header className="flex flex-wrap items-end justify-between gap-4">
       <div>
@@ -56,7 +58,15 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
         <h1 className="font-display mt-1 text-4xl font-extrabold tracking-[-.045em]">Rekap aktivitas</h1>
         <p className="mt-2 text-[var(--muted)]">Lihat ritme kerjamu, lalu bawa datanya ke laporan atau evaluasi.</p>
       </div>
-      <ExportCsv activities={items} fileName={`rekap-ngampus${selectedSemester ? `-${selectedSemester.nama_semester.toLowerCase().replaceAll(" ", "-")}` : ""}`}/>
+      <div className="flex flex-wrap items-center gap-2">
+        <Link
+          href={portfolioHref}
+          className="inline-flex items-center gap-2 rounded-xl bg-[#103626] px-4 py-2.5 text-xs font-black text-white shadow-md hover:bg-[#1d5034] transition"
+        >
+          <Sparkles size={14} /> Lihat Portofolio CV
+        </Link>
+        <ExportCsv activities={items} fileName={`rekap-ngampus${selectedSemester ? `-${selectedSemester.nama_semester.toLowerCase().replaceAll(" ", "-")}` : ""}`}/>
+      </div>
     </header>
 
     <section className="surface-lift mt-7 rounded-2xl border border-[var(--line)] bg-white p-4">
