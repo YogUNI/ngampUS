@@ -5,6 +5,7 @@ import {
   BookOpen,
   Calendar,
   Clock,
+  Download,
   ExternalLink,
   MapPin,
   Pencil,
@@ -15,6 +16,8 @@ import {
   FileText,
 } from "lucide-react";
 import { CourseData, CourseFormModal } from "./course-form-modal";
+import { CourseCalendar } from "./course-calendar";
+import { generateIcsCalendar } from "@/lib/calendar-utils";
 import { deleteCourse } from "@/app/(dashboard)/jadwal/actions";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
 
@@ -31,12 +34,16 @@ export function ScheduleClientView({
   courses,
   semesters,
   activeSemesterId,
+  semesterDates,
+  semesterName,
 }: {
   courses: (CourseData & { id: string })[];
   semesters: { id: string; nama_semester: string; is_active: boolean }[];
   activeSemesterId?: string;
+  semesterDates?: { tanggal_mulai: string; tanggal_selesai: string };
+  semesterName?: string;
 }) {
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [viewMode, setViewMode] = useState<"list" | "grid" | "calendar">("list");
   const [editingCourse, setEditingCourse] = useState<CourseData | null>(null);
 
   // Group courses by day
@@ -46,6 +53,32 @@ export function ScheduleClientView({
   }));
 
   const totalSks = courses.reduce((acc, c) => acc + (c.sks || 0), 0);
+
+  const handleExportIcs = () => {
+    if (!courses.length) return;
+    const icsContent = generateIcsCalendar(
+      courses,
+      semesterDates?.tanggal_mulai,
+      semesterDates?.tanggal_selesai,
+      semesterName || "Semester"
+    );
+    if (!icsContent) {
+      alert("Rentang tanggal semester belum ditentukan atau tidak ada jadwal mata kuliah.");
+      return;
+    }
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `jadwal-kuliah-${(semesterName || "semester").toLowerCase().replace(/\s+/g, "-")}.ics`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div>
@@ -65,12 +98,24 @@ export function ScheduleClientView({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Export to Calendar (.ics) */}
+          {courses.length > 0 && (
+            <button
+              onClick={handleExportIcs}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[#fafbf9] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-white hover:border-[#a9cdb2] transition"
+              title="Download file .ics untuk Google Calendar / Apple Calendar"
+            >
+              <Download size={14} className="text-[var(--brand)]" />
+              <span>Export ke Kalender</span>
+            </button>
+          )}
+
           {/* View Mode Toggle */}
           <div className="flex rounded-xl bg-[#f0f4f1] p-1">
             <button
               onClick={() => setViewMode("list")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition ${
                 viewMode === "list" ? "bg-white text-[var(--ink)] shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
@@ -78,11 +123,19 @@ export function ScheduleClientView({
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition ${
                 viewMode === "grid" ? "bg-white text-[var(--ink)] shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
               Tabel Mingguan
+            </button>
+            <button
+              onClick={() => setViewMode("calendar")}
+              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition ${
+                viewMode === "calendar" ? "bg-white text-[var(--brand)] shadow-xs font-extrabold" : "text-[var(--muted)] hover:text-[var(--ink)]"
+              }`}
+            >
+              Kalender
             </button>
           </div>
 
@@ -248,7 +301,7 @@ export function ScheduleClientView({
             </div>
           ))}
         </div>
-      ) : (
+      ) : viewMode === "grid" ? (
         /* GRID TIMETABLE VIEW */
         <div className="mt-6 overflow-x-auto rounded-3xl border border-[var(--line)] bg-white p-5 shadow-xs">
           <div className="grid min-w-[700px] grid-cols-6 gap-3">
@@ -295,6 +348,13 @@ export function ScheduleClientView({
             ))}
           </div>
         </div>
+      ) : (
+        /* MONTHLY CALENDAR VIEW */
+        <CourseCalendar
+          courses={courses}
+          tanggalMulai={semesterDates?.tanggal_mulai}
+          tanggalSelesai={semesterDates?.tanggal_selesai}
+        />
       )}
     </div>
   );

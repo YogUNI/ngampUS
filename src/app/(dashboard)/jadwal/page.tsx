@@ -15,7 +15,7 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
     { data: semesters },
   ] = await Promise.all([
     supabase.auth.getUser(),
-    supabase.from("semesters").select("id,nama_semester,is_active").order("tanggal_mulai", { ascending: false }),
+    supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai,is_active").order("tanggal_mulai", { ascending: false }),
   ]);
 
   const activeSemester = semesters?.find((s) => s.is_active);
@@ -79,6 +79,15 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
         courses={courses}
         semesters={semesters ?? []}
         activeSemesterId={targetSemesterId ?? undefined}
+        semesterDates={
+          currentSemester?.tanggal_mulai && currentSemester?.tanggal_selesai
+            ? {
+                tanggal_mulai: currentSemester.tanggal_mulai,
+                tanggal_selesai: currentSemester.tanggal_selesai,
+              }
+            : undefined
+        }
+        semesterName={currentSemester?.nama_semester}
       />
     </div>
   );
