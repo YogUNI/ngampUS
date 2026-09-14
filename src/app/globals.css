@@ -705,3 +705,40 @@ html {
 .dark .dashboard-content .fc-theme-standard th {
   border-color: #1a3526 !important;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LANDING PAGE — ALWAYS LIGHT (ignore dark mode)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Reset CSS vars to light values inside landing page when dark mode is active */
+.dark .landing-page {
+  --background: #f5f7f2;
+  --foreground: #10261b;
+  --ink: #10261b;
+  --muted: #65746a;
+  --line: #dbe5dc;
+  --card-bg: #ffffff;
+  --card-subtle: #fafbfa;
+  --brand: #0f6849;
+  --brand-dark: #0a432f;
+  --brand-soft: #dff3e5;
+  --cream: #f4f0e7;
+  --coral: #e57255;
+  --yellow: #d9ee72;
+}
+
+/* Override dark body background for landing page */
+.dark body:has(.landing-page) {
+  background: #f7f8f5 !important;
+  background-image: none !important;
+  color: #10261b !important;
+}
+
+/* Ensure landing inputs/selects don't inherit dark styles */
+.dark .landing-page input,
+.dark .landing-page select,
+.dark .landing-page textarea {
+  background-color: #ffffff !important;
+  border-color: #dbe5dc !important;
+  color: #10261b !important;
+}

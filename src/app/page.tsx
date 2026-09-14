@@ -20,7 +20,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { InteractivePreview } from "@/components/landing/interactive-preview";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
-import { ThemeToggle } from "@/components/theme-toggle";
+
 
 export default function Home() {
   const tickerItems = [
@@ -33,7 +33,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="atlas-page min-h-screen overflow-hidden bg-[#f7f8f5] text-[#10261b]">
+    <main className="atlas-page landing-page min-h-screen overflow-hidden bg-[#f7f8f5] text-[#10261b]">
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
       <section className="atlas-hero relative min-h-screen bg-[#103626] px-5 pb-20 pt-5 text-[#f6f8f1] sm:px-8 lg:px-12">
@@ -79,8 +79,7 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2 text-sm font-bold">
-            <ThemeToggle variant="icon" className="border-white/20 bg-white/10 text-white hover:border-white/40 hover:text-[#c8ef70]" />
-            <Link 
+            <Link
               href="/login" 
               className="rounded-full px-4 py-2 text-[#c9dbce] hover:bg-white/10 hover:text-white transition"
             >
