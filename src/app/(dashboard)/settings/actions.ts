@@ -12,9 +12,9 @@ export async function updateProfile(formData: FormData) {
     angkatan:   z.string().trim().max(4).optional().nullable(),
     phone:      z.string().trim().max(30).optional().nullable(),
     bio:        z.string().trim().max(280).optional().nullable(),
-    linkedin:   z.string().trim().max(300).optional().nullable(),
-    github:     z.string().trim().max(300).optional().nullable(),
-    avatar_url: z.string().optional().nullable(),
+    linkedin:   z.string().trim().url("Link LinkedIn harus berupa URL valid.").regex(/^https?:\/\//i, "URL harus diawali http:// atau https://.").max(300).or(z.literal("")).optional().nullable(),
+    github:     z.string().trim().url("Link GitHub harus berupa URL valid.").regex(/^https?:\/\//i, "URL harus diawali http:// atau https://.").max(300).or(z.literal("")).optional().nullable(),
+    avatar_url: z.string().trim().url("URL avatar harus valid.").regex(/^https?:\/\//i, "URL avatar harus diawali http:// atau https://.").max(500).or(z.literal("")).optional().nullable(),
   }).parse({
     full_name:  formData.get("full_name"),
     university: formData.get("university") || null,

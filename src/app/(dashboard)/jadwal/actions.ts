@@ -17,8 +17,24 @@ const courseSchema = z
     jam_selesai: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Jam selesai tidak valid."),
     tipe_pertemuan: z.enum(["offline", "online", "hybrid"]).default("offline"),
     ruangan: z.string().trim().max(80).or(z.literal("")).nullable().optional(),
-    link_pertemuan: z.string().trim().url("Link pertemuan harus URL valid.").or(z.literal("")).nullable().optional(),
-    link_materi: z.string().trim().url("Link materi harus URL valid.").or(z.literal("")).nullable().optional(),
+    link_pertemuan: z
+      .string()
+      .trim()
+      .url("Link pertemuan harus URL valid.")
+      .regex(/^https?:\/\//i, "Link pertemuan harus menggunakan protokol http:// atau https://.")
+      .max(500)
+      .or(z.literal(""))
+      .nullable()
+      .optional(),
+    link_materi: z
+      .string()
+      .trim()
+      .url("Link materi harus URL valid.")
+      .regex(/^https?:\/\//i, "Link materi harus menggunakan protokol http:// atau https://.")
+      .max(500)
+      .or(z.literal(""))
+      .nullable()
+      .optional(),
     warna_label: z.string().trim().max(20).default("#0f6849"),
     catatan: z.string().trim().max(1000).or(z.literal("")).nullable().optional(),
   })
