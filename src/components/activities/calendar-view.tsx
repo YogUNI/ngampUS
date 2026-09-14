@@ -134,7 +134,7 @@ export function CalendarView({
         id: `crs-day-${dateStr}`,
         title,
         date: dateStr,
-        backgroundColor: "#0f6849", // Brand green ngampUS
+        backgroundColor: "#4f46e5", // Indigo khas perkuliahan akademik agar kontras dengan hijau organisasi & biru tugas
         borderColor: "transparent",
         textColor: "#ffffff",
         classNames: ["cal-event-course", "font-black"],
@@ -159,18 +159,18 @@ export function CalendarView({
       {/* Legend & Filter Switches */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-3 text-xs">
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <span className="font-extrabold text-[var(--ink)]">Filter Tampilan:</span>
+          <span className="font-extrabold text-[var(--ink)]">Filter:</span>
 
           {/* Toggle Matkul */}
           <button
             onClick={() => setShowCourses((v) => !v)}
             className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-bold transition ${
               showCourses
-                ? "bg-[#0f6849] text-white shadow-2xs"
+                ? "bg-[#4f46e5] text-white shadow-2xs"
                 : "bg-[#f0f4f1] text-[var(--muted)] opacity-60 line-through"
             }`}
           >
-            <span>📚 Jadwal Kuliah ({courses.length})</span>
+            <span>🎓 Jadwal Kuliah ({courses.length})</span>
           </button>
 
           {/* Toggle Kegiatan/Tugas */}
@@ -178,7 +178,7 @@ export function CalendarView({
             onClick={() => setShowActivities((v) => !v)}
             className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-bold transition ${
               showActivities
-                ? "bg-[#3b82c4] text-white shadow-2xs"
+                ? "bg-[var(--brand)] text-white shadow-2xs"
                 : "bg-[#f0f4f1] text-[var(--muted)] opacity-60 line-through"
             }`}
           >
@@ -189,6 +189,9 @@ export function CalendarView({
 
           {/* Legend dots */}
           <div className="hidden sm:flex items-center gap-2.5 text-[11px] text-[var(--muted)] font-medium">
+            <span className="flex items-center gap-1">
+              <span className="h-2 w-2 rounded-full bg-[#4f46e5]" /> Kuliah
+            </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-[#0f6849]" /> Organisasi
             </span>
@@ -205,7 +208,7 @@ export function CalendarView({
         </div>
 
         <p className="text-[11px] text-[var(--muted)] hidden md:block">
-          💡 Klik event untuk lihat detail · Klik kotak tanggal untuk buat tugas
+          💡 Klik event untuk lihat detail · Klik tanggal untuk buat tugas
         </p>
       </div>
 
@@ -233,20 +236,26 @@ export function CalendarView({
 
       {/* Detail Popover Modal when clicking event */}
       {activeItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="w-full max-w-lg rounded-3xl border border-[var(--line)] bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActiveItem(null);
+          }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-150"
+        >
+          <div className="relative flex flex-col w-full max-w-lg max-h-[85vh] rounded-3xl border border-[var(--line)] bg-white shadow-2xl overflow-hidden">
             {activeItem.type === "course_group" && activeItem.courses && (
-              <div>
-                <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-3">
+              <>
+                {/* Header (Sticky Top) */}
+                <div className="flex items-center justify-between gap-3 border-b border-[var(--line)] bg-[#fbfcfa] px-6 py-4 shrink-0">
                   <div className="flex items-center gap-2.5">
-                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dff3e5] text-[var(--brand)]">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#eef2ff] text-[#4f46e5]">
                       <BookOpen size={20} />
                     </span>
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-wider text-[var(--brand)]">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-[#4f46e5]">
                         JADWAL KULIAH HARI INI
                       </span>
-                      <h3 className="font-display text-lg font-extrabold text-[var(--ink)] leading-snug">
+                      <h3 className="font-display text-base sm:text-lg font-extrabold text-[var(--ink)] leading-snug">
                         {activeItem.dateStr
                           ? new Intl.DateTimeFormat("id-ID", {
                               weekday: "long",
@@ -260,18 +269,20 @@ export function CalendarView({
                   </div>
                   <button
                     onClick={() => setActiveItem(null)}
-                    className="rounded-xl p-1.5 text-[var(--muted)] hover:bg-[#f0f4f1] hover:text-[var(--ink)]"
+                    className="rounded-xl p-2 text-[var(--muted)] hover:bg-[#f0f4f1] hover:text-[var(--ink)] transition"
+                    title="Tutup"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
-                <p className="mt-3 text-xs text-[var(--muted)]">
-                  Terdapat <strong className="text-[var(--ink)]">{activeItem.courses.length} mata kuliah</strong> yang berlangsung pada hari ini:
-                </p>
+                {/* Body (Scrollable) */}
+                <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+                  <p className="text-xs text-[var(--muted)]">
+                    Terdapat <strong className="text-[var(--ink)]">{activeItem.courses.length} mata kuliah</strong> yang berlangsung pada hari ini:
+                  </p>
 
-                {/* List of courses for this day */}
-                <div className="mt-3 space-y-3">
+                  {/* List of courses for this day */}
                   {activeItem.courses.map((course) => (
                     <div
                       key={course.id}
@@ -299,7 +310,7 @@ export function CalendarView({
                         {course.nama_matkul}
                       </h4>
 
-                      <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-[var(--brand)]">
+                      <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-[#4f46e5]">
                         <Clock size={13} />
                         <span>
                           {course.jam_mulai.slice(0, 5)} - {course.jam_selesai.slice(0, 5)} WIB
@@ -308,14 +319,14 @@ export function CalendarView({
 
                       {course.ruangan && (
                         <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--muted)]">
-                          <MapPin size={13} className="shrink-0 text-[var(--brand)]" />
+                          <MapPin size={13} className="shrink-0 text-[#4f46e5]" />
                           <span className="truncate">{course.ruangan}</span>
                         </div>
                       )}
 
                       {course.dosen_pengampu && (
                         <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--muted)]">
-                          <User size={13} className="shrink-0 text-[var(--brand)]" />
+                          <User size={13} className="shrink-0 text-[#4f46e5]" />
                           <span className="truncate">{course.dosen_pengampu}</span>
                         </div>
                       )}
@@ -348,66 +359,73 @@ export function CalendarView({
                   ))}
                 </div>
 
-                <div className="mt-5 text-right border-t border-[var(--line)] pt-3">
+                {/* Footer (Sticky Bottom) */}
+                <div className="flex items-center justify-end border-t border-[var(--line)] bg-[#fbfcfa] px-6 py-3 shrink-0">
                   <button
                     onClick={() => setActiveItem(null)}
-                    className="rounded-xl bg-[#103626] px-4 py-2 text-xs font-bold text-white hover:bg-[#1d5034] transition"
+                    className="rounded-xl bg-[#103626] px-5 py-2 text-xs font-bold text-white hover:bg-[#1d5034] transition"
                   >
                     Tutup
                   </button>
                 </div>
-              </div>
+              </>
             )}
 
             {activeItem.type === "activity" && activeItem.activity && (
-              <div>
-                <div className="flex items-start justify-between gap-3">
+              <>
+                {/* Header (Sticky Top) */}
+                <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] bg-[#fbfcfa] px-6 py-4 shrink-0">
                   <div>
                     <span className="text-[10px] font-black uppercase tracking-wider text-[var(--brand)]">
                       {activeItem.activity.kategori.toUpperCase()} · PRIORITAS {activeItem.activity.prioritas.toUpperCase()}
                     </span>
-                    <h3 className="font-display text-lg font-extrabold text-[var(--ink)] leading-snug">
+                    <h3 className="font-display text-base sm:text-lg font-extrabold text-[var(--ink)] leading-snug">
                       {activeItem.activity.judul}
                     </h3>
                   </div>
                   <button
                     onClick={() => setActiveItem(null)}
-                    className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[#f0f4f1] hover:text-[var(--ink)]"
+                    className="rounded-xl p-2 text-[var(--muted)] hover:bg-[#f0f4f1] hover:text-[var(--ink)] transition"
+                    title="Tutup"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
-                <div className="mt-4 space-y-2 rounded-2xl bg-[#fafbf9] p-3.5 border border-[var(--line)] text-xs">
-                  <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
-                    <CalendarIcon size={14} className="text-[var(--brand)] shrink-0" />
-                    <span>
-                      Deadline: {new Intl.DateTimeFormat("id-ID", { dateStyle: "long" }).format(new Date(`${activeItem.activity.deadline}T00:00:00`))}
-                      {activeItem.activity.jam_deadline ? ` · ${activeItem.activity.jam_deadline.slice(0, 5)} WIB` : ""}
-                    </span>
-                  </div>
+                {/* Body (Scrollable) */}
+                <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+                  <div className="space-y-2 rounded-2xl bg-[#fafbf9] p-4 border border-[var(--line)] text-xs">
+                    <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
+                      <CalendarIcon size={14} className="text-[var(--brand)] shrink-0" />
+                      <span>
+                        Deadline: {new Intl.DateTimeFormat("id-ID", { dateStyle: "long" }).format(new Date(`${activeItem.activity.deadline}T00:00:00`))}
+                        {activeItem.activity.jam_deadline ? ` · ${activeItem.activity.jam_deadline.slice(0, 5)} WIB` : ""}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center gap-2 font-semibold text-[var(--muted)]">
-                    <span>Status:</span>
-                    <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[var(--line)]">
-                      {activeItem.activity.status.replace("_", " ")}
-                    </span>
-                  </div>
+                    <div className="flex items-center gap-2 font-semibold text-[var(--muted)]">
+                      <span>Status:</span>
+                      <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[var(--line)]">
+                        {activeItem.activity.status.replace("_", " ")}
+                      </span>
+                    </div>
 
-                  {activeItem.activity.catatan && (
-                    <p className="mt-2 text-xs text-[var(--muted)] leading-relaxed italic border-t border-[var(--line)] pt-2">
-                      “{activeItem.activity.catatan}”
-                    </p>
-                  )}
+                    {activeItem.activity.catatan && (
+                      <p className="mt-2 text-xs text-[var(--muted)] leading-relaxed italic border-t border-[var(--line)] pt-2">
+                        “{activeItem.activity.catatan}”
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end gap-2">
+                {/* Footer (Sticky Bottom) */}
+                <div className="flex items-center justify-end gap-2 border-t border-[var(--line)] bg-[#fbfcfa] px-6 py-3 shrink-0">
                   {activeItem.activity.link_terkait && (
                     <a
                       href={activeItem.activity.link_terkait}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-xl bg-[#eef2ff] px-3.5 py-2 text-xs font-bold text-[#4338ca] hover:bg-[#e0e7ff] transition"
+                      className="inline-flex items-center gap-1 rounded-xl bg-[#eef2ff] px-4 py-2 text-xs font-bold text-[#4338ca] hover:bg-[#e0e7ff] transition"
                     >
                       <ExternalLink size={13} /> Buka Tautan
                     </a>
@@ -419,7 +437,7 @@ export function CalendarView({
                     Tutup
                   </button>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>
