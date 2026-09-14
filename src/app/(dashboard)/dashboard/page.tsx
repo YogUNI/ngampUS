@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
+import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
 
 function deadlineLabel(deadline: string) {
   const days = differenceInCalendarDays(parseISO(deadline), new Date());
@@ -206,12 +207,20 @@ export default async function DashboardPage() {
           {/* Quick add button */}
           <Link
             href="/kegiatan"
+            data-tour="hero-add-kegiatan"
             className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-lg shadow-[#1f6a48]/15 hover:bg-[var(--brand-dark)] transition active:scale-95"
           >
             <Plus size={16} /> Tambah kegiatan
           </Link>
         </div>
       </header>
+
+      {/* ── Onboarding Modal & Guided Tour ── */}
+      <OnboardingWizard
+        hasSemesters={(allSemesters?.length ?? 0) > 0}
+        userId={user?.id || ""}
+        userName={firstName}
+      />
 
       {/* ── No Active Semester Banner ── */}
       {!activeSemester && (

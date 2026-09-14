@@ -131,9 +131,23 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
         <nav className={`mt-3.5 space-y-1.5 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
           {nav.map(({ href, label, note, icon: Icon }) => {
             const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
+            const tourId =
+              href === "/jadwal"
+                ? "nav-jadwal"
+                : href === "/kegiatan"
+                ? "nav-kegiatan"
+                : href === "/organisasi"
+                ? "nav-organisasi"
+                : href === "/semester"
+                ? "nav-semester"
+                : href === "/rekap"
+                ? "nav-rekap"
+                : undefined;
+
             return (
               <Link
                 key={href}
+                data-tour={tourId}
                 title={collapsed ? label : undefined}
                 className={`group flex items-center rounded-2xl transition ${
                   collapsed
@@ -229,12 +243,18 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
               >
                 <Settings size={13} /> Profil
               </Link>
-              <Link
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
-                href="/settings"
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("start-ngampus-tour"));
+                  }
+                }}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition cursor-pointer"
+                title="Mulai Tur Panduan Fitur"
               >
-                <CircleHelp size={13} /> Bantuan
-              </Link>
+                <CircleHelp size={13} /> Panduan
+              </button>
             </div>
           </div>
         ) : (
@@ -400,9 +420,24 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
                   )}
                   <div className="min-w-0">
                     <p className="truncate text-xs font-bold">{name}</p>
-                    <Link href="/settings" className="text-[10px] font-bold text-[var(--brand)] hover:underline">
-                      Profil & Akun
-                    </Link>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <Link href="/settings" className="text-[10px] font-bold text-[var(--brand)] hover:underline">
+                        Profil
+                      </Link>
+                      <span className="text-[10px] text-[var(--muted)]">•</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpen(false);
+                          if (typeof window !== "undefined") {
+                            window.dispatchEvent(new CustomEvent("start-ngampus-tour"));
+                          }
+                        }}
+                        className="text-[10px] font-bold text-[var(--brand)] hover:underline"
+                      >
+                        Panduan
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <button
