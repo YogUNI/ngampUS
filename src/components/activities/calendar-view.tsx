@@ -55,8 +55,9 @@ export function CalendarView({
 }) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [activeItem, setActiveItem] = useState<{
-    type: "course" | "activity";
-    course?: CourseOccurrence;
+    type: "course_group" | "activity";
+    courses?: CourseOccurrence[];
+    dateStr?: string;
     activity?: Activity;
   } | null>(null);
 
@@ -112,21 +113,40 @@ export function CalendarView({
       });
   }, [activities, showActivities]);
 
-  // 3. Map course occurrences into calendar events
+  // 3. Group Course Occurrences by Date into single clean summary event
   const courseEvents = useMemo(() => {
-    return courseOccurrences.map((occ) => ({
-      id: `crs-${occ.id}`,
-      title: `📚 ${occ.nama_matkul} (${occ.jam_mulai.slice(0, 5)})`,
-      date: occ.dateString,
-      backgroundColor: occ.warna_label || "#0f6849",
-      borderColor: "transparent",
-      textColor: "#ffffff",
-      classNames: ["cal-event-course"],
-      extendedProps: {
-        itemType: "course" as const,
-        data: occ,
-      },
-    }));
+    // Kelompokkan occurrence berdasarkan dateString
+    const byDate = new Map<string, CourseOccurrence[]>();
+    for (const occ of courseOccurrences) {
+      const list = byDate.get(occ.dateString) || [];
+      list.push(occ);
+      byDate.set(occ.dateString, list);
+    }
+
+    const events = [];
+    for (const [dateStr, dailyCourses] of byDate.entries()) {
+      const count = dailyCourses.length;
+      const title = count === 1
+        ? `🎓 Kuliah (${dailyCourses[0].nama_matkul})`
+        : `🎓 Kuliah Kampus (${count} Kelas)`;
+
+      events.push({
+        id: `crs-day-${dateStr}`,
+        title,
+        date: dateStr,
+        backgroundColor: "#0f6849", // Brand green ngampUS
+        borderColor: "transparent",
+        textColor: "#ffffff",
+        classNames: ["cal-event-course", "font-black"],
+        extendedProps: {
+          itemType: "course_group" as const,
+          courses: dailyCourses,
+          dateStr,
+        },
+      });
+    }
+
+    return events;
   }, [courseOccurrences]);
 
   // Combined events
@@ -201,9 +221,9 @@ export function CalendarView({
           setSelectedDate(info.dateStr);
         }}
         eventClick={(info) => {
-          const { itemType, data } = info.event.extendedProps;
-          if (itemType === "course") {
-            setActiveItem({ type: "course", course: data });
+          const { itemType, data, courses: grpCourses, dateStr } = info.event.extendedProps;
+          if (itemType === "course_group") {
+            setActiveItem({ type: "course_group", courses: grpCourses, dateStr });
           } else if (itemType === "activity") {
             setActiveItem({ type: "activity", activity: data });
           }
@@ -214,85 +234,124 @@ export function CalendarView({
       {/* Detail Popover Modal when clicking event */}
       {activeItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="w-full max-w-md rounded-3xl border border-[var(--line)] bg-white p-6 shadow-2xl">
-            {activeItem.type === "course" && activeItem.course && (
+          <div className="w-full max-w-lg rounded-3xl border border-[var(--line)] bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            {activeItem.type === "course_group" && activeItem.courses && (
               <div>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
-                      <BookOpen size={18} />
+                <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dff3e5] text-[var(--brand)]">
+                      <BookOpen size={20} />
                     </span>
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-wider text-[var(--brand)]">
-                        MATA KULIAH · {activeItem.course.sks} SKS
+                        JADWAL KULIAH HARI INI
                       </span>
                       <h3 className="font-display text-lg font-extrabold text-[var(--ink)] leading-snug">
-                        {activeItem.course.nama_matkul}
+                        {activeItem.dateStr
+                          ? new Intl.DateTimeFormat("id-ID", {
+                              weekday: "long",
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }).format(new Date(`${activeItem.dateStr}T00:00:00`))
+                          : "Daftar Kuliah"}
                       </h3>
                     </div>
                   </div>
                   <button
                     onClick={() => setActiveItem(null)}
-                    className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[#f0f4f1] hover:text-[var(--ink)]"
+                    className="rounded-xl p-1.5 text-[var(--muted)] hover:bg-[#f0f4f1] hover:text-[var(--ink)]"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
-                <div className="mt-4 space-y-2 rounded-2xl bg-[#fafbf9] p-3.5 border border-[var(--line)] text-xs">
-                  <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
-                    <Clock size={14} className="text-[var(--brand)] shrink-0" />
-                    <span>
-                      {activeItem.course.jam_mulai.slice(0, 5)} - {activeItem.course.jam_selesai.slice(0, 5)} WIB
-                    </span>
-                    <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[var(--line)]">
-                      {activeItem.course.tipe_pertemuan}
-                    </span>
-                  </div>
+                <p className="mt-3 text-xs text-[var(--muted)]">
+                  Terdapat <strong className="text-[var(--ink)]">{activeItem.courses.length} mata kuliah</strong> yang berlangsung pada hari ini:
+                </p>
 
-                  {activeItem.course.ruangan && (
-                    <div className="flex items-center gap-2 text-[var(--muted)] font-semibold">
-                      <MapPin size={14} className="shrink-0 text-[var(--brand)]" />
-                      <span>{activeItem.course.ruangan}</span>
-                    </div>
-                  )}
+                {/* List of courses for this day */}
+                <div className="mt-3 space-y-3">
+                  {activeItem.courses.map((course) => (
+                    <div
+                      key={course.id}
+                      className="rounded-2xl border border-[var(--line)] bg-[#fafbf9] p-4 shadow-2xs transition hover:bg-white"
+                      style={{ borderLeftColor: course.warna_label, borderLeftWidth: "4px" }}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">
+                          {course.kode_matkul || "MATKUL"} · {course.sks} SKS
+                        </span>
+                        <span
+                          className={`rounded-md px-2 py-0.5 text-[9.5px] font-black uppercase tracking-wider ${
+                            course.tipe_pertemuan === "online"
+                              ? "bg-[#e0e7ff] text-[#3730a3]"
+                              : course.tipe_pertemuan === "hybrid"
+                              ? "bg-[#fef3c7] text-[#92400e]"
+                              : "bg-[#dcfce7] text-[#166534]"
+                          }`}
+                        >
+                          {course.tipe_pertemuan}
+                        </span>
+                      </div>
 
-                  {activeItem.course.dosen_pengampu && (
-                    <div className="flex items-center gap-2 text-[var(--muted)] font-semibold">
-                      <User size={14} className="shrink-0 text-[var(--brand)]" />
-                      <span>Dosen: {activeItem.course.dosen_pengampu}</span>
+                      <h4 className="mt-1.5 text-sm font-black text-[var(--ink)] leading-snug">
+                        {course.nama_matkul}
+                      </h4>
+
+                      <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-[var(--brand)]">
+                        <Clock size={13} />
+                        <span>
+                          {course.jam_mulai.slice(0, 5)} - {course.jam_selesai.slice(0, 5)} WIB
+                        </span>
+                      </div>
+
+                      {course.ruangan && (
+                        <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--muted)]">
+                          <MapPin size={13} className="shrink-0 text-[var(--brand)]" />
+                          <span className="truncate">{course.ruangan}</span>
+                        </div>
+                      )}
+
+                      {course.dosen_pengampu && (
+                        <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--muted)]">
+                          <User size={13} className="shrink-0 text-[var(--brand)]" />
+                          <span className="truncate">{course.dosen_pengampu}</span>
+                        </div>
+                      )}
+
+                      {(course.link_pertemuan || course.link_materi) && (
+                        <div className="mt-3 flex items-center gap-2 border-t border-[#edf2ee] pt-2.5">
+                          {course.link_pertemuan && (
+                            <a
+                              href={course.link_pertemuan}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-lg bg-[#eef2ff] px-2.5 py-1 text-[11px] font-bold text-[#4338ca] hover:bg-[#e0e7ff] transition"
+                            >
+                              <Video size={12} /> Masuk Meet
+                            </a>
+                          )}
+                          {course.link_materi && (
+                            <a
+                              href={course.link_materi}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-lg bg-[#f0fdf4] px-2.5 py-1 text-[11px] font-bold text-[#15803d] hover:bg-[#dcfce7] transition"
+                            >
+                              <FileText size={12} /> Buka Materi
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
 
-                {/* Direct Action Links */}
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {activeItem.course.link_pertemuan && (
-                    <a
-                      href={activeItem.course.link_pertemuan}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#eef2ff] px-4 py-2 text-xs font-bold text-[#4338ca] hover:bg-[#e0e7ff] transition"
-                    >
-                      <Video size={14} /> Masuk Meet
-                    </a>
-                  )}
-                  {activeItem.course.link_materi && (
-                    <a
-                      href={activeItem.course.link_materi}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#f0fdf4] px-4 py-2 text-xs font-bold text-[#15803d] hover:bg-[#dcfce7] transition"
-                    >
-                      <FileText size={14} /> Buka Materi
-                    </a>
-                  )}
-                </div>
-
-                <div className="mt-4 text-right">
+                <div className="mt-5 text-right border-t border-[var(--line)] pt-3">
                   <button
                     onClick={() => setActiveItem(null)}
-                    className="rounded-xl border border-[var(--line)] bg-white px-4 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[#f0f4f1] transition"
+                    className="rounded-xl bg-[#103626] px-4 py-2 text-xs font-bold text-white hover:bg-[#1d5034] transition"
                   >
                     Tutup
                   </button>
