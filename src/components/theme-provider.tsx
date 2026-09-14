@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 type Theme = "light" | "dark";
 
@@ -16,6 +17,7 @@ const THEME_STORAGE_KEY = "ngampus-theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
+  const pathname = usePathname();
 
   useEffect(() => {
     // Read from localStorage or system preference
@@ -44,8 +46,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  const applyTheme = (t: Theme) => {
+  useEffect(() => {
+    applyTheme(theme, pathname);
+  }, [pathname, theme]);
+
+  const applyTheme = (t: Theme, currentPath?: string) => {
+    const path = currentPath !== undefined ? currentPath : (typeof window !== "undefined" ? window.location.pathname : "");
+    const isDashboard = Boolean(path && (path.startsWith("/dashboard") || path.startsWith("/kegiatan") || path.startsWith("/jadwal") || path.startsWith("/organisasi") || path.startsWith("/rekap") || path.startsWith("/semester") || path.startsWith("/settings")));
     const root = document.documentElement;
+    if (!isDashboard) {
+      root.classList.remove("dark");
+      root.setAttribute("data-theme", "light");
+      return;
+    }
     if (t === "dark") {
       root.classList.add("dark");
       root.setAttribute("data-theme", "dark");

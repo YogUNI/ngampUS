@@ -354,19 +354,19 @@ html {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   DARK MODE TAILORED OVERRIDES (Preserving nGampUS Emerald & Lime Identity)
+   DARK MODE TAILORED OVERRIDES (Strictly Scoped to Dashboard Shell & Content)
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Dashboard background & grid */
-.dark body {
-  background: #09140e;
-  background-image: radial-gradient(circle at 8% 2%, rgba(200, 239, 112, .06), transparent 22rem), radial-gradient(circle at 96% 18%, rgba(34, 197, 94, .08), transparent 26rem);
+/* Dashboard background & grid - ONLY for dashboard-shell and dashboard-content */
+.dark .dashboard-shell {
+  background-color: #09140e !important;
   color: #edf4ef;
 }
 
 .dark .dashboard-content {
   background-color: #09140e !important;
   background-image: radial-gradient(circle at 96% 5%, rgba(200, 239, 112, .07), transparent 20rem), linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px) !important;
+  color: #edf4ef;
 }
 
 /* Header in dashboard */
@@ -380,11 +380,11 @@ html {
   color: rgba(200, 239, 112, 0.35) !important;
 }
 
-.dark .dashboard-hero::before {
+.dark .dashboard-content .dashboard-hero::before {
   color: rgba(200, 239, 112, 0.6) !important;
 }
 
-/* bg-white cards -> dark */
+/* bg-white cards inside dashboard -> dark */
 .dark .dashboard-content article[class*="bg-white"],
 .dark .dashboard-content section[class*="bg-white"],
 .dark .dashboard-content div[class*="bg-white"]:not([class*="bg-white/"]) {
@@ -409,7 +409,7 @@ html {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* Subtle card backgrounds */
+/* Subtle card backgrounds inside dashboard */
 .dark .dashboard-content div[class*="bg-[#fafbfa]"],
 .dark .dashboard-content article[class*="bg-[#fafbfa]"],
 .dark .dashboard-content div[class*="bg-[#f7f8f5]"],
@@ -466,113 +466,113 @@ html {
   border-color: #1d3c2b !important;
 }
 
-/* Typography contrast */
-.dark .text-\[\#10261b\],
-.dark .text-\[\#103626\] {
+/* Dashboard Typography contrast (strictly scoped) */
+.dark .dashboard-shell .text-\[\#10261b\],
+.dark .dashboard-shell .text-\[\#103626\] {
   color: #f0f7f2 !important;
 }
 
-.dark .text-\[\#55675b\],
-.dark .text-\[\#65746a\],
-.dark .text-\[\#697c6f\],
-.dark .text-\[\#7d9083\],
-.dark .text-\[\#5e6b63\] {
+.dark .dashboard-shell .text-\[\#55675b\],
+.dark .dashboard-shell .text-\[\#65746a\],
+.dark .dashboard-shell .text-\[\#697c6f\],
+.dark .dashboard-shell .text-\[\#7d9083\],
+.dark .dashboard-shell .text-\[\#5e6b63\] {
   color: #9ab3a2 !important;
 }
 
-.dark .text-\[\#8ba091\] {
+.dark .dashboard-shell .text-\[\#8ba091\] {
   color: #728c7b !important;
 }
 
-/* Borders */
-.dark .border-\[\#d8e3da\],
-.dark .border-\[\#d8e2da\],
-.dark .border-\[\#d7e3d9\],
-.dark .border-\[\#e5ebe5\],
-.dark .border-\[\#edf2ee\],
-.dark .border-\[\#e8eee8\],
-.dark .border-\[\#e3ebe4\],
-.dark .border-\[\#b9ddc6\] {
+/* Dashboard Borders (strictly scoped) */
+.dark .dashboard-shell .border-\[\#d8e3da\],
+.dark .dashboard-shell .border-\[\#d8e2da\],
+.dark .dashboard-shell .border-\[\#d7e3d9\],
+.dark .dashboard-shell .border-\[\#e5ebe5\],
+.dark .dashboard-shell .border-\[\#edf2ee\],
+.dark .dashboard-shell .border-\[\#e8eee8\],
+.dark .dashboard-shell .border-\[\#e3ebe4\],
+.dark .dashboard-shell .border-\[\#b9ddc6\] {
   border-color: #1a3526 !important;
 }
 
-/* GREEN pastel badges -> dark green */
-.dark .bg-\[\#dff3e5\],
-.dark .bg-\[\#dcefe4\],
-.dark .bg-\[\#eef7f2\],
-.dark .bg-\[\#dcfce7\],
-.dark .bg-\[\#d1fae5\] {
+/* GREEN pastel badges inside dashboard */
+.dark .dashboard-shell .bg-\[\#dff3e5\],
+.dark .dashboard-shell .bg-\[\#dcefe4\],
+.dark .dashboard-shell .bg-\[\#eef7f2\],
+.dark .dashboard-shell .bg-\[\#dcfce7\],
+.dark .dashboard-shell .bg-\[\#d1fae5\] {
   background-color: #0e2e1c !important;
   color: #4ade80 !important;
 }
 
-/* CORAL/RED pastel badges -> dark red */
-.dark .bg-\[\#feece7\],
-.dark .bg-\[\#fff8f7\] {
+/* CORAL/RED pastel badges inside dashboard */
+.dark .dashboard-shell .bg-\[\#feece7\],
+.dark .dashboard-shell .bg-\[\#fff8f7\] {
   background-color: #2a100c !important;
   color: #f87171 !important;
 }
 
-/* PURPLE pastel badges -> dark purple */
-.dark .bg-\[\#e8e1fa\],
-.dark .bg-\[\#ede9fe\] {
+/* PURPLE pastel badges inside dashboard */
+.dark .dashboard-shell .bg-\[\#e8e1fa\],
+.dark .dashboard-shell .bg-\[\#ede9fe\] {
   background-color: #1c1239 !important;
   color: #a78bfa !important;
 }
 
-/* AMBER/YELLOW pastel badges -> dark amber */
-.dark .bg-\[\#fff0cc\],
-.dark .bg-\[\#fef3c7\],
-.dark .bg-\[\#fffdf6\],
-.dark .bg-\[\#fff8e7\] {
+/* AMBER/YELLOW pastel badges inside dashboard */
+.dark .dashboard-shell .bg-\[\#fff0cc\],
+.dark .dashboard-shell .bg-\[\#fef3c7\],
+.dark .dashboard-shell .bg-\[\#fffdf6\],
+.dark .dashboard-shell .bg-\[\#fff8e7\] {
   background-color: #211900 !important;
   color: #fbbf24 !important;
 }
 
-/* BLUE pastel badges -> dark blue */
-.dark .bg-\[\#e0e7ff\],
-.dark .bg-\[\#e4efff\],
-.dark .bg-\[\#dbeafe\] {
+/* BLUE pastel badges inside dashboard */
+.dark .dashboard-shell .bg-\[\#e0e7ff\],
+.dark .dashboard-shell .bg-\[\#e4efff\],
+.dark .dashboard-shell .bg-\[\#dbeafe\] {
   background-color: #0e1e3a !important;
   color: #60a5fa !important;
 }
 
-/* GRAY/NEUTRAL pastel */
-.dark .bg-\[\#f0f4f0\],
-.dark .bg-\[\#eaf5eb\],
-.dark .bg-\[\#eef1ee\],
-.dark .bg-\[\#f4f0e7\],
-.dark .bg-\[\#f7f8f5\] {
+/* GRAY/NEUTRAL pastel inside dashboard */
+.dark .dashboard-shell .bg-\[\#f0f4f0\],
+.dark .dashboard-shell .bg-\[\#eaf5eb\],
+.dark .dashboard-shell .bg-\[\#eef1ee\],
+.dark .dashboard-shell .bg-\[\#f4f0e7\],
+.dark .dashboard-shell .bg-\[\#f7f8f5\] {
   background-color: #152d20 !important;
   color: #a5c4ae !important;
 }
 
-/* surface-lift */
-.dark .surface-lift {
+/* surface-lift inside dashboard */
+.dark .dashboard-shell .surface-lift {
   background-color: #0f2017 !important;
   border-color: #1a3526 !important;
   box-shadow: 0 14px 38px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* glass-panel */
-.dark .glass-panel {
+/* glass-panel inside dashboard */
+.dark .dashboard-shell .glass-panel {
   background: rgba(15, 32, 23, 0.88) !important;
   border-color: rgba(26, 53, 38, 0.8) !important;
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Inputs */
-.dark input,
-.dark select,
-.dark textarea {
+/* Inputs inside dashboard */
+.dark .dashboard-shell input,
+.dark .dashboard-shell select,
+.dark .dashboard-shell textarea {
   background-color: #0d1e15 !important;
   border-color: #1f402e !important;
   color: #eef5f1 !important;
 }
 
-.dark input:focus,
-.dark select:focus,
-.dark textarea:focus {
+.dark .dashboard-shell input:focus,
+.dark .dashboard-shell select:focus,
+.dark .dashboard-shell textarea:focus {
   border-color: #22c55e !important;
   outline-color: rgba(34, 197, 94, 0.3) !important;
 }
@@ -707,38 +707,61 @@ html {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   LANDING PAGE — ALWAYS LIGHT (ignore dark mode)
+   LANDING PAGE & PUBLIC PAGES — FORCE LIGHT MODE ALWAYS
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Reset CSS vars to light values inside landing page when dark mode is active */
+/* Force body on landing page to maintain its original styling */
+body:has(.landing-page),
+.dark body:has(.landing-page),
+html.dark:has(.landing-page) body {
+  background: #f5f7f2 !important;
+  background-image: radial-gradient(circle at 8% 2%, rgba(217, 238, 114, .18), transparent 22rem), radial-gradient(circle at 96% 18%, rgba(15, 104, 73, .08), transparent 26rem) !important;
+  color: #10261b !important;
+}
+
+.landing-page,
 .dark .landing-page {
-  --background: #f5f7f2;
-  --foreground: #10261b;
-  --ink: #10261b;
-  --muted: #65746a;
-  --line: #dbe5dc;
-  --card-bg: #ffffff;
-  --card-subtle: #fafbfa;
-  --brand: #0f6849;
-  --brand-dark: #0a432f;
-  --brand-soft: #dff3e5;
-  --cream: #f4f0e7;
-  --coral: #e57255;
-  --yellow: #d9ee72;
-}
-
-/* Override dark body background for landing page */
-.dark body:has(.landing-page) {
-  background: #f7f8f5 !important;
-  background-image: none !important;
+  --background: #f5f7f2 !important;
+  --foreground: #10261b !important;
+  --ink: #10261b !important;
+  --muted: #65746a !important;
+  --line: #dbe5dc !important;
+  --card-bg: #ffffff !important;
+  --card-subtle: #fafbfa !important;
+  --brand: #0f6849 !important;
+  --brand-dark: #0a432f !important;
+  --brand-soft: #dff3e5 !important;
+  --cream: #f4f0e7 !important;
+  --coral: #e57255 !important;
+  --yellow: #d9ee72 !important;
+  background-color: #f7f8f5 !important;
   color: #10261b !important;
 }
 
-/* Ensure landing inputs/selects don't inherit dark styles */
-.dark .landing-page input,
-.dark .landing-page select,
-.dark .landing-page textarea {
+.landing-page .text-\[\#10261b\],
+.landing-page .text-\[\#103626\],
+.dark .landing-page .text-\[\#10261b\],
+.dark .landing-page .text-\[\#103626\] {
+  color: #103626 !important;
+}
+
+.landing-page .text-\[\#55675b\],
+.landing-page .text-\[\#65746a\],
+.landing-page .text-\[\#697c6f\],
+.landing-page .text-\[\#7d9083\],
+.dark .landing-page .text-\[\#55675b\],
+.dark .landing-page .text-\[\#65746a\],
+.dark .landing-page .text-\[\#697c6f\],
+.dark .landing-page .text-\[\#7d9083\] {
+  color: #55675b !important;
+}
+
+.landing-page .bg-white,
+.dark .landing-page .bg-white {
   background-color: #ffffff !important;
-  border-color: #dbe5dc !important;
-  color: #10261b !important;
+}
+
+.landing-page .border-\[\#d8e3da\],
+.dark .landing-page .border-\[\#d8e3da\] {
+  border-color: #d8e3da !important;
 }

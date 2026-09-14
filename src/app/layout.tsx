@@ -17,7 +17,8 @@ const themeInitScript = `
 (function() {
   try {
     var storedTheme = localStorage.getItem('ngampus-theme');
-    var isDark = storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var isPublicPage = window.location.pathname === "/" || window.location.pathname.startsWith("/login") || window.location.pathname.startsWith("/register") || window.location.pathname.startsWith("/forgot-password") || window.location.pathname.startsWith("/reset-password");
+    var isDark = !isPublicPage && (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches));
     if (isDark) {
       document.documentElement.classList.add('dark');
       document.documentElement.setAttribute('data-theme', 'dark');
