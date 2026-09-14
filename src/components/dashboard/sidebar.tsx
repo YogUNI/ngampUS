@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const nav = [
   { href: "/dashboard",   label: "Dashboard",     note: "Peta fokus",       icon: LayoutDashboard },
@@ -236,7 +237,7 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
                 <LogOut size={16} />
               </button>
             </div>
-            <div className="mt-2.5 flex gap-1.5 border-t border-[#e3ebe4] pt-2">
+            <div className="mt-2.5 flex items-center gap-1.5 border-t border-[#e3ebe4] pt-2">
               <Link
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
                 href="/settings"
@@ -255,10 +256,12 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
               >
                 <CircleHelp size={13} /> Panduan
               </button>
+              <ThemeToggle variant="icon" />
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
+            <ThemeToggle variant="icon" />
             <Link
               href="/settings"
               title={`Profil: ${name}`}
@@ -333,12 +336,15 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
           </Link>
         </div>
 
-        <Link
-          href="/kegiatan?new=1"
-          className="inline-flex items-center gap-1 rounded-xl bg-[#c8ef70] px-3 py-1.5 text-xs font-black text-[#103626]"
-        >
-          <Plus size={14} /> Catat
-        </Link>
+        <div className="flex items-center gap-2">
+          <ThemeToggle variant="icon" />
+          <Link
+            href="/kegiatan?new=1"
+            className="inline-flex items-center gap-1 rounded-xl bg-[#c8ef70] px-3 py-1.5 text-xs font-black text-[#103626]"
+          >
+            <Plus size={14} /> Catat
+          </Link>
+        </div>
       </header>
 
       {/* Mobile Drawer Overlay */}

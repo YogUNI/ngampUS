@@ -6,6 +6,8 @@
   --ink: #10261b;
   --muted: #65746a;
   --line: #dbe5dc;
+  --card-bg: #ffffff;
+  --card-subtle: #fafbfa;
   --brand: #0f6849;
   --brand-dark: #0a432f;
   --brand-soft: #dff3e5;
@@ -14,6 +16,22 @@
   --yellow: #d9ee72;
   --font-body: "Aptos", "Segoe UI", Arial, sans-serif;
   --font-display: "Aptos Display", "Segoe UI", Arial, sans-serif;
+}
+
+.dark, [data-theme="dark"] {
+  --background: #09140e;
+  --foreground: #edf4ef;
+  --ink: #f0f7f2;
+  --muted: #8ca393;
+  --line: #183124;
+  --card-bg: #0f2017;
+  --card-subtle: #13271d;
+  --brand: #22c55e;
+  --brand-dark: #16a34a;
+  --brand-soft: #123422;
+  --cream: #14281e;
+  --coral: #f87171;
+  --yellow: #c8ef70;
 }
 
 @theme inline {
@@ -334,3 +352,196 @@ html {
     opacity: 0.9;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DARK MODE TAILORED OVERRIDES (Preserving nGampUS Emerald & Lime Identity)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Dashboard background & grid */
+.dark body {
+  background: #09140e;
+  background-image: radial-gradient(circle at 8% 2%, rgba(200, 239, 112, .06), transparent 22rem), radial-gradient(circle at 96% 18%, rgba(34, 197, 94, .08), transparent 26rem);
+  color: #edf4ef;
+}
+
+.dark .dashboard-content {
+  background-color: #09140e !important;
+  background-image: radial-gradient(circle at 96% 5%, rgba(200, 239, 112, .07), transparent 20rem), linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px) !important;
+}
+
+/* Header in dashboard */
+.dark .dashboard-content > div > header {
+  background: rgba(15, 32, 23, 0.92) !important;
+  border-color: #1a3526 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark .dashboard-content > div > header::after {
+  color: rgba(200, 239, 112, 0.35) !important;
+}
+
+.dark .dashboard-hero::before {
+  color: rgba(200, 239, 112, 0.6) !important;
+}
+
+/* Cards & containers in dark mode */
+.dark .dashboard-content article[class*="bg-white"],
+.dark .dashboard-content section[class*="bg-white"],
+.dark .dashboard-content div[class*="bg-white"]:not([class*="bg-white/"]) {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+}
+
+.dark .dashboard-content article[class*="rounded-2xl"],
+.dark .dashboard-content section[class*="rounded-2xl"],
+.dark .dashboard-content div[class*="rounded-2xl"],
+.dark .dashboard-content div[class*="rounded-3xl"] {
+  border-color: #1a3526;
+}
+
+.dark .dashboard-content article[class*="rounded-2xl"][class*="bg-white"]:hover,
+.dark .dashboard-content div[class*="rounded-3xl"]:hover {
+  border-color: #274d39 !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Subtle backgrounds in cards */
+.dark .dashboard-content div[class*="bg-[#fafbfa]"],
+.dark .dashboard-content article[class*="bg-[#fafbfa]"],
+.dark .dashboard-content div[class*="bg-[#f7f8f5]"],
+.dark .dashboard-content div[class*="bg-[#fafbf9]"],
+.dark .dashboard-content div[class*="bg-[#fcfdfb]"] {
+  background-color: #13271d !important;
+  border-color: #1d3c2b !important;
+}
+
+/* Sidebar in Dark Mode */
+.dark .dashboard-sidebar {
+  background-image: linear-gradient(180deg, rgba(12, 25, 18, 0.98), rgba(9, 20, 14, 0.98)) !important;
+  border-color: #1a3526 !important;
+  box-shadow: 12px 0 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .dashboard-sidebar nav a:not([class*="bg-[#103626]"]) {
+  color: #8ca393 !important;
+}
+
+.dark .dashboard-sidebar nav a:not([class*="bg-[#103626]"]):hover {
+  background-color: #152b1f !important;
+  color: #eef5f1 !important;
+  border-color: #244934 !important;
+}
+
+.dark .dashboard-sidebar div[class*="bg-white"] {
+  background-color: #12241b !important;
+  border-color: #1d3c2b !important;
+}
+
+/* Typography contrast in dark mode */
+.dark .text-\[\#10261b\],
+.dark .text-\[\#103626\] {
+  color: #f0f7f2 !important;
+}
+
+.dark .text-\[\#55675b\],
+.dark .text-\[\#65746a\],
+.dark .text-\[\#697c6f\],
+.dark .text-\[\#7d9083\] {
+  color: #9ab3a2 !important;
+}
+
+.dark .text-\[\#8ba091\] {
+  color: #728c7b !important;
+}
+
+/* Borders */
+.dark .border-\[\#d8e3da\],
+.dark .border-\[\#d8e2da\],
+.dark .border-\[\#d7e3d9\],
+.dark .border-\[\#e5ebe5\],
+.dark .border-\[\#edf2ee\],
+.dark .border-\[\#e8eee8\],
+.dark .border-\[\#e3ebe4\] {
+  border-color: #1a3526 !important;
+}
+
+/* Badges & soft colors */
+.dark .bg-\[\#dff3e5\],
+.dark .bg-\[\#dcefe4\] {
+  background-color: #123422 !important;
+  color: #c8ef70 !important;
+}
+
+.dark .bg-\[\#f0f4f0\],
+.dark .bg-\[\#eaf5eb\] {
+  background-color: #152d20 !important;
+  color: #82e29c !important;
+}
+
+/* Glass panel */
+.dark .glass-panel {
+  background: rgba(15, 32, 23, 0.88) !important;
+  border-color: rgba(26, 53, 38, 0.8) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Inputs, Textareas, Selects */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #0d1e15 !important;
+  border-color: #1f402e !important;
+  color: #eef5f1 !important;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #22c55e !important;
+  outline-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+/* Modals & Dialogs */
+.dark .surface-lift {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* FullCalendar & Schedule View in Dark Mode */
+.dark .ngampus-calendar .fc {
+  --fc-border-color: #1a3526;
+  --fc-page-bg-color: transparent;
+  --fc-today-bg-color: #122b1c;
+  --fc-button-bg-color: #14281e;
+  --fc-button-border-color: #1f402e;
+  --fc-button-text-color: #eef5f1;
+  --fc-button-hover-bg-color: #193828;
+  --fc-button-hover-border-color: #22c55e;
+  --fc-event-text-color: white;
+}
+
+.dark .ngampus-calendar .fc .fc-toolbar-title {
+  color: #f0f7f2 !important;
+}
+
+.dark .ngampus-calendar .fc .fc-daygrid-day-number {
+  color: #eef5f1 !important;
+}
+
+.dark .ngampus-calendar .fc-theme-standard td,
+.dark .ngampus-calendar .fc-theme-standard th {
+  border-color: #1a3526 !important;
+}
+
+.dark .ngampus-calendar .fc .fc-popover {
+  background-color: #0f2017 !important;
+  border-color: #1f402e !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark .ngampus-calendar .fc .fc-popover-header {
+  background-color: #13271d !important;
+  color: #eef5f1 !important;
+}
+

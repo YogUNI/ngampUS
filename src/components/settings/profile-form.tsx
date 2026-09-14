@@ -31,6 +31,7 @@ import {
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
 import { ImageCropModal } from "@/components/settings/image-crop-modal";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type Profile = {
   full_name?: string | null;
@@ -434,6 +435,17 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                   Cukup klik tombol simpan di kotak edit yang sedang kamu ubah. Data otomatis tersimpan dan terpasang di kartu KTM digitalmu.
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Theme Preference Card */}
+          <div className="rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Tampilan Tema</h4>
+                <p className="mt-0.5 text-xs text-[var(--muted)]">Pilih mode terang atau gelap.</p>
+              </div>
+              <ThemeToggle variant="pill" />
             </div>
           </div>
         </aside>
