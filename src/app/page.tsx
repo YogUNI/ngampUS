@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import { 
   ArrowRight, 
@@ -19,6 +19,7 @@ import {
 import { Reveal } from "@/components/ui/reveal";
 import { InteractivePreview } from "@/components/landing/interactive-preview";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
+import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
 
 export default function Home() {
   const tickerItems = [
@@ -362,92 +363,14 @@ export default function Home() {
                 Alur Kerja yang Menjaga Pikiran Tetap Jernih
               </h2>
               <p className="mt-4 text-base text-[#526357]">
-                Dari kekacauan awal semester menuju ritme harian yang teratur dan terukur.
+                Dari kekacauan awal semester menuju ritme harian yang teratur dan terukur. Klik tiap tahap untuk melihat visualisasinya.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Reveal delay={1}>
-              <div className="flex h-full flex-col justify-between rounded-2xl border border-[#d3dfd5] bg-white p-6 shadow-sm">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#e2efff] text-[#2b72bd]">
-                      <Target size={20} />
-                    </span>
-                    <span className="font-mono text-2xl font-black text-[#103626]/20">01</span>
-                  </div>
-                  <h4 className="font-display mt-6 text-xl font-black text-[#103626]">Setup Semester</h4>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#59695d]">
-                    Daftarkan semester aktif, mata kuliah, SKS, dosen, dan ruang kelas dalam 2 menit.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-[#eaf0eb] pt-3 text-[11px] font-bold text-[#0f6849]">
-                  Langkah Pertama ✓
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={2}>
-              <div className="flex h-full flex-col justify-between rounded-2xl border border-[#d3dfd5] bg-white p-6 shadow-sm">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#dff3e5] text-[#0f6849]">
-                      <Layers3 size={20} />
-                    </span>
-                    <span className="font-mono text-2xl font-black text-[#103626]/20">02</span>
-                  </div>
-                  <h4 className="font-display mt-6 text-xl font-black text-[#103626]">Hubungkan Peran</h4>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#59695d]">
-                    Masukkan organisasi kampusmu dan definisikan divisi serta tanggung jawab proker.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-[#eaf0eb] pt-3 text-[11px] font-bold text-[#0f6849]">
-                  Peta Beban Kerja ✓
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={3}>
-              <div className="flex h-full flex-col justify-between rounded-2xl border border-[#d3dfd5] bg-white p-6 shadow-sm">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fff0c9] text-[#916b00]">
-                      <Clock3 size={20} />
-                    </span>
-                    <span className="font-mono text-2xl font-black text-[#103626]/20">03</span>
-                  </div>
-                  <h4 className="font-display mt-6 text-xl font-black text-[#103626]">Eksekusi Harian</h4>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#59695d]">
-                    Buka radar harian untuk melihat prioritas mendesak tanpa bingung harus mulai dari mana.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-[#eaf0eb] pt-3 text-[11px] font-bold text-[#0f6849]">
-                  Fokus Tertarget ✓
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={4}>
-              <div className="flex h-full flex-col justify-between rounded-2xl border border-[#d3dfd5] bg-white p-6 shadow-sm">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eee3ff] text-[#694ccb]">
-                      <Check size={20} />
-                    </span>
-                    <span className="font-mono text-2xl font-black text-[#103626]/20">04</span>
-                  </div>
-                  <h4 className="font-display mt-6 text-xl font-black text-[#103626]">Rekap Portofolio</h4>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#59695d]">
-                    Tutup semester dengan rekapitulasi pencapaian yang siap diunduh untuk CV dan LinkedIn.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-[#eaf0eb] pt-3 text-[11px] font-bold text-[#0f6849]">
-                  Hasil Terlihat Nyata ✓
-                </div>
-              </div>
-            </Reveal>
-          </div>
+          <Reveal delay={1}>
+            <WorkflowTimeline />
+          </Reveal>
         </div>
       </section>
 

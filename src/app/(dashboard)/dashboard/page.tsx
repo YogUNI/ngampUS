@@ -27,6 +27,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
 import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
+import { ScrollEntrance } from "@/components/dashboard/scroll-entrance";
 
 function deadlineLabel(deadline: string) {
   const days = differenceInCalendarDays(parseISO(deadline), new Date());
@@ -249,78 +250,82 @@ export default async function DashboardPage() {
       )}
 
       {/* ── Quick Action Hub ── */}
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          {
-            icon: <CalendarPlus size={20} strokeWidth={2} />,
-            label: "Jadwalkan Rapat",
-            sub: "Tambah agenda",
-            href: "/kegiatan",
-            color: "bg-[#dff3e5] text-[#0f6849] group-hover:bg-[#c8ebd6]",
-          },
-          {
-            icon: <FileText size={20} strokeWidth={2} />,
-            label: "Catat Tugas",
-            sub: "Tambah deadline",
-            href: "/kegiatan",
-            color: "bg-[#feece7] text-[#c53e1c] group-hover:bg-[#fcddd6]",
-          },
-          {
-            icon: <Building2 size={20} strokeWidth={2} />,
-            label: "Organisasi",
-            sub: "Ruang kontribusi",
-            href: "/organisasi",
-            color: "bg-[#e8e1fa] text-[#5c3a9c] group-hover:bg-[#ddd4f7]",
-          },
-          {
-            icon: <BarChart3 size={20} strokeWidth={2} />,
-            label: "Lihat Rekap",
-            sub: "Progress & grafik",
-            href: "/rekap",
-            color: "bg-[#fff0cc] text-[#8a5d00] group-hover:bg-[#ffe8a8]",
-          },
-        ].map((action) => (
-          <Link
-            key={action.label}
-            href={action.href}
-            className="group surface-lift flex flex-col gap-2.5 rounded-2xl border border-[var(--line)] bg-white p-3.5 sm:p-4 transition hover:border-[#b9ddc6]"
-          >
-            <span className={`grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl transition ${action.color}`}>
-              {action.icon}
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-xs sm:text-sm font-black text-[var(--ink)]">{action.label}</p>
-              <p className="truncate text-[11px] sm:text-xs text-[var(--muted)]">{action.sub}</p>
-            </div>
-          </Link>
-        ))}
-      </section>
+      <ScrollEntrance delay={100} direction="up">
+        <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            {
+              icon: <CalendarPlus size={20} strokeWidth={2} />,
+              label: "Jadwalkan Rapat",
+              sub: "Tambah agenda",
+              href: "/kegiatan",
+              color: "bg-[#dff3e5] text-[#0f6849] group-hover:bg-[#c8ebd6]",
+            },
+            {
+              icon: <FileText size={20} strokeWidth={2} />,
+              label: "Catat Tugas",
+              sub: "Tambah deadline",
+              href: "/kegiatan",
+              color: "bg-[#feece7] text-[#c53e1c] group-hover:bg-[#fcddd6]",
+            },
+            {
+              icon: <Building2 size={20} strokeWidth={2} />,
+              label: "Organisasi",
+              sub: "Ruang kontribusi",
+              href: "/organisasi",
+              color: "bg-[#e8e1fa] text-[#5c3a9c] group-hover:bg-[#ddd4f7]",
+            },
+            {
+              icon: <BarChart3 size={20} strokeWidth={2} />,
+              label: "Lihat Rekap",
+              sub: "Progress & grafik",
+              href: "/rekap",
+              color: "bg-[#fff0cc] text-[#8a5d00] group-hover:bg-[#ffe8a8]",
+            },
+          ].map((action) => (
+            <Link
+              key={action.label}
+              href={action.href}
+              className="group surface-lift flex flex-col gap-2.5 rounded-2xl border border-[var(--line)] bg-white p-3.5 sm:p-4 transition hover:border-[#b9ddc6]"
+            >
+              <span className={`grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl transition ${action.color}`}>
+                {action.icon}
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs sm:text-sm font-black text-[var(--ink)]">{action.label}</p>
+                <p className="truncate text-[11px] sm:text-xs text-[var(--muted)]">{action.sub}</p>
+              </div>
+            </Link>
+          ))}
+        </section>
+      </ScrollEntrance>
 
       {/* ── Stats Row ── */}
-      <section className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-        <StatCard
-          icon={<CalendarDays size={18} />}
-          label="Kegiatan aktif"
-          value={activeCount ?? 0}
-          color="bg-[#dcefe4] text-[#17613e]"
-          href={`/kegiatan${semesterFilter}`}
-        />
-        <StatCard
-          icon={<CheckCircle2 size={18} />}
-          label="Sudah selesai"
-          value={completeCount ?? 0}
-          color="bg-[#e8e1fa] text-[#744bb1]"
-          href={`/rekap${semesterFilter}`}
-        />
-        <StatCard
-          icon={<Clock3 size={18} />}
-          label="Penyelesaian"
-          value={completionRate}
-          suffix="%"
-          color="bg-[#fff0cc] text-[#9a6900]"
-          href={`/rekap${semesterFilter}`}
-        />
-      </section>
+      <ScrollEntrance delay={180} direction="scale">
+        <section className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+          <StatCard
+            icon={<CalendarDays size={18} />}
+            label="Kegiatan aktif"
+            value={activeCount ?? 0}
+            color="bg-[#dcefe4] text-[#17613e]"
+            href={`/kegiatan${semesterFilter}`}
+          />
+          <StatCard
+            icon={<CheckCircle2 size={18} />}
+            label="Sudah selesai"
+            value={completeCount ?? 0}
+            color="bg-[#e8e1fa] text-[#744bb1]"
+            href={`/rekap${semesterFilter}`}
+          />
+          <StatCard
+            icon={<Clock3 size={18} />}
+            label="Penyelesaian"
+            value={completionRate}
+            suffix="%"
+            color="bg-[#fff0cc] text-[#9a6900]"
+            href={`/rekap${semesterFilter}`}
+          />
+        </section>
+      </ScrollEntrance>
 
       {/* ── Main Content Grid ── */}
       <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_.6fr]">
@@ -329,330 +334,342 @@ export default async function DashboardPage() {
         <div className="flex flex-col min-w-0 gap-5">
 
           {/* Today's Classes Widget */}
-          <div className="surface-lift min-w-0 rounded-2xl border border-[#b9ddc6] bg-[#f4faf6] p-4 sm:p-6">
-            <div className="flex items-center justify-between gap-2 border-b border-[#b9ddc6] pb-3">
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)] flex items-center gap-1.5">
-                  <BookOpen size={13} /> KULIAH HARI INI
-                </p>
-                <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
-                  Jadwal kelas perkuliahan
-                </h2>
+          <ScrollEntrance delay={240} direction="up">
+            <div className="surface-lift min-w-0 rounded-2xl border border-[#b9ddc6] bg-[#f4faf6] p-4 sm:p-6">
+              <div className="flex items-center justify-between gap-2 border-b border-[#b9ddc6] pb-3">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)] flex items-center gap-1.5">
+                    <BookOpen size={13} /> KULIAH HARI INI
+                  </p>
+                  <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+                    Jadwal kelas perkuliahan
+                  </h2>
+                </div>
+                <Link
+                  href={`/jadwal${semesterFilter}`}
+                  className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline"
+                >
+                  Semua jadwal <ArrowUpRight size={14} />
+                </Link>
               </div>
-              <Link
-                href={`/jadwal${semesterFilter}`}
-                className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline"
-              >
-                Semua jadwal <ArrowUpRight size={14} />
-              </Link>
-            </div>
 
-            <div className="mt-3.5 space-y-2.5">
-              {todayClasses.length ? (
-                todayClasses.map((c) => (
-                  <article
-                    key={c.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-white p-3.5 shadow-xs transition hover:border-[var(--brand)]"
-                    style={{ borderLeftColor: c.warna_label || "var(--brand)", borderLeftWidth: "4px" }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">
-                          {c.kode_matkul ? `${c.kode_matkul} · ` : ""}{c.sks} SKS
-                        </span>
-                        <span
-                          className={`rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider ${
-                            c.tipe_pertemuan === "online"
-                              ? "bg-[#e0e7ff] text-[#3730a3]"
-                              : c.tipe_pertemuan === "hybrid"
-                              ? "bg-[#fef3c7] text-[#92400e]"
-                              : "bg-[#dcfce7] text-[#166534]"
-                          }`}
-                        >
-                          {c.tipe_pertemuan}
-                        </span>
-                      </div>
-                      <h3 className="mt-1 font-bold text-sm text-[var(--ink)] truncate">{c.nama_matkul}</h3>
-                      <div className="mt-1 flex flex-wrap items-center gap-2.5 text-xs text-[var(--muted)]">
-                        <span className="font-bold text-[var(--brand)] flex items-center gap-1">
-                          <Clock3 size={12} /> {c.jam_mulai.slice(0, 5)} - {c.jam_selesai.slice(0, 5)} WIB
-                        </span>
-                        {c.ruangan && (
-                          <span className="flex items-center gap-1">
-                            <MapPin size={12} /> {c.ruangan}
+              <div className="mt-3.5 space-y-2.5">
+                {todayClasses.length ? (
+                  todayClasses.map((c) => (
+                    <article
+                      key={c.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-white p-3.5 shadow-xs transition hover:border-[var(--brand)]"
+                      style={{ borderLeftColor: c.warna_label || "var(--brand)", borderLeftWidth: "4px" }}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">
+                            {c.kode_matkul ? `${c.kode_matkul} · ` : ""}{c.sks} SKS
                           </span>
+                          <span
+                            className={`rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider ${
+                              c.tipe_pertemuan === "online"
+                                ? "bg-[#e0e7ff] text-[#3730a3]"
+                                : c.tipe_pertemuan === "hybrid"
+                                ? "bg-[#fef3c7] text-[#92400e]"
+                                : "bg-[#dcfce7] text-[#166534]"
+                            }`}
+                          >
+                            {c.tipe_pertemuan}
+                          </span>
+                        </div>
+                        <h3 className="mt-1 font-bold text-sm text-[var(--ink)] truncate">{c.nama_matkul}</h3>
+                        <div className="mt-1 flex flex-wrap items-center gap-2.5 text-xs text-[var(--muted)]">
+                          <span className="font-bold text-[var(--brand)] flex items-center gap-1">
+                            <Clock3 size={12} /> {c.jam_mulai.slice(0, 5)} - {c.jam_selesai.slice(0, 5)} WIB
+                          </span>
+                          {c.ruangan && (
+                            <span className="flex items-center gap-1">
+                              <MapPin size={12} /> {c.ruangan}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action buttons (Zoom / Drive) */}
+                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-[#f0f4f1] sm:border-t-0">
+                        {c.link_pertemuan && (
+                          <a
+                            href={c.link_pertemuan}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#1d5034] transition"
+                          >
+                            <Video size={13} /> Masuk Kelas
+                          </a>
+                        )}
+                        {c.link_materi && (
+                          <a
+                            href={c.link_materi}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] transition"
+                          >
+                            <FileText size={13} /> Materi
+                          </a>
                         )}
                       </div>
-                    </div>
-
-                    {/* Action buttons (Zoom / Drive) */}
-                    <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-[#f0f4f1] sm:border-t-0">
-                      {c.link_pertemuan && (
-                        <a
-                          href={c.link_pertemuan}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#1d5034] transition"
-                        >
-                          <Video size={13} /> Masuk Kelas
-                        </a>
-                      )}
-                      {c.link_materi && (
-                        <a
-                          href={c.link_materi}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] transition"
-                        >
-                          <FileText size={13} /> Materi
-                        </a>
-                      )}
-                    </div>
-                  </article>
-                ))
-              ) : (
-                <div className="rounded-xl bg-white/70 px-4 py-5 text-center border border-dashed border-[#b9ddc6]">
-                  <p className="text-xs font-bold text-[var(--brand)]">🎉 Tidak ada kelas kuliah hari ini</p>
-                  <p className="mt-0.5 text-[11px] text-[var(--muted)]">Hari ini bebas dari jadwal tatap muka/daring. Manfaatkan untuk istirahat atau cicil tugas!</p>
-                </div>
-              )}
+                    </article>
+                  ))
+                ) : (
+                  <div className="rounded-xl bg-white/70 px-4 py-5 text-center border border-dashed border-[#b9ddc6]">
+                    <p className="text-xs font-bold text-[var(--brand)]">🎉 Tidak ada kelas kuliah hari ini</p>
+                    <p className="mt-0.5 text-[11px] text-[var(--muted)]">Hari ini bebas dari jadwal tatap muka/daring. Manfaatkan untuk istirahat atau cicil tugas!</p>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          </ScrollEntrance>
 
           {/* Today's Schedule */}
-          <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">
-            <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)]">HARI INI</p>
-                <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
-                  Agenda & jadwal hari ini
-                </h2>
-              </div>
-              <Link href={`/kegiatan?view=calendar${semesterId ? `&semester_id=${semesterId}` : ""}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
-                Kalender <ArrowUpRight size={14} />
-              </Link>
-            </div>
-
-            <div className="mt-3.5 space-y-2.5">
-              {todaySchedule.length ? (
-                todaySchedule.map((item) => (
-                  <article key={item.id} className="flex items-center gap-3 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6]">
-                    <span className="text-lg shrink-0">{categoryEmoji[item.kategori] ?? "📎"}</span>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{item.judul}</h3>
-                      <p className="text-[11px] sm:text-xs text-[var(--muted)] truncate">
-                        {item.jam_pelaksanaan ? `🕐 ${item.jam_pelaksanaan}` : "Sepanjang hari"} · {item.kategori}
-                      </p>
-                    </div>
-                    <span className={`shrink-0 rounded-lg px-2 py-1 text-[10px] font-black uppercase tracking-wide ${jenisColor[item.jenis_item] ?? "bg-[#f7f8f5] text-[var(--muted)]"}`}>
-                      {item.jenis_item}
-                    </span>
-                  </article>
-                ))
-              ) : (
-                <div className="rounded-xl bg-[#f7f8f5] px-4 py-7 text-center">
-                  <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
-                    <Sparkles size={17} />
-                  </div>
-                  <p className="mt-2 text-xs sm:text-sm font-bold">Tidak ada agenda hari ini</p>
-                  <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)]">Waktu yang baik untuk merencanakan ke depan.</p>
+          <ScrollEntrance delay={280} direction="up">
+            <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">
+              <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)]">HARI INI</p>
+                  <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+                    Agenda & jadwal hari ini
+                  </h2>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Upcoming Deadlines */}
-          <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">
-            <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERLU PERHATIAN</p>
-                <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
-                  Deadline & komitmen mendesak
-                </h2>
+                <Link href={`/kegiatan?view=calendar${semesterId ? `&semester_id=${semesterId}` : ""}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
+                  Kalender <ArrowUpRight size={14} />
+                </Link>
               </div>
-              <Link href={`/kegiatan${semesterFilter}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
-                Lihat semua <ArrowUpRight size={14} />
-              </Link>
-            </div>
 
-            <div className="mt-3.5 space-y-2.5">
-              {upcomingItems.length ? (
-                upcomingItems.map((item) => {
-                  const days = differenceInCalendarDays(parseISO(item.deadline!), new Date());
-                  const isOverdue = days < 0;
-                  const isUrgent = days <= 1;
-                  return (
-                    <article
-                      key={item.id}
-                      className={`flex items-center gap-3 rounded-xl border p-3 ${
-                        isOverdue
-                          ? "border-[#f8c6b9] bg-[#fff9f8]"
-                          : isUrgent
-                          ? "border-[#fde8b3] bg-[#fffdf6]"
-                          : "border-[var(--line)]"
-                      }`}
-                    >
-                      <span
-                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-                          isOverdue ? "bg-[#e87152]" : days === 0 ? "bg-[#e87152]" : days === 1 ? "bg-[#f3c84b]" : "bg-[var(--brand)]"
-                        }`}
-                      />
+              <div className="mt-3.5 space-y-2.5">
+                {todaySchedule.length ? (
+                  todaySchedule.map((item) => (
+                    <article key={item.id} className="flex items-center gap-3 rounded-xl border border-[var(--line)] p-3 transition hover:border-[#b9ddc6]">
+                      <span className="text-lg shrink-0">{categoryEmoji[item.kategori] ?? "📎"}</span>
                       <div className="min-w-0 flex-1">
                         <h3 className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{item.judul}</h3>
-                        <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)] truncate">
-                          {categoryEmoji[item.kategori] ?? "📎"} {item.kategori} · {item.deadline}
-                          {item.jam_deadline ? ` · ${item.jam_deadline}` : ""}
+                        <p className="text-[11px] sm:text-xs text-[var(--muted)] truncate">
+                          {item.jam_pelaksanaan ? `🕐 ${item.jam_pelaksanaan}` : "Sepanjang hari"} · {item.kategori}
                         </p>
                       </div>
-                      <span
-                        className={`shrink-0 rounded-lg px-2 py-1 text-[11px] font-black ${
-                          isOverdue
-                            ? "bg-[#feece7] text-[#b93c21]"
-                            : days === 0
-                            ? "bg-[#feece7] text-[#b93c21]"
-                            : days === 1
-                            ? "bg-[#fff6dd] text-[#9a6900]"
-                            : "bg-[#f7f8f5] text-[var(--ink)]"
-                        }`}
-                      >
-                        {deadlineLabel(item.deadline!)}
+                      <span className={`shrink-0 rounded-lg px-2 py-1 text-[10px] font-black uppercase tracking-wide ${jenisColor[item.jenis_item] ?? "bg-[#f7f8f5] text-[var(--muted)]"}`}>
+                        {item.jenis_item}
                       </span>
                     </article>
-                  );
-                })
-              ) : (
-                <div className="rounded-xl bg-[#f7f8f5] px-4 py-7 text-center">
-                  <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
-                    <Target size={17} />
+                  ))
+                ) : (
+                  <div className="rounded-xl bg-[#f7f8f5] px-4 py-7 text-center">
+                    <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
+                      <Sparkles size={17} />
+                    </div>
+                    <p className="mt-2 text-xs sm:text-sm font-bold">Tidak ada agenda hari ini</p>
+                    <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)]">Waktu yang baik untuk merencanakan ke depan.</p>
                   </div>
-                  <p className="mt-2 text-xs sm:text-sm font-bold">Tidak ada deadline dalam 3 hari ke depan</p>
-                  <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)]">Great job! Kamu sudah on track.</p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          </ScrollEntrance>
+
+          {/* Upcoming Deadlines */}
+          <ScrollEntrance delay={320} direction="up">
+            <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-6">
+              <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+                <div className="min-w-0">
+                  <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERLU PERHATIAN</p>
+                  <h2 className="font-display mt-0.5 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+                    Deadline & komitmen mendesak
+                  </h2>
+                </div>
+                <Link href={`/kegiatan${semesterFilter}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[var(--brand)] hover:underline">
+                  Lihat semua <ArrowUpRight size={14} />
+                </Link>
+              </div>
+
+              <div className="mt-3.5 space-y-2.5">
+                {upcomingItems.length ? (
+                  upcomingItems.map((item) => {
+                    const days = differenceInCalendarDays(parseISO(item.deadline!), new Date());
+                    const isOverdue = days < 0;
+                    const isUrgent = days <= 1;
+                    return (
+                      <article
+                        key={item.id}
+                        className={`flex items-center gap-3 rounded-xl border p-3 ${
+                          isOverdue
+                            ? "border-[#f8c6b9] bg-[#fff9f8]"
+                            : isUrgent
+                            ? "border-[#fde8b3] bg-[#fffdf6]"
+                            : "border-[var(--line)]"
+                        }`}
+                      >
+                        <span
+                          className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                            isOverdue ? "bg-[#e87152]" : days === 0 ? "bg-[#e87152]" : days === 1 ? "bg-[#f3c84b]" : "bg-[var(--brand)]"
+                          }`}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{item.judul}</h3>
+                          <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)] truncate">
+                            {categoryEmoji[item.kategori] ?? "📎"} {item.kategori} · {item.deadline}
+                            {item.jam_deadline ? ` · ${item.jam_deadline}` : ""}
+                          </p>
+                        </div>
+                        <span
+                          className={`shrink-0 rounded-lg px-2 py-1 text-[11px] font-black ${
+                            isOverdue
+                              ? "bg-[#feece7] text-[#b93c21]"
+                              : days === 0
+                              ? "bg-[#feece7] text-[#b93c21]"
+                              : days === 1
+                              ? "bg-[#fff6dd] text-[#9a6900]"
+                              : "bg-[#f7f8f5] text-[var(--ink)]"
+                          }`}
+                        >
+                          {deadlineLabel(item.deadline!)}
+                        </span>
+                      </article>
+                    );
+                  })
+                ) : (
+                  <div className="rounded-xl bg-[#f7f8f5] px-4 py-7 text-center">
+                    <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-[#dcefe4] text-[var(--brand)]">
+                      <Target size={17} />
+                    </div>
+                    <p className="mt-2 text-xs sm:text-sm font-bold">Tidak ada deadline dalam 3 hari ke depan</p>
+                    <p className="mt-0.5 text-[11px] sm:text-xs text-[var(--muted)]">Great job! Kamu sudah on track.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </ScrollEntrance>
         </div>
 
         {/* Right Column */}
         <div className="flex flex-col min-w-0 gap-5">
 
           {/* Weekly Pulse / Motivation */}
-          <aside className="surface-lift min-w-0 flex flex-col justify-between rounded-2xl bg-[#173f2c] p-5 sm:p-6 text-white">
-            <div>
-              <Zap className="text-[#c8ef70]" size={22} />
-              <p className="mt-4 text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#b4d8c1]">Weekly Pulse</p>
-              <h2 className="font-display mt-1.5 text-lg sm:text-xl font-extrabold leading-snug">
-                {(overdueCount ?? 0) > 0
-                  ? `${overdueCount} tugas lewat tenggat — butuh perhatianmu sekarang.`
-                  : (activeCount ?? 0) > 0
-                  ? "Ritme akademikmu berjalan baik. Pertahankan momentum! 🔥"
-                  : "Semua ambisi besar dimulai dari langkah kecil pertama."}
-              </h2>
-              <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-[#c7dbce]">
-                {(overdueCount ?? 0) > 0
-                  ? "Selesaikan atau jadwalkan ulang agar beban pikiranmu lebih ringan."
-                  : "Pilih satu kegiatan yang paling penting dan selesaikan hari ini."}
-              </p>
+          <ScrollEntrance delay={260} direction="scale">
+            <aside className="surface-lift min-w-0 flex flex-col justify-between rounded-2xl bg-[#173f2c] p-5 sm:p-6 text-white">
+              <div>
+                <Zap className="text-[#c8ef70]" size={22} />
+                <p className="mt-4 text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#b4d8c1]">Weekly Pulse</p>
+                <h2 className="font-display mt-1.5 text-lg sm:text-xl font-extrabold leading-snug">
+                  {(overdueCount ?? 0) > 0
+                    ? `${overdueCount} tugas lewat tenggat — butuh perhatianmu sekarang.`
+                    : (activeCount ?? 0) > 0
+                    ? "Ritme akademikmu berjalan baik. Pertahankan momentum! 🔥"
+                    : "Semua ambisi besar dimulai dari langkah kecil pertama."}
+                </h2>
+                <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-[#c7dbce]">
+                  {(overdueCount ?? 0) > 0
+                    ? "Selesaikan atau jadwalkan ulang agar beban pikiranmu lebih ringan."
+                    : "Pilih satu kegiatan yang paling penting dan selesaikan hari ini."}
+                </p>
 
-              {/* Completion mini bar */}
-              {totalItems > 0 && (
-                <div className="mt-4 pt-3 border-t border-white/10">
-                  <div className="flex justify-between text-xs font-bold text-[#b4d8c1]">
-                    <span>Progress semester ini</span>
-                    <span>{completionRate}%</span>
+                {/* Completion mini bar */}
+                {totalItems > 0 && (
+                  <div className="mt-4 pt-3 border-t border-white/10">
+                    <div className="flex justify-between text-xs font-bold text-[#b4d8c1]">
+                      <span>Progress semester ini</span>
+                      <span>{completionRate}%</span>
+                    </div>
+                    <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/15">
+                      <div
+                        className="h-full rounded-full bg-[#c8ef70] transition-all duration-700"
+                        style={{ width: `${completionRate}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[10px] sm:text-[11px] text-white/50">{completeCount} dari {totalItems} item selesai</p>
                   </div>
-                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/15">
-                    <div
-                      className="h-full rounded-full bg-[#c8ef70] transition-all duration-700"
-                      style={{ width: `${completionRate}%` }}
-                    />
-                  </div>
-                  <p className="mt-1 text-[10px] sm:text-[11px] text-white/50">{completeCount} dari {totalItems} item selesai</p>
-                </div>
-              )}
-            </div>
-            <Link
-              href={`/kegiatan${semesterFilter}`}
-              className="mt-5 inline-flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#c8ef70] hover:underline"
-            >
-              Atur fokusmu <ArrowUpRight size={15} />
-            </Link>
-          </aside>
+                )}
+              </div>
+              <Link
+                href={`/kegiatan${semesterFilter}`}
+                className="mt-5 inline-flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#c8ef70] hover:underline"
+              >
+                Atur fokusmu <ArrowUpRight size={15} />
+              </Link>
+            </aside>
+          </ScrollEntrance>
 
           {/* Semester Progress */}
           {activeSemester && (
-            <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
-              <div className="flex items-center gap-2.5 border-b border-[var(--line)] pb-3">
-                <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)] shrink-0">
-                  <BookOpen size={16} strokeWidth={2.5} />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-wide text-[var(--muted)]">Semester Aktif</p>
-                  <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">{activeSemester.nama_semester}</p>
+            <ScrollEntrance delay={300} direction="scale">
+              <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+                <div className="flex items-center gap-2.5 border-b border-[var(--line)] pb-3">
+                  <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)] shrink-0">
+                    <BookOpen size={16} strokeWidth={2.5} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-[var(--muted)]">Semester Aktif</p>
+                    <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">{activeSemester.nama_semester}</p>
+                  </div>
                 </div>
+                {activeSemester.tanggal_mulai && activeSemester.tanggal_selesai && (
+                  <div className="mt-3.5">
+                    <div className="flex justify-between text-xs font-bold text-[var(--muted)]">
+                      <span>Sudah berjalan</span>
+                      <span className="text-[var(--brand)]">{semesterProgress}%</span>
+                    </div>
+                    <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#eff2eb]">
+                      <div
+                        className="h-full rounded-full bg-[var(--brand)] transition-all duration-700"
+                        style={{ width: `${semesterProgress}%` }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[10px] sm:text-[11px] text-[var(--muted)] truncate">
+                      {format(parseISO(activeSemester.tanggal_mulai), "d MMM", { locale: id })} –{" "}
+                      {format(parseISO(activeSemester.tanggal_selesai), "d MMM yyyy", { locale: id })}
+                    </p>
+                  </div>
+                )}
               </div>
-              {activeSemester.tanggal_mulai && activeSemester.tanggal_selesai && (
-                <div className="mt-3.5">
-                  <div className="flex justify-between text-xs font-bold text-[var(--muted)]">
-                    <span>Sudah berjalan</span>
-                    <span className="text-[var(--brand)]">{semesterProgress}%</span>
-                  </div>
-                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[#eff2eb]">
-                    <div
-                      className="h-full rounded-full bg-[var(--brand)] transition-all duration-700"
-                      style={{ width: `${semesterProgress}%` }}
-                    />
-                  </div>
-                  <p className="mt-1 text-[10px] sm:text-[11px] text-[var(--muted)] truncate">
-                    {format(parseISO(activeSemester.tanggal_mulai), "d MMM", { locale: id })} –{" "}
-                    {format(parseISO(activeSemester.tanggal_selesai), "d MMM yyyy", { locale: id })}
-                  </p>
-                </div>
-              )}
-            </div>
+            </ScrollEntrance>
           )}
 
           {/* Organization Snapshot */}
           {(organizations?.length ?? 0) > 0 && (
-            <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
-              <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#e8e1fa] text-[#5c3a9c] shrink-0">
-                    <Building2 size={16} strokeWidth={2.5} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-wide text-[var(--muted)]">Organisasi</p>
-                    <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">Ruang Kontribusi</p>
+            <ScrollEntrance delay={340} direction="scale">
+              <div className="surface-lift min-w-0 rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5">
+                <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#e8e1fa] text-[#5c3a9c] shrink-0">
+                      <Building2 size={16} strokeWidth={2.5} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black uppercase tracking-wide text-[var(--muted)]">Organisasi</p>
+                      <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">Ruang Kontribusi</p>
+                    </div>
                   </div>
+                  <Link href="/organisasi" className="shrink-0 text-xs font-black text-[var(--brand)] hover:underline">
+                    Semua →
+                  </Link>
                 </div>
-                <Link href="/organisasi" className="shrink-0 text-xs font-black text-[var(--brand)] hover:underline">
-                  Semua →
-                </Link>
-              </div>
 
-              <div className="mt-3 space-y-2">
-                {organizations!.map((org) => {
-                  const activeProker = (programs ?? []).filter(
-                    (p) => p.organization_id === org.id && p.status === "berjalan"
-                  ).length;
-                  return (
-                    <Link
-                      key={org.id}
-                      href={`/organisasi/${org.id}`}
-                      className="flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] p-2.5 transition hover:border-[#b9ddc6]"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{org.nama_organisasi}</p>
-                        <p className="text-[10px] sm:text-xs text-[var(--muted)] truncate">
-                          {activeProker > 0 ? `${activeProker} proker aktif` : org.tipe}
-                        </p>
-                      </div>
-                      <ArrowUpRight size={14} className="shrink-0 text-[var(--muted)]" />
-                    </Link>
-                  );
-                })}
+                <div className="mt-3 space-y-2">
+                  {organizations!.map((org) => {
+                    const activeProker = (programs ?? []).filter(
+                      (p) => p.organization_id === org.id && p.status === "berjalan"
+                    ).length;
+                    return (
+                      <Link
+                        key={org.id}
+                        href={`/organisasi/${org.id}`}
+                        className="flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] p-2.5 transition hover:border-[#b9ddc6]"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-xs sm:text-sm font-bold text-[var(--ink)]">{org.nama_organisasi}</p>
+                          <p className="text-[10px] sm:text-xs text-[var(--muted)] truncate">
+                            {activeProker > 0 ? `${activeProker} proker aktif` : org.tipe}
+                          </p>
+                        </div>
+                        <ArrowUpRight size={14} className="shrink-0 text-[var(--muted)]" />
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            </ScrollEntrance>
           )}
         </div>
       </section>
