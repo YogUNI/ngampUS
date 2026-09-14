@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PencilLine, X } from "lucide-react";
+import { BookOpen, PencilLine, X } from "lucide-react";
 import { updateActivity } from "@/app/(dashboard)/kegiatan/actions";
 
 import { useToast } from "@/components/ui/toast-provider";
@@ -20,17 +20,34 @@ type Activity = {
   semester_id: string | null;
   organization_id: string | null;
   program_id: string | null;
+  course_id?: string | null;
   is_portfolio: boolean;
   peran_portfolio: string | null;
 };
 type Option = { id: string; name: string };
 type ProgramOption = { id: string; name: string; organization_id?: string | null };
+type CourseOption = { id: string; name: string; semester_id?: string | null; sks?: number };
 
 const PORTFOLIO_CATEGORIES = ["lomba", "event", "organisasi"];
 
-export function ActivityEditForm({ activity, semesters, organizations, programs }: { activity: Activity; semesters: Option[]; organizations: Option[]; programs: ProgramOption[] }) {
+export function ActivityEditForm({
+  activity,
+  semesters,
+  organizations,
+  programs,
+  courses = [],
+}: {
+  activity: Activity;
+  semesters: Option[];
+  organizations: Option[];
+  programs: ProgramOption[];
+  courses?: CourseOption[];
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [kategori, setKategori] = useState<string>(activity.kategori);
+  const [selectedSemesterId, setSelectedSemesterId] = useState<string>(activity.semester_id || "");
+  const [selectedCourseId, setSelectedCourseId] = useState<string>(activity.course_id || "");
   const [deadlineStatus, setDeadlineStatus] = useState(activity.deadline_status as "terjadwal" | "belum_ditentukan");
   const [selectedOrgId, setSelectedOrgId] = useState<string>(activity.organization_id || "");
   const [isPortfolio, setIsPortfolio] = useState(activity.is_portfolio ?? PORTFOLIO_CATEGORIES.includes(activity.kategori));
@@ -39,6 +56,10 @@ export function ActivityEditForm({ activity, semesters, organizations, programs 
   const availablePrograms = selectedOrgId
     ? programs.filter((p) => p.organization_id === selectedOrgId)
     : [];
+
+  const availableCourses = selectedSemesterId
+    ? courses.filter((c) => !c.semester_id || c.semester_id === selectedSemesterId)
+    : courses;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,7 +118,15 @@ export function ActivityEditForm({ activity, semesters, organizations, programs 
                   <option value="reminder">Reminder</option>
                   <option value="catatan">Catatan</option>
                 </select>
-                <select name="kategori" defaultValue={activity.kategori}>
+                <select
+                  name="kategori"
+                  value={kategori}
+                  onChange={(e) => {
+                    const newKat = e.target.value;
+                    setKategori(newKat);
+                    if (newKat !== "kuliah") setSelectedCourseId("");
+                  }}
+                >
                   <option value="kuliah">Kuliah</option>
                   <option value="organisasi">Organisasi</option>
                   <option value="lomba">Lomba</option>
@@ -110,6 +139,38 @@ export function ActivityEditForm({ activity, semesters, organizations, programs 
                   <option value="rendah">Rendah</option>
                 </select>
               </div>
+
+              {/* Pilihan Mata Kuliah (Khusus Kategori Kuliah) */}
+              {kategori === "kuliah" && (
+                <div className="rounded-2xl border border-[#c7d2fe] bg-[#f5f7ff] p-3 transition-all">
+                  <label className="block text-[11px] font-black uppercase tracking-wider text-[#3730a3]">
+                    <span className="inline-flex items-center gap-1.5">
+                      <BookOpen size={13} className="text-[#4f46e5]" />
+                      Mata Kuliah Terkait (Semester Ini)
+                    </span>
+                  </label>
+                  {availableCourses.length > 0 ? (
+                    <select
+                      name="course_id"
+                      value={selectedCourseId}
+                      onChange={(e) => setSelectedCourseId(e.target.value)}
+                      className="mt-1.5 bg-white text-xs font-semibold text-[#1e1b4b] border-[#c7d2fe] focus:border-[#4f46e5]"
+                    >
+                      <option value="">Pilih mata kuliah (opsional / umum)</option>
+                      {availableCourses.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} {c.sks ? `(${c.sks} SKS)` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="mt-1.5 rounded-xl bg-white p-2.5 border border-[#e0e7ff] text-xs text-[#4338ca]">
+                      <p className="font-bold text-[11px]">Belum ada jadwal mata kuliah yang ditambahkan.</p>
+                      <input type="hidden" name="course_id" value="" />
+                    </div>
+                  )}
+                </div>
+              )}
 
               <label className="block text-sm font-bold">
                 Deskripsi
@@ -144,7 +205,20 @@ export function ActivityEditForm({ activity, semesters, organizations, programs 
               )}
 
               <div className="grid grid-cols-3 gap-3">
-                <select name="semester_id" defaultValue={activity.semester_id || ""}>
+                <select
+                  name="semester_id"
+                  value={selectedSemesterId}
+                  onChange={(e) => {
+                    const newSemId = e.target.value;
+                    setSelectedSemesterId(newSemId);
+                    if (selectedCourseId) {
+                      const courseObj = courses.find((c) => c.id === selectedCourseId);
+                      if (courseObj?.semester_id && courseObj.semester_id !== newSemId) {
+                        setSelectedCourseId("");
+                      }
+                    }
+                  }}
+                >
                   <option value="">Tanpa semester</option>
                   {semesters.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
                 </select>

@@ -2,17 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Calendar, CalendarClock, CheckSquare, FileText, Plus, X } from "lucide-react";
+import { BookOpen, Calendar, CalendarClock, CheckSquare, FileText, Plus, X } from "lucide-react";
 import { createActivity } from "@/app/(dashboard)/kegiatan/actions";
 import { useToast } from "@/components/ui/toast-provider";
 
 type Option = { id: string; name: string; active?: boolean };
 type ProgramOption = { id: string; name: string; organization_id?: string | null };
+type CourseOption = { id: string; name: string; semester_id?: string | null; sks?: number };
 
 export function ActivityForm({
   semesters,
   organizations,
   programs,
+  courses = [],
   defaultDate,
   triggerText,
   triggerClass,
@@ -22,6 +24,7 @@ export function ActivityForm({
   semesters: Option[];
   organizations: Option[];
   programs: ProgramOption[];
+  courses?: CourseOption[];
   defaultDate?: string;
   triggerText?: string;
   triggerClass?: string;
@@ -33,6 +36,10 @@ export function ActivityForm({
   const [mode, setMode] = useState<"agenda" | "tugas" | "catatan">("agenda");
   const [kategori, setKategori] = useState<string>("organisasi");
   const [prioritas, setPrioritas] = useState<string>("sedang");
+  const [selectedSemesterId, setSelectedSemesterId] = useState<string>(
+    semesters.find((s) => s.active)?.id || semesters[0]?.id || ""
+  );
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
   // Portfolio toggle — defaults to true for lomba/event/organisasi categories
   const PORTFOLIO_CATEGORIES = ["lomba", "event", "organisasi"];
@@ -41,9 +48,17 @@ export function ActivityForm({
 
   function handleKategoriChange(value: string) {
     setKategori(value);
+    if (value !== "kuliah") {
+      setSelectedCourseId("");
+    }
     // Smart auto-default: set portfolio based on category
     setIsPortfolio(PORTFOLIO_CATEGORIES.includes(value));
   }
+
+  // Filter courses by selected semester if semester is selected
+  const availableCourses = selectedSemesterId
+    ? courses.filter((c) => !c.semester_id || c.semester_id === selectedSemesterId)
+    : courses;
 
   const availablePrograms = selectedOrgId
     ? programs.filter((p) => p.organization_id === selectedOrgId)
@@ -228,6 +243,46 @@ export function ActivityForm({
             </div>
           </div>
 
+          {/* Pilihan Mata Kuliah (Khusus Kategori Kuliah) */}
+          {kategori === "kuliah" && (
+            <div className="rounded-2xl border border-[#c7d2fe] bg-[#f5f7ff] p-3.5 transition-all">
+              <label className="block text-xs font-black uppercase tracking-wider text-[#3730a3]">
+                <span className="inline-flex items-center gap-1.5">
+                  <BookOpen size={14} className="text-[#4f46e5]" />
+                  Mata Kuliah Terkait (Semester Ini)
+                </span>
+              </label>
+              {availableCourses.length > 0 ? (
+                <>
+                  <select
+                    name="course_id"
+                    value={selectedCourseId}
+                    onChange={(e) => setSelectedCourseId(e.target.value)}
+                    className="mt-2 bg-white text-xs font-semibold text-[#1e1b4b] border-[#c7d2fe] focus:border-[#4f46e5]"
+                  >
+                    <option value="">Pilih mata kuliah (opsional / umum)</option>
+                    {availableCourses.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} {c.sks ? `(${c.sks} SKS)` : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="mt-1.5 text-[11px] text-[#4f46e5]">
+                    💡 Tugas akan dikaitkan langsung dengan mata kuliah pilihanmu.
+                  </p>
+                </>
+              ) : (
+                <div className="mt-2 rounded-xl bg-white p-3 border border-[#e0e7ff] text-xs text-[#4338ca]">
+                  <p className="font-bold">Belum ada jadwal mata kuliah yang ditambahkan.</p>
+                  <p className="mt-0.5 text-[11px] text-[var(--muted)]">
+                    Kamu bisa tambah mata kuliah di menu <strong>Jadwal Kuliah</strong> terlebih dahulu agar muncul di sini.
+                  </p>
+                  <input type="hidden" name="course_id" value="" />
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Portfolio Toggle */}
           <input type="hidden" name="is_portfolio" value={isPortfolio ? "true" : "false"} />
           <div
@@ -356,7 +411,22 @@ export function ActivityForm({
               <div className="grid sm:grid-cols-2 gap-2.5">
                 <div>
                   <label className="block text-[11px] font-bold text-[var(--muted)]">Semester</label>
-                  <select name="semester_id" defaultValue={semesters.find((s) => s.active)?.id || ""} className="mt-1">
+                  <select
+                    name="semester_id"
+                    value={selectedSemesterId}
+                    onChange={(e) => {
+                      const newSemId = e.target.value;
+                      setSelectedSemesterId(newSemId);
+                      // Clear selected course if it doesn't belong to the newly selected semester
+                      if (selectedCourseId) {
+                        const courseObj = courses.find((c) => c.id === selectedCourseId);
+                        if (courseObj?.semester_id && courseObj.semester_id !== newSemId) {
+                          setSelectedCourseId("");
+                        }
+                      }
+                    }}
+                    className="mt-1"
+                  >
                     <option value="">Tanpa semester</option>
                     {semesters.map((s) => (
                       <option key={s.id} value={s.id}>{s.name}</option>

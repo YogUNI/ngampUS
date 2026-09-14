@@ -32,6 +32,7 @@ type Activity = {
   jenis_item: string;
   catatan?: string | null;
   link_terkait?: string | null;
+  course_id?: string | null;
 };
 
 type Option = { id: string; name: string; active?: boolean };
@@ -409,6 +410,15 @@ export function CalendarView({
                         </span>
                       </div>
 
+                      {activeItem.activity.course_id && (
+                        <div className="flex items-center gap-2 font-semibold text-[#4338ca]">
+                          <BookOpen size={14} className="text-[#4f46e5] shrink-0" />
+                          <span>
+                            Mata Kuliah: {courses.find((c) => c.id === activeItem.activity?.course_id)?.nama_matkul || "Mata Kuliah"}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex items-center gap-2 font-semibold text-[var(--muted)]">
                         <span>Status:</span>
                         <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border border-[var(--line)]">
@@ -457,6 +467,12 @@ export function CalendarView({
           semesters={semesters}
           organizations={organizations}
           programs={programs}
+          courses={courses.map((c) => ({
+            id: c.id,
+            name: c.nama_matkul,
+            semester_id: c.semester_id,
+            sks: c.sks,
+          }))}
           defaultDate={selectedDate}
           initialOpen={true}
           onClose={() => setSelectedDate(null)}

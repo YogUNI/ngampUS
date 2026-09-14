@@ -19,6 +19,7 @@ const schema = z.object({
   semester_id: z.string().uuid().or(z.literal("")).nullable().optional(),
   organization_id: z.string().uuid().or(z.literal("")).nullable().optional(),
   program_id: z.string().uuid().or(z.literal("")).nullable().optional(),
+  course_id: z.string().uuid().or(z.literal("")).nullable().optional(),
   is_portfolio: z.boolean().optional().default(false),
   peran_portfolio: z.string().trim().max(120).or(z.literal("")).nullable().optional(),
 }).superRefine((value, context) => {
@@ -52,6 +53,7 @@ function parseActivity(formData: FormData) {
     semester_id: formData.get("semester_id") || "",
     organization_id: formData.get("organization_id") || "",
     program_id: formData.get("program_id") || "",
+    course_id: formData.get("course_id") || "",
     is_portfolio: isPortfolio,
     peran_portfolio: formData.get("peran_portfolio") || "",
   });
@@ -78,6 +80,7 @@ function activityPayload(item: z.infer<typeof schema>, organizationId: string | 
     semester_id: item.semester_id || null,
     organization_id: organizationId,
     program_id: item.program_id || null,
+    course_id: item.course_id || null,
     peran_portfolio: item.peran_portfolio || null,
   };
 }

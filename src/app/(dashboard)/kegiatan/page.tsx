@@ -62,6 +62,12 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
   ]);
   const calendar = filters.view === "calendar";
   const mappedPrograms = (programs ?? []).map((program) => ({ id: program.id, name: program.nama_proker, organization_id: program.organization_id }));
+  const mappedCourses = (courses ?? []).map((course) => ({
+    id: course.id,
+    name: course.nama_matkul,
+    semester_id: course.semester_id,
+    sks: course.sks,
+  }));
 
   const activeSemester = semesters?.find((s) => s.is_active) ?? semesters?.[0];
 
@@ -77,6 +83,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
           semesters={(semesters ?? []).map((semester) => ({ id: semester.id, name: semester.nama_semester, active: semester.is_active }))}
           organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))}
           programs={mappedPrograms}
+          courses={mappedCourses}
         />
       </header>
 
@@ -217,6 +224,14 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                               )}
                             </div>
                             <p className="mt-1 text-xs text-[var(--muted)] flex flex-wrap items-center gap-1.5">
+                              {activity.course_id && (
+                                <>
+                                  <span className="inline-flex items-center gap-1 rounded-md bg-[#eef2ff] px-2 py-0.5 text-[11px] font-bold text-[#4338ca]">
+                                    📚 {courses?.find((c) => c.id === activity.course_id)?.nama_matkul || "Mata Kuliah"}
+                                  </span>
+                                  <span>·</span>
+                                </>
+                              )}
                               <span className="font-semibold">{activity.kategori}</span>
                               <span>·</span>
                               <span>{activity.deadline ? `Deadline: ${activity.deadline}` : "Tanpa deadline"}</span>
@@ -241,6 +256,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                                 name: organization.nama_organisasi,
                               }))}
                               programs={mappedPrograms}
+                              courses={mappedCourses}
                             />
                             <ConfirmDeleteForm
                               action={deleteActivity}
@@ -296,6 +312,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                                   name: organization.nama_organisasi,
                                 }))}
                                 programs={mappedPrograms}
+                                courses={mappedCourses}
                               />
                               <ConfirmDeleteForm
                                 action={deleteActivity}
