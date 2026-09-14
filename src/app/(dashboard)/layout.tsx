@@ -15,9 +15,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const semesterName = activeSemester?.nama_semester;
 
   return (
-    <main className="dashboard-shell min-h-screen">
+    <main className="dashboard-shell min-h-screen w-full bg-[var(--background)]">
       <MobileTopbar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName}/>
-      <div className="mx-auto flex min-h-screen max-w-[1600px]">
+      <div className="flex min-h-screen w-full">
         <div className="hidden md:block">
           <Sidebar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName}/>
         </div>
