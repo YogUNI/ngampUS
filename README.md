@@ -1,245 +1,204 @@
-<div align="center">
+﻿<div align="center">
 
-# ngampUS
+  <img src="./public/logo_ngampUS.png" alt="ngampUS Logo" width="120" style="margin-bottom: 12px;" />
 
-### Your campus command center
+  # **ngampUS**
+  ### *Your Modern Campus Command Center*
 
-_Personal workspace untuk mahasiswa aktif yang ingin menjaga kuliah, organisasi, program kerja, dan deadline tetap satu arah._
+  <p align="center">
+    <b>Personal workspace cerdas untuk mahasiswa aktif yang ingin menjaga jadwal kuliah, tugas, organisasi, proker, dan target prestasi tetap dalam satu kendali.</b>
+  </p>
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.3.3-103626?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-103626?style=flat-square&logo=react&logoColor=61DAFB)](https://react.dev/)
-[![Supabase](https://img.shields.io/badge/Supabase-Postgres_%2B_Auth-103626?style=flat-square&logo=supabase&logoColor=3ECF8E)](https://supabase.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-103626?style=flat-square&logo=typescript&logoColor=3178C6)](https://www.typescriptlang.org/)
+  <p align="center">
+    <a href="#-fitur-unggulan">Fitur Unggulan</a> •
+    <a href="#-arsitektur--keamanan">Arsitektur & Keamanan</a> •
+    <a href="#-cara-menjalankan-secara-lokal">Cara Menjalankan</a> •
+    <a href="#-struktur-proyek">Struktur Proyek</a> •
+    <a href="#-kontribusi">Kontribusi</a>
+  </p>
 
-[Mulai lokal](#menjalankan-secara-lokal) · [Fitur](#fitur-utama) · [Setup Supabase](#setup-supabase) · [Arsitektur](#arsitektur)
+  <p align="center">
+    <img src="https://img.shields.io/badge/Next.js-16.3-103626?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React-19-103626?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Supabase-Postgres_%2B_Auth-103626?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase" />
+    <img src="https://img.shields.io/badge/TypeScript-Strict-103626?style=for-the-badge&logo=typescript&logoColor=3178C6" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-v4-103626?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Cyber_Security-Hardened-103626?style=for-the-badge&logo=auth0&logoColor=c8ef70" alt="Security Hardened" />
+  </p>
 
-Untuk handoff ke AI agent atau maintainer baru, baca [Project Context for Antigravity](./docs/ANTIGRAVITY_PROJECT_CONTEXT.md).
+  <br/>
 
-<br/>
-
-![Preview ngampUS](./public/ngampus-preview.svg)
+  <img src="./public/ngampus-preview.svg" alt="ngampUS Dashboard Preview" width="100%" style="border-radius: 16px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);" />
 
 </div>
 
 ---
 
-## Tentang ngampUS
+## 🌟 Mengapa nGampUS?
 
-ngampUS bukan sekadar to-do list. Aplikasi ini dibuat sebagai **campus atlas**: satu tempat untuk menangkap semua komitmen mahasiswa, menautkannya dengan semester dan organisasi, lalu mengubahnya menjadi fokus harian yang lebih jelas.
+Banyak mahasiswa merasa kewalahan mengatur jadwal kuliah yang tercecer di grup WhatsApp, tugas yang tertumpuk di catatan HP, serta timeline program kerja organisasi yang berantakan.
 
-Desainnya memakai konsep **Campus Atlas / Campus Console**—nuansa hijau tua, mint, dan papan fokus yang membuat data terasa seperti peta kerja personal, bukan tabel administrasi.
+**nGampUS** hadir dengan filosofi **Campus Atlas / Campus Console**:
+- 🧭 **Satu Peta Kendali**: Jadwal kelas, tugas kuliah, rapat organisasi, dan kalender akademik saling terhubung secara terstruktur.
+- ⚡ **Fokus Tanpa Distraksi**: Dashboard proaktif yang otomatis menghitung deadline terdekat, kelas hari ini, dan target semester.
+- 🎯 **Portofolio Otomatis**: Setiap kontribusi di kepanitiaan, lomba, dan proker otomatis dirangkum jadi rekap portofolio siap pakai untuk CV.
 
-## Fitur utama
+---
 
-| Area | Yang bisa dilakukan |
-| --- | --- |
-| 🔐 **Authentication** | Register, login, logout, session SSR, dan route workspace terlindungi. |
-| 👤 **Profil mahasiswa** | Kelola nama, email Auth, universitas, program studi, NIM, WhatsApp, dan bio. |
-| 🎓 **Semester** | Buat semester, pilih satu semester aktif, edit, dan hapus dengan konfirmasi. |
-| 🏛️ **Organisasi** | Simpan organisasi/UKM/kepanitiaan, peran, divisi, dan catatan kontribusi. |
-| 🪪 **Jabatan terstruktur** | Ketua, wakil, sekretaris, bendahara, kepala/wakil kepala departemen, anggota, atau role kustom. |
-| 💼 **Program kerja** | Tambah proker per organisasi, isi peran, status, deskripsi, dan periode. |
-| ✅ **Kegiatan** | Catat tugas, reminder, atau catatan dengan prioritas, status, tanggal, deadline, dan konteks organisasi. |
-| 🗓️ **Kalender & filter** | Filter per semester, organisasi, kategori, prioritas, status; lihat juga kalender bulanan. |
-| 📊 **Dashboard & rekap** | Metrik semester aktif, deadline dekat, progress, distribusi kategori, dan ekspor CSV UTF-8. |
-| 🔒 **Data terisolasi** | Setiap tabel menggunakan Row Level Security (RLS); user hanya dapat melihat dan mengubah datanya sendiri. |
+## 🚀 Fitur Unggulan
 
-## Alur produk
+### 1. 🎓 Onboarding Interaktif & Guided Tour
+* **Smart First-Time Detection**: Mahasiswa yang baru mendaftar langsung disambut oleh wizard setup semester dengan rentang tanggal perkiraan otomatis.
+* **1-Minute Spotlight Feature Tour**: Sorotan visual interaktif yang memperkenalkan letak tombol dan fitur inti nGampUS agar pengguna baru tidak kebingungan.
+* **Anti-Spam State**: Status tur tersimpan per akun, serta dapat diputar ulang (*replay*) kapan saja melalui tombol **Panduan** di sidebar.
+
+### 2. 📅 Jadwal Kuliah & Ruang Kelas Virtual
+* **Jadwal Mingguan Interaktif**: Pantau jadwal perkuliahan hari Senin hingga Minggu lengkap dengan jam mulai-selesai, jumlah SKS, nama dosen pengampu, kontak, dan ruangan.
+* **Akses Kelas Virtual 1-Klik**: Tombol pintas langsung membuka tautan Google Meet / Zoom dan tautan materi kuliah tanpa perlu mencari di chat grup.
+* **Tipe Kuliah**: Label visual yang jelas untuk perkuliahan *Offline*, *Online*, dan *Hybrid*.
+
+### 3. 📝 Manajemen Kegiatan & Deadline Pintar
+* **Kaitan Mata Kuliah**: Saat mencatat tugas kategori kuliah, mahasiswa dapat memilih mata kuliah terkait dari semester yang sedang berjalan.
+* **Status Deadline Fleksibel**: Mendukung tugas **Terjadwal** (dengan tanggal & jam deadline) maupun kegiatan **Belum Ditentukan**.
+* **Progress Auto-Sync**: Status otomatis berpindah dari *Belum Mulai* ke *On Progress* ketika tanggal pelaksanaan tiba.
+
+### 4. 🏢 Organisasi, Jabatan & Program Kerja (Proker)
+* **Struktur Peran Dinamis**: Kelola posisi di BEM, Himpunan, UKK/UKM mulai dari Ketua Umum, Sekretaris, Bendahara, Kepala Departemen, hingga Anggota.
+* **Monitoring Proker**: Pantau status program kerja mulai dari tahap perencanaan, berjalan, selesai, hingga arsip.
+
+### 5. 🏆 Rekap Portofolio & Ekspor Data
+* **Auto-Curated Portfolio**: Beri tanda bintang pada kegiatan organisasi atau lomba agar otomatis masuk ke galeri portofolio semester.
+* **Ekspor CSV UTF-8**: Unduh rekapitulasi data akademik dan kegiatan untuk arsip pribadi atau lampiran beasiswa.
+
+---
+
+## 🛡️ Arsitektur & Keamanan Siber (Enterprise-Grade)
+
+Keamanan privasi dan data mahasiswa di nGampUS dilindungi dengan prinsip **Defense-in-Depth**:
+
+| Komponen Keamanan | Implementasi di nGampUS |
+| :--- | :--- |
+| **Row Level Security (RLS)** | Seluruh tabel PostgreSQL Supabase dilindungi RLS ketat (`auth.uid() = user_id`). Tidak ada data pengguna lain yang bisa dibaca atau diubah. |
+| **Edge Auth Middleware** | Next.js Middleware di level edge memeriksa auth session dan secara otomatis me-refresh session cookie dengan opsi `SameSite=Lax` & `Secure`. |
+| **Content-Security-Policy (CSP)** | Membatasi skrip eksternal dan hanya mengizinkan koneksi aman ke server nGampUS dan Supabase endpoint (`*.supabase.co`). |
+| **Anti-Clickjacking** | Menggunakan header `X-Frame-Options: DENY` dan `frame-ancestors 'none'` untuk mencegah web dibungkus iframe penipuan. |
+| **Anti-XSS URL Protocol Filter** | Validasi skema URL ketat (`/^https?:\/\//i`) pada seluruh input link meet, materi, LinkedIn, dan GitHub untuk memblokir eksploitasi `javascript:`. |
+| **MIME Sniffing & HSTS Protection** | `X-Content-Type-Options: nosniff` dan `Strict-Transport-Security` (HSTS) selama 2 tahun (`max-age=63072000`). |
 
 ```mermaid
-flowchart LR
-  A[Register] --> B[Profile & semester aktif]
-  B --> C[Organisasi / jabatan / proker]
-  B --> D[Tambah kegiatan]
-  C --> D
-  D --> E[Dashboard fokus]
-  E --> F[Rekap & ekspor CSV]
+flowchart TD
+  User([Mahasiswa / Browser]) -->|HTTPS + OWASP Security Headers| Edge[Edge Middleware]
+  Edge -->|Validasi Auth & CSRF Cookie| Next[Next.js 16 App Router]
+  Next -->|Server Actions + Zod Validation| SSR[Supabase SSR Client]
+  SSR -->|PostgreSQL via RLS Policy| DB[(Database Supabase)]
+  DB -->|Hanya Data auth.uid = user_id| SSR
+  SSR --> Next
+  Next --> User
 ```
 
-## Teknologi
+---
 
-| Layer | Teknologi |
-| --- | --- |
-| Framework | Next.js 16 App Router + React 19 |
-| Language | TypeScript |
-| Styling | Tailwind CSS 4 + design tokens CSS |
-| Backend | Supabase PostgreSQL, Auth, SSR cookies, RLS |
-| Validasi form | React Hook Form + Zod |
-| Kalender | FullCalendar |
-| Ikon & utility | Lucide React, date-fns, clsx, tailwind-merge |
+## 💻 Tech Stack
 
-## Arsitektur
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/) dengan **React 19**
+- **Bahasa**: [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) + CSS Custom Design Tokens
+- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL, Supabase Auth SSR, Row Level Security)
+- **Validasi Data**: [Zod](https://zod.dev/) & [React Hook Form](https://react-hook-form.com/)
+- **Ikonografi & UI**: [Lucide React](https://lucide.dev/), [date-fns](https://date-fns.org/)
+- **Kalender**: [FullCalendar](https://fullcalendar.io/)
 
-```mermaid
-flowchart TB
-  UI[Next.js App Router UI] --> Actions[Server Actions]
-  UI --> Auth[Supabase Auth Client]
-  Actions --> SSR[Supabase SSR Client]
-  Auth --> DB[(Supabase PostgreSQL)]
-  SSR --> DB
-  DB --> RLS[Row Level Security]
-  RLS --> Data[Data milik user saat ini]
-```
+---
 
-## Menjalankan secara lokal
+## 🛠️ Cara Menjalankan Secara Lokal
 
 ### Prasyarat
+- Node.js versi 20 atau yang lebih baru
+- Akun dan project [Supabase](https://supabase.com) aktif
 
-- Node.js 20 atau lebih baru
-- npm
-- Project Supabase
-
-### 1. Clone dan install
-
+### 1. Kloning Repositori
 ```bash
 git clone https://github.com/YogUNI/nGampUS.git
 cd nGampUS
+```
+
+### 2. Instalasi Dependensi
+```bash
 npm install
 ```
 
-### 2. Siapkan environment variable
-
-Salin file contoh:
-
+### 3. Konfigurasi Environment Variable
+Salin file `.env.example` menjadi `.env.local`:
 ```bash
-copy .env.example .env.local
+cp .env.example .env.local
 ```
-
-Isi `.env.local` menggunakan nilai dari **Supabase Dashboard → Connect**:
-
+Lengkapi isian kredensial Supabase Anda di `.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-anon-key
 ```
 
-> Jangan commit `.env.local`. Aplikasi ini tidak memerlukan `SUPABASE_SERVICE_ROLE_KEY` untuk berjalan di browser.
+### 4. Setup Database Supabase
+Buka **SQL Editor** di dashboard Supabase Anda, lalu jalankan script berikut secara berurutan:
+1. `supabase/schema.sql` (Skema tabel utama & RLS)
+2. `supabase/migrations/20260913_create_courses_table.sql` (Tabel jadwal kuliah mingguan)
 
-### 3. Jalankan aplikasi
-
+### 5. Jalankan Development Server
 ```bash
 npm run dev
 ```
+Buka browser di [http://localhost:3000](http://localhost:3000) untuk mengakses aplikasi.
 
-Buka [http://localhost:3000](http://localhost:3000).
+---
 
-## Setup Supabase
-
-> **Penting:** jangan menjalankan ulang `schema.sql` pada project yang sudah berisi data. Gunakan migration yang belum pernah dijalankan saja.
-
-### Project Supabase baru
-
-Buka **SQL Editor**, lalu jalankan file berikut secara berurutan:
-
-1. [`supabase/schema.sql`](./supabase/schema.sql)
-2. [`20260829_expand_profiles.sql`](./supabase/migrations/20260829_expand_profiles.sql)
-3. [`20260830_add_organization_position_roles.sql`](./supabase/migrations/20260830_add_organization_position_roles.sql)
-4. [`20260830_profile_academic_fields.sql`](./supabase/migrations/20260830_profile_academic_fields.sql)
-5. [`20260830_fix_profile_academic_trigger_email.sql`](./supabase/migrations/20260830_fix_profile_academic_trigger_email.sql)
-
-### Project yang sudah berjalan
-
-Jalankan **hanya migration yang belum pernah dijalankan**, tetap dalam urutan yang sama. Migration terakhir harus dijalankan setelah `20260829_expand_profiles.sql` karena memperbarui trigger profile agar menyimpan `email`, `university`, dan `major` dari metadata register.
-
-### Konfigurasi Auth untuk lokal
-
-Di **Authentication → Sign In / Providers**:
-
-1. Pastikan provider **Email** aktif.
-2. Untuk testing lokal cepat, nonaktifkan **Confirm email**.
-3. Jika Confirm email tetap aktif, tambahkan `http://localhost:3000` pada **URL Configuration**, konfirmasi email, lalu login.
-
-### Verifikasi data register
-
-Setelah menjalankan migration terakhir, buat akun baru lalu periksa profile-nya:
-
-```sql
-select id, email, full_name, university, major
-from public.profiles
-order by created_at desc;
-```
-
-## Model data
-
-```mermaid
-erDiagram
-  AUTH_USERS ||--|| PROFILES : owns
-  AUTH_USERS ||--o{ SEMESTERS : creates
-  AUTH_USERS ||--o{ ORGANIZATIONS : creates
-  AUTH_USERS ||--o{ ACTIVITIES : creates
-  ORGANIZATIONS ||--o{ ORGANIZATION_POSITIONS : has
-  ORGANIZATIONS ||--o{ PROGRAMS : has
-  SEMESTERS ||--o{ ACTIVITIES : scopes
-  ORGANIZATIONS ||--o{ ACTIVITIES : contextualizes
-  PROGRAMS ||--o{ ACTIVITIES : contextualizes
-```
-
-### Tabel inti
-
-| Tabel | Tanggung jawab |
-| --- | --- |
-| `profiles` | Identitas dan informasi kampus user. |
-| `semesters` | Riwayat semester dan penanda semester aktif. |
-| `organizations` | Organisasi, UKM, UKK, kepanitiaan, atau ruang kontribusi lain. |
-| `organization_positions` | Jabatan, role type, divisi, dan rentang waktu peran. |
-| `programs` | Program kerja per organisasi. |
-| `activities` | Tugas, reminder, dan catatan yang terhubung ke konteks lain. |
-
-## Keamanan data
-
-- Semua tabel inti memakai **Row Level Security**.
-- Policy membatasi `select`, `insert`, `update`, dan `delete` ke `auth.uid()` user saat ini.
-- Relasi organisasi, jabatan, proker, dan kegiatan ikut memverifikasi kepemilikan user.
-- Service role key tidak digunakan di client.
-
-### Cara menguji RLS
-
-1. Buat akun A dan akun B.
-2. Dengan akun A, buat semester, organisasi, jabatan, proker, serta kegiatan.
-3. Logout, lalu masuk sebagai akun B.
-4. Pastikan akun B tidak dapat melihat, mengubah, atau menghapus data akun A.
-
-## Struktur project
+## 📁 Struktur Proyek
 
 ```text
-src/
-├── app/
-│   ├── (auth)/                 # Login, register, dan auth layout
-│   ├── (dashboard)/            # Dashboard, kegiatan, organisasi, rekap, settings
-│   ├── page.tsx                # Landing page Campus Atlas
-│   ├── globals.css             # Design tokens dan visual system
-│   └── proxy.ts                # Proteksi route berbasis session
-├── components/
-│   ├── activities/             # Form, edit form, dan calendar
-│   ├── auth/                   # Form + visual auth
-│   ├── dashboard/              # Sidebar dan mobile topbar
-│   ├── organizations/          # Form organisasi dan jabatan
-│   ├── recap/                  # Export CSV
-│   └── ui/                     # Komponen UI reusable
-└── lib/
-    ├── activity-styles.ts      # Mapping warna kategori/status
-    └── supabase/               # Client browser dan server
-
-supabase/
-├── schema.sql                  # Schema awal: table, constraint, RLS, view
-└── migrations/                 # Upgrade aman untuk project existing
+nGampUS/
+├── public/                     # Aset statis & logo nGampUS
+│   ├── logo_ngampUS.png        # Logo resmi nGampUS
+│   └── ngampus-preview.svg     # Banner visual preview
+├── src/
+│   ├── app/
+│   │   ├── (auth)/             # Halaman login, register, lupa password
+│   │   ├── (dashboard)/        # Halaman workspace utama mahasiswa
+│   │   │   ├── dashboard/      # Command center & widget fokus harian
+│   │   │   ├── jadwal/         # Manajemen jadwal kuliah mingguan
+│   │   │   ├── kegiatan/       # Manajemen tugas, reminder & deadline
+│   │   │   ├── organisasi/     # Ruang kelola organisasi, peran & proker
+│   │   │   ├── semester/       # Kalender akademik & kontrol semester
+│   │   │   ├── rekap/          # Rekap statistik & galeri portofolio CV
+│   │   │   └── settings/       # Pengaturan profil & keamanan akun
+│   │   └── layout.tsx          # Root layout
+│   ├── components/
+│   │   ├── activities/         # Komponen form tugas & kalender
+│   │   ├── dashboard/          # Sidebar responsive & topbar
+│   │   ├── onboarding/         # Onboarding wizard & spotlight tour
+│   │   ├── schedule/           # Grid jadwal mingguan & modal matkul
+│   │   └── settings/           # Form profil, KTM preview & crop modal
+│   ├── lib/                    # Supabase client, helper & date utilities
+│   └── middleware.ts           # Next.js edge auth & security shield
+├── supabase/
+│   ├── schema.sql              # Skema database & konfigurasi RLS
+│   ├── SECURITY_CHECKLIST.md   # Panduan audit keamanan database
+│   └── migrations/             # Berkas migrasi database bertahap
+└── next.config.ts              # Konfigurasi Next.js & HTTP Security Headers
 ```
 
-## Perintah quality check
+---
 
-```bash
-npx tsc --noEmit
-npm run lint
-npm run build
-```
+## 🤝 Kontribusi
 
-## Kontribusi
-
-Issue, saran UX, dan pull request sangat terbuka. Untuk perubahan yang menyentuh database, selalu sertakan migration baru di `supabase/migrations/` dan jangan memodifikasi migration yang sudah digunakan di production.
+Kontribusi dari sesama mahasiswa dan pengembang selalu disambut dengan hangat!
+1. Fork repositori ini
+2. Buat branch fitur baru (`git checkout -b fitur/nama-fitur-keren`)
+3. Commit perubahan Anda (`git commit -m "feat: menambahkan fitur baru"`)
+4. Push ke branch Anda (`git push origin fitur/nama-fitur-keren`)
+5. Ajukan **Pull Request**
 
 ---
 
 <div align="center">
-
-Made for students who are building more than a schedule. ✦
-
+  <p>Dibuat dengan dedikasi untuk mahasiswa Indonesia 🇮🇩</p>
+  <p>© 2026 <b>nGampUS</b>. Hak Cipta Dilindungi.</p>
 </div>
