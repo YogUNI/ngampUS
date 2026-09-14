@@ -384,12 +384,16 @@ html {
   color: rgba(200, 239, 112, 0.6) !important;
 }
 
-/* Cards & containers in dark mode */
+/* bg-white cards -> dark */
 .dark .dashboard-content article[class*="bg-white"],
 .dark .dashboard-content section[class*="bg-white"],
 .dark .dashboard-content div[class*="bg-white"]:not([class*="bg-white/"]) {
   background-color: #0f2017 !important;
   border-color: #1a3526 !important;
+}
+
+.dark .dashboard-content div[class*="border-dashed"] {
+  border-color: #1d3c2b !important;
 }
 
 .dark .dashboard-content article[class*="rounded-2xl"],
@@ -399,23 +403,46 @@ html {
   border-color: #1a3526;
 }
 
-.dark .dashboard-content article[class*="rounded-2xl"][class*="bg-white"]:hover,
+.dark .dashboard-content article[class*="rounded-2xl"]:hover,
 .dark .dashboard-content div[class*="rounded-3xl"]:hover {
   border-color: #274d39 !important;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* Subtle backgrounds in cards */
+/* Subtle card backgrounds */
 .dark .dashboard-content div[class*="bg-[#fafbfa]"],
 .dark .dashboard-content article[class*="bg-[#fafbfa]"],
 .dark .dashboard-content div[class*="bg-[#f7f8f5]"],
+.dark .dashboard-content article[class*="bg-[#f7f8f5]"],
 .dark .dashboard-content div[class*="bg-[#fafbf9]"],
-.dark .dashboard-content div[class*="bg-[#fcfdfb]"] {
-  background-color: #13271d !important;
+.dark .dashboard-content article[class*="bg-[#fafbf9]"],
+.dark .dashboard-content div[class*="bg-[#fcfdfb]"],
+.dark .dashboard-content div[class*="bg-[#f8fcf9]"],
+.dark .dashboard-content article[class*="bg-[#f8fcf9]"],
+.dark .dashboard-content div[class*="bg-[#f5fbf7]"],
+.dark .dashboard-content article[class*="bg-[#f5fbf7]"] {
+  background-color: #132a1d !important;
   border-color: #1d3c2b !important;
 }
 
-/* Sidebar in Dark Mode */
+/* Active semester ring */
+.dark .dashboard-content article[class*="ring-2"] {
+  background-color: #0f2017 !important;
+  border-color: #22c55e !important;
+}
+
+/* Internal card separator lines */
+.dark .dashboard-content [class*="border-[#f0f4f1]"] {
+  border-color: #1a3526 !important;
+}
+
+/* View toggle pill bg */
+.dark .dashboard-content div[class*="bg-[#f0f4f1]"],
+.dark .dashboard-content div[class*="bg-[#f0f4f0]"] {
+  background-color: #162c21 !important;
+}
+
+/* Sidebar */
 .dark .dashboard-sidebar {
   background-image: linear-gradient(180deg, rgba(12, 25, 18, 0.98), rgba(9, 20, 14, 0.98)) !important;
   border-color: #1a3526 !important;
@@ -432,12 +459,14 @@ html {
   border-color: #244934 !important;
 }
 
-.dark .dashboard-sidebar div[class*="bg-white"] {
+.dark .dashboard-sidebar div[class*="bg-white"],
+.dark .dashboard-sidebar [class*="bg-white/90"],
+.dark .dashboard-sidebar [class*="bg-white/95"] {
   background-color: #12241b !important;
   border-color: #1d3c2b !important;
 }
 
-/* Typography contrast in dark mode */
+/* Typography contrast */
 .dark .text-\[\#10261b\],
 .dark .text-\[\#103626\] {
   color: #f0f7f2 !important;
@@ -446,7 +475,8 @@ html {
 .dark .text-\[\#55675b\],
 .dark .text-\[\#65746a\],
 .dark .text-\[\#697c6f\],
-.dark .text-\[\#7d9083\] {
+.dark .text-\[\#7d9083\],
+.dark .text-\[\#5e6b63\] {
   color: #9ab3a2 !important;
 }
 
@@ -461,31 +491,77 @@ html {
 .dark .border-\[\#e5ebe5\],
 .dark .border-\[\#edf2ee\],
 .dark .border-\[\#e8eee8\],
-.dark .border-\[\#e3ebe4\] {
+.dark .border-\[\#e3ebe4\],
+.dark .border-\[\#b9ddc6\] {
   border-color: #1a3526 !important;
 }
 
-/* Badges & soft colors */
+/* GREEN pastel badges -> dark green */
 .dark .bg-\[\#dff3e5\],
-.dark .bg-\[\#dcefe4\] {
-  background-color: #123422 !important;
-  color: #c8ef70 !important;
+.dark .bg-\[\#dcefe4\],
+.dark .bg-\[\#eef7f2\],
+.dark .bg-\[\#dcfce7\],
+.dark .bg-\[\#d1fae5\] {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
 }
 
+/* CORAL/RED pastel badges -> dark red */
+.dark .bg-\[\#feece7\],
+.dark .bg-\[\#fff8f7\] {
+  background-color: #2a100c !important;
+  color: #f87171 !important;
+}
+
+/* PURPLE pastel badges -> dark purple */
+.dark .bg-\[\#e8e1fa\],
+.dark .bg-\[\#ede9fe\] {
+  background-color: #1c1239 !important;
+  color: #a78bfa !important;
+}
+
+/* AMBER/YELLOW pastel badges -> dark amber */
+.dark .bg-\[\#fff0cc\],
+.dark .bg-\[\#fef3c7\],
+.dark .bg-\[\#fffdf6\],
+.dark .bg-\[\#fff8e7\] {
+  background-color: #211900 !important;
+  color: #fbbf24 !important;
+}
+
+/* BLUE pastel badges -> dark blue */
+.dark .bg-\[\#e0e7ff\],
+.dark .bg-\[\#e4efff\],
+.dark .bg-\[\#dbeafe\] {
+  background-color: #0e1e3a !important;
+  color: #60a5fa !important;
+}
+
+/* GRAY/NEUTRAL pastel */
 .dark .bg-\[\#f0f4f0\],
-.dark .bg-\[\#eaf5eb\] {
+.dark .bg-\[\#eaf5eb\],
+.dark .bg-\[\#eef1ee\],
+.dark .bg-\[\#f4f0e7\],
+.dark .bg-\[\#f7f8f5\] {
   background-color: #152d20 !important;
-  color: #82e29c !important;
+  color: #a5c4ae !important;
 }
 
-/* Glass panel */
+/* surface-lift */
+.dark .surface-lift {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* glass-panel */
 .dark .glass-panel {
   background: rgba(15, 32, 23, 0.88) !important;
   border-color: rgba(26, 53, 38, 0.8) !important;
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Inputs, Textareas, Selects */
+/* Inputs */
 .dark input,
 .dark select,
 .dark textarea {
@@ -501,14 +577,63 @@ html {
   outline-color: rgba(34, 197, 94, 0.3) !important;
 }
 
-/* Modals & Dialogs */
-.dark .surface-lift {
+/* Mobile topbar */
+.dark header[class*="bg-white"] {
   background-color: #0f2017 !important;
   border-color: #1a3526 !important;
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* FullCalendar & Schedule View in Dark Mode */
+/* Schedule day label badge */
+.dark .dashboard-content span[class*="bg-[#103626]"] {
+  background-color: #1d5034 !important;
+  color: #c8ef70 !important;
+}
+
+/* Schedule tipe_pertemuan badges */
+.dark .dashboard-content span[class*="bg-[#e0e7ff]"] {
+  background-color: #0e1e3a !important;
+  color: #93c5fd !important;
+}
+
+.dark .dashboard-content span[class*="bg-[#fef3c7]"] {
+  background-color: #211900 !important;
+  color: #fcd34d !important;
+}
+
+.dark .dashboard-content span[class*="bg-[#dcfce7]"] {
+  background-color: #0e2e1c !important;
+  color: #86efac !important;
+}
+
+/* Semester archive pill */
+.dark .dashboard-content span[class*="bg-[#f7f8f5]"] {
+  background-color: #152d20 !important;
+  color: #8ca393 !important;
+}
+
+/* Export / subtle action buttons */
+.dark .dashboard-content button[class*="bg-[#fafbf9]"],
+.dark .dashboard-content a[class*="bg-[#fafbf9]"] {
+  background-color: #152b1f !important;
+  border-color: #1d3c2b !important;
+  color: #d4ede0 !important;
+}
+
+/* Rekap filter terapkan button */
+.dark .dashboard-content button[class*="bg-[#dcefe4]"],
+.dark .dashboard-content a[class*="bg-[#dcefe4]"] {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+
+/* Deadline warning banner */
+.dark .dashboard-content div[class*="bg-[#feece7]"] {
+  background-color: #2a100c !important;
+  border-color: #5c1c14 !important;
+  color: #fca5a5 !important;
+}
+
+/* FullCalendar dark */
 .dark .ngampus-calendar .fc {
   --fc-border-color: #1a3526;
   --fc-page-bg-color: transparent;
@@ -545,3 +670,38 @@ html {
   color: #eef5f1 !important;
 }
 
+.dark .ngampus-calendar .fc .fc-col-header-cell {
+  background-color: #0d1e15 !important;
+}
+
+.dark .ngampus-calendar .fc .fc-col-header-cell-cushion {
+  color: #8ca393 !important;
+}
+
+.dark .ngampus-calendar .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  color: #c8ef70 !important;
+  font-weight: 900;
+}
+
+/* Activity calendar view */
+.dark .dashboard-content .fc {
+  --fc-border-color: #1a3526;
+  --fc-page-bg-color: #0f2017;
+  --fc-today-bg-color: #122b1c;
+  --fc-button-bg-color: #14281e;
+  --fc-button-border-color: #1f402e;
+  --fc-button-text-color: #eef5f1;
+  --fc-button-hover-bg-color: #193828;
+  --fc-button-hover-border-color: #22c55e;
+}
+
+.dark .dashboard-content .fc .fc-toolbar-title,
+.dark .dashboard-content .fc .fc-daygrid-day-number,
+.dark .dashboard-content .fc .fc-col-header-cell-cushion {
+  color: #eef5f1 !important;
+}
+
+.dark .dashboard-content .fc-theme-standard td,
+.dark .dashboard-content .fc-theme-standard th {
+  border-color: #1a3526 !important;
+}
