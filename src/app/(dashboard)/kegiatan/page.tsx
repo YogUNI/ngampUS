@@ -47,14 +47,23 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
   if (filters.organization_id) activitiesQuery = activitiesQuery.eq("organization_id", filters.organization_id);
   if (filters.prioritas) activitiesQuery = activitiesQuery.eq("prioritas", filters.prioritas);
 
-  const [{ data: activities }, { data: semesters }, { data: organizations }, { data: programs }] = await Promise.all([
+  const [
+    { data: activities },
+    { data: semesters },
+    { data: organizations },
+    { data: programs },
+    { data: courses },
+  ] = await Promise.all([
     activitiesQuery,
-    supabase.from("semesters").select("id,nama_semester,is_active").order("tanggal_mulai", { ascending: false }),
+    supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai,is_active").order("tanggal_mulai", { ascending: false }),
     supabase.from("organizations").select("id,nama_organisasi").order("nama_organisasi"),
     supabase.from("programs").select("id,nama_proker,organization_id").order("nama_proker"),
+    supabase.from("courses").select("*").order("hari", { ascending: true }).order("jam_mulai", { ascending: true }),
   ]);
   const calendar = filters.view === "calendar";
   const mappedPrograms = (programs ?? []).map((program) => ({ id: program.id, name: program.nama_proker, organization_id: program.organization_id }));
+
+  const activeSemester = semesters?.find((s) => s.is_active) ?? semesters?.[0];
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
@@ -142,6 +151,9 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
           {calendar ? (
             <CalendarView
               activities={activities ?? []}
+              courses={courses ?? []}
+              tanggalMulai={activeSemester?.tanggal_mulai}
+              tanggalSelesai={activeSemester?.tanggal_selesai}
               semesters={(semesters ?? []).map((s) => ({ id: s.id, name: s.nama_semester, active: s.is_active }))}
               organizations={(organizations ?? []).map((o) => ({ id: o.id, name: o.nama_organisasi }))}
               programs={mappedPrograms}
