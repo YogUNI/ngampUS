@@ -20,6 +20,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { InteractivePreview } from "@/components/landing/interactive-preview";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
+import { LandingNavbar } from "@/components/landing/landing-navbar";
 
 
 export default function Home() {
@@ -36,7 +37,7 @@ export default function Home() {
     <main className="atlas-page landing-page min-h-screen overflow-hidden bg-[#f7f8f5] text-[#10261b]">
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="atlas-hero relative min-h-screen bg-[#103626] px-5 pb-20 pt-5 text-[#f6f8f1] sm:px-8 lg:px-12">
+      <section className="atlas-hero relative min-h-screen bg-[#103626] px-4 pb-16 pt-3 text-[#f6f8f1] sm:px-8 sm:pb-20 sm:pt-6 lg:px-12">
 
         {/* Ambient grain */}
         <div className="atlas-grain absolute inset-0 opacity-25 pointer-events-none" />
@@ -56,51 +57,15 @@ export default function Home() {
         />
 
         {/* Nav */}
-        <nav className="hero-stagger-1 relative z-20 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/15 bg-white/[.07] px-4 py-3 backdrop-blur-xl sm:px-6">
-          <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-black tracking-[-.06em]">
-            <Image
-              src="/logo_ngampUS.png"
-              alt="ngampUS Logo"
-              width={34}
-              height={34}
-              className="h-8 w-8 object-contain drop-shadow-sm"
-              priority
-            />
-            <span className="text-white">
-              ngamp<span className="text-[#c8ef70]">US</span>
-            </span>
-          </Link>
-
-          {/* Center nav links */}
-          <div className="hidden md:flex items-center gap-6 text-xs font-bold text-[#cad7ce]">
-            <a href="#features" className="hover:text-white transition">Fitur Utama</a>
-            <a href="#how-it-works" className="hover:text-white transition">Cara Kerja</a>
-            <a href="#faq" className="hover:text-white transition">FAQ</a>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm font-bold">
-            <Link
-              href="/login" 
-              className="rounded-full px-4 py-2 text-[#c9dbce] hover:bg-white/10 hover:text-white transition"
-            >
-              Masuk
-            </Link>
-            <Link 
-              href="/register" 
-              className="rounded-full bg-[#c8ef70] px-5 py-2.5 text-[#103626] font-black shadow-[0_4px_14px_rgba(200,239,112,.35)] transition-all hover:-translate-y-0.5 hover:bg-[#d6f888]"
-            >
-              Mulai Gratis →
-            </Link>
-          </div>
-        </nav>
+        <LandingNavbar />
 
         {/* Hero Content Grid */}
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 pb-8 pt-16 lg:grid-cols-[1fr_1fr] lg:items-center lg:pt-24">
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-8 sm:gap-12 pb-8 pt-8 sm:pt-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:pt-20">
 
           {/* Left Column — Sharp Copywriting */}
           <div className="max-w-2xl">
             {/* Live Status Pill */}
-            <div className="hero-stagger-2 inline-flex items-center gap-2.5 rounded-full border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-3.5 py-1.5 text-xs font-black tracking-wider text-[#d8f89a]">
+            <div className="hero-stagger-2 inline-flex max-w-full items-center gap-2 sm:gap-2.5 rounded-full border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-3 py-1.5 text-[10px] sm:text-xs font-black tracking-wider text-[#d8f89a] overflow-hidden">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c8ef70] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#c8ef70]" />
@@ -109,35 +74,35 @@ export default function Home() {
             </div>
 
             {/* Display Headline */}
-            <h1 className="hero-stagger-3 font-display mt-6 text-4xl sm:text-6xl lg:text-[4.6rem] font-black leading-[.95] tracking-[-.065em]">
+            <h1 className="hero-stagger-3 font-display mt-5 sm:mt-6 text-3xl sm:text-5xl md:text-6xl lg:text-[4.6rem] font-black leading-[1] sm:leading-[.95] tracking-[-.05em] sm:tracking-[-.065em]">
               Kuliah jalan.<br />
               <span className="text-[#c8ef70]">Ambis organisasi</span><br />
               tetap terarah.
             </h1>
 
             {/* Sub-headline */}
-            <p className="hero-stagger-4 mt-6 text-base sm:text-lg leading-relaxed text-[#c6d7cc]">
+            <p className="hero-stagger-4 mt-4 sm:mt-6 text-sm sm:text-base md:text-lg leading-relaxed text-[#c6d7cc]">
               Lupakan grup WhatsApp berantakan, catatan tercecer, dan deadline tugas yang tiba-tiba menumpuk. nGampUS menyatukan jadwal kuliah, proker organisasi, dan portofolio CV dalam satu workspace cerdas.
             </p>
 
             {/* CTA Buttons */}
-            <div className="hero-stagger-5 mt-8 flex flex-wrap items-center gap-4">
+            <div className="hero-stagger-5 mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <Link 
                 href="/register" 
-                className="inline-flex items-center gap-3 rounded-2xl bg-[#c8ef70] px-6 py-4 font-black text-[#103626] shadow-xl shadow-black/25 transition-all hover:-translate-y-1 hover:bg-[#d5f685] hover:shadow-2xl"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-2xl bg-[#c8ef70] px-6 py-3.5 sm:py-4 text-sm sm:text-base font-black text-[#103626] shadow-xl shadow-black/25 transition-all hover:-translate-y-1 hover:bg-[#d5f685] hover:shadow-2xl active:scale-98"
               >
                 Mulai Petakan Semestermu <ArrowRight size={18} />
               </Link>
               <a 
                 href="#features" 
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-5 py-4 font-bold text-[#f6f8f1] hover:bg-white/10 transition"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-5 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#f6f8f1] hover:bg-white/10 transition active:scale-98"
               >
                 Jelajahi Fitur ↓
               </a>
             </div>
 
             {/* Hero Quick Proof Points */}
-            <div className="hero-stagger-6 mt-10 flex flex-wrap gap-x-8 gap-y-2 border-t border-white/10 pt-5 text-xs sm:text-sm text-[#b2c7ba]">
+            <div className="hero-stagger-6 mt-8 sm:mt-10 flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-white/10 pt-4 sm:pt-5 text-xs sm:text-sm text-[#b2c7ba]">
               <span className="flex items-center gap-1.5">
                 <Check size={16} className="text-[#c8ef70]" /> 100% Gratis Selamanya
               </span>
@@ -172,7 +137,7 @@ export default function Home() {
       </div>
 
       {/* ── BENTO GRID SECTION: CORE WORKSPACE SYSTEM ──────────── */}
-      <section id="features" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:px-12">
+      <section id="features" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12">
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#0f6849]/20 bg-[#dff3e5] px-3.5 py-1 text-xs font-black tracking-wider text-[#0f6849]">
@@ -193,7 +158,7 @@ export default function Home() {
 
           {/* Bento Card 1: Jadwal Kuliah & Link Pertemuan (Wide 2 Cols) */}
           <Reveal className="md:col-span-2">
-            <div className="group relative overflow-hidden rounded-[2rem] border border-[#d8e3da] bg-white p-7 sm:p-9 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
+            <div className="group relative overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 lg:p-9 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
               <div className="flex items-center justify-between">
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
                   <Calendar size={24} />
@@ -243,7 +208,7 @@ export default function Home() {
 
           {/* Bento Card 2: Smart Deadline Radar (1 Col) */}
           <Reveal delay={1}>
-            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-[2rem] border border-[#d8e3da] bg-white p-7 sm:p-8 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
+            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#feeae5] text-[#e57255]">
@@ -279,7 +244,7 @@ export default function Home() {
 
           {/* Bento Card 3: Organisasi & Proker (1 Col) */}
           <Reveal delay={2}>
-            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-[2rem] border border-[#d8e3da] bg-white p-7 sm:p-8 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
+            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#e5f1fa] text-[#2978ba]">
@@ -314,7 +279,7 @@ export default function Home() {
 
           {/* Bento Card 4: Portofolio & CV Otomatis (Wide 2 Cols) */}
           <Reveal delay={3} className="md:col-span-2">
-            <div className="group relative overflow-hidden rounded-[2rem] border border-[#d8e3da] bg-white p-7 sm:p-9 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
+            <div className="group relative overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 lg:p-9 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
               <div className="flex items-center justify-between">
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#f0ecfc] text-[#644fe2]">
                   <Award size={24} />
@@ -353,7 +318,7 @@ export default function Home() {
       </section>
 
       {/* ── THE ATLAS METHOD (HOW IT WORKS) ────────────────────── */}
-      <section id="how-it-works" className="border-t border-[#d8e3da] bg-[#f0f4ed] px-5 py-24 sm:px-8 lg:px-12">
+      <section id="how-it-works" className="border-t border-[#d8e3da] bg-[#f0f4ed] px-4 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -376,7 +341,7 @@ export default function Home() {
       </section>
 
       {/* ── FAQ SECTION ────────────────────────────────────────── */}
-      <section id="faq" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:px-12">
+      <section id="faq" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12">
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#0f6849] uppercase">
@@ -397,9 +362,9 @@ export default function Home() {
       </section>
 
       {/* ── BIG CTA SECTION ───────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8 lg:px-12">
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-8 sm:pb-24 lg:px-12">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-[#103626] px-6 py-14 text-white sm:px-12 sm:py-20 shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-[#103626] px-5 py-10 sm:px-12 sm:py-20 text-white shadow-2xl">
             {/* Ambient decorative circles */}
             <div className="cta-ring-spin pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full border-[36px] border-[#c8ef70]/10 opacity-70" />
             <div className="pointer-events-none absolute -left-24 -bottom-24 h-72 w-72 rounded-full border-[28px] border-[#c8ef70]/05 opacity-50" />
@@ -421,7 +386,7 @@ export default function Home() {
               <div className="lg:justify-self-end flex flex-col items-start lg:items-end gap-4">
                 <Link 
                   href="/register" 
-                  className="inline-flex items-center gap-3 rounded-2xl bg-[#c8ef70] px-8 py-5 text-lg font-black text-[#103626] shadow-[0_8px_0_#82a737] transition-all hover:-translate-y-1 hover:shadow-[0_12px_0_#82a737] hover:bg-[#d6f888]"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-2xl bg-[#c8ef70] px-6 sm:px-8 py-4 sm:py-5 text-base sm:text-lg font-black text-[#103626] shadow-[0_6px_0_#82a737] sm:shadow-[0_8px_0_#82a737] transition-all hover:-translate-y-1 hover:bg-[#d6f888]"
                 >
                   Buat Ruangmu Sekarang <ArrowRight size={20} />
                 </Link>
@@ -436,7 +401,7 @@ export default function Home() {
 
       {/* ── FOOTER ─────────────────────────────────────────────── */}
       <footer className="border-t border-[#d3ddd4] bg-[#eff3ed]">
-        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-8 sm:py-12 lg:px-12">
           <div className="grid gap-10 md:grid-cols-4 pb-10 border-b border-[#d8e3da]">
             
             {/* Brand column */}
