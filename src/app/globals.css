@@ -713,6 +713,281 @@ html {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   COMPREHENSIVE DARK MODE — ALL DASHBOARD PAGES
+   Covers all bg-white cards, headers, links, badges, text, borders, inputs
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── 1. ALL bg-white & near-white elements (cards, articles, links, aside) ── */
+.dark .dashboard-shell *[class*="bg-white"]:not([class*="bg-white/"]):not(.landing-page *) {
+  background-color: #0f2017 !important;
+}
+
+/* Catch-all for light card backgrounds inside dashboard */
+.dark .dashboard-content header,
+.dark .dashboard-content article,
+.dark .dashboard-content aside:not([class*="bg-[#103626]"]):not([class*="bg-[#0f"]):not([class*="bg-[#1"]) {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+}
+
+/* Link-based cards (Quick Action Hub, Stat Cards, Org items) */
+.dark .dashboard-content a[class*="bg-white"],
+.dark .dashboard-content a[class*="bg-[#fafbfa]"],
+.dark .dashboard-content a[class*="bg-[#f7f8f5]"],
+.dark .dashboard-content a[class*="bg-[#fafbf9]"],
+.dark .dashboard-content a[class*="bg-[#fcfdfb]"] {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+}
+
+/* ── 2. Hero header card (dashboard main page) ── */
+.dark .dashboard-content header[class*="bg-gradient"],
+.dark .dashboard-content header[class*="from-white"],
+.dark .dashboard-content header[class*="via-[#fbfdfa]"],
+.dark .dashboard-content header[class*="to-[#edf5ee]"] {
+  background: linear-gradient(135deg, #0f2017, #132a1d) !important;
+  border-color: #1a3526 !important;
+}
+
+/* Active semester pill in header */
+.dark .dashboard-content header span[class*="bg-white"],
+.dark .dashboard-content header a[class*="bg-white"] {
+  background-color: #1a3526 !important;
+  border-color: #274d39 !important;
+  color: #a5c4ae !important;
+}
+
+/* ── 3. TEXT — All dark text in dashboard ── */
+.dark .dashboard-shell [class*="text-[#10261b]"],
+.dark .dashboard-shell [class*="text-[#103626]"] {
+  color: #f0f7f2 !important;
+}
+.dark .dashboard-shell [class*="text-[#55675b]"],
+.dark .dashboard-shell [class*="text-[#65746a]"],
+.dark .dashboard-shell [class*="text-[#697c6f]"],
+.dark .dashboard-shell [class*="text-[#7d9083]"],
+.dark .dashboard-shell [class*="text-[#5e6b63]"],
+.dark .dashboard-shell [class*="text-[#3b4b41]"] {
+  color: #8ca393 !important;
+}
+.dark .dashboard-shell [class*="text-[#8ba091]"],
+.dark .dashboard-shell [class*="text-[#b2c7ba]"] {
+  color: #6a8a76 !important;
+}
+
+/* ── 4. BORDERS ── */
+.dark .dashboard-shell [class*="border-[#d8e3da]"],
+.dark .dashboard-shell [class*="border-[#d8e2da]"],
+.dark .dashboard-shell [class*="border-[#d7e3d9]"],
+.dark .dashboard-shell [class*="border-[#e5ebe5]"],
+.dark .dashboard-shell [class*="border-[#edf2ee]"],
+.dark .dashboard-shell [class*="border-[#e8eee8]"],
+.dark .dashboard-shell [class*="border-[#e3ebe4]"],
+.dark .dashboard-shell [class*="border-[#d6e2d8]"],
+.dark .dashboard-shell [class*="border-[#cfe0d3]"],
+.dark .dashboard-shell [class*="border-[#b9ddc6]"],
+.dark .dashboard-shell [class*="border-[#f0f4f0]"],
+.dark .dashboard-shell [class*="border-[#f0f4f1]"],
+.dark .dashboard-shell [class*="border-[#e2eae2]"] {
+  border-color: #1a3526 !important;
+}
+
+/* ── 5. SUBTLE SECTION DIVIDERS ── */
+.dark .dashboard-shell [class*="border-[#edf2ee]"],
+.dark .dashboard-shell [class*="border-b"][class*="border-[#edf2ee]"] {
+  border-color: #1a3526 !important;
+}
+
+/* ── 6. QUICK ACTION / NAVIGATION BUTTONS ── */
+.dark .dashboard-shell a[class*="bg-[#f0f4f0]"],
+.dark .dashboard-shell button[class*="bg-[#f0f4f0]"],
+.dark .dashboard-shell a[class*="bg-[#f0f4f1]"],
+.dark .dashboard-shell button[class*="bg-[#f0f4f1]"],
+.dark .dashboard-shell a[class*="bg-[#eaf5eb]"],
+.dark .dashboard-shell a[class*="bg-[#eff3ee]"] {
+  background-color: #152d20 !important;
+  border-color: #1a3526 !important;
+  color: #4ade80 !important;
+}
+
+/* ── 7. NO-DATA / EMPTY STATE BACKGROUNDS ── */
+.dark .dashboard-shell div[class*="bg-[#fafbfa]"],
+.dark .dashboard-shell div[class*="bg-[#f7f8f5]"],
+.dark .dashboard-shell div[class*="bg-[#fafbf9]"],
+.dark .dashboard-shell div[class*="bg-[#fcfdfb]"],
+.dark .dashboard-shell div[class*="bg-[#f8fcf9]"],
+.dark .dashboard-shell div[class*="bg-[#f9faf8]"],
+.dark .dashboard-shell article[class*="bg-[#fafbfa]"] {
+  background-color: #132a1d !important;
+  border-color: #1d3c2b !important;
+}
+
+/* ── 8. PROGRESS BAR TRACK ── */
+.dark .dashboard-shell div[class*="bg-[#eff4ef]"],
+.dark .dashboard-shell div[class*="bg-[#f0f4f0]"]:not(a):not(button) {
+  background-color: #1a3526 !important;
+}
+
+/* ── 9. COLORED ICON BADGE BACKGROUNDS ── */
+/* Green */
+.dark .dashboard-shell [class*="bg-[#dff3e5]"],
+.dark .dashboard-shell [class*="bg-[#dcefe4]"],
+.dark .dashboard-shell [class*="bg-[#eaf3eb]"],
+.dark .dashboard-shell [class*="bg-[#eef7f2]"] {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+/* Coral/Red */
+.dark .dashboard-shell [class*="bg-[#feece7]"],
+.dark .dashboard-shell [class*="bg-[#fff8f7]"],
+.dark .dashboard-shell [class*="bg-[#fff6f4]"] {
+  background-color: #2a100c !important;
+  color: #f87171 !important;
+}
+/* Purple */
+.dark .dashboard-shell [class*="bg-[#e8e1fa]"],
+.dark .dashboard-shell [class*="bg-[#ede9fe]"] {
+  background-color: #1c1239 !important;
+  color: #a78bfa !important;
+}
+/* Amber/Yellow */
+.dark .dashboard-shell [class*="bg-[#fff0cc]"],
+.dark .dashboard-shell [class*="bg-[#fef3c7]"],
+.dark .dashboard-shell [class*="bg-[#fffdf6]"],
+.dark .dashboard-shell [class*="bg-[#fff6dd]"],
+.dark .dashboard-shell [class*="bg-[#fffaf0]"],
+.dark .dashboard-shell [class*="bg-[#faedd0]"] {
+  background-color: #211900 !important;
+  color: #fbbf24 !important;
+}
+/* Blue */
+.dark .dashboard-shell [class*="bg-[#e0e7ff]"],
+.dark .dashboard-shell [class*="bg-[#dbeafe]"] {
+  background-color: #0e1e3a !important;
+  color: #60a5fa !important;
+}
+/* Gray-neutral */
+.dark .dashboard-shell [class*="bg-[#f7f8f5]"],
+.dark .dashboard-shell [class*="bg-[#eff3ee]"],
+.dark .dashboard-shell [class*="bg-[#eef1ee]"] {
+  background-color: #152d20 !important;
+  color: #a5c4ae !important;
+}
+
+/* ── 10. OVERDUE / WARNING BANNERS ── */
+.dark .dashboard-shell div[class*="bg-[#fff6f4]"],
+.dark .dashboard-shell div[class*="bg-[#fff8f7]"] {
+  background-color: #2a0f0c !important;
+  border-color: #5c1c14 !important;
+}
+.dark .dashboard-shell div[class*="bg-[#fffaf0]"],
+.dark .dashboard-shell a[class*="bg-[#fffaf0]"] {
+  background-color: #1e1600 !important;
+  border-color: #3a2e00 !important;
+}
+.dark .dashboard-shell [class*="text-[#7a5b03]"],
+.dark .dashboard-shell [class*="text-[#a33218]"] {
+  color: #f87171 !important;
+}
+
+/* ── 11. FORM INPUTS ── */
+.dark .dashboard-shell input:not([type="checkbox"]):not([type="radio"]),
+.dark .dashboard-shell select,
+.dark .dashboard-shell textarea {
+  background-color: #0d1e15 !important;
+  border-color: #1f402e !important;
+  color: #eef5f1 !important;
+}
+.dark .dashboard-shell input:focus,
+.dark .dashboard-shell select:focus,
+.dark .dashboard-shell textarea:focus {
+  border-color: #22c55e !important;
+  outline-color: rgba(34, 197, 94, 0.3) !important;
+}
+.dark .dashboard-shell label {
+  color: #a5c4ae !important;
+}
+.dark .dashboard-shell input::placeholder,
+.dark .dashboard-shell textarea::placeholder {
+  color: #4a6b58 !important;
+}
+
+/* ── 12. DIALOG / MODAL / OVERLAY ── */
+.dark .dashboard-shell [role="dialog"],
+.dark .dashboard-shell [data-radix-dialog-content] {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+  color: #edf4ef !important;
+}
+
+/* ── 13. ACTION BUTTONS (non-primary) ── */
+.dark .dashboard-shell button[class*="bg-[#f0f4f0]"],
+.dark .dashboard-shell button[class*="bg-[#eff3ee]"],
+.dark .dashboard-shell button[class*="bg-white"],
+.dark .dashboard-shell button[class*="border-[#d8e3da]"] {
+  background-color: #132a1d !important;
+  border-color: #1a3526 !important;
+  color: #9ab3a2 !important;
+}
+
+/* ── 14. SCHEDULE PAGE SPECIFIC ── */
+.dark .dashboard-shell [class*="bg-[#edf7f0]"],
+.dark .dashboard-shell [class*="bg-[#f4fbf6]"] {
+  background-color: #0e2018 !important;
+  border-color: #1a3526 !important;
+}
+
+/* ── 15. REKAP / SETTINGS PAGE ── */
+.dark .dashboard-shell [class*="bg-[#fafbf9]"] {
+  background-color: #132a1d !important;
+}
+.dark .dashboard-shell [class*="bg-[#f9faf8]"] {
+  background-color: #132a1d !important;
+}
+
+/* ── 16. MOBILE TOPBAR ── */
+.dark header.dashboard-topbar,
+.dark [class*="dashboard-topbar"] {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+}
+
+/* ── 17. HOVER STATES ── */
+.dark .dashboard-shell a[class*="hover:bg-white"]:hover,
+.dark .dashboard-shell div[class*="hover:bg-white"]:hover,
+.dark .dashboard-shell article[class*="hover:bg-white"]:hover {
+  background-color: #152d20 !important;
+}
+.dark .dashboard-shell a[class*="hover:bg-[#f4faf6]"]:hover,
+.dark .dashboard-shell a[class*="hover:bg-[#dff3e5]"]:hover {
+  background-color: #0e2e1c !important;
+}
+
+/* ── 18. MATERI LINK BUTTON ── */
+.dark .dashboard-shell a[class*="bg-white"][class*="text-[#10261b]"],
+.dark .dashboard-shell a[class*="bg-white"][class*="border-[#d8e3da]"] {
+  background-color: #152d20 !important;
+  border-color: #1a3526 !important;
+  color: #9ab3a2 !important;
+}
+
+/* ── 19. SEMESTER PAGE specific ── */
+.dark .dashboard-shell article[class*="ring-2"] {
+  background-color: #0f2017 !important;
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 2px #22c55e !important;
+}
+
+/* ── 20. Card inner icon circle on white bg ── */
+.dark .dashboard-shell span[class*="bg-white"][class*="border"],
+.dark .dashboard-shell span[class*="bg-white"][class*="shadow"] {
+  background-color: #132a1d !important;
+  border-color: #1d3c2b !important;
+}
+
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
    LANDING PAGE & PUBLIC PAGES — FORCE LIGHT MODE ALWAYS
    ───────────────────────────────────────────────────────────────────────────── */
 
