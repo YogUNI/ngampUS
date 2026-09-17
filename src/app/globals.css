@@ -1,3 +1,10 @@
+
+/* Global mobile viewport safety */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
 @import "tailwindcss";
 
 :root {

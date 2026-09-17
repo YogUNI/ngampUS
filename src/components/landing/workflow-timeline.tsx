@@ -219,12 +219,12 @@ export function WorkflowTimeline() {
             </p>
 
             {/* Step navigation buttons on mobile */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-6 grid grid-cols-4 sm:hidden gap-1.5">
               {STEPS.map((s, idx) => (
                 <button
                   key={s.step}
                   onClick={() => setActiveStep(idx)}
-                  className={`sm:hidden rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                  className={`rounded-xl py-2 text-[11px] font-bold text-center transition truncate ${
                     activeStep === idx 
                       ? "bg-[#103626] text-[#c8ef70]" 
                       : "bg-[#eff3ee] text-[#55675b]"
@@ -236,7 +236,7 @@ export function WorkflowTimeline() {
             </div>
 
             {/* Next / Action CTA */}
-            <div className="mt-8 flex items-center gap-4 pt-6 border-t border-[#edf2ee]">
+            <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-6 border-t border-[#edf2ee]">
               {activeStep < STEPS.length - 1 ? (
                 <button
                   onClick={() => setActiveStep((prev) => prev + 1)}

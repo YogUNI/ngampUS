@@ -37,7 +37,7 @@ export default function Home() {
     <main className="atlas-page landing-page min-h-screen overflow-hidden bg-[#f7f8f5] text-[#10261b]">
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="atlas-hero relative min-h-screen bg-[#103626] px-4 pb-16 pt-3 text-[#f6f8f1] sm:px-8 sm:pb-20 sm:pt-6 lg:px-12">
+      <section className="atlas-hero relative min-h-screen bg-[#103626] px-3 xs:px-4 pb-16 pt-3 text-[#f6f8f1] sm:px-8 sm:pb-20 sm:pt-6 lg:px-12 overflow-x-hidden w-full">
 
         {/* Ambient grain */}
         <div className="atlas-grain absolute inset-0 opacity-25 pointer-events-none" />
@@ -65,12 +65,12 @@ export default function Home() {
           {/* Left Column — Sharp Copywriting */}
           <div className="max-w-2xl">
             {/* Live Status Pill */}
-            <div className="hero-stagger-2 inline-flex max-w-full items-center gap-2 sm:gap-2.5 rounded-full border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-3 py-1.5 text-[10px] sm:text-xs font-black tracking-wider text-[#d8f89a] overflow-hidden">
+            <div className="hero-stagger-2 inline-flex max-w-full items-center gap-2 sm:gap-2.5 rounded-full border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-3 py-1.5 text-[10px] sm:text-xs font-black tracking-wider text-[#d8f89a]">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c8ef70] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#c8ef70]" />
               </span>
-              <span>v2.4 LIVE • BUILT FOR INDONESIAN COLLEGE STUDENTS</span>
+              <span className="truncate sm:whitespace-normal">v2.4 LIVE • BUILT FOR INDONESIAN STUDENTS</span>
             </div>
 
             {/* Display Headline */}
@@ -91,7 +91,7 @@ export default function Home() {
                 href="/register" 
                 className="inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-2xl bg-[#c8ef70] px-6 py-3.5 sm:py-4 text-sm sm:text-base font-black text-[#103626] shadow-xl shadow-black/25 transition-all hover:-translate-y-1 hover:bg-[#d5f685] hover:shadow-2xl active:scale-98"
               >
-                Mulai Petakan Semestermu <ArrowRight size={18} />
+                <span className="truncate">Mulai Petakan Semestermu</span> <ArrowRight size={18} className="shrink-0" />
               </Link>
               <a 
                 href="#features" 
@@ -102,7 +102,7 @@ export default function Home() {
             </div>
 
             {/* Hero Quick Proof Points */}
-            <div className="hero-stagger-6 mt-8 sm:mt-10 flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-white/10 pt-4 sm:pt-5 text-xs sm:text-sm text-[#b2c7ba]">
+            <div className="hero-stagger-6 mt-8 sm:mt-10 grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-white/10 pt-4 sm:pt-5 text-xs sm:text-sm text-[#b2c7ba]">
               <span className="flex items-center gap-1.5">
                 <Check size={16} className="text-[#c8ef70]" /> 100% Gratis Selamanya
               </span>
@@ -125,7 +125,7 @@ export default function Home() {
       </section>
 
       {/* ── TICKER STRIP ────────────────────────────────────────── */}
-      <div className="atlas-ticker overflow-hidden border-y border-[#d3ddd4] bg-[#eff3ed] py-4">
+      <div className="atlas-ticker overflow-hidden border-y border-[#d3ddd4] bg-[#eff3ed] py-4 max-w-full">
         <div className="flex min-w-max items-center gap-8 text-xs sm:text-sm font-black tracking-[.15em] text-[#103626]">
           {[...tickerItems, ...tickerItems].map((item, i) => (
             <span key={i} className="flex items-center gap-8">

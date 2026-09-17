@@ -1,7 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ToastProvider } from "@/components/ui/toast-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "ngampUS | Your campus command center",
@@ -34,13 +40,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="id"
-      className="h-full antialiased"
+      className="h-full antialiased overflow-x-hidden"
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-x-hidden w-full">
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>
