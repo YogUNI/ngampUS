@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { 
@@ -35,18 +35,7 @@ export function InteractivePreview() {
   const [activeTab, setActiveTab] = useState<TabKey>("jadwal");
 
   return (
-    <div className="relative w-full max-w-[560px] mx-auto">
-      {/* Glow Ambient behind card */}
-      <div 
-        className="absolute -inset-2 rounded-[2.5rem] opacity-40 blur-xl pointer-events-none transition-all duration-700"
-        style={{
-          background: 
-            activeTab === "jadwal" ? "radial-gradient(circle, rgba(200,239,112,.35), transparent 70%)" :
-            activeTab === "tugas" ? "radial-gradient(circle, rgba(229,114,85,.3), transparent 70%)" :
-            activeTab === "organisasi" ? "radial-gradient(circle, rgba(61,132,198,.3), transparent 70%)" :
-            "radial-gradient(circle, rgba(123,108,238,.35), transparent 70%)"
-        }}
-      />
+    <div className="relative w-full min-w-0 overflow-hidden">
 
       {/* Main Preview Container */}
       <div className="relative rounded-[2rem] border border-white/20 bg-[#0c281c]/90 backdrop-blur-xl p-3 sm:p-4 text-[#f6f8f1] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
@@ -72,7 +61,7 @@ export function InteractivePreview() {
         </div>
 
         {/* Tab Navigation Pill Bar */}
-        <div className="mt-3 flex gap-1.5 overflow-x-auto p-1 bg-black/30 rounded-xl border border-white/5 scrollbar-none">
+        <div className="mt-3 grid grid-cols-4 gap-1 p-1 bg-black/30 rounded-xl border border-white/5">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -80,14 +69,14 @@ export function InteractivePreview() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`group flex flex-1 min-w-fit items-center justify-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-bold transition-all duration-200 ${
+                className={`group flex items-center justify-center gap-1 rounded-lg px-1 py-2 text-[11px] font-bold transition-all duration-200 overflow-hidden ${
                   isActive 
                     ? "bg-[#c8ef70] text-[#103626] shadow-md shadow-black/20" 
                     : "text-[#c8d8ce] hover:bg-white/10 hover:text-white"
                 }`}
               >
-                <Icon size={14} className={isActive ? "text-[#103626]" : "text-[#c8ef70] group-hover:scale-110 transition"} />
-                <span className="truncate">{tab.label}</span>
+                <Icon size={13} className={`shrink-0 ${isActive ? "text-[#103626]" : "text-[#c8ef70]"}`} />
+                <span className="truncate text-[10px]">{tab.label}</span>
               </button>
             );
           })}

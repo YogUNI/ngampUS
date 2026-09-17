@@ -37,7 +37,7 @@ export default function Home() {
     <main className="atlas-page landing-page min-h-screen overflow-hidden bg-[#f7f8f5] text-[#10261b]">
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="atlas-hero relative min-h-screen bg-[#103626] px-3 xs:px-4 pb-16 pt-3 text-[#f6f8f1] sm:px-8 sm:pb-20 sm:pt-6 lg:px-12 overflow-x-hidden w-full">
+      <section className="atlas-hero relative min-h-screen bg-[#103626] px-4 pb-16 pt-3 text-[#f6f8f1] sm:px-8 sm:pb-20 sm:pt-6 lg:px-12 overflow-hidden w-full">
 
         {/* Ambient grain */}
         <div className="atlas-grain absolute inset-0 opacity-25 pointer-events-none" />
@@ -60,10 +60,10 @@ export default function Home() {
         <LandingNavbar />
 
         {/* Hero Content Grid */}
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-8 sm:gap-12 pb-8 pt-8 sm:pt-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:pt-20">
+        <div className="relative z-10 mx-auto w-full min-w-0 grid max-w-7xl gap-8 sm:gap-12 pb-8 pt-8 sm:pt-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:pt-20">
 
           {/* Left Column — Sharp Copywriting */}
-          <div className="max-w-2xl">
+          <div className="w-full min-w-0">
             {/* Live Status Pill */}
             <div className="hero-stagger-2 inline-flex max-w-full items-center gap-2 sm:gap-2.5 rounded-full border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-3 py-1.5 text-[10px] sm:text-xs font-black tracking-wider text-[#d8f89a]">
               <span className="relative flex h-2 w-2">
@@ -102,7 +102,7 @@ export default function Home() {
             </div>
 
             {/* Hero Quick Proof Points */}
-            <div className="hero-stagger-6 mt-8 sm:mt-10 grid grid-cols-1 xs:grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-white/10 pt-4 sm:pt-5 text-xs sm:text-sm text-[#b2c7ba]">
+            <div className="hero-stagger-6 mt-8 sm:mt-10 flex flex-wrap items-center gap-x-5 gap-y-2.5 border-t border-white/10 pt-4 sm:pt-5 text-xs text-[#b2c7ba]">
               <span className="flex items-center gap-1.5">
                 <Check size={16} className="text-[#c8ef70]" /> 100% Gratis Selamanya
               </span>
@@ -116,7 +116,7 @@ export default function Home() {
           </div>
 
           {/* Right Column — Live Interactive Preview */}
-          <div className="hero-stagger-4 relative w-full pt-4 lg:pt-0">
+          <div className="hero-stagger-4 relative w-full min-w-0 overflow-hidden pt-4 lg:pt-0">
             <InteractivePreview />
           </div>
 

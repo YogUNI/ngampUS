@@ -1,11 +1,10 @@
-
-/* Global mobile viewport safety */
-html, body {
-  overflow-x: hidden;
-  max-width: 100vw;
-  width: 100%;
-}
 @import "tailwindcss";
+
+/* Global mobile viewport safety — must come AFTER @import */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
 
 :root {
   --background: #f5f7f2;
