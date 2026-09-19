@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, Building2, BriefcaseBusiness } from "lucide-react";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
 import { createClient } from "@/lib/supabase/server";
 import { OrganizationForm } from "@/components/organizations/organization-form";
+import { extractOrgLogoAndNotes } from "@/lib/utils/org-logo";
 import { deleteOrganization } from "./actions";
 
 export default async function OrganizationsPage() {
@@ -27,12 +29,24 @@ export default async function OrganizationsPage() {
       {organizations?.length ? organizations.map((organization) => {
         const orgPositions = positions?.filter((item) => item.organization_id === organization.id) ?? [];
         const orgPrograms = programs?.filter((item) => item.organization_id === organization.id) ?? [];
+        const { logoUrl, notes } = extractOrgLogoAndNotes(organization.catatan);
+
         return <article key={organization.id} className="surface-lift flex flex-col justify-between rounded-2xl border border-[var(--line)] bg-white p-5 transition hover:border-[#b9ddc6]">
           <div>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#eef7f2] text-[var(--brand)]">
-                  <Building2 size={22}/>
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#eef7f2] text-[var(--brand)] flex items-center justify-center">
+                  {logoUrl ? (
+                    <Image
+                      src={logoUrl}
+                      alt={organization.nama_organisasi}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  ) : (
+                    <Building2 size={22}/>
+                  )}
                 </div>
                 <div>
                   <span className="rounded-md bg-[#f7f8f5] px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-[var(--muted)]">{organization.tipe}</span>
@@ -50,7 +64,7 @@ export default async function OrganizationsPage() {
               )) : <span className="text-xs text-[var(--muted)] italic">Belum ada posisi dicatat</span>}
             </div>
 
-            <p className="mt-3.5 line-clamp-2 text-sm leading-relaxed text-[var(--muted)]">{organization.catatan || "Belum ada catatan untuk organisasi ini."}</p>
+            <p className="mt-3.5 line-clamp-2 text-sm leading-relaxed text-[var(--muted)]">{notes || "Belum ada catatan untuk organisasi ini."}</p>
           </div>
 
           <div className="mt-5 border-t border-[var(--line)] pt-3.5">

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -8,6 +9,7 @@ import {
   Building2,
   Calendar,
   CalendarDays,
+  Camera,
   CheckCircle2,
   Clock,
   ExternalLink,
@@ -17,13 +19,17 @@ import {
   PencilLine,
   Plus,
   Sparkles,
+  Trash2,
   TrendingUp,
+  Upload,
   UsersRound,
   X,
 } from "lucide-react";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
 import { PositionForm } from "@/components/organizations/position-form";
 import { ActivityForm } from "@/components/activities/activity-form";
+import { useToast } from "@/components/ui/toast-provider";
+import { extractOrgLogoAndNotes } from "@/lib/utils/org-logo";
 import {
   createProgram,
   deletePosition,
@@ -119,6 +125,85 @@ export function OrganizationDetailView({
   const plannedProker = programs.filter((p) => p.status === "perencanaan").length;
   const completionRate = totalProker > 0 ? Math.round((completedProker / totalProker) * 100) : 0;
 
+  // Parse stored logo and notes from organization.catatan
+  const parsedOrg = extractOrgLogoAndNotes(organization.catatan);
+  const [logoUrl, setLogoUrl] = useState<string | null>(parsedOrg.logoUrl);
+  const [editCatatan, setEditCatatan] = useState<string>(parsedOrg.notes);
+  const [editLogoUrl, setEditLogoUrl] = useState<string | null>(parsedOrg.logoUrl);
+  const editLogoInputRef = useRef<HTMLInputElement | null>(null);
+  const heroLogoInputRef = useRef<HTMLInputElement | null>(null);
+  const { showToast } = useToast();
+
+  function handleLogoFile(e: React.ChangeEvent<HTMLInputElement>, onDone: (dataUrl: string) => void) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Pilih file gambar yang valid (PNG, JPG, WebP).", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Ukuran gambar maksimal 5MB.", "error");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxDim = 200;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/webp", 0.85);
+          onDone(dataUrl);
+        }
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
+  async function handleQuickLogoUpload(dataUrl: string) {
+    setLogoUrl(dataUrl);
+    setEditLogoUrl(dataUrl);
+    try {
+      const formData = new FormData();
+      formData.set("id", organization.id);
+      formData.set("nama_organisasi", organization.nama_organisasi);
+      formData.set("tipe", organization.tipe);
+      formData.set("periode_mulai", organization.periode_mulai || "");
+      formData.set("periode_selesai", organization.periode_selesai || "");
+      formData.set("catatan", editCatatan);
+      formData.set("logo_url", dataUrl);
+      await updateOrganization(formData);
+      showToast("Logo organisasi berhasil diperbarui! ✨", "success");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal mengunggah logo.";
+      showToast(msg, "error");
+    }
+  }
+
   // Activities group by program
   const activitiesByProgram: Record<string, OrgActivity[]> = {};
   activities.forEach((act) => {
@@ -141,6 +226,15 @@ export function OrganizationDetailView({
 
   return (
     <div className="space-y-6">
+      {/* ── Hidden file input for quick hero logo upload ── */}
+      <input
+        ref={heroLogoInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => handleLogoFile(e, handleQuickLogoUpload)}
+      />
+
       {/* ── Top Breadcrumb & Actions ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
@@ -175,9 +269,33 @@ export function OrganizationDetailView({
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="grid h-16 w-16 sm:h-18 sm:w-18 shrink-0 place-items-center rounded-2xl bg-[#c8ef70]/20 text-[#c8ef70] ring-1 ring-[#c8ef70]/30 shadow-inner">
-              <Building2 size={32} strokeWidth={2.3} />
+            {/* Logo container with hover quick-upload button */}
+            <div className="group relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-inner flex items-center justify-center">
+              {logoUrl ? (
+                <Image
+                  src={logoUrl}
+                  alt={organization.nama_organisasi}
+                  fill
+                  className="object-cover transition duration-300 group-hover:scale-105"
+                  unoptimized
+                />
+              ) : (
+                <div className="grid h-full w-full place-items-center bg-[#c8ef70]/20 text-[#c8ef70] ring-1 ring-[#c8ef70]/30">
+                  <Building2 size={32} strokeWidth={2.3} />
+                </div>
+              )}
+              {/* Quick logo hover action */}
+              <button
+                type="button"
+                onClick={() => heroLogoInputRef.current?.click()}
+                className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100 text-white"
+                title="Ganti / Unggah Logo"
+              >
+                <Camera size={18} className="text-[#c8ef70]" />
+                <span className="mt-0.5 text-[9px] font-bold tracking-wider uppercase">Logo</span>
+              </button>
             </div>
+
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-[#c8ef70] px-3 py-0.5 text-[10px] font-black uppercase tracking-widest text-[#103626]">
@@ -211,22 +329,34 @@ export function OrganizationDetailView({
 
         {/* ── Executive Stat Highlights ── */}
         <div className="relative z-10 mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 border-t border-white/10 pt-5">
-          <div className="rounded-2xl bg-white/5 p-3 sm:p-3.5 backdrop-blur-xs">
+          <div
+            className="rounded-2xl p-3 sm:p-3.5 border border-white/10 shadow-inner"
+            style={{ backgroundColor: "rgba(10, 35, 25, 0.65)" }}
+          >
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#9cbca5]">Total Proker</span>
             <p className="font-display mt-0.5 text-xl sm:text-2xl font-black text-white">{totalProker}</p>
           </div>
-          <div className="rounded-2xl bg-white/5 p-3 sm:p-3.5 backdrop-blur-xs">
+          <div
+            className="rounded-2xl p-3 sm:p-3.5 border border-[#c8ef70]/20 shadow-inner"
+            style={{ backgroundColor: "rgba(10, 35, 25, 0.65)" }}
+          >
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#c8ef70]">Sedang Berjalan</span>
             <p className="font-display mt-0.5 text-xl sm:text-2xl font-black text-[#c8ef70]">{runningProker}</p>
           </div>
-          <div className="rounded-2xl bg-white/5 p-3 sm:p-3.5 backdrop-blur-xs">
+          <div
+            className="rounded-2xl p-3 sm:p-3.5 border border-white/10 shadow-inner"
+            style={{ backgroundColor: "rgba(10, 35, 25, 0.65)" }}
+          >
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#9cbca5]">Proker Selesai</span>
             <p className="font-display mt-0.5 text-xl sm:text-2xl font-black text-white">
               {completedProker}{" "}
               <span className="text-xs font-bold text-[#c8ef70]">({completionRate}%)</span>
             </p>
           </div>
-          <div className="rounded-2xl bg-white/5 p-3 sm:p-3.5 backdrop-blur-xs">
+          <div
+            className="rounded-2xl p-3 sm:p-3.5 border border-white/10 shadow-inner"
+            style={{ backgroundColor: "rgba(10, 35, 25, 0.65)" }}
+          >
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#9cbca5]">Agenda & Rapat</span>
             <p className="font-display mt-0.5 text-xl sm:text-2xl font-black text-white">{activities.length}</p>
           </div>
@@ -568,9 +698,9 @@ export function OrganizationDetailView({
           </div>
 
           <div className="rounded-2xl bg-[#fbfcfb] p-5 border border-[#edf2ee]">
-            {organization.catatan ? (
+            {editCatatan ? (
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--ink)]">
-                {organization.catatan}
+                {editCatatan}
               </p>
             ) : (
               <p className="text-xs italic text-[var(--muted)]">
@@ -603,7 +733,7 @@ export function OrganizationDetailView({
       {/* ── MODAL: UBAH INFORMASI ORGANISASI ── */}
       {editOrgOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="relative my-auto w-full max-w-lg overflow-hidden rounded-3xl border border-[var(--line)] bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150">
+          <div className="relative my-auto w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-[var(--line)] bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
               <div className="flex items-center gap-2">
                 <PencilLine size={18} className="text-[var(--brand)]" />
@@ -619,12 +749,70 @@ export function OrganizationDetailView({
 
             <form
               action={async (formData) => {
+                if (editLogoUrl) {
+                  formData.set("logo_url", editLogoUrl);
+                }
+                formData.set("catatan", editCatatan);
                 await updateOrganization(formData);
+                setLogoUrl(editLogoUrl);
                 setEditOrgOpen(false);
+                showToast("Informasi organisasi berhasil diperbarui!", "success");
               }}
               className="mt-5 space-y-3.5 text-xs [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:px-3 [&_input]:py-2.5 [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2.5 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:px-3 [&_textarea]:py-2.5"
             >
               <input type="hidden" name="id" value={organization.id} />
+
+              {/* Logo in Edit Modal */}
+              <div>
+                <label className="block font-bold text-[var(--ink)] mb-1">Logo Organisasi</label>
+                <div className="flex items-center gap-3 p-3 rounded-2xl border border-dashed border-[var(--line)] bg-[#fafcfb]">
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-[var(--line)] bg-white shadow-2xs flex items-center justify-center">
+                    {editLogoUrl ? (
+                      <Image
+                        src={editLogoUrl}
+                        alt="Logo"
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <Building2 className="text-[var(--muted)]" size={24} />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-[var(--ink)]">
+                      {editLogoUrl ? "Logo terpasang" : "Belum ada logo"}
+                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => editLogoInputRef.current?.click()}
+                        className="inline-flex items-center gap-1 rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-xs font-bold text-[var(--ink)] shadow-2xs hover:bg-[#f7f8f5]"
+                      >
+                        <Camera size={12} className="text-[var(--brand)]" />
+                        {editLogoUrl ? "Ganti Logo" : "Upload Logo"}
+                      </button>
+                      {editLogoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => setEditLogoUrl(null)}
+                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 size={12} /> Hapus Logo
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <input
+                    ref={editLogoInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleLogoFile(e, (url) => setEditLogoUrl(url))}
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block font-bold text-[var(--ink)] mb-1">Nama Organisasi</label>
                 <input required name="nama_organisasi" defaultValue={organization.nama_organisasi} />
@@ -657,7 +845,8 @@ export function OrganizationDetailView({
                 <textarea
                   name="catatan"
                   rows={4}
-                  defaultValue={organization.catatan || ""}
+                  value={editCatatan}
+                  onChange={(e) => setEditCatatan(e.target.value)}
                   placeholder="Catatan visi misi, link google drive dokumen LPJ, kontak tim, dll."
                 />
               </div>

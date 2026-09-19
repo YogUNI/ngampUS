@@ -4,12 +4,15 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
+import { packOrgLogoAndNotes } from "@/lib/utils/org-logo";
+
 const organizationSchema = z.object({
   nama_organisasi: z.string().trim().min(1).max(140),
   tipe: z.enum(["organisasi", "ukm", "ukk", "kepanitiaan", "lainnya"]),
   periode_mulai: z.string().date().or(z.literal("")),
   periode_selesai: z.string().date().or(z.literal("")),
-  catatan: z.string().trim().max(3000),
+  catatan: z.string().trim().max(100000), // Accommodates packed base64 compressed logo & notes
+  logo_url: z.string().trim().optional().nullable(),
 }).refine((value) => !value.periode_mulai || !value.periode_selesai || value.periode_selesai >= value.periode_mulai, { path: ["periode_selesai"], message: "Tanggal selesai harus setelah tanggal mulai." });
 
 const roleTypeSchema = z.enum(["ketua_umum", "wakil_ketua_umum", "sekretaris", "bendahara", "kepala_departemen", "wakil_kepala_departemen", "anggota", "lainnya"]);
@@ -84,7 +87,18 @@ function parsePosition(formData: FormData) {
 }
 
 export async function createOrganization(formData: FormData) {
-  const data = organizationSchema.parse({ nama_organisasi: formData.get("nama_organisasi"), tipe: formData.get("tipe"), periode_mulai: formData.get("periode_mulai"), periode_selesai: formData.get("periode_selesai"), catatan: formData.get("catatan") || "" });
+  const rawCatatan = (formData.get("catatan") as string) || "";
+  const rawLogo = (formData.get("logo_url") as string) || "";
+  const packedCatatan = packOrgLogoAndNotes(rawCatatan, rawLogo);
+
+  const data = organizationSchema.parse({
+    nama_organisasi: formData.get("nama_organisasi"),
+    tipe: formData.get("tipe"),
+    periode_mulai: formData.get("periode_mulai"),
+    periode_selesai: formData.get("periode_selesai"),
+    catatan: packedCatatan,
+    logo_url: rawLogo || null,
+  });
   const role = initialRoleSchema.parse({ role_type: formData.get("role_type"), divisi: formData.get("divisi") || "", jabatan_lainnya: formData.get("jabatan_lainnya") || "" });
   const { supabase } = await getSignedInClient();
   const { data: organizationId, error } = await supabase.rpc("create_organization_with_position", {
@@ -103,9 +117,30 @@ export async function createOrganization(formData: FormData) {
 
 export async function updateOrganization(formData: FormData) {
   const id = z.string().uuid().parse(formData.get("id"));
-  const data = organizationSchema.parse({ nama_organisasi: formData.get("nama_organisasi"), tipe: formData.get("tipe"), periode_mulai: formData.get("periode_mulai"), periode_selesai: formData.get("periode_selesai"), catatan: formData.get("catatan") || "" });
+  const rawCatatan = (formData.get("catatan") as string) || "";
+  const rawLogo = (formData.get("logo_url") as string) || "";
+  const packedCatatan = packOrgLogoAndNotes(rawCatatan, rawLogo);
+
+  const data = organizationSchema.parse({
+    nama_organisasi: formData.get("nama_organisasi"),
+    tipe: formData.get("tipe"),
+    periode_mulai: formData.get("periode_mulai"),
+    periode_selesai: formData.get("periode_selesai"),
+    catatan: packedCatatan,
+    logo_url: rawLogo || null,
+  });
   const { supabase, user } = await getSignedInClient();
-  const { error } = await supabase.from("organizations").update({ ...data, periode_mulai: data.periode_mulai || null, periode_selesai: data.periode_selesai || null, catatan: data.catatan || null }).eq("id", id).eq("user_id", user.id);
+  const { error } = await supabase
+    .from("organizations")
+    .update({
+      nama_organisasi: data.nama_organisasi,
+      tipe: data.tipe,
+      periode_mulai: data.periode_mulai || null,
+      periode_selesai: data.periode_selesai || null,
+      catatan: data.catatan || null,
+    })
+    .eq("id", id)
+    .eq("user_id", user.id);
   if (error) throw new Error(error.message);
   refreshOrganizationPages(id);
 }

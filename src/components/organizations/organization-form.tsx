@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Building2, Info, Plus, X } from "lucide-react";
+import { useState, useRef } from "react";
+import Image from "next/image";
+import { Building2, Camera, Info, Plus, Trash2, Upload, X } from "lucide-react";
 import { createOrganization } from "@/app/(dashboard)/organisasi/actions";
+import { useToast } from "@/components/ui/toast-provider";
 
 const roleOptions = [
   ["ketua_umum", "Ketua Umum"],
@@ -19,25 +21,80 @@ function capitalizeFirst(value: string) {
   return value ? value.charAt(0).toLocaleUpperCase("id-ID") + value.slice(1) : value;
 }
 
-import { useToast } from "@/components/ui/toast-provider";
-
 export function OrganizationForm() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState<(typeof roleOptions)[number][0]>("anggota");
   const [department, setDepartment] = useState("");
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { showToast } = useToast();
-  const needsDepartment = role === "kepala_departemen" || role === "wakil_kepala_departemen" || role === "anggota";
+  const needsDepartment =
+    role === "kepala_departemen" || role === "wakil_kepala_departemen" || role === "anggota";
+
+  function handleLogoFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Pilih file gambar yang valid (PNG, JPG, WebP).", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Ukuran gambar maksimal 5MB.", "error");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxDim = 200;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/webp", 0.85);
+          setLogoPreview(dataUrl);
+        }
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
+      if (logoPreview) {
+        formData.set("logo_url", logoPreview);
+      }
       await createOrganization(formData);
       showToast("Organisasi & jabatan berhasil ditambahkan!", "success");
       setOpen(false);
       setDepartment("");
+      setLogoPreview(null);
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : "Gagal menambahkan organisasi.";
       showToast(errorMsg, "error");
@@ -46,5 +103,227 @@ export function OrganizationForm() {
     }
   }
 
-  return <><button onClick={() => setOpen(true)} className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--brand-dark)]"><Plus size={17}/> Tambah organisasi</button>{open && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto"><div className="relative my-auto w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-2xl"><div className="flex items-start justify-between"><div><p className="text-sm font-bold text-[var(--brand)]">ORGANISASI BARU</p><h2 className="font-display mt-1 text-2xl font-extrabold">Tambahkan keterlibatanmu</h2></div><button onClick={() => setOpen(false)} className="rounded-lg p-2 hover:bg-[#f7f8f5]" title="Tutup"><X size={18}/></button></div><form onSubmit={handleSubmit} className="mt-6 space-y-4"><label className="block text-sm font-bold">Nama organisasi<input required name="nama_organisasi" placeholder="Contoh: BEM FASILKOM" className="mt-2 w-full rounded-xl border border-[var(--line)] px-3 py-3 outline-none focus:border-[var(--brand)]"/></label><label className="block text-sm font-bold">Tipe organisasi<select name="tipe" defaultValue="organisasi" className="mt-2 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-3 outline-none focus:border-[var(--brand)]"><option value="organisasi">Organisasi</option><option value="ukm">UKM</option><option value="ukk">UKK</option><option value="kepanitiaan">Kepanitiaan</option><option value="lainnya">Lainnya</option></select></label><section className="rounded-2xl border border-[#b9ddc6] bg-[#f3faf5] p-4"><div className="flex gap-2"><Building2 size={18} className="mt-0.5 text-[var(--brand)]"/><div><h3 className="text-sm font-extrabold">Peran utama kamu</h3><p className="mt-0.5 text-xs leading-5 text-[var(--muted)]">Role ini langsung dibuat sebagai jabatan pertama pada organisasi ini.</p></div></div><label className="mt-3 block text-sm font-bold">Jabatan<select name="role_type" value={role} onChange={(event) => setRole(event.target.value as typeof role)} className="mt-2 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-3 outline-none focus:border-[var(--brand)]">{roleOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>{needsDepartment && <label className="mt-3 block text-sm font-bold">Nama departemen<input required name="divisi" value={department} onChange={(event) => setDepartment(event.target.value)} onBlur={() => setDepartment((value) => capitalizeFirst(value.trim()))} placeholder="Contoh: Departemen PSDM" className="mt-2 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-3 outline-none focus:border-[var(--brand)]"/><span className="mt-1.5 flex gap-1.5 text-xs font-normal leading-5 text-[var(--muted)]"><Info size={14} className="mt-0.5 shrink-0"/>Wajib diisi untuk {role === "anggota" ? "Anggota" : roleOptions.find(([value]) => value === role)?.[1]}. Awali setiap kata penting dengan huruf kapital, misalnya “Departemen Media Kreatif”.</span></label>}{role === "lainnya" && <label className="mt-3 block text-sm font-bold">Nama jabatan<input required name="jabatan_lainnya" placeholder="Contoh: Koordinator Lapangan" className="mt-2 w-full rounded-xl border border-[var(--line)] px-3 py-3 outline-none focus:border-[var(--brand)]"/></label>}</section><div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm font-bold">Mulai (opsional)<input name="periode_mulai" type="date" className="mt-2 w-full rounded-xl border border-[var(--line)] px-3 py-3"/></label><label className="block text-sm font-bold">Selesai (opsional)<input name="periode_selesai" type="date" className="mt-2 w-full rounded-xl border border-[var(--line)] px-3 py-3"/></label></div><label className="block text-sm font-bold">Catatan (opsional)<textarea name="catatan" rows={3} placeholder="Hal penting tentang keterlibatanmu" className="mt-2 w-full resize-none rounded-xl border border-[var(--line)] px-3 py-3 outline-none focus:border-[var(--brand)]"/></label><div className="flex justify-end gap-2"><button onClick={() => setOpen(false)} type="button" className="rounded-xl px-4 py-3 text-sm font-bold hover:bg-[#f7f8f5]">Batal</button><button disabled={loading} className="rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)] disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan organisasi & jabatan"}</button></div></form></div></div>}</>;
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+      >
+        <Plus size={17} /> Tambah organisasi
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="relative my-auto w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-start justify-between border-b border-[var(--line)] pb-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-[var(--brand)]">ORGANISASI BARU</p>
+                <h2 className="font-display mt-0.5 text-2xl font-extrabold">Tambahkan keterlibatanmu</h2>
+              </div>
+              <button
+                onClick={() => setOpen(false)}
+                className="rounded-lg p-2 text-[var(--muted)] hover:bg-[#f7f8f5]"
+                title="Tutup"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+              {/* Logo Upload Section */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[var(--muted)] mb-2">
+                  Logo Organisasi (Opsional)
+                </label>
+                <div className="flex items-center gap-4 p-3 rounded-2xl border border-dashed border-[var(--line)] bg-[#fafcfb]">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-[var(--line)] bg-white shadow-2xs flex items-center justify-center">
+                    {logoPreview ? (
+                      <Image
+                        src={logoPreview}
+                        alt="Preview Logo"
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <Building2 className="text-[var(--muted)]" size={26} />
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-[var(--ink)]">
+                      {logoPreview ? "Logo terpilih" : "Unggah logo organisasi"}
+                    </p>
+                    <p className="text-[11px] text-[var(--muted)] mt-0.5 truncate">
+                      PNG, JPG, atau WebP (maks. 5MB)
+                    </p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-xs font-bold text-[var(--ink)] shadow-2xs hover:bg-[#f7f8f5]"
+                      >
+                        <Camera size={13} className="text-[var(--brand)]" />
+                        {logoPreview ? "Ganti Logo" : "Pilih File"}
+                      </button>
+                      {logoPreview && (
+                        <button
+                          type="button"
+                          onClick={() => setLogoPreview(null)}
+                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 size={12} /> Hapus
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleLogoFileChange}
+                  />
+                </div>
+              </div>
+
+              <label className="block text-sm font-bold">
+                Nama organisasi *
+                <input
+                  required
+                  name="nama_organisasi"
+                  placeholder="Contoh: BEM FASILKOM"
+                  className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3 py-2.5 outline-none focus:border-[var(--brand)] text-sm"
+                />
+              </label>
+
+              <label className="block text-sm font-bold">
+                Tipe organisasi
+                <select
+                  name="tipe"
+                  defaultValue="organisasi"
+                  className="mt-1.5 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2.5 outline-none focus:border-[var(--brand)] text-sm"
+                >
+                  <option value="organisasi">Organisasi Mahasiswa (BEM/HIMA)</option>
+                  <option value="ukm">Unit Kegiatan Mahasiswa (UKM)</option>
+                  <option value="ukk">Unit Kegiatan Khusus (UKK)</option>
+                  <option value="kepanitiaan">Kepanitiaan Khusus</option>
+                  <option value="lainnya">Lainnya / Komunitas</option>
+                </select>
+              </label>
+
+              <section className="rounded-2xl border border-[#b9ddc6] bg-[#f3faf5] p-4">
+                <div className="flex gap-2">
+                  <Building2 size={18} className="mt-0.5 text-[var(--brand)]" />
+                  <div>
+                    <h3 className="text-sm font-extrabold">Peran utama kamu</h3>
+                    <p className="mt-0.5 text-xs leading-5 text-[var(--muted)]">
+                      Role ini langsung dibuat sebagai jabatan pertama pada organisasi ini.
+                    </p>
+                  </div>
+                </div>
+
+                <label className="mt-3 block text-sm font-bold">
+                  Jabatan
+                  <select
+                    name="role_type"
+                    value={role}
+                    onChange={(event) => setRole(event.target.value as typeof role)}
+                    className="mt-1.5 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2.5 outline-none focus:border-[var(--brand)] text-sm"
+                  >
+                    {roleOptions.map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                {needsDepartment && (
+                  <label className="mt-3 block text-sm font-bold">
+                    Nama departemen
+                    <input
+                      required
+                      name="divisi"
+                      value={department}
+                      onChange={(event) => setDepartment(event.target.value)}
+                      onBlur={() => setDepartment((value) => capitalizeFirst(value.trim()))}
+                      placeholder="Contoh: Departemen PSDM"
+                      className="mt-1.5 w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2.5 outline-none focus:border-[var(--brand)] text-sm"
+                    />
+                    <span className="mt-1.5 flex gap-1.5 text-xs font-normal leading-5 text-[var(--muted)]">
+                      <Info size={14} className="mt-0.5 shrink-0" />
+                      Wajib diisi untuk{" "}
+                      {role === "anggota"
+                        ? "Anggota"
+                        : roleOptions.find(([value]) => value === role)?.[1]}
+                      . Awali huruf kapital, misal “Departemen Media Kreatif”.
+                    </span>
+                  </label>
+                )}
+
+                {role === "lainnya" && (
+                  <label className="mt-3 block text-sm font-bold">
+                    Nama jabatan
+                    <input
+                      required
+                      name="jabatan_lainnya"
+                      placeholder="Contoh: Koordinator Lapangan"
+                      className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3 py-2.5 outline-none focus:border-[var(--brand)] text-sm"
+                    />
+                  </label>
+                )}
+              </section>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block text-sm font-bold">
+                  Mulai (opsional)
+                  <input
+                    name="periode_mulai"
+                    type="date"
+                    className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3 py-2.5 text-sm"
+                  />
+                </label>
+                <label className="block text-sm font-bold">
+                  Selesai (opsional)
+                  <input
+                    name="periode_selesai"
+                    type="date"
+                    className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3 py-2.5 text-sm"
+                  />
+                </label>
+              </div>
+
+              <label className="block text-sm font-bold">
+                Catatan (opsional)
+                <textarea
+                  name="catatan"
+                  rows={3}
+                  placeholder="Hal penting tentang keterlibatanmu, link drive, dll."
+                  className="mt-1.5 w-full resize-none rounded-xl border border-[var(--line)] px-3 py-2.5 outline-none focus:border-[var(--brand)] text-sm"
+                />
+              </label>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--line)]">
+                <button
+                  onClick={() => setOpen(false)}
+                  type="button"
+                  className="rounded-xl px-4 py-2.5 text-sm font-bold text-[var(--muted)] hover:bg-[#f7f8f5]"
+                >
+                  Batal
+                </button>
+                <button
+                  disabled={loading}
+                  className="rounded-xl bg-[var(--brand)] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)] disabled:opacity-50"
+                >
+                  {loading ? "Menyimpan..." : "Simpan organisasi & jabatan"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
