@@ -175,6 +175,29 @@ export function ModuleChatModal({
           <div ref={messagesEndRef} />
         </div>
 
+        {/* Quick Question Suggestions */}
+        <div className="flex items-center gap-1.5 overflow-x-auto px-4 py-2 bg-[var(--card-bg)] border-t border-[var(--line)] scrollbar-none">
+          <span className="text-[10px] font-bold text-[var(--muted)] shrink-0">Cepat tanya:</span>
+          {[
+            "Jelaskan dengan bahasa sederhana dong",
+            "Beri 1 contoh kasus nyata",
+            "Apa rumus / aturan pentingnya?",
+            "Bagian mana yang sering keluar di ujian?",
+          ].map((promptText, pIdx) => (
+            <button
+              key={pIdx}
+              type="button"
+              disabled={loading}
+              onClick={() => {
+                setInputMessage(promptText);
+              }}
+              className="shrink-0 rounded-full border border-[var(--line)] bg-[var(--card-subtle)] px-2.5 py-1 text-[10px] font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition disabled:opacity-50"
+            >
+              {promptText}
+            </button>
+          ))}
+        </div>
+
         {/* Input Bar */}
         <form
           onSubmit={handleSend}
