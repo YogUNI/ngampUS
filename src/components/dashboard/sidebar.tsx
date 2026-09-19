@@ -38,16 +38,16 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
 
   return (
     <aside
-      className={`dashboard-sidebar sticky top-0 flex h-screen shrink-0 flex-col justify-between overflow-hidden border-r border-[#d8e2da] ${
-        collapsed ? "w-[76px] px-2.5 py-4 items-center" : "w-72 px-3.5 py-4"
+      className={`dashboard-sidebar sticky top-0 flex h-screen shrink-0 flex-col overflow-hidden border-r border-[#d8e2da] ${
+        collapsed ? "w-[76px] px-2.5 py-3.5 items-center" : "w-72 px-3.5 py-3.5"
       } transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]`}
     >
-      {/* ── TOP & MIDDLE SECTION: Logo, Semester, Nav, CTA ── */}
-      <div className={`flex flex-col min-w-0 ${collapsed ? "w-full items-center" : ""}`}>
+      {/* ── TOP & MIDDLE SCROLLABLE SECTION: Logo, Semester, Nav, CTA ── */}
+      <div className={`flex flex-1 flex-col min-h-0 min-w-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${collapsed ? "w-full items-center" : ""}`}>
         
         {/* Logo & Header */}
         {!collapsed ? (
-          <div className="flex items-center justify-between px-1">
+          <div className="flex items-center justify-between px-1 shrink-0">
             <Link
               href="/dashboard"
               className="flex items-center gap-2.5 min-w-0"
@@ -55,16 +55,16 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
               <Image
                 src="/logo_ngampUS.png"
                 alt="ngampUS Logo"
-                width={36}
-                height={36}
-                className="h-9 w-9 shrink-0 object-contain drop-shadow-xs"
+                width={34}
+                height={34}
+                className="h-8.5 w-8.5 shrink-0 object-contain drop-shadow-xs"
                 priority
               />
               <span className="min-w-0">
-                <span className="font-display block text-[22px] font-black tracking-[-.04em] leading-tight whitespace-nowrap">
+                <span className="font-display block text-[21px] font-black tracking-[-.04em] leading-tight whitespace-nowrap">
                   ngamp<span className="text-[var(--brand)]">US</span>
                 </span>
-                <span className="block text-[9px] font-black tracking-[.18em] text-[var(--muted)] leading-none mt-0.5 whitespace-nowrap">
+                <span className="block text-[8.5px] font-black tracking-[.18em] text-[var(--muted)] leading-none mt-0.5 whitespace-nowrap">
                   CAMPUS CONSOLE
                 </span>
               </span>
@@ -80,14 +80,14 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
           </div>
         ) : (
           /* Collapsed Header: Large Logo on Top + Expand Button */
-          <div className="flex flex-col items-center gap-2 pb-1">
+          <div className="flex flex-col items-center gap-2 pb-1 shrink-0">
             <Link href="/dashboard" title="ngampUS Dashboard">
               <Image
                 src="/logo_ngampUS.png"
                 alt="ngampUS Logo"
-                width={36}
-                height={36}
-                className="h-9 w-9 shrink-0 object-contain drop-shadow-xs transition hover:scale-105"
+                width={34}
+                height={34}
+                className="h-8.5 w-8.5 shrink-0 object-contain drop-shadow-xs transition hover:scale-105"
                 priority
               />
             </Link>
@@ -105,16 +105,16 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
         {!collapsed ? (
           <Link
             href="/semester"
-            className="mt-3.5 rounded-2xl border border-[#d7e3d9] bg-white/90 p-3 text-left shadow-xs transition hover:border-[#a9cdb2]"
+            className="mt-2.5 rounded-2xl border border-[#d7e3d9] bg-white/90 p-2.5 text-left shadow-xs transition hover:border-[#a9cdb2] shrink-0"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <span className="block text-[9px] font-black tracking-[.14em] text-[var(--muted)]">AKTIF SEKARANG</span>
-                <b className="mt-0.5 block truncate text-[13.5px] font-extrabold text-[var(--ink)]">{activeSemester || "Pilih semester"}</b>
+                <span className="block text-[8.5px] font-black tracking-[.14em] text-[var(--muted)]">AKTIF SEKARANG</span>
+                <b className="mt-0.5 block truncate text-[13px] font-extrabold text-[var(--ink)]">{activeSemester || "Pilih semester"}</b>
               </div>
-              <ChevronDown className="shrink-0 text-[var(--brand)]" size={15} />
+              <ChevronDown className="shrink-0 text-[var(--brand)]" size={14} />
             </div>
-            <div className="mt-1.5 flex items-center gap-1.5 text-[10px] font-bold text-[var(--brand)]">
+            <div className="mt-1 flex items-center gap-1.5 text-[9.5px] font-bold text-[var(--brand)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] shadow-[0_0_0_2px_#dff3e5]" />
               Semester control
             </div>
@@ -123,14 +123,14 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
           <Link
             href="/semester"
             title={activeSemester || "Pilih semester"}
-            className="mt-3 grid h-10 w-10 place-items-center rounded-xl border border-[#d7e3d9] bg-white text-[var(--brand)] shadow-xs transition hover:border-[#a9cdb2] hover:bg-[#f4faf6]"
+            className="mt-2.5 grid h-9 w-9 place-items-center rounded-xl border border-[#d7e3d9] bg-white text-[var(--brand)] shadow-xs transition hover:border-[#a9cdb2] hover:bg-[#f4faf6] shrink-0"
           >
-            <GraduationCap size={18} />
+            <GraduationCap size={17} />
           </Link>
         )}
 
         {/* Main Navigation Links */}
-        <nav className={`mt-3.5 space-y-1.5 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
+        <nav className={`mt-2.5 space-y-1 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
           {nav.map(({ href, label, note, icon: Icon }) => {
             const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
             const tourId =
@@ -151,10 +151,10 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
                 key={href}
                 data-tour={tourId}
                 title={collapsed ? label : undefined}
-                className={`group flex items-center rounded-2xl transition ${
+                className={`group flex items-center rounded-xl transition ${
                   collapsed
-                    ? "h-10 w-10 justify-center p-0"
-                    : "gap-3 px-3 py-2.5"
+                    ? "h-9 w-9 justify-center p-0"
+                    : "gap-2.5 px-2.5 py-2"
                 } ${
                   active
                     ? "bg-[#103626] text-white shadow-md shadow-[#103626]/15"
@@ -163,25 +163,25 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
                 href={href}
               >
                 <span
-                  className={`grid shrink-0 place-items-center rounded-xl ${
-                    collapsed ? "h-9 w-9" : "h-8 w-8"
+                  className={`grid shrink-0 place-items-center rounded-lg ${
+                    collapsed ? "h-8 w-8" : "h-7.5 w-7.5"
                   } ${
                     active
                       ? "bg-[#c8ef70] text-[#103626]"
                       : "bg-[#e7eee7] text-[#50705e] group-hover:bg-[#dff3e5] group-hover:text-[#0f6849]"
                   }`}
                 >
-                  <Icon size={17} />
+                  <Icon size={16} />
                 </span>
                 {!collapsed && (
                   <>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[13px] font-extrabold leading-tight">{label}</span>
-                      <span className={`block truncate text-[10.5px] ${active ? "text-[#bdd0c2]" : "text-[#829187]"}`}>
+                      <span className="block text-[12.5px] font-extrabold leading-tight">{label}</span>
+                      <span className={`block truncate text-[10px] ${active ? "text-[#bdd0c2]" : "text-[#829187]"}`}>
                         {note}
                       </span>
                     </span>
-                    {active && <ArrowUpRight size={14} className="text-[#c8ef70]" />}
+                    {active && <ArrowUpRight size={13} className="text-[#c8ef70]" />}
                   </>
                 )}
               </Link>
@@ -192,27 +192,27 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
         {/* CTA Catat Kegiatan */}
         {!collapsed ? (
           <Link
-            className="mt-3.5 flex items-center justify-center gap-2 rounded-2xl bg-[#c8ef70] px-3.5 py-3 text-xs font-black text-[#103626] shadow-[0_3px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839]"
+            className="my-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839] shrink-0"
             href="/kegiatan?new=1"
           >
-            <Plus size={16} strokeWidth={3} /> Catat kegiatan
+            <Plus size={15} strokeWidth={3} /> Catat kegiatan
           </Link>
         ) : (
           <Link
             href="/kegiatan?new=1"
             title="Catat kegiatan"
-            className="mt-3.5 grid h-10 w-10 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_3px_0_#84a839] transition hover:-translate-y-0.5"
+            className="my-2.5 grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 shrink-0"
           >
-            <Plus size={18} strokeWidth={3} />
+            <Plus size={16} strokeWidth={3} />
           </Link>
         )}
       </div>
 
-      {/* ── BOTTOM SECTION: User Card Footer ── */}
-      <div className={`pt-2 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
+      {/* ── BOTTOM SECTION: User Card Footer (Always pinned at bottom, never clipped) ── */}
+      <div className={`shrink-0 pt-2 border-t border-[#d8e2da]/70 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
         {!collapsed ? (
-          <div className="rounded-2xl border border-[#d8e2da] bg-white/95 p-3 shadow-xs">
-            <div className="flex items-center gap-2.5">
+          <div className="rounded-2xl border border-[#d8e2da] bg-white/95 p-2.5 shadow-xs">
+            <div className="flex items-center gap-2">
               {avatarUrl ? (
                 <Image
                   src={avatarUrl}
@@ -228,22 +228,22 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-extrabold text-[var(--ink)] leading-snug">{name}</p>
-                <p className="text-[10px] font-bold text-[var(--muted)] leading-none mt-0.5">Personal workspace</p>
+                <p className="text-[9.5px] font-bold text-[var(--muted)] leading-none mt-0.5">Personal workspace</p>
               </div>
               <button
                 onClick={signOut}
                 title="Keluar"
                 className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21] transition"
               >
-                <LogOut size={16} />
+                <LogOut size={15} />
               </button>
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5 border-t border-[#e3ebe4] pt-2">
+            <div className="mt-2 flex items-center gap-1 border-t border-[#e3ebe4] pt-1.5">
               <Link
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
                 href="/settings"
               >
-                <Settings size={13} /> Profil
+                <Settings size={12.5} /> Profil
               </Link>
               <button
                 type="button"
@@ -255,13 +255,13 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition cursor-pointer"
                 title="Mulai Tur Panduan Fitur"
               >
-                <CircleHelp size={13} /> Panduan
+                <CircleHelp size={12.5} /> Panduan
               </button>
               <ThemeToggle variant="icon" />
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-1.5 pt-1">
             <ThemeToggle variant="icon" />
             <Link
               href="/settings"
