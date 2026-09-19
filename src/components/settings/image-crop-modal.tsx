@@ -1,25 +1,33 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
   ZoomIn,
   ZoomOut,
   RotateCw,
   Move,
-  UploadCloud,
   Check,
   X,
-  Sparkles,
   Crop,
   RefreshCw,
+  Square,
+  RectangleHorizontal,
+  RectangleVertical,
 } from "lucide-react";
+
+export type AspectRatioMode = "square" | "landscape" | "portrait";
 
 interface ImageCropModalProps {
   isOpen: boolean;
   imageSrc: string | null;
   onClose: () => void;
   onSave: (croppedDataUrl: string) => void;
+  title?: string;
+  subtitle?: string;
+  shape?: "circle" | "rounded-rect";
+  allowAspectRatioChange?: boolean;
+  defaultAspectRatio?: AspectRatioMode;
 }
 
 export function ImageCropModal({
@@ -27,29 +35,38 @@ export function ImageCropModal({
   imageSrc,
   onClose,
   onSave,
+  title = "Sesuaikan Foto",
+  subtitle = "Geser posisi, atur zoom, dan putar foto sesuai keinginanmu.",
+  shape = "circle",
+  allowAspectRatioChange = false,
+  defaultAspectRatio = "square",
 }: ImageCropModalProps) {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [aspectRatio, setAspectRatio] = useState<AspectRatioMode>(defaultAspectRatio);
+  const [fitMode, setFitMode] = useState<"cover" | "contain">("contain");
+  const [bgColor, setBgColor] = useState<"white" | "transparent">("white");
   const [mounted, setMounted] = useState(false);
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Reset state whenever new image is loaded
+  // Reset state whenever new image is loaded or modal opened
   useEffect(() => {
-    if (imageSrc) {
+    if (imageSrc && isOpen) {
       setZoom(1);
       setRotation(0);
       setPosition({ x: 0, y: 0 });
+      setAspectRatio(defaultAspectRatio);
+      setFitMode("contain");
     }
-  }, [imageSrc]);
+  }, [imageSrc, isOpen, defaultAspectRatio]);
 
   // Dragging handlers for mouse & touch
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -91,45 +108,87 @@ export function ImageCropModal({
     setIsDragging(false);
   };
 
-  // Crop & Export to DataURL
+  // Dimensions based on aspect ratio
+  // Standard bounding box in UI: max width ~280px, max height ~280px
+  let viewportWidth = 260;
+  let viewportHeight = 260;
+
+  if (aspectRatio === "landscape") {
+    viewportWidth = 280;
+    viewportHeight = 190;
+  } else if (aspectRatio === "portrait") {
+    viewportWidth = 200;
+    viewportHeight = 270;
+  }
+
+  // Export to DataURL
   const handleApplyCrop = () => {
     if (!imageRef.current) return;
     const canvas = document.createElement("canvas");
-    const outputSize = 400; // standard 400x400 output
-    canvas.width = outputSize;
-    canvas.height = outputSize;
+
+    // High quality export size
+    const maxOutputDim = 400;
+    let outputWidth = maxOutputDim;
+    let outputHeight = maxOutputDim;
+
+    if (aspectRatio === "landscape") {
+      outputWidth = 450;
+      outputHeight = 300;
+    } else if (aspectRatio === "portrait") {
+      outputWidth = 300;
+      outputHeight = 400;
+    }
+
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Viewport preview box is 260px in UI
-    const previewBoxSize = 260;
-    const scaleFactor = outputSize / previewBoxSize;
+    if (bgColor === "white") {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, outputWidth, outputHeight);
+    } else {
+      ctx.clearRect(0, 0, outputWidth, outputHeight);
+    }
 
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, outputSize, outputSize);
+    const scaleFactorX = outputWidth / viewportWidth;
+    const scaleFactorY = outputHeight / viewportHeight;
 
     ctx.save();
     // Center canvas context
-    ctx.translate(outputSize / 2, outputSize / 2);
+    ctx.translate(outputWidth / 2, outputHeight / 2);
     ctx.rotate((rotation * Math.PI) / 180);
     ctx.scale(zoom, zoom);
     ctx.translate(
-      position.x * scaleFactor * (1 / zoom),
-      position.y * scaleFactor * (1 / zoom)
+      position.x * scaleFactorX * (1 / zoom),
+      position.y * scaleFactorY * (1 / zoom)
     );
 
     const img = imageRef.current;
-    // Calculate aspect fit inside preview
     const imgAspect = img.naturalWidth / img.naturalHeight;
-    let drawWidth = outputSize;
-    let drawHeight = outputSize;
+    const boxAspect = outputWidth / outputHeight;
 
-    if (imgAspect > 1) {
-      drawWidth = outputSize * imgAspect;
-      drawHeight = outputSize;
+    let drawWidth = outputWidth;
+    let drawHeight = outputHeight;
+
+    if (fitMode === "cover") {
+      // Cover: fill the box, clipping edges
+      if (imgAspect > boxAspect) {
+        drawHeight = outputHeight;
+        drawWidth = outputHeight * imgAspect;
+      } else {
+        drawWidth = outputWidth;
+        drawHeight = outputWidth / imgAspect;
+      }
     } else {
-      drawWidth = outputSize;
-      drawHeight = outputSize / imgAspect;
+      // Contain: fit entirely within the box without clipping
+      if (imgAspect > boxAspect) {
+        drawWidth = outputWidth;
+        drawHeight = outputWidth / imgAspect;
+      } else {
+        drawHeight = outputHeight;
+        drawWidth = outputHeight * imgAspect;
+      }
     }
 
     ctx.drawImage(
@@ -141,7 +200,10 @@ export function ImageCropModal({
     );
     ctx.restore();
 
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+    // Use WebP with fallback to PNG for transparency or JPEG for white bg
+    const mime = bgColor === "transparent" ? "image/png" : "image/webp";
+    const quality = 0.9;
+    const dataUrl = canvas.toDataURL(mime, quality);
     onSave(dataUrl);
     onClose();
   };
@@ -149,7 +211,7 @@ export function ImageCropModal({
   if (!isOpen || !imageSrc || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-y-auto">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -157,7 +219,7 @@ export function ImageCropModal({
       />
 
       {/* Modal Container */}
-      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl border border-[#d8e2da] bg-white p-6 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative z-10 my-auto w-full max-w-lg overflow-hidden rounded-3xl border border-[#d8e2da] bg-white p-6 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-[#e5ece6] pb-4">
@@ -167,10 +229,10 @@ export function ImageCropModal({
             </span>
             <div>
               <h3 className="font-display text-lg font-black text-[#103626]">
-                Sesuaikan Foto Profil
+                {title}
               </h3>
               <p className="text-xs text-[var(--muted)]">
-                Geser posisi, atur zoom, dan putar foto sesuai keinginanmu.
+                {subtitle}
               </p>
             </div>
           </div>
@@ -182,10 +244,60 @@ export function ImageCropModal({
           </button>
         </div>
 
+        {/* Aspect Ratio Selector (Optional / Organization Logo) */}
+        {allowAspectRatioChange && (
+          <div className="mt-4 flex items-center justify-between gap-2 rounded-2xl bg-[#f4f8f5] p-2 border border-[#d8e2da]">
+            <span className="pl-2 text-xs font-bold text-[#103626]">Orientasi:</span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setAspectRatio("square")}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                  aspectRatio === "square"
+                    ? "bg-[var(--brand)] text-white shadow-xs"
+                    : "bg-white text-[var(--ink)] hover:bg-[#eef5ef]"
+                }`}
+              >
+                <Square size={13} /> Persegi (1:1)
+              </button>
+              <button
+                type="button"
+                onClick={() => setAspectRatio("landscape")}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                  aspectRatio === "landscape"
+                    ? "bg-[var(--brand)] text-white shadow-xs"
+                    : "bg-white text-[var(--ink)] hover:bg-[#eef5ef]"
+                }`}
+              >
+                <RectangleHorizontal size={14} /> Landscape
+              </button>
+              <button
+                type="button"
+                onClick={() => setAspectRatio("portrait")}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                  aspectRatio === "portrait"
+                    ? "bg-[var(--brand)] text-white shadow-xs"
+                    : "bg-white text-[var(--ink)] hover:bg-[#eef5ef]"
+                }`}
+              >
+                <RectangleVertical size={13} /> Portrait
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Crop Viewport & Canvas Area */}
         <div className="mt-5 flex flex-col items-center">
           <div
-            className="relative h-[260px] w-[260px] cursor-grab active:cursor-grabbing select-none overflow-hidden rounded-full border-4 border-[var(--brand)] bg-[#103626]/5 shadow-inner"
+            className={`relative cursor-grab active:cursor-grabbing select-none overflow-hidden border-4 border-[var(--brand)] shadow-inner transition-all duration-200 ${
+              shape === "circle" && aspectRatio === "square"
+                ? "rounded-full"
+                : "rounded-3xl"
+            } ${bgColor === "white" ? "bg-white" : "bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px]"}`}
+            style={{
+              width: `${viewportWidth}px`,
+              height: `${viewportHeight}px`,
+            }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -195,16 +307,15 @@ export function ImageCropModal({
             onTouchEnd={handleTouchEnd}
           >
             {/* Guide overlay */}
-            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/30" />
-            <div className="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-25">
-              <div className="border-r border-b border-white" />
-              <div className="border-r border-b border-white" />
-              <div className="border-b border-white" />
-              <div className="border-r border-b border-white" />
-              <div className="border-r border-b border-white" />
-              <div className="border-b border-white" />
-              <div className="border-r border-white" />
-              <div className="border-r border-white" />
+            <div className="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-20 z-20">
+              <div className="border-r border-b border-[#103626]" />
+              <div className="border-r border-b border-[#103626]" />
+              <div className="border-b border-[#103626]" />
+              <div className="border-r border-b border-[#103626]" />
+              <div className="border-r border-b border-[#103626]" />
+              <div className="border-b border-[#103626]" />
+              <div className="border-r border-[#103626]" />
+              <div className="border-r border-[#103626]" />
               <div />
             </div>
 
@@ -214,31 +325,31 @@ export function ImageCropModal({
               src={imageSrc}
               alt="Crop target"
               draggable={false}
-              className="absolute left-1/2 top-1/2 max-w-none origin-center pointer-events-none transition-transform duration-75"
+              className="absolute left-1/2 top-1/2 max-w-none origin-center pointer-events-none transition-transform duration-75 select-none"
               style={{
                 transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotation}deg)`,
-                width: "260px",
-                height: "260px",
-                objectFit: "contain",
+                width: `${viewportWidth}px`,
+                height: `${viewportHeight}px`,
+                objectFit: fitMode,
               }}
             />
           </div>
 
           <p className="mt-2.5 flex items-center gap-1.5 text-xs text-[var(--muted)] font-medium">
             <Move size={13} className="text-[var(--brand)]" />
-            Klik & drag foto di dalam lingkaran untuk memindahkan posisi
+            Klik & geser logo di dalam area untuk menyesuaikan posisi
           </p>
         </div>
 
-        {/* Adjust Controls: Zoom, Rotate, Reset */}
-        <div className="mt-5 space-y-3.5 rounded-2xl bg-[#f7faf6] p-4 border border-[#e2ece3]">
+        {/* Adjust Controls: Zoom, Fit, Rotate, Reset */}
+        <div className="mt-4 space-y-3 rounded-2xl bg-[#f7faf6] p-4 border border-[#e2ece3]">
           
           {/* Zoom Slider */}
           <div className="flex items-center gap-3">
             <ZoomOut size={16} className="text-[var(--muted)] shrink-0" />
             <input
               type="range"
-              min="0.8"
+              min="0.5"
               max="3"
               step="0.05"
               value={zoom}
@@ -251,16 +362,23 @@ export function ImageCropModal({
             </span>
           </div>
 
-          {/* Quick Buttons: Rotate & Reset */}
-          <div className="flex items-center justify-between border-t border-[#e2ece3] pt-3">
-            <div className="flex items-center gap-2">
+          {/* Quick Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#e2ece3] pt-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setFitMode((m) => (m === "contain" ? "cover" : "contain"))}
+                className="flex items-center gap-1.5 rounded-xl border border-[#d8e2da] bg-white px-3 py-1.5 text-xs font-bold text-[#103626] hover:bg-[#eaf5eb] transition active:scale-95"
+                title="Sesuaikan ukuran penuh atau paskan ke kotak"
+              >
+                {fitMode === "contain" ? "Paskan Logo (Fit)" : "Penuh (Fill)"}
+              </button>
               <button
                 type="button"
                 onClick={() => setRotation((r) => (r + 90) % 360)}
                 className="flex items-center gap-1.5 rounded-xl border border-[#d8e2da] bg-white px-3 py-1.5 text-xs font-bold text-[#103626] hover:bg-[#eaf5eb] transition active:scale-95"
               >
-                <RotateCw size={13} />
-                Putar 90°
+                <RotateCw size={13} /> Putar 90°
               </button>
               <button
                 type="button"
@@ -271,18 +389,40 @@ export function ImageCropModal({
                 }}
                 className="flex items-center gap-1.5 rounded-xl border border-[#d8e2da] bg-white px-3 py-1.5 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[#103626] transition active:scale-95"
               >
-                <RefreshCw size={13} />
-                Reset
+                <RefreshCw size={13} /> Reset
               </button>
             </div>
-            <span className="text-[11px] font-semibold text-[var(--brand)]">
-              Ratio 1:1 Bulat
-            </span>
+
+            <div className="flex items-center gap-1">
+              <span className="text-[11px] font-bold text-[var(--muted)] mr-1">Latar:</span>
+              <button
+                type="button"
+                onClick={() => setBgColor("white")}
+                className={`rounded-lg px-2 py-1 text-[11px] font-bold border transition ${
+                  bgColor === "white"
+                    ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-dark)]"
+                    : "border-transparent bg-white text-[var(--muted)] hover:text-black"
+                }`}
+              >
+                Putih
+              </button>
+              <button
+                type="button"
+                onClick={() => setBgColor("transparent")}
+                className={`rounded-lg px-2 py-1 text-[11px] font-bold border transition ${
+                  bgColor === "transparent"
+                    ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-dark)]"
+                    : "border-transparent bg-white text-[var(--muted)] hover:text-black"
+                }`}
+              >
+                Transparan
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Modal Actions */}
-        <div className="mt-6 flex items-center justify-end gap-3">
+        <div className="mt-5 flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
@@ -295,8 +435,7 @@ export function ImageCropModal({
             onClick={handleApplyCrop}
             className="flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-2.5 text-sm font-black text-white shadow-md shadow-[#0f6849]/20 hover:bg-[var(--brand-dark)] transition active:scale-95"
           >
-            <Check size={16} />
-            Terapkan Foto
+            <Check size={16} /> Terapkan Logo
           </button>
         </div>
       </div>

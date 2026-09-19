@@ -2,9 +2,10 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { Building2, Camera, Info, Plus, Trash2, Upload, X } from "lucide-react";
+import { Building2, Camera, Crop, Info, Plus, Trash2, Upload, X } from "lucide-react";
 import { createOrganization } from "@/app/(dashboard)/organisasi/actions";
 import { useToast } from "@/components/ui/toast-provider";
+import { ImageCropModal } from "@/components/settings/image-crop-modal";
 
 const roleOptions = [
   ["ketua_umum", "Ketua Umum"],
@@ -27,6 +28,8 @@ export function OrganizationForm() {
   const [role, setRole] = useState<(typeof roleOptions)[number][0]>("anggota");
   const [department, setDepartment] = useState("");
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [rawImageSrc, setRawImageSrc] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { showToast } = useToast();
   const needsDepartment =
@@ -48,38 +51,16 @@ export function OrganizationForm() {
 
     const reader = new FileReader();
     reader.onload = () => {
-      const img = new window.Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const maxDim = 200;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          }
-        } else {
-          if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL("image/webp", 0.85);
-          setLogoPreview(dataUrl);
-        }
-      };
-      img.src = reader.result as string;
+      setRawImageSrc(reader.result as string);
+      setIsCropModalOpen(true);
     };
     reader.readAsDataURL(file);
     e.target.value = "";
+  }
+
+  function handleSaveCroppedLogo(croppedDataUrl: string) {
+    setLogoPreview(croppedDataUrl);
+    showToast("Posisi dan potongan logo berhasil disesuaikan! ✨", "success");
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -157,7 +138,7 @@ export function OrganizationForm() {
                     <p className="text-[11px] text-[var(--muted)] mt-0.5 truncate">
                       PNG, JPG, atau WebP (maks. 5MB)
                     </p>
-                    <div className="mt-2 flex items-center gap-2">
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
@@ -167,13 +148,25 @@ export function OrganizationForm() {
                         {logoPreview ? "Ganti Logo" : "Pilih File"}
                       </button>
                       {logoPreview && (
-                        <button
-                          type="button"
-                          onClick={() => setLogoPreview(null)}
-                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 size={12} /> Hapus
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRawImageSrc(logoPreview);
+                              setIsCropModalOpen(true);
+                            }}
+                            className="inline-flex items-center gap-1 rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-xs font-bold text-[var(--brand-dark)] shadow-2xs hover:bg-[#eef7f2]"
+                          >
+                            <Crop size={12} className="text-[var(--brand)]" /> Sesuaikan
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setLogoPreview(null)}
+                            className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={12} /> Hapus
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
@@ -324,6 +317,19 @@ export function OrganizationForm() {
           </div>
         </div>
       )}
+
+      {/* ── Smart Logo Crop & Adjustment Modal ── */}
+      <ImageCropModal
+        isOpen={isCropModalOpen}
+        imageSrc={rawImageSrc}
+        onClose={() => setIsCropModalOpen(false)}
+        onSave={handleSaveCroppedLogo}
+        title="Sesuaikan Logo Organisasi"
+        subtitle="Atur orientasi (persegi/landscape/portrait), zoom, posisi, dan rotasi agar logo terlihat rapi."
+        shape="rounded-rect"
+        allowAspectRatioChange={true}
+        defaultAspectRatio="square"
+      />
     </>
   );
 }

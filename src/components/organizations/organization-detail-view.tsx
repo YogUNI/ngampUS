@@ -12,6 +12,7 @@ import {
   Camera,
   CheckCircle2,
   Clock,
+  Crop,
   ExternalLink,
   Layers,
   Link2,
@@ -30,6 +31,7 @@ import { PositionForm } from "@/components/organizations/position-form";
 import { ActivityForm } from "@/components/activities/activity-form";
 import { useToast } from "@/components/ui/toast-provider";
 import { extractOrgLogoAndNotes } from "@/lib/utils/org-logo";
+import { ImageCropModal } from "@/components/settings/image-crop-modal";
 import {
   createProgram,
   deletePosition,
@@ -130,11 +132,20 @@ export function OrganizationDetailView({
   const [logoUrl, setLogoUrl] = useState<string | null>(parsedOrg.logoUrl);
   const [editCatatan, setEditCatatan] = useState<string>(parsedOrg.notes);
   const [editLogoUrl, setEditLogoUrl] = useState<string | null>(parsedOrg.logoUrl);
+
+  // Smart Logo Crop states
+  const [rawCropImage, setRawCropImage] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const [cropTargetSource, setCropTargetSource] = useState<"quick_hero" | "edit_modal">("quick_hero");
+
   const editLogoInputRef = useRef<HTMLInputElement | null>(null);
   const heroLogoInputRef = useRef<HTMLInputElement | null>(null);
   const { showToast } = useToast();
 
-  function handleLogoFile(e: React.ChangeEvent<HTMLInputElement>, onDone: (dataUrl: string) => void) {
+  function handleFileSelectForCrop(
+    e: React.ChangeEvent<HTMLInputElement>,
+    source: "quick_hero" | "edit_modal"
+  ) {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -150,57 +161,36 @@ export function OrganizationDetailView({
 
     const reader = new FileReader();
     reader.onload = () => {
-      const img = new window.Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const maxDim = 200;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          }
-        } else {
-          if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL("image/webp", 0.85);
-          onDone(dataUrl);
-        }
-      };
-      img.src = reader.result as string;
+      setRawCropImage(reader.result as string);
+      setCropTargetSource(source);
+      setIsCropModalOpen(true);
     };
     reader.readAsDataURL(file);
     e.target.value = "";
   }
 
-  async function handleQuickLogoUpload(dataUrl: string) {
-    setLogoUrl(dataUrl);
-    setEditLogoUrl(dataUrl);
-    try {
-      const formData = new FormData();
-      formData.set("id", organization.id);
-      formData.set("nama_organisasi", organization.nama_organisasi);
-      formData.set("tipe", organization.tipe);
-      formData.set("periode_mulai", organization.periode_mulai || "");
-      formData.set("periode_selesai", organization.periode_selesai || "");
-      formData.set("catatan", editCatatan);
-      formData.set("logo_url", dataUrl);
-      await updateOrganization(formData);
-      showToast("Logo organisasi berhasil diperbarui! ✨", "success");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal mengunggah logo.";
-      showToast(msg, "error");
+  async function handleSaveCroppedLogo(croppedDataUrl: string) {
+    if (cropTargetSource === "quick_hero") {
+      setLogoUrl(croppedDataUrl);
+      setEditLogoUrl(croppedDataUrl);
+      try {
+        const formData = new FormData();
+        formData.set("id", organization.id);
+        formData.set("nama_organisasi", organization.nama_organisasi);
+        formData.set("tipe", organization.tipe);
+        formData.set("periode_mulai", organization.periode_mulai || "");
+        formData.set("periode_selesai", organization.periode_selesai || "");
+        formData.set("catatan", editCatatan);
+        formData.set("logo_url", croppedDataUrl);
+        await updateOrganization(formData);
+        showToast("Logo organisasi berhasil diperbarui & disimpan! ✨", "success");
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Gagal mengunggah logo.";
+        showToast(msg, "error");
+      }
+    } else {
+      setEditLogoUrl(croppedDataUrl);
+      showToast("Logo berhasil disesuaikan! Klik 'Simpan Perubahan' untuk memperbarui.", "success");
     }
   }
 
@@ -232,7 +222,7 @@ export function OrganizationDetailView({
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={(e) => handleLogoFile(e, handleQuickLogoUpload)}
+        onChange={(e) => handleFileSelectForCrop(e, "quick_hero")}
       />
 
       {/* ── Top Breadcrumb & Actions ── */}
@@ -270,17 +260,19 @@ export function OrganizationDetailView({
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-start gap-4">
             {/* Logo container with hover quick-upload button */}
-            <div className="group relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-white/10 shadow-inner flex items-center justify-center">
+            <div className="group relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-white shadow-inner flex items-center justify-center p-1">
               {logoUrl ? (
-                <Image
-                  src={logoUrl}
-                  alt={organization.nama_organisasi}
-                  fill
-                  className="object-cover transition duration-300 group-hover:scale-105"
-                  unoptimized
-                />
+                <div className="relative h-full w-full">
+                  <Image
+                    src={logoUrl}
+                    alt={organization.nama_organisasi}
+                    fill
+                    className="object-contain transition duration-300 group-hover:scale-105"
+                    unoptimized
+                  />
+                </div>
               ) : (
-                <div className="grid h-full w-full place-items-center bg-[#c8ef70]/20 text-[#c8ef70] ring-1 ring-[#c8ef70]/30">
+                <div className="grid h-full w-full place-items-center rounded-xl bg-[#c8ef70]/20 text-[#c8ef70] ring-1 ring-[#c8ef70]/30">
                   <Building2 size={32} strokeWidth={2.3} />
                 </div>
               )}
@@ -783,7 +775,7 @@ export function OrganizationDetailView({
                     <p className="text-xs font-bold text-[var(--ink)]">
                       {editLogoUrl ? "Logo terpasang" : "Belum ada logo"}
                     </p>
-                    <div className="mt-1.5 flex items-center gap-2">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
                       <button
                         type="button"
                         onClick={() => editLogoInputRef.current?.click()}
@@ -793,13 +785,26 @@ export function OrganizationDetailView({
                         {editLogoUrl ? "Ganti Logo" : "Upload Logo"}
                       </button>
                       {editLogoUrl && (
-                        <button
-                          type="button"
-                          onClick={() => setEditLogoUrl(null)}
-                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 size={12} /> Hapus Logo
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRawCropImage(editLogoUrl);
+                              setCropTargetSource("edit_modal");
+                              setIsCropModalOpen(true);
+                            }}
+                            className="inline-flex items-center gap-1 rounded-lg border border-[var(--line)] bg-white px-2.5 py-1 text-xs font-bold text-[var(--brand-dark)] shadow-2xs hover:bg-[#eef7f2]"
+                          >
+                            <Crop size={12} className="text-[var(--brand)]" /> Sesuaikan
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditLogoUrl(null)}
+                            className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={12} /> Hapus Logo
+                          </button>
+                        </>
                       )}
                     </div>
                   </div>
@@ -808,7 +813,7 @@ export function OrganizationDetailView({
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => handleLogoFile(e, (url) => setEditLogoUrl(url))}
+                    onChange={(e) => handleFileSelectForCrop(e, "edit_modal")}
                   />
                 </div>
               </div>
@@ -956,6 +961,19 @@ export function OrganizationDetailView({
           </div>
         </div>
       )}
+
+      {/* ── Smart Logo Crop & Adjustment Modal ── */}
+      <ImageCropModal
+        isOpen={isCropModalOpen}
+        imageSrc={rawCropImage}
+        onClose={() => setIsCropModalOpen(false)}
+        onSave={handleSaveCroppedLogo}
+        title="Sesuaikan Logo Organisasi"
+        subtitle="Atur orientasi (persegi/landscape/portrait), zoom, posisi, dan rotasi agar logo rapi dan presisi."
+        shape="rounded-rect"
+        allowAspectRatioChange={true}
+        defaultAspectRatio="square"
+      />
     </div>
   );
 }

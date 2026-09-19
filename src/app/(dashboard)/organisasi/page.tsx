@@ -35,15 +35,17 @@ export default async function OrganizationsPage() {
           <div>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#eef7f2] text-[var(--brand)] flex items-center justify-center">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#f9fbf9] text-[var(--brand)] flex items-center justify-center p-1">
                   {logoUrl ? (
-                    <Image
-                      src={logoUrl}
-                      alt={organization.nama_organisasi}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={logoUrl}
+                        alt={organization.nama_organisasi}
+                        fill
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
                   ) : (
                     <Building2 size={22}/>
                   )}
