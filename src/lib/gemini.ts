@@ -1,11 +1,16 @@
-// Helper utility for interacting with Google Gemini API (gemini-3.6-flash)
+export type GeminiPart =
+  | { text: string }
+  | { inlineData: { mimeType: string; data: string } };
 
 export type GeminiMessage = {
   role: "user" | "model";
-  parts: { text: string }[];
+  parts: GeminiPart[];
 };
 
-export async function callGemini(prompt: string, systemInstruction?: string): Promise<string> {
+export async function callGemini(
+  promptOrParts: string | GeminiPart[],
+  systemInstruction?: string
+): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY belum dikonfigurasi di file .env.local.");
@@ -13,11 +18,14 @@ export async function callGemini(prompt: string, systemInstruction?: string): Pr
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
+  const parts: GeminiPart[] =
+    typeof promptOrParts === "string" ? [{ text: promptOrParts }] : promptOrParts;
+
   const body: any = {
     contents: [
       {
         role: "user",
-        parts: [{ text: prompt }],
+        parts: parts,
       },
     ],
   };
@@ -78,3 +86,4 @@ export async function callGeminiChat(
   const data = await res.json();
   return data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
+

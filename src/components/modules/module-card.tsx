@@ -349,6 +349,7 @@ export function ModuleCard({
           moduleTopik={module.topik}
           pertemuan={module.pertemuan}
           courseName={courseName}
+          fileName={module.file_name}
           isOpen={isChatOpen}
           onClose={() => setIsChatOpen(false)}
         />

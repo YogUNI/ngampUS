@@ -4,13 +4,19 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
   Bot,
+  FileCheck,
   MessageSquare,
+  RotateCcw,
   Send,
   Sparkles,
   User,
   X,
 } from "lucide-react";
-import { sendModuleChatMessage, getModuleChatHistory } from "@/app/(dashboard)/modul/ai-actions";
+import {
+  sendModuleChatMessage,
+  getModuleChatHistory,
+  clearModuleChatHistory,
+} from "@/app/(dashboard)/modul/ai-actions";
 import { useToast } from "@/components/ui/toast-provider";
 
 export function ModuleChatModal({
@@ -18,6 +24,7 @@ export function ModuleChatModal({
   moduleTopik,
   pertemuan,
   courseName,
+  fileName,
   isOpen,
   onClose,
 }: {
@@ -25,15 +32,24 @@ export function ModuleChatModal({
   moduleTopik: string;
   pertemuan: number;
   courseName?: string;
+  fileName?: string | null;
   isOpen: boolean;
   onClose: () => void;
 }) {
   const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [fetchingHistory, setFetchingHistory] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { showToast } = useToast();
+
+  const initialGreeting = {
+    role: "assistant" as const,
+    content: `Halo! Saya asisten studi AI untuk mata kuliah ${courseName || "ini"}, pertemuan ke-${pertemuan} (${moduleTopik}).${
+      fileName ? ` Dokumen modul **"${fileName}"** telah dibaca.` : ""
+    } Ada bagian materi, konsep, atau rumus yang ingin kamu tanyakan?`,
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -43,23 +59,33 @@ export function ModuleChatModal({
           if (hist && hist.length > 0) {
             setMessages(hist.map((h: any) => ({ role: h.role, content: h.content })));
           } else {
-            // Initial greeting message
-            setMessages([
-              {
-                role: "assistant",
-                content: `Halo! Saya asisten studi AI untuk mata kuliah ${courseName || "ini"}, pertemuan ke-${pertemuan} (${moduleTopik}). Ada bagian konsep, rumus, atau materi yang ingin kamu tanyakan atau minta contoh penjelasannya?`,
-              },
-            ]);
+            setMessages([initialGreeting]);
           }
         })
         .catch(() => {})
         .finally(() => setFetchingHistory(false));
     }
-  }, [isOpen, moduleId, pertemuan, moduleTopik, courseName]);
+  }, [isOpen, moduleId, pertemuan, moduleTopik, courseName, fileName]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const handleClearHistory = async () => {
+    if (clearing || loading) return;
+    if (!confirm("Hapus seluruh percakapan obrolan AI untuk modul ini?")) return;
+
+    setClearing(true);
+    try {
+      await clearModuleChatHistory(moduleId);
+      setMessages([initialGreeting]);
+      showToast("Percakapan berhasil direset.", "success");
+    } catch {
+      showToast("Gagal mereset percakapan.", "error");
+    } finally {
+      setClearing(false);
+    }
+  };
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -104,19 +130,38 @@ export function ModuleChatModal({
                   Gemini 3.6
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--muted)] truncate max-w-xs sm:max-w-sm">
-                P{pertemuan}: {moduleTopik} {courseName ? `· ${courseName}` : ""}
-              </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <p className="text-[11px] text-[var(--muted)] truncate max-w-[200px] sm:max-w-xs">
+                  P{pertemuan}: {moduleTopik} {courseName ? `· ${courseName}` : ""}
+                </p>
+                {fileName && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800/60 px-1.5 py-0.5 text-[9.5px] font-bold text-sky-700 dark:text-sky-300 shrink-0" title={`RAG Grounded: Membaca dokumen ${fileName}`}>
+                    <FileCheck size={10} />
+                    Dokumen Siap
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-bg)] hover:text-[var(--ink)] transition"
-          >
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleClearHistory}
+              disabled={clearing || loading}
+              title="Reset / Bersihkan percakapan"
+              className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-bg)] hover:text-rose-500 transition disabled:opacity-50"
+            >
+              <RotateCcw size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-bg)] hover:text-[var(--ink)] transition"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Message Chat Body */}
