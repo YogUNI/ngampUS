@@ -309,6 +309,7 @@ export default async function DashboardPage() {
               href: "/organisasi",
               color: "bg-[#e8e1fa] text-[#5c3a9c]",
               borderHover: "hover:border-[#5c3a9c]/40",
+              tourId: "action-organisasi",
             },
             {
               icon: <BarChart3 size={20} strokeWidth={2.2} />,
@@ -317,11 +318,14 @@ export default async function DashboardPage() {
               href: "/rekap",
               color: "bg-[#fff0cc] text-[#8a5d00]",
               borderHover: "hover:border-[#8a5d00]/40",
+              tourId: "action-rekap",
             },
           ].map((action) => (
             <Link
               key={action.label}
               href={action.href}
+              prefetch={true}
+              data-tour={action.tourId}
               className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#d8e3da] bg-white p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 ${action.borderHover}`}
             >
               <div className="flex items-center justify-between">

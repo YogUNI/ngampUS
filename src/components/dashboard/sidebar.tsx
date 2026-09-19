@@ -321,7 +321,8 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setOpen(true)}
-            className="grid h-9 w-9 place-items-center rounded-xl border border-[var(--line)] bg-[#f7f8f5] text-[var(--ink)]"
+            data-tour="mobile-menu-trigger"
+            className="grid h-9 w-9 place-items-center rounded-xl border border-[var(--line)] bg-[#f7f8f5] text-[var(--ink)] active:scale-95 transition"
             aria-label="Buka menu"
           >
             <Menu size={18} />

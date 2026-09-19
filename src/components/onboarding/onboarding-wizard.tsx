@@ -30,9 +30,9 @@ const TOUR_STEPS: TourStep[] = [
     description: "Kegiatan organisasi, lomba, dan kepanitiaanmu otomatis dirangkum jadi portofolio siap ekspor ke CV!",
   },
   {
-    targetSelector: '[data-tour="nav-organisasi"], [data-tour="nav-semester"]',
-    title: "Organisasi & Semester 🏢",
-    description: "Kelola jabatan kepengurusan proker, serta pantau kalender akademik dan target IPK dengan mudah lewat menu utama.",
+    targetSelector: '[data-tour="action-organisasi"], [data-tour="nav-organisasi"], [data-tour="mobile-menu-trigger"]',
+    title: "Organisasi & Proker 🏢",
+    description: "Akses ruang organisasi untuk mengelola jabatan kepengurusan, memantau program kerja, dan tim divisimu.",
   },
 ];
 
