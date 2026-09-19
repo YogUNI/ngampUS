@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -10,29 +10,29 @@ import { SpotlightTour, TourStep } from "./spotlight-tour";
 
 const TOUR_STEPS: TourStep[] = [
   {
-    targetSelector: '[data-tour="nav-jadwal"]',
+    targetSelector: '[data-tour="mob-nav-jadwal"], [data-tour="nav-jadwal"]',
     title: "Jadwal Kuliah Mingguan 📅",
     description: "Atur jadwal kuliah, ruangan, dosen, link Zoom, dan materi kelas di sini. Mata kuliah yang kamu isi di sini otomatis bisa dikaitkan ke tugas kuliah!",
   },
   {
-    targetSelector: '[data-tour="hero-add-kegiatan"]',
+    targetSelector: '[data-tour="hero-add-kegiatan"], [data-tour="mob-nav-kegiatan"], [data-tour="nav-kegiatan"]',
     title: "Catat Tugas & Deadline 📝",
     description: "Klik tombol ini kapan saja untuk mencatat tugas, reminder ujian, atau agenda kegiatan kampus lainnya agar tidak terlewat.",
   },
   {
-    targetSelector: '[data-tour="nav-semester"]',
-    title: "Konteks Semester 🎓",
-    description: "Lihat kalender akademik, pantau target IPK per semester, dan beralih antar semester aktif dengan mudah.",
+    targetSelector: '[data-tour="mob-nav-modul"], [data-tour="nav-modul"]',
+    title: "Modul & Catatan Matkul 📂",
+    description: "Unggah materi kuliah, rangkum otomatis, atau gunakan Tanya AI & kuis interaktif untuk belajar lebih cepat.",
   },
   {
-    targetSelector: '[data-tour="nav-organisasi"]',
-    title: "Organisasi & Proker 🏢",
-    description: "Kelola jabatan di BEM, Himpunan, atau UKM serta pantau program kerja kepanitiaanmu.",
-  },
-  {
-    targetSelector: '[data-tour="nav-rekap"]',
+    targetSelector: '[data-tour="mob-nav-rekap"], [data-tour="nav-rekap"]',
     title: "Rekap & Portofolio CV 🏆",
     description: "Kegiatan organisasi, lomba, dan kepanitiaanmu otomatis dirangkum jadi portofolio siap ekspor ke CV!",
+  },
+  {
+    targetSelector: '[data-tour="nav-organisasi"], [data-tour="nav-semester"]',
+    title: "Organisasi & Semester 🏢",
+    description: "Kelola jabatan kepengurusan proker, serta pantau kalender akademik dan target IPK dengan mudah lewat menu utama.",
   },
 ];
 

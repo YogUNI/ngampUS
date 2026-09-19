@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
@@ -34,10 +34,16 @@ export function SpotlightTour({
 
   const updateTargetRect = useCallback(() => {
     if (!currentStep) return;
-    const el = document.querySelector(currentStep.targetSelector);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    // Find all matching elements and pick the first one that is actually visible
+    const elements = Array.from(document.querySelectorAll(currentStep.targetSelector));
+    const visibleEl = elements.find((el) => {
       const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && window.getComputedStyle(el).display !== "none";
+    }) as HTMLElement | undefined;
+
+    if (visibleEl) {
+      visibleEl.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+      const rect = visibleEl.getBoundingClientRect();
       setTargetRect(rect);
     } else {
       setTargetRect(null);
@@ -91,19 +97,23 @@ export function SpotlightTour({
 
   if (targetRect) {
     const margin = 14;
-    const tooltipWidth = 320;
+    const tooltipWidth = Math.min(320, window.innerWidth - 32);
 
-    let top = targetRect.bottom + margin;
+    // If target is in the lower 45% of the screen (like mobile bottom bar), render tooltip above it!
+    const isTargetNearBottom = targetRect.bottom > window.innerHeight * 0.55;
+
+    let top: number;
+    if (isTargetNearBottom && targetRect.top > 200) {
+      top = targetRect.top - 210 - margin;
+    } else {
+      top = targetRect.bottom + margin;
+    }
+
     let left = targetRect.left;
-
     if (left + tooltipWidth > window.innerWidth - 16) {
       left = window.innerWidth - tooltipWidth - 16;
     }
     if (left < 16) left = 16;
-
-    if (top + 190 > window.innerHeight && targetRect.top > 200) {
-      top = targetRect.top - 190 - margin;
-    }
 
     tooltipStyle = {
       ...tooltipStyle,

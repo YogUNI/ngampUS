@@ -464,34 +464,45 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOBILE BOTTOM NAVIGATION (Fixed 5 tabs for fast thumb navigation)
+// MOBILE BOTTOM NAVIGATION (App-like 5 items with central CTA and tour tags)
 // ─────────────────────────────────────────────────────────────────────────────
+const mobileTabs = [
+  { href: "/dashboard",   label: "Beranda",  icon: LayoutDashboard, tourId: "mob-nav-dashboard" },
+  { href: "/jadwal",      label: "Jadwal",   icon: BookOpen,        tourId: "mob-nav-jadwal"    },
+  { href: "/kegiatan",    label: "Kegiatan", icon: CalendarDays,    tourId: "mob-nav-kegiatan"  },
+  { href: "/modul",       label: "Modul",    icon: FolderOpen,      tourId: "mob-nav-modul"     },
+  { href: "/rekap",       label: "Rekap",    icon: BarChart3,       tourId: "mob-nav-rekap"     },
+];
+
 export function MobileBottomNav() {
   const pathname = usePathname();
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-[#d8e2da] bg-white/95 px-2 py-2 backdrop-blur-md md:hidden"
-      style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+      className="dashboard-mobile-nav fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-[#d8e2da] bg-white/95 px-2 py-1.5 backdrop-blur-lg md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+      style={{ paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))" }}
     >
-      {nav.map(({ href, label, icon: Icon }) => {
+      {mobileTabs.map(({ href, label, icon: Icon, tourId }) => {
         const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
         return (
           <Link
             key={href}
             href={href}
-            className={`flex flex-1 flex-col items-center gap-0.5 py-1 text-[10px] font-extrabold transition active:scale-95 ${
-              active ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+            data-tour={tourId}
+            className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-extrabold transition active:scale-90 select-none ${
+              active ? "text-[#0f6849]" : "text-[var(--muted)] opacity-75 hover:opacity-100"
             }`}
           >
             <span
-              className={`grid h-7 w-7 place-items-center rounded-xl transition ${
-                active ? "bg-[#dff3e5] text-[#0f6849]" : ""
+              className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
+                active ? "bg-[#dff3e5] text-[#0f6849] shadow-xs scale-105" : "text-[#50705e]"
               }`}
             >
-              <Icon size={17} strokeWidth={active ? 2.5 : 2} />
+              <Icon size={18} strokeWidth={active ? 2.5 : 2} />
             </span>
-            <span className="truncate">{label}</span>
+            <span className={`truncate text-[10px] leading-tight ${active ? "font-black text-[#0f6849]" : "font-semibold"}`}>
+              {label}
+            </span>
           </Link>
         );
       })}

@@ -1046,3 +1046,22 @@ html.dark:has(.landing-page) body {
 .dark .landing-page .border-\[\#d8e3da\] {
   border-color: #d8e3da !important;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MOBILE BOTTOM NAVIGATION DARK MODE
+   ───────────────────────────────────────────────────────────────────────────── */
+.dark .dashboard-mobile-nav {
+  background-color: rgba(9, 20, 14, 0.95) !important;
+  border-color: #183124 !important;
+}
+.dark .dashboard-mobile-nav [data-tour] span.bg-\[\#dff3e5\] {
+  background-color: #123422 !important;
+  color: #22c55e !important;
+}
+.dark .dashboard-mobile-nav .text-\[\#0f6849\] {
+  color: #22c55e !important;
+}
+.dark .dashboard-mobile-nav .text-\[\#50705e\] {
+  color: #8ca393 !important;
+}
+

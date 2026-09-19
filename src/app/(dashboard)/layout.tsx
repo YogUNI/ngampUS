@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { MobileTopbar, Sidebar } from "@/components/dashboard/sidebar";
+import { MobileTopbar, Sidebar, MobileBottomNav } from "@/components/dashboard/sidebar";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -21,8 +21,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="hidden md:block">
           <Sidebar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName}/>
         </div>
-        <section className="dashboard-content min-w-0 flex-1 overflow-x-hidden pb-20 md:pb-0">{children}</section>
+        <section className="dashboard-content min-w-0 flex-1 overflow-x-hidden pb-24 md:pb-0">{children}</section>
       </div>
+      <MobileBottomNav />
     </main>
   );
 }
