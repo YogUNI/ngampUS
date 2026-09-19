@@ -12,8 +12,6 @@ const moduleSchema = z.object({
   link_modul: z
     .string()
     .trim()
-    .url("Link modul harus berupa URL yang valid (contoh: https://drive.google.com/...)")
-    .regex(/^https?:\/\//i, "Link modul harus diawali http:// atau https://.")
     .max(800)
     .or(z.literal(""))
     .nullable()
@@ -21,8 +19,6 @@ const moduleSchema = z.object({
   link_tugas: z
     .string()
     .trim()
-    .url("Link tugas harus berupa URL yang valid.")
-    .regex(/^https?:\/\//i, "Link tugas harus diawali http:// atau https://.")
     .max(800)
     .or(z.literal(""))
     .nullable()
@@ -35,6 +31,10 @@ const moduleSchema = z.object({
     .nullable()
     .optional(),
   catatan: z.string().trim().max(2000).or(z.literal("")).nullable().optional(),
+  file_url: z.string().trim().or(z.literal("")).nullable().optional(),
+  file_name: z.string().trim().max(255).or(z.literal("")).nullable().optional(),
+  file_size: z.coerce.number().int().nonnegative().nullable().optional(),
+  file_type: z.string().trim().max(100).or(z.literal("")).nullable().optional(),
 });
 
 async function getSignedInUser() {
@@ -63,6 +63,10 @@ function parseModuleFormData(formData: FormData) {
     status: formData.get("status") || "belum_baca",
     tanggal_pertemuan: formData.get("tanggal_pertemuan") || null,
     catatan: formData.get("catatan") || null,
+    file_url: formData.get("file_url") || null,
+    file_name: formData.get("file_name") || null,
+    file_size: formData.get("file_size") ? Number(formData.get("file_size")) : null,
+    file_type: formData.get("file_type") || null,
   });
 }
 
@@ -106,6 +110,26 @@ export async function updateModule(formData: FormData) {
 export async function deleteModule(formData: FormData) {
   const id = z.string().uuid().parse(formData.get("id"));
   const { supabase, user } = await getSignedInUser();
+
+  // Check if there is an uploaded file to remove from storage
+  const { data: moduleData } = await supabase
+    .from("course_modules")
+    .select("file_url")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (moduleData?.file_url) {
+    try {
+      const urlParts = moduleData.file_url.split("/course-materials/");
+      if (urlParts.length > 1) {
+        const filePath = decodeURIComponent(urlParts[1]);
+        await supabase.storage.from("course-materials").remove([filePath]);
+      }
+    } catch {
+      // Ignore cleanup error, proceed to delete record
+    }
+  }
 
   const { error } = await supabase
     .from("course_modules")

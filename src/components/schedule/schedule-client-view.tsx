@@ -372,15 +372,27 @@ export function ScheduleClientView({
                                     </div>
 
                                     <div className="flex items-center gap-1 shrink-0">
+                                      {m.file_url && (
+                                        <a
+                                          href={m.file_url}
+                                          download={m.file_name || `modul-pertemuan-${m.pertemuan}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="rounded-md bg-[var(--brand)] px-1.5 py-0.5 text-[10px] font-bold text-white shadow-2xs hover:bg-[var(--brand-dark)] transition"
+                                          title={`Unduh file ${m.file_name || ""}`}
+                                        >
+                                          Unduh File
+                                        </a>
+                                      )}
                                       {m.link_modul && (
                                         <a
                                           href={m.link_modul}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="rounded-md bg-[#103626] px-1.5 py-0.5 text-[10px] font-bold text-[#c8ef70]"
-                                          title="Buka Slide/Drive"
+                                          title="Buka Link Eksternal"
                                         >
-                                          Modul
+                                          Link
                                         </a>
                                       )}
                                     </div>

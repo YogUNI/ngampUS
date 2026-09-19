@@ -7,9 +7,13 @@ import {
   CheckCircle2,
   Circle,
   Clock,
+  Download,
   ExternalLink,
+  FileCheck,
+  FileSpreadsheet,
   FileText,
   Link2,
+  Paperclip,
   Pencil,
   Sparkles,
 } from "lucide-react";
@@ -39,6 +43,25 @@ const STATUS_CONFIG = {
   },
 };
 
+function formatBytes(bytes?: number | null, decimals = 1) {
+  if (!bytes) return "";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+}
+
+function getFileBadge(fileName?: string | null) {
+  if (!fileName) return { label: "FILE", color: "bg-gray-100 text-gray-700" };
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  if (ext === "pdf") return { label: "PDF", color: "bg-red-50 text-red-700 border-red-200" };
+  if (["doc", "docx"].includes(ext || "")) return { label: "WORD", color: "bg-blue-50 text-blue-700 border-blue-200" };
+  if (["ppt", "pptx"].includes(ext || "")) return { label: "PPT", color: "bg-orange-50 text-orange-700 border-orange-200" };
+  if (["xls", "xlsx"].includes(ext || "")) return { label: "EXCEL", color: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+  return { label: ext?.toUpperCase() || "DOC", color: "bg-gray-50 text-gray-700 border-gray-200" };
+}
+
 export function ModuleCard({
   module,
   courses,
@@ -56,6 +79,7 @@ export function ModuleCard({
 
   const cfg = STATUS_CONFIG[module.status] || STATUS_CONFIG.belum_baca;
   const StatusIcon = cfg.icon;
+  const fileBadge = getFileBadge(module.file_name);
 
   async function handleCycleStatus() {
     if (isUpdatingStatus) return;
@@ -115,6 +139,38 @@ export function ModuleCard({
             </p>
           )}
 
+          {/* Direct File Document Badge / Download Box */}
+          {module.file_url && module.file_name && (
+            <div className="mt-3 flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] p-2.5 transition hover:bg-[var(--card-bg)]">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className={`rounded-md border px-1.5 py-0.5 text-[9px] font-black ${fileBadge.color}`}>
+                  {fileBadge.label}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-bold text-[var(--ink)]">
+                    {module.file_name}
+                  </p>
+                  {module.file_size ? (
+                    <p className="text-[10px] text-[var(--muted)] font-medium">
+                      {formatBytes(module.file_size)}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+
+              <a
+                href={module.file_url}
+                download={module.file_name}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[var(--brand)] px-2.5 py-1 text-[11px] font-black text-white shadow-2xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+                title="Unduh file dokumen"
+              >
+                <Download size={12} /> Unduh
+              </a>
+            </div>
+          )}
+
           {/* Catatan / Resume */}
           {module.catatan && (
             <div className="mt-3 rounded-xl border border-dashed border-[var(--line)] bg-[var(--card-subtle)] p-2.5 text-[11px] text-[var(--ink)]">
@@ -148,8 +204,9 @@ export function ModuleCard({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-2.5 py-1.5 text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
+                title="Buka tautan eksternal"
               >
-                <Link2 size={12} /> Buka Modul
+                <Link2 size={12} /> Link
               </a>
             )}
 
