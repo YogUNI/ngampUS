@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   BookOpen,
+  Bot,
   Calendar,
   CheckCircle2,
   Circle,
@@ -12,15 +13,21 @@ import {
   FileCheck,
   FileSpreadsheet,
   FileText,
+  HelpCircle,
   Link2,
+  MessageSquare,
   Paperclip,
   Pencil,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 import { CourseModuleData, CourseOption, ModuleFormModal } from "./module-form-modal";
 import { deleteModule, updateModuleStatus } from "@/app/(dashboard)/modul/actions";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
 import { useToast } from "@/components/ui/toast-provider";
+import { ModuleSummaryModal } from "./module-summary-modal";
+import { ModuleQuizModal } from "./module-quiz-modal";
+import { ModuleChatModal } from "./module-chat-modal";
 
 const STATUS_CONFIG = {
   belum_baca: {
@@ -68,12 +75,20 @@ export function ModuleCard({
   courseName,
   courseColor,
 }: {
-  module: CourseModuleData & { id: string };
+  module: CourseModuleData & {
+    id: string;
+    ai_summary?: string | null;
+    ai_key_points?: string[] | null;
+    ai_exam_tips?: string[] | null;
+  };
   courses: CourseOption[];
   courseName?: string;
   courseColor?: string | null;
 }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const { showToast } = useToast();
 
@@ -180,6 +195,55 @@ export function ModuleCard({
               <p className="line-clamp-3 whitespace-pre-wrap">{module.catatan}</p>
             </div>
           )}
+
+          {/* ── AI STUDY COMPANION TOOLBAR ── */}
+          <div className="mt-3.5 rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-2">
+            <div className="flex items-center justify-between px-1 mb-1.5">
+              <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[var(--brand)]">
+                <Sparkles size={12} /> AI Study Companion
+              </span>
+              {module.ai_summary && (
+                <span className="text-[9.5px] font-bold text-emerald-600">
+                  ✓ Rangkuman Siap
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-3 gap-1.5">
+              {/* 1. Rangkuman AI */}
+              <button
+                type="button"
+                onClick={() => setIsSummaryOpen(true)}
+                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-2 text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs"
+                title="Rangkum materi dengan AI"
+              >
+                <BookOpen size={12} className="text-[var(--brand)]" />
+                <span>Rangkuman</span>
+              </button>
+
+              {/* 2. Tanya AI */}
+              <button
+                type="button"
+                onClick={() => setIsChatOpen(true)}
+                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-2 text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs"
+                title="Tanya AI seputar materi pertemuan ini"
+              >
+                <Bot size={12} className="text-[var(--brand)]" />
+                <span>Tanya AI</span>
+              </button>
+
+              {/* 3. Kuis AI */}
+              <button
+                type="button"
+                onClick={() => setIsQuizOpen(true)}
+                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#103626] py-1.5 px-2 text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
+                title="Uji pemahaman dengan Kuis AI"
+              >
+                <Trophy size={12} />
+                <span>Kuis Modul</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Bottom meta & links */}
@@ -248,6 +312,45 @@ export function ModuleCard({
           courses={courses}
           isOpen={isEditing}
           onClose={() => setIsEditing(false)}
+        />
+      )}
+
+      {/* AI Summary Modal */}
+      {isSummaryOpen && (
+        <ModuleSummaryModal
+          moduleId={module.id}
+          moduleTopik={module.topik}
+          pertemuan={module.pertemuan}
+          courseName={courseName}
+          initialSummary={module.ai_summary}
+          initialKeyPoints={module.ai_key_points}
+          initialExamTips={module.ai_exam_tips}
+          isOpen={isSummaryOpen}
+          onClose={() => setIsSummaryOpen(false)}
+        />
+      )}
+
+      {/* AI Quiz Modal */}
+      {isQuizOpen && (
+        <ModuleQuizModal
+          moduleId={module.id}
+          moduleTopik={module.topik}
+          pertemuan={module.pertemuan}
+          courseName={courseName}
+          isOpen={isQuizOpen}
+          onClose={() => setIsQuizOpen(false)}
+        />
+      )}
+
+      {/* AI Chat Modal */}
+      {isChatOpen && (
+        <ModuleChatModal
+          moduleId={module.id}
+          moduleTopik={module.topik}
+          pertemuan={module.pertemuan}
+          courseName={courseName}
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
         />
       )}
     </>
