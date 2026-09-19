@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import {
   ArrowUpRight, BarChart3, BookOpen, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
-  CircleHelp, GraduationCap, LayoutDashboard, LogOut, Menu, Plus,
+  CircleHelp, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Menu, Plus,
   Settings, Sparkles, UsersRound, X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ const nav = [
   { href: "/dashboard",   label: "Dashboard",     note: "Peta fokus",       icon: LayoutDashboard },
   { href: "/kegiatan",    label: "Kegiatan",      note: "Semua komitmen",    icon: CalendarDays    },
   { href: "/jadwal",      label: "Jadwal Kuliah", note: "Kelas mingguan",   icon: BookOpen        },
+  { href: "/modul",       label: "Modul Kuliah",  note: "Materi & arsip",   icon: FolderOpen      },
   { href: "/organisasi",  label: "Organisasi",    note: "Ruang kontribusi",  icon: UsersRound      },
   { href: "/semester",    label: "Semester",      note: "Konteks akademik",  icon: GraduationCap   },
   { href: "/rekap",       label: "Rekap",         note: "Jejak progres",     icon: BarChart3       },

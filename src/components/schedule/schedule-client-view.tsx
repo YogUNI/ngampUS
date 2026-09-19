@@ -14,12 +14,15 @@ import {
   User,
   Video,
   FileText,
+  FolderOpen,
 } from "lucide-react";
+import Link from "next/link";
 import { CourseData, CourseFormModal } from "./course-form-modal";
 import { CourseCalendar } from "./course-calendar";
 import { generateIcsCalendar } from "@/lib/calendar-utils";
 import { deleteCourse } from "@/app/(dashboard)/jadwal/actions";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
+import { CourseModuleData, ModuleFormModal } from "@/components/modules/module-form-modal";
 
 const DAYS = [
   { value: 1, name: "Senin" },
@@ -32,12 +35,14 @@ const DAYS = [
 
 export function ScheduleClientView({
   courses,
+  modules = [],
   semesters,
   activeSemesterId,
   semesterDates,
   semesterName,
 }: {
   courses: (CourseData & { id: string })[];
+  modules?: (CourseModuleData & { id: string })[];
   semesters: { id: string; nama_semester: string; is_active: boolean }[];
   activeSemesterId?: string;
   semesterDates?: { tanggal_mulai: string; tanggal_selesai: string };
@@ -45,6 +50,14 @@ export function ScheduleClientView({
 }) {
   const [viewMode, setViewMode] = useState<"list" | "grid" | "calendar">("list");
   const [editingCourse, setEditingCourse] = useState<CourseData | null>(null);
+  const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({});
+
+  const toggleCourseModules = (courseId: string) => {
+    setExpandedModules((prev) => ({
+      ...prev,
+      [courseId]: !prev[courseId],
+    }));
+  };
 
   // Group courses by day
   const coursesByDay = DAYS.map((d) => ({
@@ -253,17 +266,17 @@ export function ScheduleClientView({
                       </div>
 
                       {/* Bottom quick links & action buttons */}
-                      <div className="mt-4 flex items-center justify-between border-t border-[#f0f4f1] pt-3">
-                        <div className="flex items-center gap-2">
+                      <div className="mt-4 flex flex-wrap items-center justify-between border-t border-[#f0f4f1] pt-3 gap-2">
+                        <div className="flex flex-wrap items-center gap-1.5">
                           {course.link_pertemuan && (
                             <a
                               href={course.link_pertemuan}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 rounded-lg bg-[#eef2ff] px-2.5 py-1 text-[11px] font-bold text-[#4338ca] hover:bg-[#e0e7ff] transition"
+                              className="inline-flex items-center gap-1 rounded-lg bg-[#eef2ff] px-2 py-1 text-[11px] font-bold text-[#4338ca] hover:bg-[#e0e7ff] transition"
                               title="Masuk Kelas Virtual"
                             >
-                              <Video size={12} /> Masuk Meet
+                              <Video size={12} /> Meet
                             </a>
                           )}
                           {course.link_materi && (
@@ -271,12 +284,27 @@ export function ScheduleClientView({
                               href={course.link_materi}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 rounded-lg bg-[#f0fdf4] px-2.5 py-1 text-[11px] font-bold text-[#15803d] hover:bg-[#dcfce7] transition"
+                              className="inline-flex items-center gap-1 rounded-lg bg-[#f0fdf4] px-2 py-1 text-[11px] font-bold text-[#15803d] hover:bg-[#dcfce7] transition"
                               title="Buka Materi Kuliah"
                             >
                               <FileText size={12} /> Materi
                             </a>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => toggleCourseModules(course.id)}
+                            className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold transition ${
+                              expandedModules[course.id]
+                                ? "bg-[var(--brand)] text-white"
+                                : "bg-[var(--card-subtle)] text-[var(--brand)] border border-[var(--line)] hover:bg-[#dff3e5]"
+                            }`}
+                            title="Tampilkan modul pertemuan"
+                          >
+                            <FolderOpen size={12} />
+                            <span>
+                              {modules.filter((m) => m.course_id === course.id).length} Modul
+                            </span>
+                          </button>
                         </div>
 
                         <div className="flex items-center gap-1">
@@ -294,6 +322,74 @@ export function ScheduleClientView({
                           />
                         </div>
                       </div>
+
+                      {/* Expandable Course Modules Drawer */}
+                      {expandedModules[course.id] && (
+                        <div className="mt-3 rounded-xl border border-dashed border-[var(--line)] bg-[var(--card-subtle)] p-3 text-left animate-in fade-in duration-150">
+                          <div className="flex items-center justify-between pb-2 border-b border-[var(--line)]">
+                            <span className="text-[11px] font-black uppercase tracking-wider text-[var(--brand)]">
+                              Modul Perkuliahan
+                            </span>
+                            <Link
+                              href="/modul"
+                              className="text-[10px] font-bold text-[var(--brand)] hover:underline"
+                            >
+                              Buka Semua Modul →
+                            </Link>
+                          </div>
+
+                          {modules.filter((m) => m.course_id === course.id).length === 0 ? (
+                            <div className="py-3 text-center">
+                              <p className="text-[11px] text-[var(--muted)]">
+                                Belum ada modul yang dicatat untuk matkul ini.
+                              </p>
+                              <Link
+                                href="/modul"
+                                className="mt-1.5 inline-block text-[11px] font-black text-[var(--brand)] hover:underline"
+                              >
+                                + Catat Modul di Menu Modul Kuliah
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="mt-2 space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                              {modules
+                                .filter((m) => m.course_id === course.id)
+                                .sort((a, b) => a.pertemuan - b.pertemuan)
+                                .map((m) => (
+                                  <div
+                                    key={m.id}
+                                    className="flex items-center justify-between gap-2 rounded-lg border border-[var(--line)] bg-[var(--card-bg)] px-2.5 py-1.5 text-xs"
+                                  >
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="shrink-0 font-black text-[10px] text-[var(--brand)]">
+                                          P{m.pertemuan}:
+                                        </span>
+                                        <span className="truncate font-semibold text-[11px] text-[var(--ink)]">
+                                          {m.topik}
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-1 shrink-0">
+                                      {m.link_modul && (
+                                        <a
+                                          href={m.link_modul}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="rounded-md bg-[#103626] px-1.5 py-0.5 text-[10px] font-bold text-[#c8ef70]"
+                                          title="Buka Slide/Drive"
+                                        >
+                                          Modul
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
