@@ -1,230 +1,72 @@
-import Link from "next/link";
-import { ArrowLeft, BriefcaseBusiness, Building2, Calendar, CalendarDays, ListChecks, PencilLine, Plus, UsersRound } from "lucide-react";
 import { notFound } from "next/navigation";
 import { z } from "zod";
-import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
-import { PositionForm } from "@/components/organizations/position-form";
-import { ActivityForm } from "@/components/activities/activity-form";
 import { createClient } from "@/lib/supabase/server";
-import { createProgram, deletePosition, deleteProgram, updateOrganization, updateProgram } from "../actions";
+import { OrganizationDetailView } from "@/components/organizations/organization-detail-view";
 
-const dateFormatter = new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" });
-
-function dateRange(start: string | null, end: string | null) {
-  if (!start && !end) return "Periode belum diisi";
-  const startLabel = start ? dateFormatter.format(new Date(`${start}T00:00:00`)) : "—";
-  const endLabel = end ? dateFormatter.format(new Date(`${end}T00:00:00`)) : "Sekarang";
-  return `${startLabel} — ${endLabel}`;
-}
-
-export default async function OrganizationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function OrganizationDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   if (!z.string().uuid().safeParse(id).success) notFound();
+
   const supabase = await createClient();
   const [
     { data: organization },
     { data: positions },
     { data: programs },
-    { count: activityCount },
     { data: orgActivities },
     { data: semesters },
     { data: allOrgs },
   ] = await Promise.all([
     supabase.from("organizations").select("*").eq("id", id).maybeSingle(),
-    supabase.from("organization_positions").select("*").eq("organization_id", id).order("mulai", { ascending: false }),
-    supabase.from("programs").select("*").eq("organization_id", id).order("created_at", { ascending: false }),
-    supabase.from("activities").select("*", { count: "exact", head: true }).eq("organization_id", id),
-    supabase.from("activities").select("id,judul,status,deadline,program_id,prioritas").eq("organization_id", id),
-    supabase.from("semesters").select("id,nama_semester,is_active").order("tanggal_mulai", { ascending: false }),
+    supabase
+      .from("organization_positions")
+      .select("*")
+      .eq("organization_id", id)
+      .order("mulai", { ascending: false }),
+    supabase
+      .from("programs")
+      .select("*")
+      .eq("organization_id", id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("activities")
+      .select("id,judul,status,deadline,program_id,prioritas")
+      .eq("organization_id", id),
+    supabase
+      .from("semesters")
+      .select("id,nama_semester,is_active")
+      .order("tanggal_mulai", { ascending: false }),
     supabase.from("organizations").select("id,nama_organisasi").order("nama_organisasi"),
   ]);
+
   if (!organization) notFound();
 
-  // Mapping activities count by program_id
-  type OrgActivity = NonNullable<typeof orgActivities>[number];
-  const activitiesByProgram: Record<string, OrgActivity[]> = {};
-  (orgActivities || []).forEach((act) => {
-    if (act.program_id) {
-      if (!activitiesByProgram[act.program_id]) {
-        activitiesByProgram[act.program_id] = [];
-      }
-      activitiesByProgram[act.program_id]!.push(act);
-    }
-  });
-
-  const mappedSemesters = (semesters || []).map((s) => ({ id: s.id, name: s.nama_semester, active: s.is_active }));
+  const mappedSemesters = (semesters || []).map((s) => ({
+    id: s.id,
+    name: s.nama_semester,
+    active: s.is_active,
+  }));
   const mappedOrgs = (allOrgs || []).map((o) => ({ id: o.id, name: o.nama_organisasi }));
-  const mappedPrograms = (programs || []).map((p) => ({ id: p.id, name: p.nama_proker, organization_id: id }));
+  const mappedPrograms = (programs || []).map((p) => ({
+    id: p.id,
+    name: p.nama_proker,
+    organization_id: id,
+  }));
 
-  return <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
-    <Link href="/organisasi" className="inline-flex items-center gap-2 text-sm font-bold text-[var(--muted)] transition hover:text-[var(--brand)]"><ArrowLeft size={16}/> Semua organisasi</Link>
-    <header className="mt-5 rounded-3xl bg-[#173f32] p-6 text-white sm:p-8"><div className="flex flex-wrap items-start justify-between gap-5"><div className="flex items-start gap-4"><div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/15 text-[#c8ef70]"><Building2 size={25}/></div><div><p className="text-xs font-bold uppercase tracking-[.14em] text-[#b4d8c1]">{organization.tipe}</p><h1 className="font-display mt-1 text-3xl font-extrabold tracking-[-.04em] sm:text-4xl">{organization.nama_organisasi}</h1><p className="mt-2 text-sm text-white/70">{dateRange(organization.periode_mulai, organization.periode_selesai)}</p></div></div><Link href={`/kegiatan?organization_id=${organization.id}`} className="rounded-xl bg-white/10 px-4 py-2.5 text-sm font-bold text-white hover:bg-white/20">{activityCount || 0} kegiatan terkait</Link></div><p className="mt-6 max-w-3xl whitespace-pre-wrap text-sm leading-6 text-white/80">{organization.catatan || "Belum ada catatan untuk organisasi ini."}</p></header>
-
-    <section className="mt-6 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
-      <div className="space-y-6">
-        <details className="group rounded-2xl border border-[var(--line)] bg-white p-5 transition hover:border-[#b9ddc6]">
-          <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-extrabold text-[var(--ink)]">
-            <span className="flex items-center gap-2">
-              <PencilLine size={18} className="text-[var(--brand)]"/> Ubah informasi organisasi
-            </span>
-            <span className="text-xs font-bold text-[var(--muted)] group-open:rotate-180 transition-transform duration-200">▼</span>
-          </summary>
-          <form action={updateOrganization} className="mt-5 space-y-3 border-t border-[var(--line)] pt-4 [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:px-3 [&_input]:py-2.5 [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2.5 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:px-3 [&_textarea]:py-2.5">
-            <input type="hidden" name="id" value={organization.id}/>
-            <label className="block text-sm font-bold">Nama organisasi<input required name="nama_organisasi" defaultValue={organization.nama_organisasi} className="mt-1.5"/></label>
-            <label className="block text-sm font-bold">Tipe<select name="tipe" defaultValue={organization.tipe} className="mt-1.5"><option value="organisasi">Organisasi</option><option value="ukm">UKM</option><option value="ukk">UKK</option><option value="kepanitiaan">Kepanitiaan</option><option value="lainnya">Lainnya</option></select></label>
-            <div className="grid grid-cols-2 gap-3"><label className="block text-sm font-bold">Mulai<input type="date" name="periode_mulai" defaultValue={organization.periode_mulai || ""} className="mt-1.5"/></label><label className="block text-sm font-bold">Selesai<input type="date" name="periode_selesai" defaultValue={organization.periode_selesai || ""} className="mt-1.5"/></label></div>
-            <label className="block text-sm font-bold">Catatan<textarea name="catatan" rows={4} defaultValue={organization.catatan || ""} className="mt-1.5"/></label>
-            <button className="rounded-xl bg-[var(--brand)] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]">Simpan perubahan</button>
-          </form>
-        </details>
-
-        <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <UsersRound className="text-[var(--brand)]" size={19}/>
-              <div>
-                <h2 className="font-display text-xl font-extrabold">Jabatan & divisi</h2>
-                <p className="text-sm text-[var(--muted)]">Simpan riwayat peranmu di organisasi ini.</p>
-              </div>
-            </div>
-            <PositionForm organizationId={organization.id}/>
-          </div>
-          <div className="mt-5 space-y-2">
-            {positions?.length ? positions.map((position) => (
-              <article key={position.id} className="flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[#fbfcfb] p-3 transition hover:border-[#b9ddc6]">
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-bold">{position.jabatan}</h3>
-                  <p className="mt-0.5 text-xs text-[var(--muted)]">{position.divisi || "Tanpa divisi"} · {dateRange(position.mulai, position.selesai)}</p>
-                </div>
-                <PositionForm organizationId={organization.id} position={position}/>
-                <ConfirmDeleteForm action={deletePosition} id={position.id} itemName={`jabatan “${position.jabatan}”`} fields={{ organization_id: organization.id }}/>
-              </article>
-            )) : <p className="rounded-xl bg-[#f7f8f5] px-4 py-6 text-center text-sm text-[var(--muted)]">Belum ada jabatan yang dicatat.</p>}
-          </div>
-        </section>
-      </div>
-
-      <section className="rounded-2xl border border-[var(--line)] bg-white p-5">
-        <div className="flex items-center gap-2">
-          <BriefcaseBusiness className="text-[var(--brand)]" size={19}/>
-          <div>
-            <h2 className="font-display text-xl font-extrabold">Program kerja</h2>
-            <p className="text-sm text-[var(--muted)]">Lacak proker dan peranmu dari perencanaan sampai selesai.</p>
-          </div>
-        </div>
-        <form action={createProgram} className="mt-5 rounded-xl bg-[#f7f8f5] p-4 space-y-3 [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-white [&_input]:px-3 [&_input]:py-2.5 [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2.5 [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-white [&_textarea]:px-3 [&_textarea]:py-2.5">
-          <input type="hidden" name="organization_id" value={organization.id}/>
-          <div className="grid grid-cols-2 gap-3">
-            <input required name="nama_proker" placeholder="Nama program kerja"/>
-            <input name="peran" placeholder="Peranmu (opsional)"/>
-          </div>
-          <textarea name="deskripsi" rows={2} placeholder="Tujuan atau catatan proker (opsional)"/>
-          <div className="grid grid-cols-3 gap-2">
-            <input name="tanggal_mulai" type="date"/>
-            <input name="tanggal_selesai" type="date"/>
-            <select name="status" defaultValue="perencanaan">
-              <option value="perencanaan">Rencana</option>
-              <option value="berjalan">Berjalan</option>
-              <option value="selesai">Selesai</option>
-              <option value="dibatalkan">Dibatalkan</option>
-            </select>
-          </div>
-          <button className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]">
-            <Plus size={16}/> Tambah proker
-          </button>
-        </form>
-
-        <div className="mt-6 space-y-3">
-          {programs?.length ? programs.map((program) => {
-            const relatedActivities = activitiesByProgram[program.id] || [];
-            return (
-              <article key={program.id} className="rounded-xl border border-[var(--line)] bg-white p-4 transition hover:border-[#b9ddc6]">
-                <div className="flex items-start gap-3">
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#dcefe4] text-[var(--brand)]">
-                    <ListChecks size={17}/>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-bold">{program.nama_proker}</h3>
-                      <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${program.status === "selesai" ? "bg-[#eaf6ee] text-[#17613e]" : program.status === "berjalan" ? "bg-[#fff0cc] text-[#9a6900]" : program.status === "dibatalkan" ? "bg-[#fff0ec] text-[#b93c21]" : "bg-[#f4f0e7] text-[#8b7242]"}`}>
-                        {program.status}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-sm text-[var(--muted)]">{program.peran || "Peran belum dicatat"} · {dateRange(program.tanggal_mulai, program.tanggal_selesai)}</p>
-                    {program.deskripsi && <p className="mt-2.5 whitespace-pre-wrap text-sm leading-6 text-[var(--muted)]">{program.deskripsi}</p>}
-
-                    {/* Quick Info: Scheduled Activities for this Proker */}
-                    <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-[var(--line)] pt-3">
-                      <ActivityForm
-                        semesters={mappedSemesters}
-                        organizations={mappedOrgs}
-                        programs={mappedPrograms}
-                        defaultOrganizationId={organization.id}
-                        defaultProgramId={program.id}
-                        defaultJudul={`Agenda ${program.nama_proker}`}
-                        defaultPeranPortfolio={program.peran || undefined}
-                        triggerNode={
-                          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#b9ddc6] bg-[var(--brand-soft)] px-2.5 py-1 text-xs font-bold text-[var(--brand-dark)] transition hover:bg-[#c9e8d3]">
-                            <Calendar size={13} /> + Jadwalkan Agenda
-                          </span>
-                        }
-                      />
-
-                      {relatedActivities.length > 0 ? (
-                        <Link
-                          href={`/kegiatan?organization_id=${organization.id}`}
-                          className="inline-flex items-center gap-1 rounded-lg bg-[#f7f8f5] px-2.5 py-1 text-xs font-semibold text-[var(--muted)] hover:text-[var(--brand)] hover:bg-[#eef7f2] transition"
-                        >
-                          🗓️ {relatedActivities.length} Agenda Terjadwal
-                        </Link>
-                      ) : (
-                        <span className="text-[11px] text-[var(--muted)] italic">
-                          Belum ada agenda rapat/eksekusi
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <ConfirmDeleteForm action={deleteProgram} id={program.id} itemName={`program kerja “${program.nama_proker}”`} fields={{ organization_id: organization.id }}/>
-                </div>
-
-                <details className="group mt-3 rounded-xl bg-[#f7f8f5] p-3">
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
-                    <span>Ubah data proker</span>
-                    <span className="text-[10px] group-open:rotate-180 transition-transform">▼</span>
-                  </summary>
-                  <form action={updateProgram} className="mt-3 grid gap-3 border-t border-[var(--line)] pt-3 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-white [&_input]:px-3 [&_input]:py-2 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2 [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-white [&_textarea]:px-3 [&_textarea]:py-2">
-                    <input type="hidden" name="id" value={program.id}/>
-                    <input type="hidden" name="organization_id" value={organization.id}/>
-                    <div className="grid grid-cols-2 gap-3">
-                      <input required name="nama_proker" defaultValue={program.nama_proker}/>
-                      <input name="peran" defaultValue={program.peran || ""} placeholder="Peran"/>
-                    </div>
-                    <textarea name="deskripsi" rows={2} defaultValue={program.deskripsi || ""}/>
-                    <div className="grid grid-cols-3 gap-2">
-                      <input name="tanggal_mulai" type="date" defaultValue={program.tanggal_mulai || ""}/>
-                      <input name="tanggal_selesai" type="date" defaultValue={program.tanggal_selesai || ""}/>
-                      <select name="status" defaultValue={program.status}>
-                        <option value="perencanaan">Rencana</option>
-                        <option value="berjalan">Berjalan</option>
-                        <option value="selesai">Selesai</option>
-                        <option value="dibatalkan">Dibatalkan</option>
-                      </select>
-                    </div>
-                    <button className="w-fit rounded-lg bg-[var(--brand)] px-3.5 py-2 text-xs font-bold text-white shadow hover:bg-[var(--brand-dark)]">
-                      Simpan proker
-                    </button>
-                  </form>
-                </details>
-              </article>
-            );
-          }) : <div className="rounded-xl bg-[#f7f8f5] px-5 py-12 text-center">
-            <CalendarDays className="mx-auto text-[var(--brand)]"/>
-            <p className="mt-3 font-bold">Belum ada program kerja</p>
-            <p className="mt-1 text-sm text-[var(--muted)]">Tambahkan satu proker agar kontribusimu lebih terstruktur.</p>
-          </div>}
-        </div>
-      </section>
-    </section>
-  </div>;
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 lg:px-10">
+      <OrganizationDetailView
+        organization={organization}
+        positions={positions || []}
+        programs={programs || []}
+        activities={orgActivities || []}
+        mappedSemesters={mappedSemesters}
+        mappedOrgs={mappedOrgs}
+        mappedPrograms={mappedPrograms}
+      />
+    </div>
+  );
 }
