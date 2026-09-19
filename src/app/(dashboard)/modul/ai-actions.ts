@@ -14,40 +14,59 @@ async function getSignedInUser() {
 }
 
 /**
- * Helper to fetch document buffer from Supabase storage or public URL and format as GeminiPart
+ * Helper to fetch document buffer from Supabase storage or public URL and format as GeminiPart.
+ * Supported Gemini native types: application/pdf, image/png, image/jpeg, image/webp, text/plain.
+ * For unsupported or failed downloads, returns null safely so AI falls back to course metadata.
  */
 async function loadModuleDocumentPart(fileUrl?: string | null, fileName?: string | null): Promise<GeminiPart | null> {
   if (!fileUrl) return null;
 
   try {
     const res = await fetch(fileUrl);
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`File download returned ${res.status}, falling back to text metadata.`);
+      return null;
+    }
+
+    const contentType = res.headers.get("content-type") || "";
+    // If Supabase returned JSON error (e.g. Bucket not found / NoSuchBucket), don't pass as document!
+    if (contentType.includes("application/json")) {
+      return null;
+    }
 
     const arrayBuffer = await res.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Limit to 20MB for Gemini inlineData
-    if (buffer.length > 20 * 1024 * 1024) {
+    // If buffer is too small (e.g. empty/error snippet) or exceeds 20MB limit
+    if (buffer.length < 100 || buffer.length > 20 * 1024 * 1024) {
       return null;
     }
 
     const lowerName = (fileName || "").toLowerCase();
-    let mimeType = "application/pdf";
+
+    // 1. Text or Markdown files
+    if (lowerName.endsWith(".txt") || lowerName.endsWith(".md") || lowerName.endsWith(".csv")) {
+      const textContent = buffer.toString("utf-8");
+      return {
+        text: `\n\n=== ISI DOKUMEN MATERI (${fileName}) ===\n${textContent.slice(0, 50000)}\n=== AKHIR DOKUMEN ===\n\n`,
+      };
+    }
+
+    // 2. Supported native Gemini binary types
+    let mimeType = "";
     if (lowerName.endsWith(".pdf")) {
       mimeType = "application/pdf";
     } else if (lowerName.endsWith(".png")) {
       mimeType = "image/png";
     } else if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg")) {
       mimeType = "image/jpeg";
-    } else if (lowerName.endsWith(".txt") || lowerName.endsWith(".md")) {
-      // Plain text or markdown
-      const textContent = buffer.toString("utf-8");
-      return {
-        text: `\n\n=== ISI DOKUMEN MATERI (${fileName}) ===\n${textContent.slice(0, 50000)}\n=== AKHIR DOKUMEN ===\n\n`,
-      };
+    } else if (lowerName.endsWith(".webp")) {
+      mimeType = "image/webp";
     } else {
-      // For other types, try application/pdf or fallback
-      mimeType = "application/pdf";
+      // Office files (pptx, ppt, docx, doc, xlsx) cannot be sent directly as application/pdf to Gemini inlineData.
+      // Instead, we return null so the AI uses full course metadata, syllabus, and notes without 400 crashes.
+      console.info(`File ${fileName} is binary format not natively supported as inlineData. Fallback to metadata.`);
+      return null;
     }
 
     const base64Data = buffer.toString("base64");
@@ -126,7 +145,18 @@ Balas HANYA dalam format JSON valid tanpa format markdown codeblock apapun (tida
 
   const systemInstruction =
     "Kamu asisten studi cerdas mahasiswa kampus. Selalu hasilkan output JSON murni yang valid, tajam, dan langsung berdasar pada materi modul.";
-  const rawResponse = await callGemini(requestParts, systemInstruction);
+  
+  let rawResponse = "";
+  try {
+    rawResponse = await callGemini(requestParts, systemInstruction);
+  } catch (err: any) {
+    if (docPart) {
+      console.warn("Generating summary with docPart failed, retrying without docPart:", err.message);
+      rawResponse = await callGemini([{ text: promptText }], systemInstruction);
+    } else {
+      throw err;
+    }
+  }
 
   let parsedData: { summary: string; key_points: string[]; exam_tips: string[] };
   try {
@@ -219,7 +249,18 @@ Wajib balas HANYA dengan JSON valid (tanpa pembungkus markdown codeblock). Forma
 
   const systemInstruction =
     "Kamu pembuat soal ujian universitas profesional. Format kuis harus JSON valid dengan 5 soal berkualitas tinggi.";
-  const rawResponse = await callGemini(requestParts, systemInstruction);
+  
+  let rawResponse = "";
+  try {
+    rawResponse = await callGemini(requestParts, systemInstruction);
+  } catch (err: any) {
+    if (docPart) {
+      console.warn("Generating quiz with docPart failed, retrying without docPart:", err.message);
+      rawResponse = await callGemini([{ text: promptText }], systemInstruction);
+    } else {
+      throw err;
+    }
+  }
 
   let questions: QuizQuestion[] = [];
   try {
@@ -371,7 +412,21 @@ ALGORITMA & PROTOKOL KECERDASAN KAMU (SANGAT PENTING):
    - Jika mahasiswa bertanya hal yang 100% tidak ada hubungannya dengan kuliah (misal politik, gosip, atau topik di luar perkuliahan), berikan tanggapan santai bersahabat 1 kalimat lalu arahkan kembali ke materi modul ini.
 `;
 
-  const botReply = await callGeminiChat(formattedHistory, systemPrompt);
+  let botReply = "";
+  try {
+    botReply = await callGeminiChat(formattedHistory, systemPrompt);
+  } catch (err: any) {
+    if (docPart) {
+      console.warn("Chat call with docPart failed, retrying with text-only prompt:", err.message);
+      const textOnlyHistory = formattedHistory.map((m) => ({
+        role: m.role,
+        parts: m.parts.filter((p) => "text" in p),
+      }));
+      botReply = await callGeminiChat(textOnlyHistory, systemPrompt);
+    } else {
+      throw err;
+    }
+  }
 
   // Save assistant reply to database
   await supabase.from("module_chats").insert({
