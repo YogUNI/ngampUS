@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
+  ArrowRight,
   BookOpen,
   Bot,
   Calendar,
   CheckCircle2,
+  ChevronRight,
   Circle,
   Clock,
   Download,
@@ -142,10 +145,16 @@ export function ModuleCard({
             </button>
           </div>
 
-          {/* Topik Title */}
-          <h3 className="font-display mt-2.5 text-sm sm:text-base font-black text-[var(--ink)]">
-            {module.topik}
-          </h3>
+          {/* Topik Title linked to dedicated detail page */}
+          <Link
+            href={`/modul/${module.id}`}
+            className="group/title mt-2.5 block"
+          >
+            <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)] group-hover/title:text-[var(--brand)] transition flex items-center gap-1.5">
+              <span>{module.topik}</span>
+              <ArrowRight size={14} className="opacity-0 -translate-x-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all text-[var(--brand)] shrink-0" />
+            </h3>
+          </Link>
 
           {/* Deskripsi */}
           {module.deskripsi && (
@@ -202,11 +211,20 @@ export function ModuleCard({
               <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[var(--brand)]">
                 <Sparkles size={12} /> AI Study Companion
               </span>
-              {module.ai_summary && (
-                <span className="text-[9.5px] font-bold text-emerald-600">
-                  ✓ Rangkuman Siap
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                {module.ai_summary && (
+                  <span className="text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">
+                    ✓ Rangkuman Siap
+                  </span>
+                )}
+                <Link
+                  href={`/modul/${module.id}`}
+                  className="inline-flex items-center gap-1 text-[10.5px] font-black text-[var(--brand)] hover:underline"
+                  title="Buka ruang belajar penuh untuk modul ini"
+                >
+                  Ruang Belajar →
+                </Link>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-1.5">
