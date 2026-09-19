@@ -150,6 +150,7 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
               <Link
                 key={href}
                 data-tour={tourId}
+                prefetch={true}
                 title={collapsed ? label : undefined}
                 className={`group flex items-center rounded-xl transition ${
                   collapsed
@@ -194,12 +195,14 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
           <Link
             className="my-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839] shrink-0"
             href="/kegiatan?new=1"
+            prefetch={true}
           >
             <Plus size={15} strokeWidth={3} /> Catat kegiatan
           </Link>
         ) : (
           <Link
             href="/kegiatan?new=1"
+            prefetch={true}
             title="Catat kegiatan"
             className="my-2.5 grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 shrink-0"
           >
@@ -394,6 +397,8 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
                     <Link
                       key={href}
                       href={href}
+                      prefetch={true}
+                      onClick={() => setOpen(false)}
                       className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
                         active
                           ? "bg-[#103626] text-white shadow-sm"
@@ -488,6 +493,7 @@ export function MobileBottomNav() {
           <Link
             key={href}
             href={href}
+            prefetch={true}
             data-tour={tourId}
             className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-extrabold transition active:scale-90 select-none ${
               active ? "text-[#0f6849]" : "text-[var(--muted)] opacity-75 hover:opacity-100"

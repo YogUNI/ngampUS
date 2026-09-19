@@ -32,12 +32,6 @@ function makeHref(filters: ActivityFilters, view?: "list" | "calendar") {
 export default async function ActivitiesPage({ searchParams }: { searchParams: Promise<ActivityFilters> }) {
   const filters = await searchParams;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  // Auto sync activities to "on_progress" if their scheduled date & time has arrived
-  if (user) {
-    await syncActivityProgressStatuses(supabase, user.id);
-  }
 
   let activitiesQuery = supabase.from("activities").select("*").order("deadline", { ascending: true });
   if (filters.q) activitiesQuery = activitiesQuery.ilike("judul", `%${filters.q}%`);
@@ -48,18 +42,27 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
   if (filters.prioritas) activitiesQuery = activitiesQuery.eq("prioritas", filters.prioritas);
 
   const [
+    { data: { user } },
     { data: activities },
     { data: semesters },
     { data: organizations },
     { data: programs },
     { data: courses },
   ] = await Promise.all([
+    supabase.auth.getUser(),
     activitiesQuery,
     supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai,is_active").order("tanggal_mulai", { ascending: false }),
     supabase.from("organizations").select("id,nama_organisasi").order("nama_organisasi"),
     supabase.from("programs").select("id,nama_proker,organization_id").order("nama_proker"),
     supabase.from("courses").select("*").order("hari", { ascending: true }).order("jam_mulai", { ascending: true }),
   ]);
+
+  // Non-blocking auto sync so the user does not experience page lag
+  if (user) {
+    syncActivityProgressStatuses(supabase, user.id).catch((err) =>
+      console.error("Background sync error in activities:", err)
+    );
+  }
   const calendar = filters.view === "calendar";
   const mappedPrograms = (programs ?? []).map((program) => ({ id: program.id, name: program.nama_proker, organization_id: program.organization_id }));
   const mappedCourses = (courses ?? []).map((course) => ({

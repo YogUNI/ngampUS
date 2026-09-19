@@ -50,25 +50,29 @@ export default async function DashboardPage() {
   const threeDaysFromNow = format(addDays(new Date(), 3), "yyyy-MM-dd");
   const jakartaHour = new Date().getUTCHours() + 7; // WIB offset
 
-  const { data: { user } } = await supabase.auth.getUser();
-
-  // Auto sync activity progress status when scheduled time arrives
-  if (user) {
-    await syncActivityProgressStatuses(supabase, user.id);
-  }
+  // Fetch user, profile, active semester, and counts in parallel
   const [
+    { data: { user } },
     { data: profile },
     { data: activeSemester },
     { data: allSemesters },
     { data: organizations },
     { data: programs },
   ] = await Promise.all([
+    supabase.auth.getUser(),
     supabase.from("profiles").select("full_name").single(),
     supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai").eq("is_active", true).maybeSingle(),
     supabase.from("semesters").select("id").order("created_at", { ascending: false }),
     supabase.from("organizations").select("id,nama_organisasi,tipe").order("created_at", { ascending: false }).limit(3),
     supabase.from("programs").select("organization_id,status").order("created_at", { ascending: false }),
   ]);
+
+  // Non-blocking background sync so user does not wait for database updates
+  if (user) {
+    syncActivityProgressStatuses(supabase, user.id).catch((err) =>
+      console.error("Background sync error:", err)
+    );
+  }
 
   const firstName = profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "Mahasiswa";
   const semesterId = activeSemester?.id;
@@ -230,6 +234,7 @@ export default async function DashboardPage() {
           {/* Quick Action Button */}
           <Link
             href="/kegiatan"
+            prefetch={true}
             data-tour="hero-add-kegiatan"
             className="inline-flex shrink-0 items-center gap-2 rounded-2xl bg-[#103626] px-5 py-3 text-xs sm:text-sm font-black text-[#c8ef70] shadow-md shadow-[#103626]/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a4a34] hover:shadow-lg active:scale-95"
           >
@@ -769,6 +774,7 @@ function StatCard({
   return (
     <Link 
       href={href} 
+      prefetch={true}
       className="group relative overflow-hidden rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-5 shadow-xs transition-all duration-300 hover:border-[#103626]/30 hover:shadow-lg hover:-translate-y-1"
     >
       <div className="flex items-center justify-between">
