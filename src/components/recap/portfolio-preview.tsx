@@ -16,6 +16,7 @@ type Activity = {
   peran_portfolio?: string | null;
   is_portfolio: boolean;
   organization_id?: string | null;
+  program_id?: string | null;
 };
 
 type Profile = {
@@ -35,11 +36,13 @@ type SemesterInfo = {
 export function PortfolioPreview({
   activities,
   orgMap,
+  programMap = {},
   profile,
   semester,
 }: {
   activities: Activity[];
   orgMap: Record<string, string>;
+  programMap?: Record<string, string>;
   profile: Profile;
   semester: SemesterInfo;
 }) {
@@ -163,6 +166,7 @@ export function PortfolioPreview({
                   key={a.id}
                   activity={a}
                   orgName={a.organization_id ? orgMap[a.organization_id] : null}
+                  programName={a.program_id ? programMap[a.program_id] : null}
                   formatDate={formatDate}
                   priorityBadge={priorityBadge}
                 />
@@ -295,11 +299,13 @@ function Section({
 function ActivityCard({
   activity,
   orgName,
+  programName,
   formatDate,
   priorityBadge,
 }: {
   activity: Activity;
   orgName?: string | null;
+  programName?: string | null;
   formatDate: (d?: string | null) => string;
   priorityBadge: Record<string, string>;
 }) {
@@ -315,10 +321,15 @@ function ActivityCard({
                 🎖 {activity.peran_portfolio}
               </p>
             )}
-            <div className="mt-1 flex flex-wrap gap-2 text-[10.5px] text-[var(--muted)]">
+            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[10.5px] text-[var(--muted)]">
               {orgName && (
-                <span className="flex items-center gap-1">
-                  <Building2 size={11} /> {orgName}
+                <span className="flex items-center gap-1 font-semibold text-[var(--ink)]">
+                  <Building2 size={12} className="text-[var(--brand)]" /> {orgName}
+                </span>
+              )}
+              {programName && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-[#eaf5eb] px-1.5 py-0.5 font-bold text-[#0f6849]">
+                  📌 Proker: {programName}
                 </span>
               )}
               {(activity.deadline || activity.tanggal_mulai) && (

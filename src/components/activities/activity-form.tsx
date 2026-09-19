@@ -16,8 +16,13 @@ export function ActivityForm({
   programs,
   courses = [],
   defaultDate,
+  defaultOrganizationId,
+  defaultProgramId,
+  defaultJudul,
+  defaultPeranPortfolio,
   triggerText,
   triggerClass,
+  triggerNode,
   initialOpen = false,
   onClose,
 }: {
@@ -26,8 +31,13 @@ export function ActivityForm({
   programs: ProgramOption[];
   courses?: CourseOption[];
   defaultDate?: string;
+  defaultOrganizationId?: string;
+  defaultProgramId?: string;
+  defaultJudul?: string;
+  defaultPeranPortfolio?: string;
   triggerText?: string;
   triggerClass?: string;
+  triggerNode?: React.ReactNode;
   initialOpen?: boolean;
   onClose?: () => void;
 }) {
@@ -40,7 +50,8 @@ export function ActivityForm({
     semesters.find((s) => s.active)?.id || semesters[0]?.id || ""
   );
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
-  const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  const [selectedOrgId, setSelectedOrgId] = useState<string>(defaultOrganizationId || "");
+  const [selectedProgramId, setSelectedProgramId] = useState<string>(defaultProgramId || "");
   // Portfolio toggle — defaults to true for lomba/event/organisasi categories
   const PORTFOLIO_CATEGORIES = ["lomba", "event", "organisasi"];
   const [isPortfolio, setIsPortfolio] = useState(true); // default true because default kategori is "organisasi"
@@ -195,6 +206,7 @@ export function ActivityForm({
             <input
               required
               name="judul"
+              defaultValue={defaultJudul || ""}
               placeholder={
                 mode === "agenda"
                   ? "Contoh: Rapat Pleno 1 BEM, Kelas Pengganti AI, dll."
@@ -324,6 +336,7 @@ export function ActivityForm({
               </label>
               <input
                 name="peran_portfolio"
+                defaultValue={defaultPeranPortfolio || ""}
                 placeholder="Contoh: Ketua Pelaksana, Juara 2 Nasional, Peserta Aktif"
                 maxLength={120}
                 className="mt-1"
@@ -439,7 +452,10 @@ export function ActivityForm({
                   <select
                     name="organization_id"
                     value={selectedOrgId}
-                    onChange={(e) => setSelectedOrgId(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedOrgId(e.target.value);
+                      setSelectedProgramId("");
+                    }}
                     className="mt-1"
                   >
                     <option value="">Tanpa organisasi</option>
@@ -453,7 +469,12 @@ export function ActivityForm({
               {selectedOrgId && availablePrograms.length > 0 && (
                 <div>
                   <label className="block text-[11px] font-bold text-[var(--muted)]">Program Kerja Terkait</label>
-                  <select name="program_id" className="mt-1">
+                  <select
+                    name="program_id"
+                    value={selectedProgramId}
+                    onChange={(e) => setSelectedProgramId(e.target.value)}
+                    className="mt-1"
+                  >
                     <option value="">Tanpa proker khusus (Umum)</option>
                     {availablePrograms.map((p) => (
                       <option key={p.id} value={p.id}>{p.name}</option>
@@ -491,17 +512,23 @@ export function ActivityForm({
   return (
     <>
       {!initialOpen && (
-        <button
-          id="tambah-kegiatan"
-          type="button"
-          onClick={() => setOpen(true)}
-          className={
-            triggerClass ||
-            "inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-[#0f6849]/15 transition hover:-translate-y-0.5 hover:bg-[var(--brand-dark)]"
-          }
-        >
-          <Plus size={18}/> {triggerText || "Tambah kegiatan"}
-        </button>
+        triggerNode ? (
+          <div onClick={() => setOpen(true)} className="inline-block cursor-pointer">
+            {triggerNode}
+          </div>
+        ) : (
+          <button
+            id="tambah-kegiatan"
+            type="button"
+            onClick={() => setOpen(true)}
+            className={
+              triggerClass ||
+              "inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-[#0f6849]/15 transition hover:-translate-y-0.5 hover:bg-[var(--brand-dark)]"
+            }
+          >
+            <Plus size={18}/> {triggerText || "Tambah kegiatan"}
+          </button>
+        )
       )}
 
       {mounted && modalContent ? createPortal(modalContent, document.body) : null}

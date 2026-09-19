@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ArrowLeft, BriefcaseBusiness, Building2, CalendarDays, ListChecks, PencilLine, Plus, UsersRound } from "lucide-react";
+import { ArrowLeft, BriefcaseBusiness, Building2, Calendar, CalendarDays, ListChecks, PencilLine, Plus, UsersRound } from "lucide-react";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
 import { PositionForm } from "@/components/organizations/position-form";
+import { ActivityForm } from "@/components/activities/activity-form";
 import { createClient } from "@/lib/supabase/server";
 import { createProgram, deletePosition, deleteProgram, updateOrganization, updateProgram } from "../actions";
 
@@ -20,13 +21,40 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const { id } = await params;
   if (!z.string().uuid().safeParse(id).success) notFound();
   const supabase = await createClient();
-  const [{ data: organization }, { data: positions }, { data: programs }, { count: activityCount }] = await Promise.all([
+  const [
+    { data: organization },
+    { data: positions },
+    { data: programs },
+    { count: activityCount },
+    { data: orgActivities },
+    { data: semesters },
+    { data: allOrgs },
+  ] = await Promise.all([
     supabase.from("organizations").select("*").eq("id", id).maybeSingle(),
     supabase.from("organization_positions").select("*").eq("organization_id", id).order("mulai", { ascending: false }),
     supabase.from("programs").select("*").eq("organization_id", id).order("created_at", { ascending: false }),
     supabase.from("activities").select("*", { count: "exact", head: true }).eq("organization_id", id),
+    supabase.from("activities").select("id,judul,status,deadline,program_id,prioritas").eq("organization_id", id),
+    supabase.from("semesters").select("id,nama_semester,is_active").order("tanggal_mulai", { ascending: false }),
+    supabase.from("organizations").select("id,nama_organisasi").order("nama_organisasi"),
   ]);
   if (!organization) notFound();
+
+  // Mapping activities count by program_id
+  type OrgActivity = NonNullable<typeof orgActivities>[number];
+  const activitiesByProgram: Record<string, OrgActivity[]> = {};
+  (orgActivities || []).forEach((act) => {
+    if (act.program_id) {
+      if (!activitiesByProgram[act.program_id]) {
+        activitiesByProgram[act.program_id] = [];
+      }
+      activitiesByProgram[act.program_id]!.push(act);
+    }
+  });
+
+  const mappedSemesters = (semesters || []).map((s) => ({ id: s.id, name: s.nama_semester, active: s.is_active }));
+  const mappedOrgs = (allOrgs || []).map((o) => ({ id: o.id, name: o.nama_organisasi }));
+  const mappedPrograms = (programs || []).map((p) => ({ id: p.id, name: p.nama_proker, organization_id: id }));
 
   return <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
     <Link href="/organisasi" className="inline-flex items-center gap-2 text-sm font-bold text-[var(--muted)] transition hover:text-[var(--brand)]"><ArrowLeft size={16}/> Semua organisasi</Link>
@@ -108,55 +136,89 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         </form>
 
         <div className="mt-6 space-y-3">
-          {programs?.length ? programs.map((program) => (
-            <article key={program.id} className="rounded-xl border border-[var(--line)] bg-white p-4 transition hover:border-[#b9ddc6]">
-              <div className="flex items-start gap-3">
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#dcefe4] text-[var(--brand)]">
-                  <ListChecks size={17}/>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-bold">{program.nama_proker}</h3>
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${program.status === "selesai" ? "bg-[#eaf6ee] text-[#17613e]" : program.status === "berjalan" ? "bg-[#fff0cc] text-[#9a6900]" : program.status === "dibatalkan" ? "bg-[#fff0ec] text-[#b93c21]" : "bg-[#f4f0e7] text-[#8b7242]"}`}>
-                      {program.status}
-                    </span>
+          {programs?.length ? programs.map((program) => {
+            const relatedActivities = activitiesByProgram[program.id] || [];
+            return (
+              <article key={program.id} className="rounded-xl border border-[var(--line)] bg-white p-4 transition hover:border-[#b9ddc6]">
+                <div className="flex items-start gap-3">
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#dcefe4] text-[var(--brand)]">
+                    <ListChecks size={17}/>
                   </div>
-                  <p className="mt-1 text-sm text-[var(--muted)]">{program.peran || "Peran belum dicatat"} · {dateRange(program.tanggal_mulai, program.tanggal_selesai)}</p>
-                  {program.deskripsi && <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[var(--muted)]">{program.deskripsi}</p>}
-                </div>
-                <ConfirmDeleteForm action={deleteProgram} id={program.id} itemName={`program kerja “${program.nama_proker}”`} fields={{ organization_id: organization.id }}/>
-              </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-bold">{program.nama_proker}</h3>
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${program.status === "selesai" ? "bg-[#eaf6ee] text-[#17613e]" : program.status === "berjalan" ? "bg-[#fff0cc] text-[#9a6900]" : program.status === "dibatalkan" ? "bg-[#fff0ec] text-[#b93c21]" : "bg-[#f4f0e7] text-[#8b7242]"}`}>
+                        {program.status}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-[var(--muted)]">{program.peran || "Peran belum dicatat"} · {dateRange(program.tanggal_mulai, program.tanggal_selesai)}</p>
+                    {program.deskripsi && <p className="mt-2.5 whitespace-pre-wrap text-sm leading-6 text-[var(--muted)]">{program.deskripsi}</p>}
 
-              <details className="group mt-4 rounded-xl bg-[#f7f8f5] p-3">
-                <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
-                  <span>Ubah data proker</span>
-                  <span className="text-[10px] group-open:rotate-180 transition-transform">▼</span>
-                </summary>
-                <form action={updateProgram} className="mt-3 grid gap-3 border-t border-[var(--line)] pt-3 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-white [&_input]:px-3 [&_input]:py-2 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2 [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-white [&_textarea]:px-3 [&_textarea]:py-2">
-                  <input type="hidden" name="id" value={program.id}/>
-                  <input type="hidden" name="organization_id" value={organization.id}/>
-                  <div className="grid grid-cols-2 gap-3">
-                    <input required name="nama_proker" defaultValue={program.nama_proker}/>
-                    <input name="peran" defaultValue={program.peran || ""} placeholder="Peran"/>
+                    {/* Quick Info: Scheduled Activities for this Proker */}
+                    <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-[var(--line)] pt-3">
+                      <ActivityForm
+                        semesters={mappedSemesters}
+                        organizations={mappedOrgs}
+                        programs={mappedPrograms}
+                        defaultOrganizationId={organization.id}
+                        defaultProgramId={program.id}
+                        defaultJudul={`Agenda ${program.nama_proker}`}
+                        defaultPeranPortfolio={program.peran || undefined}
+                        triggerNode={
+                          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#b9ddc6] bg-[var(--brand-soft)] px-2.5 py-1 text-xs font-bold text-[var(--brand-dark)] transition hover:bg-[#c9e8d3]">
+                            <Calendar size={13} /> + Jadwalkan Agenda
+                          </span>
+                        }
+                      />
+
+                      {relatedActivities.length > 0 ? (
+                        <Link
+                          href={`/kegiatan?organization_id=${organization.id}`}
+                          className="inline-flex items-center gap-1 rounded-lg bg-[#f7f8f5] px-2.5 py-1 text-xs font-semibold text-[var(--muted)] hover:text-[var(--brand)] hover:bg-[#eef7f2] transition"
+                        >
+                          🗓️ {relatedActivities.length} Agenda Terjadwal
+                        </Link>
+                      ) : (
+                        <span className="text-[11px] text-[var(--muted)] italic">
+                          Belum ada agenda rapat/eksekusi
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <textarea name="deskripsi" rows={2} defaultValue={program.deskripsi || ""}/>
-                  <div className="grid grid-cols-3 gap-2">
-                    <input name="tanggal_mulai" type="date" defaultValue={program.tanggal_mulai || ""}/>
-                    <input name="tanggal_selesai" type="date" defaultValue={program.tanggal_selesai || ""}/>
-                    <select name="status" defaultValue={program.status}>
-                      <option value="perencanaan">Rencana</option>
-                      <option value="berjalan">Berjalan</option>
-                      <option value="selesai">Selesai</option>
-                      <option value="dibatalkan">Dibatalkan</option>
-                    </select>
-                  </div>
-                  <button className="w-fit rounded-lg bg-[var(--brand)] px-3.5 py-2 text-xs font-bold text-white shadow hover:bg-[var(--brand-dark)]">
-                    Simpan proker
-                  </button>
-                </form>
-              </details>
-            </article>
-          )) : <div className="rounded-xl bg-[#f7f8f5] px-5 py-12 text-center">
+                  <ConfirmDeleteForm action={deleteProgram} id={program.id} itemName={`program kerja “${program.nama_proker}”`} fields={{ organization_id: organization.id }}/>
+                </div>
+
+                <details className="group mt-3 rounded-xl bg-[#f7f8f5] p-3">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
+                    <span>Ubah data proker</span>
+                    <span className="text-[10px] group-open:rotate-180 transition-transform">▼</span>
+                  </summary>
+                  <form action={updateProgram} className="mt-3 grid gap-3 border-t border-[var(--line)] pt-3 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[var(--line)] [&_input]:bg-white [&_input]:px-3 [&_input]:py-2 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2 [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:bg-white [&_textarea]:px-3 [&_textarea]:py-2">
+                    <input type="hidden" name="id" value={program.id}/>
+                    <input type="hidden" name="organization_id" value={organization.id}/>
+                    <div className="grid grid-cols-2 gap-3">
+                      <input required name="nama_proker" defaultValue={program.nama_proker}/>
+                      <input name="peran" defaultValue={program.peran || ""} placeholder="Peran"/>
+                    </div>
+                    <textarea name="deskripsi" rows={2} defaultValue={program.deskripsi || ""}/>
+                    <div className="grid grid-cols-3 gap-2">
+                      <input name="tanggal_mulai" type="date" defaultValue={program.tanggal_mulai || ""}/>
+                      <input name="tanggal_selesai" type="date" defaultValue={program.tanggal_selesai || ""}/>
+                      <select name="status" defaultValue={program.status}>
+                        <option value="perencanaan">Rencana</option>
+                        <option value="berjalan">Berjalan</option>
+                        <option value="selesai">Selesai</option>
+                        <option value="dibatalkan">Dibatalkan</option>
+                      </select>
+                    </div>
+                    <button className="w-fit rounded-lg bg-[var(--brand)] px-3.5 py-2 text-xs font-bold text-white shadow hover:bg-[var(--brand-dark)]">
+                      Simpan proker
+                    </button>
+                  </form>
+                </details>
+              </article>
+            );
+          }) : <div className="rounded-xl bg-[#f7f8f5] px-5 py-12 text-center">
             <CalendarDays className="mx-auto text-[var(--brand)]"/>
             <p className="mt-3 font-bold">Belum ada program kerja</p>
             <p className="mt-1 text-sm text-[var(--muted)]">Tambahkan satu proker agar kontribusimu lebih terstruktur.</p>

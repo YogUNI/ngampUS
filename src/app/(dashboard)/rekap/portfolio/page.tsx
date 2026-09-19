@@ -36,13 +36,15 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
     activityQuery = activityQuery.eq("semester_id", targetSemesterId);
   }
 
-  const [{ data: portfolioActivities }, { data: organizations }] = await Promise.all([
+  const [{ data: portfolioActivities }, { data: organizations }, { data: programs }] = await Promise.all([
     activityQuery,
     supabase.from("organizations").select("id,nama_organisasi,tipe"),
+    supabase.from("programs").select("id,nama_proker,organization_id"),
   ]);
 
   const items = portfolioActivities ?? [];
   const orgMap = new Map((organizations ?? []).map((o) => [o.id, o.nama_organisasi]));
+  const programMap = new Map((programs ?? []).map((p) => [p.id, p.nama_proker]));
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8 lg:px-10">
@@ -111,6 +113,7 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
         <PortfolioPreview
           activities={items}
           orgMap={Object.fromEntries(orgMap)}
+          programMap={Object.fromEntries(programMap)}
           profile={{
             full_name: profile?.full_name ?? user?.email?.split("@")[0] ?? "Mahasiswa",
             university: profile?.university ?? "Universitas Mercu Buana",
