@@ -34,6 +34,7 @@ import {
 } from "@/app/(dashboard)/modul/ai-actions";
 import { updateModuleStatus } from "@/app/(dashboard)/modul/actions";
 import { useToast } from "@/components/ui/toast-provider";
+import { FormattedMarkdown } from "@/components/ui/formatted-markdown";
 import { ModuleFormModal, CourseOption } from "@/components/modules/module-form-modal";
 
 export type ModuleDetailData = {
@@ -660,9 +661,7 @@ export function ModuleDetailClient({
                   <BookOpen size={16} />
                   <span>Ringkasan Inti Konsep</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[var(--ink)] leading-relaxed whitespace-pre-line">
-                  {summary}
-                </p>
+                <FormattedMarkdown content={summary} />
               </div>
 
               {/* Poin Kunci */}
@@ -763,13 +762,17 @@ export function ModuleDetailClient({
                   </span>
 
                   <div
-                    className={`max-w-[85%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap shadow-2xs ${
+                    className={`max-w-[85%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-2xs ${
                       isUser
-                        ? "bg-[#103626] text-white rounded-tr-xs"
+                        ? "bg-[#103626] text-white rounded-tr-xs whitespace-pre-wrap"
                         : "bg-[var(--card-subtle)] text-[var(--ink)] border border-[var(--line)] rounded-tl-xs"
                     }`}
                   >
-                    {msg.content}
+                    {isUser ? (
+                      msg.content
+                    ) : (
+                      <FormattedMarkdown content={msg.content} />
+                    )}
                   </div>
                 </div>
               );

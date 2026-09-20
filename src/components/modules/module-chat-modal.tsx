@@ -18,6 +18,7 @@ import {
   clearModuleChatHistory,
 } from "@/app/(dashboard)/modul/ai-actions";
 import { useToast } from "@/components/ui/toast-provider";
+import { FormattedMarkdown } from "@/components/ui/formatted-markdown";
 
 export function ModuleChatModal({
   moduleId,
@@ -190,13 +191,17 @@ export function ModuleChatModal({
                   </span>
 
                   <div
-                    className={`max-w-[82%] rounded-2xl p-3 text-xs leading-relaxed whitespace-pre-wrap ${
+                    className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
                       isUser
-                        ? "bg-[#103626] text-white rounded-tr-xs"
+                        ? "bg-[#103626] text-white rounded-tr-xs whitespace-pre-wrap"
                         : "bg-[var(--card-bg)] text-[var(--ink)] border border-[var(--line)] shadow-2xs rounded-tl-xs"
                     }`}
                   >
-                    {msg.content}
+                    {isUser ? (
+                      msg.content
+                    ) : (
+                      <FormattedMarkdown content={msg.content} />
+                    )}
                   </div>
                 </div>
               );
