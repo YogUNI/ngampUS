@@ -43,27 +43,35 @@ export function ActivityFilterBar({
   organizations,
   calendar,
   totalItems,
+  counts,
 }: {
   filters: FilterState;
   semesters: Option[];
   organizations: Option[];
   calendar: boolean;
   totalItems: number;
+  counts?: {
+    total: number;
+    active: number;
+    onProgress: number;
+    completed: number;
+  };
 }) {
   const [showAdvanced, setShowAdvanced] = useState(
-    Boolean(filters.semester_id || filters.organization_id || filters.prioritas || filters.status)
+    Boolean(filters.semester_id || filters.organization_id || filters.prioritas)
   );
 
   const activeAdvancedCount = [
     filters.semester_id,
     filters.organization_id,
     filters.prioritas,
-    filters.status,
   ].filter(Boolean).length;
 
+  const currentStatusTab = filters.status || "";
+
   return (
-    <div className="mb-4 rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-3 sm:p-4 shadow-2xs">
-      {/* ── Top Bar: Search, View Switcher & Filter Toggle ── */}
+    <div className="mb-4 rounded-3xl border border-[#d8e3da] bg-white p-3.5 sm:p-5 shadow-xs">
+      {/* ── Top Bar: Search + Quick Action Controls ── */}
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         <form className="relative flex-1 min-w-[200px] max-w-md">
           {calendar && <input type="hidden" name="view" value="calendar" />}
@@ -74,15 +82,15 @@ export function ActivityFilterBar({
           {filters.status && <input type="hidden" name="status" value={filters.status} />}
 
           <Search
-            size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)] pointer-events-none"
+            size={16}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7d9284] pointer-events-none"
           />
           <input
             type="text"
             name="q"
             defaultValue={filters.q || ""}
-            placeholder="Cari judul kegiatan, tugas, proker..."
-            className="w-full rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] py-2 pl-9 pr-3 text-xs sm:text-sm text-[var(--ink)] placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:outline-hidden"
+            placeholder="Cari kegiatan, tugas, modul..."
+            className="w-full rounded-2xl border border-[#d8e3da] bg-[#f7f9f7] py-2 sm:py-2.5 pl-10 pr-3.5 text-xs sm:text-sm font-medium text-[#10261b] placeholder:text-[#8b9e91] focus:border-[#0f6849] focus:bg-white focus:outline-none transition"
           />
         </form>
 
@@ -91,34 +99,35 @@ export function ActivityFilterBar({
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition ${
+            className={`inline-flex items-center gap-1.5 rounded-2xl border px-3 py-2 text-xs font-bold transition active:scale-95 ${
               showAdvanced || activeAdvancedCount > 0
-                ? "border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)]"
-                : "border-[var(--line)] bg-[var(--card-subtle)] text-[var(--ink)] hover:bg-[var(--card-bg)]"
+                ? "border-[#0f6849] bg-[#dff3e5] text-[#0f6849]"
+                : "border-[#d8e3da] bg-[#f7f9f7] text-[#33463a] hover:bg-white"
             }`}
           >
             <SlidersHorizontal size={14} />
-            <span>Filter</span>
+            <span className="hidden sm:inline">Filter Tambahan</span>
+            <span className="sm:hidden">Filter</span>
             {activeAdvancedCount > 0 && (
-              <span className="grid h-4.5 w-4.5 place-items-center rounded-full bg-[var(--brand)] text-[10px] font-black text-white">
+              <span className="grid h-4.5 w-4.5 place-items-center rounded-full bg-[#0f6849] text-[10px] font-black text-[#c8ef70]">
                 {activeAdvancedCount}
               </span>
             )}
           </button>
 
           {/* List / Calendar View Switcher */}
-          <div className="flex rounded-xl bg-[var(--card-subtle)] p-1 border border-[var(--line)]">
+          <div className="flex rounded-2xl bg-[#f0f4f0] p-1 border border-[#d8e3da]">
             <Link
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
-                !calendar ? "bg-[var(--card-bg)] text-[var(--brand)] shadow-2xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                !calendar ? "bg-white text-[#0f6849] shadow-2xs" : "text-[#697c6f] hover:text-[#10261b]"
               }`}
               href={buildHref(filters, {}, "list")}
             >
-              List
+              Daftar
             </Link>
             <Link
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
-                calendar ? "bg-[var(--card-bg)] text-[var(--brand)] shadow-2xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                calendar ? "bg-white text-[#0f6849] shadow-2xs" : "text-[#697c6f] hover:text-[#10261b]"
               }`}
               href={buildHref(filters, {}, "calendar")}
             >
@@ -126,6 +135,48 @@ export function ActivityFilterBar({
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* ── Segmented Quick Status Tabs (One-Tap Thumb Friendly on Mobile) ── */}
+      <div className="mt-3.5 flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-t border-[#f0f4f0] pt-3">
+        {[
+          { id: "", label: "Semua", count: counts?.total ?? totalItems },
+          { id: "belum_mulai", label: "Belum Mulai", count: counts?.active },
+          { id: "on_progress", label: "Sedang Berjalan", count: counts?.onProgress },
+          { id: "selesai", label: "Selesai", count: counts?.completed },
+        ].map((tab) => {
+          const isActive = currentStatusTab === tab.id;
+          const href = buildHref(
+            filters,
+            { status: tab.id || undefined },
+            calendar ? "calendar" : "list"
+          );
+
+          return (
+            <Link
+              key={tab.id}
+              href={href}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
+                isActive
+                  ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
+                  : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
+              }`}
+            >
+              <span>{tab.label}</span>
+              {typeof tab.count === "number" && (
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+                    isActive
+                      ? "bg-[#c8ef70]/20 text-[#c8ef70]"
+                      : "bg-[#e2eae4] text-[#55675b]"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </div>
 
       {/* ── Category Quick Chips (Horizontal Scrollable on Mobile) ── */}
@@ -141,10 +192,10 @@ export function ActivityFilterBar({
             <Link
               key={cat.id}
               href={href}
-              className={`inline-flex shrink-0 items-center rounded-lg px-2.5 py-1 text-[11px] font-bold transition ${
+              className={`inline-flex shrink-0 items-center rounded-xl px-2.5 py-1 text-[11px] font-bold transition ${
                 isActive
-                  ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
-                  : "bg-[var(--card-subtle)] text-[var(--muted)] hover:bg-[var(--card-bg)] hover:text-[var(--ink)] border border-[var(--line)]"
+                  ? "bg-[#0f6849] text-white shadow-2xs"
+                  : "bg-white text-[#697c6f] hover:bg-[#f4f7f4] hover:text-[#10261b] border border-[#d8e3da]"
               }`}
             >
               {cat.label}
