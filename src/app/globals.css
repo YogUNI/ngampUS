@@ -402,6 +402,45 @@ html {
   }
 }
 
+/* ─── Atelier / Campus Ledger Artisanal Accents ─── */
+.atelier-ledger-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #d4e0d7;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px -2px rgba(16, 54, 38, 0.05), 0 1px 3px rgba(16, 54, 38, 0.03);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.atelier-ledger-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px -8px rgba(16, 54, 38, 0.09), 0 2px 8px rgba(16, 54, 38, 0.03);
+  border-color: #a8cfb4;
+}
+
+.ruled-paper {
+  background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(16, 54, 38, 0.04) 28px);
+}
+
+.stamp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.375rem;
+  border-width: 1px;
+}
+
+.tag-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.02em;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    DARK MODE TAILORED OVERRIDES (Strictly Scoped to Dashboard Shell & Content)
    ───────────────────────────────────────────────────────────────────────────── */
