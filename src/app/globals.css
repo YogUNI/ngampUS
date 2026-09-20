@@ -221,18 +221,21 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inse
   -webkit-transform: rotateY(180deg);
 }
 .card-face {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.card-face-back {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-face-front {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+}
+.card-face-back {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
 }

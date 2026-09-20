@@ -58,33 +58,29 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
   const isFlipped = mode === "register";
 
-  // Measure both card heights and lock flipper to the taller one with safety bottom padding
+  // Sync 3D card height to the taller face once mounted
   useEffect(() => {
-    const measure = () => {
-      // Use offsetHeight or scrollHeight
-      const frontH = frontRef.current ? Math.max(frontRef.current.scrollHeight, frontRef.current.offsetHeight) : 0;
-      const backH = backRef.current ? Math.max(backRef.current.scrollHeight, backRef.current.offsetHeight) : 0;
-      const maxH = Math.max(frontH, backH);
-      if (maxH > 100) {
-        setFlipperHeight(maxH + 20);
+    const updateHeight = () => {
+      if (frontRef.current && backRef.current) {
+        // Measure the inner content wrapper of both cards
+        const frontContent = frontRef.current.firstElementChild as HTMLElement | null;
+        const backContent = backRef.current.firstElementChild as HTMLElement | null;
+        const frontH = frontRef.current.scrollHeight;
+        const backH = backRef.current.scrollHeight;
+        const h = Math.max(frontH, backH);
+        if (h > 400 && h < 950) {
+          setFlipperHeight(h);
+        }
       }
     };
 
-    // Run measurement immediately and on next tick
-    measure();
-    const timer = setTimeout(measure, 50);
-
-    const ro = new ResizeObserver(() => {
-      measure();
-    });
-    if (frontRef.current) ro.observe(frontRef.current);
-    if (backRef.current) ro.observe(backRef.current);
-
+    const t = setTimeout(updateHeight, 60);
+    window.addEventListener("resize", updateHeight);
     return () => {
-      clearTimeout(timer);
-      ro.disconnect();
+      clearTimeout(t);
+      window.removeEventListener("resize", updateHeight);
     };
-  }, []);
+  }, [mode]);
 
   const loginForm = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
   const registerForm = useForm<RegisterValues>({ resolver: zodResolver(registerSchema) });
@@ -165,7 +161,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           {/* ══ FRONT: LOGIN ══ */}
           <div
             ref={frontRef}
-            className={`card-face flex flex-col justify-between rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 sm:p-7 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
+            className={`card-face card-face-front flex flex-col justify-between rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 sm:p-7 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
               isFlipped ? "pointer-events-none" : ""
             }`}
           >
