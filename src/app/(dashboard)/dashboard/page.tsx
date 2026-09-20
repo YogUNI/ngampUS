@@ -338,27 +338,30 @@ export default async function DashboardPage() {
 
       {/* ── METRIC STAT CARDS (Overlap Pill on Mobile, Sleek 3-Card Grid on Desktop) ── */}
       <div className="relative z-20 -mt-[26px] md:mt-5">
-        <div className="grid grid-cols-3 divide-x divide-[#e8eee9] md:divide-x-0 md:gap-4 rounded-2xl sm:rounded-3xl md:rounded-2xl border border-[#d2e2d5] md:border-transparent bg-white md:bg-transparent p-3.5 sm:p-5 md:p-0 shadow-[0_10px_25px_rgba(0,0,0,0.06)] md:shadow-none">
+        <div className="grid grid-cols-3 divide-x divide-[#e8eee9] md:divide-x-0 md:gap-4 rounded-2xl sm:rounded-3xl md:rounded-2xl border border-[#d2e2d5] md:border-transparent bg-white md:bg-transparent p-3 sm:p-5 md:p-0 shadow-[0_10px_25px_rgba(0,0,0,0.06)] md:shadow-none">
           {/* Col 1: Tugas Aktif */}
           <Link
             href={`/kegiatan${semesterFilter}`}
             prefetch={true}
-            className="flex flex-col items-center md:items-start text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
+            className="flex flex-col items-center md:items-start justify-between text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
           >
-            <div className="flex items-center gap-1.5 text-[#55675b]">
+            <div className="flex items-center justify-center md:justify-start gap-1 sm:gap-1.5 text-[#55675b] w-full min-h-[22px]">
               <div className="md:p-2 md:rounded-xl md:bg-[#dff3e5] md:text-[#0f6849]">
-                <svg className="h-4 w-4 md:h-5 md:w-5 text-[#0f6849]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-[#0f6849] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
               </div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30]">Tugas Aktif</span>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30] truncate">
+                Tugas
+              </span>
             </div>
-            <div className="md:mt-2">
-              <p className="font-display mt-1 md:mt-0 text-lg sm:text-2xl md:text-3xl font-black text-[#10261b] tracking-tight group-hover:text-[#0f6849] transition">
+            <div className="w-full mt-1 md:mt-2">
+              <p className="font-display text-lg sm:text-2xl md:text-3xl font-black text-[#10261b] tracking-tight group-hover:text-[#0f6849] transition leading-none py-0.5">
                 {activeCount ?? 0}
               </p>
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-[#0f6849] mt-0.5 block">
-                Total Komitmen Terjadwal
+              <span className="text-[9px] sm:text-[10.5px] font-extrabold text-[#0f6849] mt-1 block truncate">
+                <span className="md:hidden">Aktif</span>
+                <span className="hidden md:inline">Total Komitmen</span>
               </span>
             </div>
           </Link>
@@ -367,29 +370,32 @@ export default async function DashboardPage() {
           <Link
             href={`/kegiatan${semesterFilter}`}
             prefetch={true}
-            className="flex flex-col items-center md:items-start text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
+            className="flex flex-col items-center md:items-start justify-between text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
           >
-            <div className="flex items-center gap-1.5 text-[#55675b]">
+            <div className="flex items-center justify-center md:justify-start gap-1 sm:gap-1.5 text-[#55675b] w-full min-h-[22px]">
               <div className={`md:p-2 md:rounded-xl ${
                 (overdueCount ?? 0) > 0 ? "md:bg-[#feece7] md:text-[#c53e1c]" : "md:bg-[#fffbe6] md:text-[#8a5d00]"
               }`}>
-                <svg className={`h-4 w-4 md:h-5 md:w-5 ${(overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                <svg className={`h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 shrink-0 ${(overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
                   <circle cx="12" cy="12" r="9" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
                 </svg>
               </div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30]">Tenggat</span>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30] truncate">
+                Tenggat
+              </span>
             </div>
-            <div className="md:mt-2">
-              <p className={`font-display mt-1 md:mt-0 text-lg sm:text-2xl md:text-3xl font-black tracking-tight transition ${
+            <div className="w-full mt-1 md:mt-2">
+              <p className={`font-display text-lg sm:text-2xl md:text-3xl font-black tracking-tight transition leading-none py-0.5 ${
                 (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#10261b] group-hover:text-[#8a5d00]"
               }`}>
                 {(overdueCount ?? 0) > 0 ? `${overdueCount} Lewat` : `${upcomingItems.length} Dekat`}
               </p>
-              <span className={`text-[9px] sm:text-[10px] font-extrabold mt-0.5 block ${
+              <span className={`text-[9px] sm:text-[10.5px] font-extrabold mt-1 block truncate ${
                 (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"
               }`}>
-                {(overdueCount ?? 0) > 0 ? "Perlu Ditinjau Segera" : "3 Hari Mendatang"}
+                <span className="md:hidden">{(overdueCount ?? 0) > 0 ? "Perlu Tinjau" : "3 Hari Depan"}</span>
+                <span className="hidden md:inline">{(overdueCount ?? 0) > 0 ? "Perlu Ditinjau Segera" : "3 Hari Mendatang"}</span>
               </span>
             </div>
           </Link>
@@ -398,22 +404,25 @@ export default async function DashboardPage() {
           <Link
             href={`/rekap${semesterFilter}`}
             prefetch={true}
-            className="flex flex-col items-center md:items-start text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
+            className="flex flex-col items-center md:items-start justify-between text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
           >
-            <div className="flex items-center gap-1.5 text-[#55675b]">
+            <div className="flex items-center justify-center md:justify-start gap-1 sm:gap-1.5 text-[#55675b] w-full min-h-[22px]">
               <div className="md:p-2 md:rounded-xl md:bg-[#e8e1fa] md:text-[#5c3a9c]">
-                <svg className="h-4 w-4 md:h-5 md:w-5 text-[#5c3a9c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-[#5c3a9c] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30]">Progress</span>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30] truncate">
+                Progress
+              </span>
             </div>
-            <div className="md:mt-2">
-              <p className="font-display mt-1 md:mt-0 text-lg sm:text-2xl md:text-3xl font-black text-[#10261b] tracking-tight group-hover:text-[#5c3a9c] transition">
+            <div className="w-full mt-1 md:mt-2">
+              <p className="font-display text-lg sm:text-2xl md:text-3xl font-black text-[#10261b] tracking-tight group-hover:text-[#5c3a9c] transition leading-none py-0.5">
                 {completionRate}%
               </p>
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-[#5c3a9c] mt-0.5 block">
-                {completeCount ?? 0} Selesai Dikerjakan
+              <span className="text-[9px] sm:text-[10.5px] font-extrabold text-[#5c3a9c] mt-1 block truncate">
+                <span className="md:hidden">{completeCount ?? 0} Selesai</span>
+                <span className="hidden md:inline">{completeCount ?? 0} Selesai Dikerjakan</span>
               </span>
             </div>
           </Link>
