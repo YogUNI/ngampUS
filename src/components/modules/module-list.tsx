@@ -101,145 +101,85 @@ export function ModuleList({
 
   return (
     <div className="mt-5 space-y-4 sm:space-y-6">
-      {/* ── STREAMLINED STAT STRIP (Compact Single-Strip on Mobile, 4-Card Executive Grid on Desktop) ── */}
-      {/* Mobile View (< md) */}
-      <div className="md:hidden rounded-3xl border border-[#d8e3da] bg-white p-4 shadow-xs">
-        <div className="grid grid-cols-3 divide-x divide-[#e8eee9]">
-          {/* Total Modul */}
-          <div className="flex flex-col items-center text-center px-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] block min-h-[26px] flex items-center justify-center">
-              Total Modul
+      {/* ── 01 // METRIC DOSSIER STRIP: ARCHIVAL STUDY DOCKET ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* Card 1: Total Modul */}
+        <div className="group flex flex-col justify-between rounded-2xl border border-[#d6e2d8] bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#0f6849] hover:shadow-md">
+          <div className="flex items-center justify-between">
+            <span className="stamp-badge border-[#0f6849]/25 bg-[#dff3e5] text-[#0f6849]">
+              [CDX-01]
             </span>
-            <div className="mt-1 flex items-baseline justify-center gap-1">
-              <span className="font-display text-xl font-black text-[#10261b] leading-none">
+            <span className="tag-mono text-[10px] font-bold text-[#697c6f] group-hover:text-[#0f6849] transition">
+              TOTAL ARSIP
+            </span>
+          </div>
+          <div className="mt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-3xl sm:text-4xl font-black text-[#10261b] tracking-tight leading-none">
                 {totalModules}
               </span>
-              <span className="text-[10px] font-bold text-[#697c6f]">Materi</span>
-            </div>
-          </div>
-
-          {/* Sudah Dibaca */}
-          <div className="flex flex-col items-center text-center px-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#0f6849] block min-h-[26px] flex items-center justify-center">
-              Selesai Dibaca
-            </span>
-            <div className="mt-1 flex items-baseline justify-center gap-1">
-              <span className="font-display text-xl font-black text-[#0f6849] leading-none">
-                {readModules}
+              <span className="tag-mono text-xs font-bold text-[#455c4e]">
+                Materi Tersimpan
               </span>
-              <span className="text-[10px] font-bold text-[#0f6849]">Modul</span>
             </div>
+            <p className="tag-mono text-[10.5px] font-medium text-[#697c6f] mt-1 truncate">
+              {courses.length} mata kuliah semester ini
+            </p>
           </div>
-
-          {/* Progress Rate */}
-          <div className="flex flex-col items-center text-center px-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#5c3a9c] block min-h-[26px] flex items-center justify-center">
-              Pemahaman
-            </span>
-            <div className="mt-1 flex items-baseline justify-center gap-1">
-              <span className="font-display text-xl font-black text-[#5c3a9c] leading-none">
-                {completedRate}%
-              </span>
-              <span className="text-[10px] font-bold text-[#5c3a9c]">Tuntas</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Bar Mobile */}
-        <div className="mt-3 pt-3 border-t border-[#f0f4f0]">
-          <div className="flex items-center justify-between text-[11px] font-bold text-[#697c6f] mb-1.5">
-            <span>Progress Belajar</span>
-            <span className="font-black text-[#0f6849]">{readModules} dari {totalModules} materi</span>
-          </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#f0f4f0] border border-[#d8e3da]">
-            <div
-              className="h-full rounded-full bg-[#0f6849] transition-all duration-500"
-              style={{ width: `${completedRate}%` }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Desktop View (>= md): 4 Solid Metric Cards matching Executive Dashboard aesthetic */}
-      <div className="hidden md:grid md:grid-cols-4 gap-4">
-        {/* Card 1: Total Modul */}
-        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#a9cdb2]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#697c6f]">
-              Total Modul
-            </span>
-            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#f0f4f0] text-[#0f6849]">
-              <BookOpen size={16} />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-display text-3xl font-black text-[#10261b]">
-              {totalModules}
-            </span>
-            <span className="text-xs font-bold text-[#697c6f]">Pertemuan Tersimpan</span>
-          </div>
-          <p className="mt-1 text-[11px] text-[#8b9e91]">Seluruh mata kuliah semester ini</p>
         </div>
 
         {/* Card 2: Sudah Dibaca */}
-        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#a9cdb2]">
+        <div className="group flex flex-col justify-between rounded-2xl border border-[#d6e2d8] bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#0f6849] hover:shadow-md">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#0f6849]">
-              Selesai Dibaca
+            <span className="stamp-badge border-[#bbf7d0] bg-[#dcfce7] text-[#166534]">
+              [RDY-02]
             </span>
-            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[#0f6849]">
-              <Sparkles size={16} />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-display text-3xl font-black text-[#0f6849]">
-              {readModules}
+            <span className="tag-mono text-[10px] font-bold text-[#166534] transition">
+              {completedRate}% TUNTAS
             </span>
-            <span className="text-xs font-bold text-[#0f6849]">Modul Tuntas</span>
           </div>
-          <p className="mt-1 text-[11px] text-[#8b9e91]">Materi siap dipelajari & diuji</p>
-        </div>
-
-        {/* Card 3: Belum Dibaca */}
-        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#a9cdb2]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#8a5d00]">
-              Belum Dibaca
-            </span>
-            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#fffbe6] text-[#8a5d00]">
-              <FolderOpen size={16} />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-display text-3xl font-black text-[#8a5d00]">
-              {Math.max(0, totalModules - readModules)}
-            </span>
-            <span className="text-xs font-bold text-[#8a5d00]">Perlu Ditinjau</span>
-          </div>
-          <p className="mt-1 text-[11px] text-[#8b9e91]">Persiapan sebelum perkuliahan</p>
-        </div>
-
-        {/* Card 4: Progress Belajar */}
-        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs flex flex-col justify-between transition hover:shadow-md hover:border-[#a9cdb2]">
-          <div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#5c3a9c]">
-                Tingkat Selesai
+          <div className="mt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-3xl sm:text-4xl font-black text-[#0f6849] tracking-tight leading-none">
+                {readModules}
               </span>
-              <span className="font-display text-xl font-black text-[#5c3a9c]">
-                {completedRate}%
+              <span className="tag-mono text-xs font-bold text-[#0f6849]">
+                Modul Selesai
               </span>
             </div>
-            <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-[#f0f4f0] border border-[#d8e3da]">
-              <div
-                className="h-full rounded-full bg-[#5c3a9c] transition-all duration-500"
-                style={{ width: `${completedRate}%` }}
+            {/* Minimalist Progress Meter */}
+            <div className="mt-2 h-1.5 w-full rounded-full bg-[#f0f4f0] overflow-hidden border border-[#d8e3da]">
+              <div 
+                className="h-full bg-[#0f6849] rounded-full transition-all duration-500" 
+                style={{ width: `${completedRate}%` }} 
               />
             </div>
           </div>
-          <p className="mt-2 text-[11px] font-bold text-[#697c6f]">
-            {readModules} dari {totalModules} materi tuntas
-          </p>
+        </div>
+
+        {/* Card 3: Perlu Ditinjau */}
+        <div className="group flex flex-col justify-between rounded-2xl border border-[#d6e2d8] bg-white p-4 shadow-sm transition-all duration-200 hover:border-[#b45309] hover:shadow-md">
+          <div className="flex items-center justify-between">
+            <span className="stamp-badge border-[#fde68a] bg-[#fef3c7] text-[#92400e]">
+              [REV-03]
+            </span>
+            <span className="tag-mono text-[10px] font-bold text-[#92400e]">
+              PERSIAPAN
+            </span>
+          </div>
+          <div className="mt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-3xl sm:text-4xl font-black text-[#10261b] tracking-tight leading-none">
+                {Math.max(0, totalModules - readModules)}
+              </span>
+              <span className="tag-mono text-xs font-bold text-[#78350f]">
+                Perlu Dipelajari
+              </span>
+            </div>
+            <p className="tag-mono text-[10.5px] font-medium text-[#697c6f] mt-1 truncate">
+              Siap diuji lewat Tutor & Kuis AI
+            </p>
+          </div>
         </div>
       </div>
 
@@ -410,33 +350,33 @@ export function ModuleList({
                 className="rounded-3xl border border-[#d8e3da] bg-white shadow-xs overflow-hidden transition"
               >
                 {/* Course Group Accordion Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-5 bg-[#fafbfa] border-b border-[#f0f4f0]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 bg-[#fafbfa] border-b border-[#edf2ee]">
                   <button
                     type="button"
                     onClick={() => toggleCourseExpand(course.id)}
-                    className="flex items-start sm:items-center gap-2.5 sm:gap-3 text-left min-w-0 flex-1 group transition active:scale-[0.99]"
+                    className="flex items-start sm:items-center gap-3 text-left min-w-0 flex-1 group transition active:scale-[0.99] cursor-pointer"
                   >
                     <span className="text-[#697c6f] group-hover:text-[#10261b] mt-0.5 sm:mt-0 shrink-0 transition">
-                      {isExpanded ? <ChevronDown size={19} /> : <ChevronRight size={19} />}
+                      {isExpanded ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                     </span>
 
                     <span
-                      className="h-3.5 w-3.5 rounded-full shrink-0 ring-2 ring-white shadow-xs mt-1 sm:mt-0"
+                      className="h-4 w-4 rounded-full shrink-0 ring-2 ring-white shadow-xs mt-1 sm:mt-0"
                       style={{ backgroundColor: course.warna_label || "#0f6849" }}
                     />
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h2 className="font-display text-sm sm:text-base font-black text-[#10261b] leading-snug break-words group-hover:text-[#0f6849] transition">
+                        <h2 className="font-display text-base sm:text-lg font-black text-[#10261b] leading-snug break-words group-hover:text-[#0f6849] transition">
                           {course.nama_matkul}
                         </h2>
                         {course.kode_matkul && (
-                          <span className="rounded-md bg-white px-1.5 py-0.5 text-[9.5px] font-black uppercase text-[#697c6f] border border-[#d8e3da] shrink-0">
+                          <span className="tag-mono rounded-md bg-white px-2 py-0.5 text-[10px] font-black uppercase text-[#425a4c] border border-[#d8e3da] shrink-0">
                             {course.kode_matkul}
                           </span>
                         )}
                         {course.sks && (
-                          <span className="text-[10px] sm:text-xs font-bold text-[#697c6f] shrink-0">
+                          <span className="tag-mono text-xs font-bold text-[#697c6f] shrink-0">
                             · {course.sks} SKS
                           </span>
                         )}
@@ -444,9 +384,9 @@ export function ModuleList({
                     </div>
                   </button>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t border-[#f0f4f0] pt-2.5 sm:border-0 sm:pt-0">
-                    <span className="rounded-full bg-white px-2.5 py-1 text-[10.5px] font-black text-[#0f6849] border border-[#d8e3da]">
-                      {courseReadCount}/{courseModules.length} Modul Selesai
+                  <div className="flex items-center justify-between sm:justify-end gap-2.5 shrink-0 border-t border-[#edf2ee] pt-2.5 sm:border-0 sm:pt-0">
+                    <span className="stamp-badge border-[#d6e2d8] bg-white text-[#0f6849]">
+                      {courseReadCount}/{courseModules.length} TUNTAS
                     </span>
 
                     <ModuleFormModal
@@ -454,17 +394,17 @@ export function ModuleList({
                       defaultCourseId={course.id}
                       defaultPertemuan={nextPertemuan}
                       triggerText={`+ Pertemuan ${nextPertemuan}`}
-                      triggerClass="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] px-3 py-1.5 text-[11px] sm:text-xs font-black text-white hover:bg-[#0c4e37] transition shadow-2xs"
+                      triggerClass="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-3.5 py-1.5 text-xs font-black text-[#c8ef70] hover:bg-[#1a4a34] transition active:scale-95 shadow-2xs cursor-pointer"
                     />
                   </div>
                 </div>
 
                 {/* ── PERTEMUAN QUICK JUMP CHIPS (When many modules exist) ── */}
                 {isExpanded && courseModules.length > 0 && (
-                  <div className="px-4 pt-3 pb-1 border-b border-[#f0f4f0] bg-white">
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] shrink-0 mr-1">
-                        Pertemuan:
+                  <div className="px-4 py-2.5 border-b border-[#edf2ee] bg-[#fcfdfc]">
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                      <span className="tag-mono text-[10px] font-black uppercase text-[#697c6f] shrink-0">
+                        PERTEMUAN:
                       </span>
                       {courseModules.map((m) => {
                         const isDone = m.status === "sudah_baca" || m.status === "dipelajari";
@@ -472,14 +412,14 @@ export function ModuleList({
                           <a
                             key={m.id}
                             href={`#module-${m.id}`}
-                            className={`grid h-6 min-w-[24px] px-1.5 place-items-center rounded-lg text-[10px] font-black transition active:scale-95 shrink-0 border ${
+                            className={`tag-mono grid h-6.5 min-w-[28px] px-2 place-items-center rounded-lg text-[10px] font-black transition active:scale-95 shrink-0 border ${
                               isDone
-                                ? "bg-[#dff3e5] text-[#0f6849] border-[#b9ddc6]"
-                                : "bg-[#f4f7f4] text-[#697c6f] border-[#d8e3da] hover:bg-white"
+                                ? "bg-[#dff3e5] text-[#0f6849] border-[#b9ddc6] hover:bg-[#d5eedc]"
+                                : "bg-white text-[#425a4c] border-[#d8e3da] hover:border-[#0f6849]"
                             }`}
                             title={`Lompat ke Pertemuan ${m.pertemuan}: ${m.topik}`}
                           >
-                            P{m.pertemuan}
+                            P-{m.pertemuan < 10 ? `0${m.pertemuan}` : m.pertemuan}
                           </a>
                         );
                       })}

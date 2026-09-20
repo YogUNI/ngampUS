@@ -298,37 +298,37 @@ export function ModuleDetailClient({
         </div>
       </div>
 
-      {/* ── Header Banner ── */}
+      {/* ── Header Banner: Campus Codex Detail Deck ── */}
       <header
-        className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-7 shadow-xs relative overflow-hidden"
+        className="rounded-3xl border border-[#d6e2d8] bg-white p-5 sm:p-7 shadow-sm relative overflow-hidden"
         style={{
-          borderLeftColor: module.courses?.warna_label || "var(--brand)",
+          borderLeftColor: module.courses?.warna_label || "#0f6849",
           borderLeftWidth: "6px",
         }}
       >
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="space-y-1.5 max-w-3xl">
+          <div className="space-y-2 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md bg-[var(--card-subtle)] px-2.5 py-0.5 text-xs font-black tracking-wide text-[var(--brand)] border border-[var(--line)]">
-                Pertemuan {module.pertemuan}
+              <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
+                PERTEMUAN {module.pertemuan < 10 ? `0${module.pertemuan}` : module.pertemuan}
               </span>
-              <span className="text-xs font-bold text-[var(--muted)]">
+              <span className="tag-mono text-xs font-bold text-[#455c4e]">
                 {module.courses?.nama_matkul}
                 {module.courses?.kode_matkul ? ` (${module.courses.kode_matkul})` : ""}
               </span>
               {module.tanggal_pertemuan && (
-                <span className="inline-flex items-center gap-1 text-xs text-[var(--muted)] font-medium">
-                  <Calendar size={13} /> {module.tanggal_pertemuan}
+                <span className="tag-mono inline-flex items-center gap-1 text-xs text-[#697c6f]">
+                  <Calendar size={13} className="text-[#0f6849]" /> {module.tanggal_pertemuan}
                 </span>
               )}
             </div>
 
-            <h1 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-[#10261b]">
               {module.topik}
             </h1>
 
             {module.deskripsi && (
-              <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#55675b] leading-relaxed">
                 {module.deskripsi}
               </p>
             )}
@@ -336,15 +336,15 @@ export function ModuleDetailClient({
 
           {/* Document Indicator Badge */}
           {module.file_url && (
-            <div className="flex items-center gap-2 rounded-2xl border border-sky-200 dark:border-sky-800/60 bg-sky-50 dark:bg-sky-950/40 p-3 shrink-0">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-sky-500 text-white shadow-2xs">
+            <div className="flex items-center gap-3 rounded-2xl border border-[#d8e3da] bg-[#fafbfa] p-3.5 shrink-0 shadow-2xs">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#103626] text-[#c8ef70] shadow-2xs">
                 <FileCheck size={20} />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-300">
-                  RAG Document Grounded
+                <p className="tag-mono text-[10px] font-black uppercase tracking-wider text-[#0f6849]">
+                  BERKAS GROUNDING AI
                 </p>
-                <p className="text-xs font-bold text-[var(--ink)] truncate max-w-[180px] sm:max-w-xs">
+                <p className="text-xs font-bold text-[#10261b] truncate max-w-[180px] sm:max-w-xs">
                   {module.file_name}
                 </p>
                 <a
@@ -352,7 +352,7 @@ export function ModuleDetailClient({
                   target="_blank"
                   rel="noopener noreferrer"
                   download={module.file_name}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-600 dark:text-sky-400 hover:underline mt-0.5"
+                  className="tag-mono inline-flex items-center gap-1 text-[11px] font-black text-[#0f6849] hover:underline mt-0.5"
                 >
                   <Download size={11} /> Unduh File ({formatBytes(module.file_size)})
                 </a>

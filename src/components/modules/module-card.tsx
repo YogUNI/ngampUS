@@ -115,18 +115,18 @@ export function ModuleCard({
   return (
     <>
       <article
-        className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-4 sm:p-5 transition-all duration-200 hover:border-[var(--brand)]/30 hover:shadow-md"
-        style={{ borderLeftColor: courseColor || "var(--brand)", borderLeftWidth: "4px" }}
+        className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#d6e2d8] bg-white p-4 sm:p-5 shadow-sm transition-all duration-200 hover:border-[#0f6849]/50 hover:shadow-md"
+        style={{ borderLeftColor: courseColor || "#0f6849", borderLeftWidth: "4px" }}
       >
         <div>
           {/* Top row: Pertemuan & Status */}
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 flex-wrap min-w-0">
-              <span className="inline-flex items-center gap-1 rounded-md bg-[var(--card-subtle)] px-2 py-0.5 text-[11px] font-black tracking-wide text-[var(--brand)] border border-[var(--line)] shrink-0">
-                Pertemuan {module.pertemuan}
+              <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
+                PERTEMUAN {module.pertemuan < 10 ? `0${module.pertemuan}` : module.pertemuan}
               </span>
               {courseName && (
-                <span className="text-xs font-bold text-[var(--muted)] truncate max-w-[140px] sm:max-w-[200px]">
+                <span className="tag-mono text-[11px] font-bold text-[#697c6f] truncate max-w-[140px] sm:max-w-[200px]">
                   · {courseName}
                 </span>
               )}
@@ -138,9 +138,9 @@ export function ModuleCard({
               onClick={handleCycleStatus}
               disabled={isUpdatingStatus}
               title="Klik untuk mengubah status baca"
-              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider transition hover:scale-105 active:scale-95 disabled:opacity-50 ${cfg.badge}`}
+              className={`stamp-badge transition hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer ${cfg.badge}`}
             >
-              <StatusIcon size={12} strokeWidth={2.5} />
+              <StatusIcon size={11} strokeWidth={2.5} />
               <span>{cfg.label}</span>
             </button>
           </div>
@@ -148,34 +148,34 @@ export function ModuleCard({
           {/* Topik Title linked to dedicated detail page */}
           <Link
             href={`/modul/${module.id}`}
-            className="group/title mt-2.5 block"
+            className="group/title mt-3 block"
           >
-            <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)] group-hover/title:text-[var(--brand)] transition flex items-start gap-1.5 leading-snug">
+            <h3 className="font-display text-base sm:text-lg font-black text-[#10261b] group-hover/title:text-[#0f6849] transition flex items-start gap-1.5 leading-snug">
               <span className="break-words">{module.topik}</span>
-              <ArrowRight size={14} className="mt-0.5 opacity-0 -translate-x-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all text-[var(--brand)] shrink-0" />
+              <ArrowRight size={15} className="mt-0.5 opacity-0 -translate-x-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all text-[#0f6849] shrink-0" />
             </h3>
           </Link>
 
           {/* Deskripsi */}
           {module.deskripsi && (
-            <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed line-clamp-2">
+            <p className="mt-1 text-xs text-[#55675b] leading-relaxed line-clamp-2">
               {module.deskripsi}
             </p>
           )}
 
           {/* Direct File Document Badge / Download Box */}
           {module.file_url && module.file_name && (
-            <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] p-2.5 transition hover:bg-[var(--card-bg)]">
+            <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-[#d8e3da] bg-[#fafbfa] p-2.5 transition hover:bg-white hover:border-[#0f6849]/40 hover:shadow-2xs">
               <div className="flex items-center gap-2 min-w-0 flex-1">
-                <span className={`shrink-0 rounded-md border px-1.5 py-0.5 text-[9px] font-black ${fileBadge.color}`}>
+                <span className={`shrink-0 tag-mono rounded-md border px-1.5 py-0.5 text-[9px] font-black ${fileBadge.color}`}>
                   {fileBadge.label}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-bold text-[var(--ink)]">
+                  <p className="truncate text-xs font-bold text-[#10261b]">
                     {module.file_name}
                   </p>
                   {module.file_size ? (
-                    <p className="text-[10px] text-[var(--muted)] font-medium">
+                    <p className="tag-mono text-[10px] text-[#697c6f]">
                       {formatBytes(module.file_size)}
                     </p>
                   ) : null}
@@ -187,7 +187,7 @@ export function ModuleCard({
                 download={module.file_name}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[var(--brand)] px-2 py-1 text-[10px] sm:text-[11px] font-black text-white shadow-2xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+                className="tag-mono inline-flex shrink-0 items-center gap-1 rounded-lg bg-[#103626] px-2.5 py-1 text-[10.5px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
                 title="Unduh file dokumen"
               >
                 <Download size={11} /> Unduh
@@ -195,31 +195,33 @@ export function ModuleCard({
             </div>
           )}
 
-          {/* Catatan / Resume */}
+          {/* Catatan / Resume (Ruled notebook style) */}
           {module.catatan && (
-            <div className="mt-3 rounded-xl border border-dashed border-[var(--line)] bg-[var(--card-subtle)] p-2.5 text-[11px] text-[var(--ink)]">
-              <p className="font-bold text-[10px] uppercase tracking-wider text-[var(--muted)] mb-0.5">
-                📝 Catatan Kuliah:
-              </p>
-              <p className="line-clamp-3 whitespace-pre-wrap">{module.catatan}</p>
+            <div className="mt-3 rounded-xl border border-[#dce6de] bg-[#fbfdfb] p-3 text-[11px] text-[#1e382b] relative overflow-hidden">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <span className="tag-mono font-bold text-[9.5px] uppercase tracking-wider text-[#0f6849]">
+                  📝 RESUME CATATAN:
+                </span>
+              </div>
+              <p className="line-clamp-3 whitespace-pre-wrap leading-relaxed font-sans">{module.catatan}</p>
             </div>
           )}
 
-          {/* ── AI STUDY COMPANION TOOLBAR ── */}
-          <div className="mt-3.5 rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-2 sm:p-2.5">
+          {/* ── AI STUDY COMPANION TOOLBAR (Campustech Atelier Style) ── */}
+          <div className="mt-3.5 rounded-2xl border border-[#d8e3da] bg-[#fcfdfc] p-2.5">
             <div className="flex items-center justify-between px-1 mb-2 gap-1.5">
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[var(--brand)] truncate">
-                <Sparkles size={12} className="shrink-0" /> Study AI
+              <span className="tag-mono flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[#0f6849]">
+                <Sparkles size={12} className="shrink-0 text-[#0f6849]" /> STUDY AI SUITE
               </span>
               <div className="flex items-center gap-2 shrink-0">
                 {module.ai_summary && (
-                  <span className="hidden xs:inline-block text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="hidden xs:inline-block tag-mono text-[9.5px] font-bold text-[#0f6849]">
                     ✓ Rangkuman Siap
                   </span>
                 )}
                 <Link
                   href={`/modul/${module.id}`}
-                  className="inline-flex items-center gap-0.5 text-[10.5px] font-black text-[var(--brand)] hover:underline shrink-0"
+                  className="tag-mono inline-flex items-center gap-0.5 text-[10.5px] font-black text-[#0f6849] hover:underline shrink-0"
                   title="Buka ruang belajar penuh untuk modul ini"
                 >
                   Ruang Belajar →
@@ -227,15 +229,15 @@ export function ModuleCard({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
+            <div className="grid grid-cols-3 gap-1.5">
               {/* 1. Rangkuman AI */}
               <button
                 type="button"
                 onClick={() => setIsSummaryOpen(true)}
-                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs text-center"
+                className="tag-mono inline-flex items-center justify-center gap-1 rounded-xl bg-white py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-bold text-[#10261b] border border-[#d8e3da] hover:border-[#0f6849] hover:text-[#0f6849] transition shadow-2xs text-center cursor-pointer"
                 title="Rangkum materi dengan AI"
               >
-                <BookOpen size={11} className="text-[var(--brand)] shrink-0" />
+                <BookOpen size={11} className="text-[#0f6849] shrink-0" />
                 <span className="truncate">Rangkum</span>
               </button>
 
@@ -243,10 +245,10 @@ export function ModuleCard({
               <button
                 type="button"
                 onClick={() => setIsChatOpen(true)}
-                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs text-center"
+                className="tag-mono inline-flex items-center justify-center gap-1 rounded-xl bg-white py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-bold text-[#10261b] border border-[#d8e3da] hover:border-[#0f6849] hover:text-[#0f6849] transition shadow-2xs text-center cursor-pointer"
                 title="Tanya AI seputar materi pertemuan ini"
               >
-                <Bot size={11} className="text-[var(--brand)] shrink-0" />
+                <Bot size={11} className="text-[#0f6849] shrink-0" />
                 <span className="truncate">Tanya AI</span>
               </button>
 
@@ -254,7 +256,7 @@ export function ModuleCard({
               <button
                 type="button"
                 onClick={() => setIsQuizOpen(true)}
-                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#103626] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95 text-center"
+                className="tag-mono inline-flex items-center justify-center gap-1 rounded-xl bg-[#103626] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95 text-center cursor-pointer"
                 title="Uji pemahaman dengan Kuis AI"
               >
                 <Trophy size={11} className="shrink-0" />
@@ -265,16 +267,16 @@ export function ModuleCard({
         </div>
 
         {/* Bottom meta & links */}
-        <div className="mt-4 pt-3 border-t border-[var(--line)] flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-3 text-[11px] text-[var(--muted)] font-medium">
+        <div className="mt-4 pt-3 border-t border-[#edf2ee] flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-3 text-[11px] text-[#697c6f] font-medium">
             {module.tanggal_pertemuan ? (
-              <span className="flex items-center gap-1">
-                <Calendar size={13} />
+              <span className="tag-mono flex items-center gap-1 text-[10.5px]">
+                <Calendar size={12} className="text-[#0f6849]" />
                 {module.tanggal_pertemuan}
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-[10px] text-[var(--muted)]">
-                <Clock size={12} /> Sesuai Jadwal
+              <span className="tag-mono flex items-center gap-1 text-[10px] text-[#697c6f]">
+                <Clock size={11} /> Sesuai Jadwal
               </span>
             )}
           </div>
@@ -285,10 +287,10 @@ export function ModuleCard({
                 href={module.link_modul}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-2.5 py-1.5 text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
+                className="tag-mono inline-flex items-center gap-1 rounded-xl bg-[#103626] px-2.5 py-1 text-[10.5px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
                 title="Buka tautan eksternal"
               >
-                <Link2 size={12} /> Link
+                <Link2 size={11} /> Link
               </a>
             )}
 
@@ -297,9 +299,9 @@ export function ModuleCard({
                 href={module.link_tugas}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-2.5 py-1.5 text-[11px] font-bold text-[var(--ink)] hover:bg-[var(--card-subtle)] transition"
+                className="tag-mono inline-flex items-center gap-1 rounded-xl border border-[#d8e3da] bg-white px-2.5 py-1 text-[10.5px] font-bold text-[#10261b] hover:bg-[#f4faf6] transition"
               >
-                <ExternalLink size={12} /> Tugas
+                <ExternalLink size={11} /> Tugas
               </a>
             )}
 
@@ -308,7 +310,7 @@ export function ModuleCard({
               type="button"
               onClick={() => setIsEditing(true)}
               title="Edit modul"
-              className="grid h-7 w-7 place-items-center rounded-lg text-[var(--muted)] transition hover:bg-[var(--card-subtle)] hover:text-[var(--ink)]"
+              className="grid h-7 w-7 place-items-center rounded-lg text-[#697c6f] transition hover:bg-[#f0f4f0] hover:text-[#10261b] cursor-pointer"
             >
               <Pencil size={13} />
             </button>
