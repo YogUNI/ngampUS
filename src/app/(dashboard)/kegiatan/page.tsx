@@ -9,6 +9,8 @@ import { ActivityEditForm } from "@/components/activities/activity-edit-form";
 import { categoryClass, statusClass } from "@/lib/activity-styles";
 import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
 
+import { ActivityFilterBar } from "@/components/activities/activity-filter-bar";
+
 type ActivityFilters = {
   q?: string;
   view?: string;
@@ -75,88 +77,47 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
   const activeSemester = semesters?.find((s) => s.is_active) ?? semesters?.[0];
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-sm font-bold text-[var(--brand)]">SEMUA KOMITMEN</p>
-          <h1 className="font-display mt-1 text-4xl font-extrabold tracking-[-.045em]">Kegiatan kamu</h1>
-          <p className="mt-2 text-[var(--muted)]">Satu ruang untuk tugas, tanggung jawab organisasi, lomba, dan event.</p>
+    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
+      {/* ── Compact Header ── */}
+      <header className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[var(--brand)]">
+              SEMUA KOMITMEN
+            </span>
+            {activeSemester && (
+              <span className="hidden sm:inline-flex rounded-md bg-[var(--card-subtle)] px-2 py-0.5 text-[10px] font-bold text-[var(--muted)] border border-[var(--line)]">
+                {activeSemester.nama_semester}
+              </span>
+            )}
+          </div>
+          <h1 className="font-display mt-0.5 text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
+            Kegiatan kamu
+          </h1>
         </div>
-        <ActivityForm
-          semesters={(semesters ?? []).map((semester) => ({ id: semester.id, name: semester.nama_semester, active: semester.is_active }))}
-          organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))}
-          programs={mappedPrograms}
-          courses={mappedCourses}
-        />
+
+        <div className="shrink-0">
+          <ActivityForm
+            semesters={(semesters ?? []).map((semester) => ({ id: semester.id, name: semester.nama_semester, active: semester.is_active }))}
+            organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))}
+            programs={mappedPrograms}
+            courses={mappedCourses}
+            triggerClass="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
+            triggerText="Tambah Kegiatan"
+          />
+        </div>
       </header>
 
-      <section className="mt-8">
-        <div>
-          <div className="mb-4 rounded-2xl border border-[var(--line)] bg-white p-3 sm:p-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="text-[var(--brand)]" size={17}/>
-                <h2 className="font-display text-lg font-extrabold">Saring kegiatan</h2>
-              </div>
-              <div className="flex rounded-xl bg-[#f7f8f5] p-1">
-                <Link
-                  className={`rounded-lg px-3 py-1.5 text-sm font-bold ${!calendar ? "bg-white text-[var(--brand)] shadow-sm" : "text-[var(--muted)]"}`}
-                  href={makeHref(filters, "list")}
-                >
-                  List
-                </Link>
-                <Link
-                  className={`rounded-lg px-3 py-1.5 text-sm font-bold ${calendar ? "bg-white text-[var(--brand)] shadow-sm" : "text-[var(--muted)]"}`}
-                  href={makeHref(filters, "calendar")}
-                >
-                  Kalender
-                </Link>
-              </div>
-            </div>
-            <form className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-              {calendar && <input type="hidden" name="view" value="calendar"/>}
-              <input
-                type="text"
-                name="q"
-                defaultValue={filters.q || ""}
-                placeholder="Cari judul..."
-                className="rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm outline-none focus:border-[var(--brand)]"
-              />
-              <select name="semester_id" defaultValue={filters.semester_id || ""} className="rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm">
-                <option value="">Semua semester</option>
-                {semesters?.map((semester) => <option key={semester.id} value={semester.id}>{semester.nama_semester}</option>)}
-              </select>
-              <select name="organization_id" defaultValue={filters.organization_id || ""} className="rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm">
-                <option value="">Semua organisasi</option>
-                {organizations?.map((organization) => <option key={organization.id} value={organization.id}>{organization.nama_organisasi}</option>)}
-              </select>
-              <select name="kategori" defaultValue={filters.kategori || ""} className="rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm">
-                <option value="">Semua kategori</option>
-                <option value="kuliah">Kuliah</option>
-                <option value="organisasi">Organisasi</option>
-                <option value="lomba">Lomba</option>
-                <option value="event">Event</option>
-                <option value="lainnya">Lainnya</option>
-              </select>
-              <select name="prioritas" defaultValue={filters.prioritas || ""} className="rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm">
-                <option value="">Semua prioritas</option>
-                <option value="tinggi">Tinggi</option>
-                <option value="sedang">Sedang</option>
-                <option value="rendah">Rendah</option>
-              </select>
-              <div className="flex gap-2">
-                <select name="status" defaultValue={filters.status || ""} className="min-w-0 flex-1 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm">
-                  <option value="">Semua status</option>
-                  <option value="belum_mulai">Belum mulai</option>
-                  <option value="on_progress">Berjalan</option>
-                  <option value="selesai">Selesai</option>
-                </select>
-                <button className="rounded-xl bg-[var(--brand)] px-3 py-2 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]">
-                  Terapkan
-                </button>
-              </div>
-            </form>
-          </div>
+      {/* ── Filter & Search Section (Modern & Collapsible) ── */}
+      <section className="mt-5">
+        <ActivityFilterBar
+          filters={filters}
+          semesters={(semesters ?? []).map((s) => ({ id: s.id, name: s.nama_semester }))}
+          organizations={(organizations ?? []).map((o) => ({ id: o.id, name: o.nama_organisasi }))}
+          makeHref={makeHref}
+          calendar={calendar}
+          totalItems={activities?.length || 0}
+        />
 
           {calendar ? (
             <CalendarView
@@ -338,7 +299,6 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
               </div>
             </div>
           )}
-        </div>
       </section>
     </div>
   );

@@ -117,18 +117,20 @@ export function ActivityForm({
 
   const modalContent = open ? (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 overflow-y-auto">
-      <div className="relative w-full max-w-xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto rounded-t-[2rem] sm:rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-2xl pb-24 sm:pb-7">
+      <div className="relative w-full max-w-xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto rounded-t-[2rem] sm:rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-6 shadow-2xl pb-24 sm:pb-6">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">
-                <Plus size={18}/>
+              <span className="grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)] shrink-0">
+                <Plus size={17} />
               </span>
-              <h2 className="font-display text-xl sm:text-2xl font-extrabold">Jadwalkan / Catat Kegiatan</h2>
+              <h2 className="font-display text-lg sm:text-2xl font-extrabold truncate">
+                Jadwalkan / Catat Kegiatan
+              </h2>
             </div>
-            <p className="mt-1 text-xs text-[var(--muted)]">
-              Pilih tipe kegiatan agar form menyesuaikan kebutuhanmu secara otomatis.
+            <p className="mt-1 text-[11px] sm:text-xs text-[var(--muted)]">
+              Pilih tipe kegiatan agar form menyesuaikan secara otomatis.
             </p>
           </div>
           <button
@@ -138,27 +140,28 @@ export function ActivityForm({
               setOpen(false);
               onClose?.();
             }}
-            className="rounded-xl p-2 text-[var(--muted)] hover:bg-[#f7f8f5] hover:text-[var(--ink)]"
+            className="rounded-xl p-1.5 text-[var(--muted)] hover:bg-[#f7f8f5] hover:text-[var(--ink)] transition shrink-0"
           >
-            <X size={19}/>
+            <X size={18} />
           </button>
         </div>
 
         {/* Mode Selector Tabs */}
-        <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-[#f0f4f1] p-1.5">
+        <div className="mt-4 grid grid-cols-3 gap-1.5 rounded-2xl bg-[#f0f4f1] p-1">
           <button
             type="button"
             onClick={() => {
               setMode("agenda");
               if (kategori === "kuliah") handleKategoriChange("organisasi");
             }}
-            className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-black transition ${
+            className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] sm:text-xs font-black transition text-center truncate ${
               mode === "agenda"
-                ? "bg-white text-[var(--brand)] shadow-sm"
+                ? "bg-white text-[var(--brand)] shadow-xs"
                 : "text-[var(--muted)] hover:text-[#103626]"
             }`}
           >
-            <Calendar size={15}/> Agenda / Rapat
+            <Calendar size={13} className="shrink-0" />
+            <span className="truncate">Agenda / Rapat</span>
           </button>
 
           <button
@@ -167,25 +170,27 @@ export function ActivityForm({
               setMode("tugas");
               handleKategoriChange("kuliah");
             }}
-            className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-black transition ${
+            className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] sm:text-xs font-black transition text-center truncate ${
               mode === "tugas"
-                ? "bg-white text-[#b9442a] shadow-sm"
+                ? "bg-white text-[#b9442a] shadow-xs"
                 : "text-[var(--muted)] hover:text-[#103626]"
             }`}
           >
-            <CheckSquare size={15}/> Tugas / Deadline
+            <CheckSquare size={13} className="shrink-0" />
+            <span className="truncate">Tugas Kuliah</span>
           </button>
 
           <button
             type="button"
             onClick={() => setMode("catatan")}
-            className={`flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-black transition ${
+            className={`flex items-center justify-center gap-1 rounded-xl py-2 px-1 text-[11px] sm:text-xs font-black transition text-center truncate ${
               mode === "catatan"
-                ? "bg-white text-[#765800] shadow-sm"
+                ? "bg-white text-[#765800] shadow-xs"
                 : "text-[var(--muted)] hover:text-[#103626]"
             }`}
           >
-            <FileText size={15}/> Catatan Ide
+            <FileText size={13} className="shrink-0" />
+            <span className="truncate">Catatan Ide</span>
           </button>
         </div>
 

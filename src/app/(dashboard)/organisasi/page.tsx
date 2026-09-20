@@ -16,16 +16,18 @@ export default async function OrganizationsPage() {
   ]);
 
   const roleLabel: Record<string, string> = { ketua_umum: "Ketua Umum", wakil_ketua_umum: "Wakil Ketua", sekretaris: "Sekretaris", bendahara: "Bendahara", kepala_departemen: "Kepala Departemen", wakil_kepala_departemen: "Wakil Kepala Dept.", anggota: "Anggota", lainnya: "Lainnya" };
-  return <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8 lg:px-10">
-    <header className="flex flex-wrap items-end justify-between gap-4">
+  return <div className="mx-auto max-w-5xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
+    <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
       <div>
-        <p className="text-sm font-bold text-[var(--brand)]">RUANG KOLABORASI</p>
-        <h1 className="font-display mt-1 text-4xl font-extrabold tracking-[-.045em]">Organisasi saya</h1>
-        <p className="mt-2 text-[var(--muted)]">Simpan semua ruang tempat kamu tumbuh dan berkontribusi.</p>
+        <p className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[var(--brand)]">RUANG KOLABORASI</p>
+        <h1 className="font-display mt-0.5 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--ink)]">Organisasi saya</h1>
+        <p className="mt-1 text-xs text-[var(--muted)]">Simpan semua ruang tempat kamu tumbuh dan berkontribusi.</p>
       </div>
-      <OrganizationForm/>
+      <div className="shrink-0">
+        <OrganizationForm/>
+      </div>
     </header>
-    <section className="mt-8 grid gap-4 sm:grid-cols-2">
+    <section className="mt-6 grid gap-4 sm:grid-cols-2">
       {organizations?.length ? organizations.map((organization) => {
         const orgPositions = positions?.filter((item) => item.organization_id === organization.id) ?? [];
         const orgPrograms = programs?.filter((item) => item.organization_id === organization.id) ?? [];

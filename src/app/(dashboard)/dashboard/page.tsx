@@ -191,42 +191,42 @@ export default async function DashboardPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 lg:px-10">
 
       {/* ── Hero Header ── */}
-      <header className="relative overflow-hidden rounded-3xl border border-[#d6e2d8] bg-gradient-to-br from-white via-[#fbfdfa] to-[#edf5ee] p-5 sm:p-7 shadow-sm transition-all duration-300 hover:shadow-md">
+      <header className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-[#d6e2d8] bg-gradient-to-br from-white via-[#fbfdfa] to-[#edf5ee] p-4 sm:p-6 shadow-xs transition-all duration-300 hover:shadow-sm">
         {/* Subtle Ambient Decorative Glow */}
         <div 
-          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full opacity-35 blur-2xl"
+          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-25 blur-2xl"
           style={{ background: "radial-gradient(circle, rgba(200,239,112,.6), transparent 70%)" }}
         />
         <div 
-          className="pointer-events-none absolute right-32 -bottom-16 h-40 w-40 rounded-full opacity-20 blur-xl"
+          className="pointer-events-none absolute right-32 -bottom-16 h-36 w-36 rounded-full opacity-15 blur-xl"
           style={{ background: "radial-gradient(circle, rgba(15,104,73,.5), transparent 70%)" }}
         />
 
-        <div className="relative z-10 flex flex-wrap items-center justify-between gap-5">
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#0f6849]">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider text-[#0f6849]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
                 {dateHeading}
               </span>
               {activeSemester && (
-                <span className="hidden sm:inline-flex items-center rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#55675b] border border-[#d8e2da]">
+                <span className="inline-flex items-center rounded-full bg-white px-2.5 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-[#55675b] border border-[#d8e2da]">
                   {activeSemester.nama_semester}
                 </span>
               )}
             </div>
 
-            <h1 className="font-display mt-2.5 text-2xl sm:text-4xl font-black tracking-tight text-[#10261b]">
+            <h1 className="font-display mt-2 text-xl sm:text-3xl font-black tracking-tight text-[#10261b] leading-tight">
               {greeting}, <span className="text-[#0f6849]">{firstName}.</span> 👋
             </h1>
 
-            <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-[#55675b] max-w-2xl">
+            <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[#55675b] max-w-2xl">
               {(overdueCount ?? 0) > 0
-                ? `⚠️ Ada ${overdueCount} item lewat deadline — yuk diselesaikan dulu agar ritmemu tenang.`
+                ? `⚠️ Ada ${overdueCount} item lewat deadline — yuk selesaikan agar ritmemu tenang.`
                 : todaySchedule.length > 0
-                ? `Kamu punya ${todaySchedule.length} agenda hari ini. Terus jaga momentum belajarmu! 💪`
+                ? `Kamu punya ${todaySchedule.length} agenda hari ini. Jaga momentum belajarmu! 💪`
                 : activeSemester
-                ? `Semua tugas terkontrol rapi di ${activeSemester.nama_semester}. Hari ini bebas jadwal, waktu yang baik untuk proaktif.`
+                ? `Semua tugas terkontrol rapi di ${activeSemester.nama_semester}. Hari ini bebas jadwal kuliah.`
                 : "Pilih semester aktif agar seluruh jadwal dan deadline terpetakan optimal."}
             </p>
           </div>
@@ -236,9 +236,9 @@ export default async function DashboardPage() {
             href="/kegiatan"
             prefetch={true}
             data-tour="hero-add-kegiatan"
-            className="inline-flex shrink-0 items-center gap-2 rounded-2xl bg-[#103626] px-5 py-3 text-xs sm:text-sm font-black text-[#c8ef70] shadow-md shadow-[#103626]/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1a4a34] hover:shadow-lg active:scale-95"
+            className="inline-flex shrink-0 self-start sm:self-auto items-center gap-1.5 rounded-xl bg-[#103626] px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-black text-[#c8ef70] shadow-sm transition-all duration-200 hover:bg-[#1a4a34] active:scale-95"
           >
-            <Plus size={16} strokeWidth={2.5} /> Tambah Kegiatan
+            <Plus size={15} strokeWidth={2.5} /> Tambah Kegiatan
           </Link>
         </div>
       </header>
@@ -254,40 +254,42 @@ export default async function DashboardPage() {
       {!activeSemester && (
         <Link
           href="/semester"
-          className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-[#ebdcb2] bg-[#fffaf0] p-4 text-xs sm:text-sm text-[#7a5b03] shadow-xs transition hover:border-[#dfc98c]"
+          className="mt-3.5 flex items-center justify-between gap-3 rounded-2xl border border-[#ebdcb2] bg-[#fffaf0] p-3 sm:p-4 text-xs sm:text-sm text-[#7a5b03] shadow-xs transition hover:border-[#dfc98c]"
         >
           <span className="flex items-center gap-2">
-            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#faedd0] text-[#7a5b03] shrink-0 font-black">!</span>
-            <span><b>Belum ada semester aktif.</b> Hubungkan semester agar agenda dan mata kuliahmu terfokus rapi.</span>
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#faedd0] text-[#7a5b03] shrink-0 font-black text-xs">!</span>
+            <span><b>Belum ada semester aktif.</b> Hubungkan semester agar agenda dan mata kuliah terfokus.</span>
           </span>
-          <span className="shrink-0 font-bold underline">Pilih Semester →</span>
+          <span className="shrink-0 font-bold underline text-xs">Pilih Semester →</span>
         </Link>
       )}
 
-      {/* ── Overdue Alert ── */}
+      {/* ── Overdue Alert (Compact & Streamlined) ── */}
       {(overdueCount ?? 0) > 0 && (
-        <div className="mt-5 flex items-center gap-3.5 rounded-2xl border border-[#f7c8be] bg-[#fff6f4] p-4 shadow-xs">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#feece7] text-[#c53e1c]">
-            <AlertTriangle size={18} strokeWidth={2.5} />
-          </span>
-          <p className="min-w-0 flex-1 text-xs sm:text-sm font-semibold text-[#a33218]">
-            <b>{overdueCount} kegiatan</b> sudah melewati batas waktu deadline tanpa ditandai selesai.
-          </p>
+        <div className="mt-3.5 flex items-center justify-between gap-3 rounded-2xl border border-[#f7c8be] bg-[#fff6f4] p-3 sm:p-3.5 shadow-2xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="grid h-7 w-7 sm:h-8 sm:w-8 shrink-0 place-items-center rounded-lg bg-[#feece7] text-[#c53e1c]">
+              <AlertTriangle size={15} strokeWidth={2.5} />
+            </span>
+            <p className="min-w-0 text-xs sm:text-sm font-semibold text-[#a33218] leading-tight truncate">
+              <b>{overdueCount} kegiatan</b> lewat batas deadline
+            </p>
+          </div>
           <Link 
             href={`/kegiatan${semesterFilter}`} 
-            className="shrink-0 rounded-xl bg-[#c53e1c] px-3.5 py-1.5 text-xs font-black text-white shadow-xs hover:bg-[#a93012] transition"
+            className="shrink-0 rounded-xl bg-[#c53e1c] px-3 py-1.5 text-[11px] sm:text-xs font-black text-white shadow-2xs hover:bg-[#a93012] transition"
           >
-            Tinjau Sekarang →
+            Tinjau →
           </Link>
         </div>
       )}
 
-      {/* ── Quick Action Hub ── */}
+      {/* ── Quick Action Hub (Compact & Responsive) ── */}
       <ScrollEntrance delay={100} direction="up">
-        <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <section className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
           {[
             {
-              icon: <CalendarPlus size={20} strokeWidth={2.2} />,
+              icon: <CalendarPlus size={18} strokeWidth={2.2} />,
               label: "Jadwalkan Rapat",
               sub: "Agenda & kelas",
               href: "/kegiatan",
@@ -295,7 +297,7 @@ export default async function DashboardPage() {
               borderHover: "hover:border-[#0f6849]/40",
             },
             {
-              icon: <FileText size={20} strokeWidth={2.2} />,
+              icon: <FileText size={18} strokeWidth={2.2} />,
               label: "Catat Tugas",
               sub: "Deadline & matkul",
               href: "/kegiatan",
@@ -303,16 +305,16 @@ export default async function DashboardPage() {
               borderHover: "hover:border-[#c53e1c]/40",
             },
             {
-              icon: <Building2 size={20} strokeWidth={2.2} />,
+              icon: <Building2 size={18} strokeWidth={2.2} />,
               label: "Ruang Organisasi",
-              sub: "Proker & tim divisi",
+              sub: "Proker & divisi",
               href: "/organisasi",
               color: "bg-[#e8e1fa] text-[#5c3a9c]",
               borderHover: "hover:border-[#5c3a9c]/40",
               tourId: "action-organisasi",
             },
             {
-              icon: <BarChart3 size={20} strokeWidth={2.2} />,
+              icon: <BarChart3 size={18} strokeWidth={2.2} />,
               label: "Rekap & Portofolio",
               sub: "Progress & resume",
               href: "/rekap",
@@ -326,19 +328,19 @@ export default async function DashboardPage() {
               href={action.href}
               prefetch={true}
               data-tour={action.tourId}
-              className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#d8e3da] bg-white p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 ${action.borderHover}`}
+              className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#d8e3da] bg-white p-3 sm:p-3.5 transition-all duration-200 hover:shadow-sm hover:-translate-y-0.5 ${action.borderHover}`}
             >
               <div className="flex items-center justify-between">
-                <span className={`grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-2xl transition-transform duration-300 group-hover:scale-110 ${action.color}`}>
+                <span className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-xl transition-transform duration-200 group-hover:scale-105 ${action.color}`}>
                   {action.icon}
                 </span>
                 <span className="text-[11px] font-bold text-[#8ba091] group-hover:text-[#103626] transition">
                   →
                 </span>
               </div>
-              <div className="min-w-0 mt-4">
+              <div className="min-w-0 mt-2.5">
                 <p className="truncate text-xs sm:text-sm font-black text-[#10261b] tracking-tight">{action.label}</p>
-                <p className="truncate text-[11px] font-medium text-[#65746a] mt-0.5">{action.sub}</p>
+                <p className="truncate text-[10.5px] font-medium text-[#65746a] mt-0.5">{action.sub}</p>
               </div>
             </Link>
           ))}

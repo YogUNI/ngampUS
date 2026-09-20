@@ -45,40 +45,40 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
+    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
       {/* Page Header */}
-      <header className="flex flex-wrap items-end justify-between gap-4">
+      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[.18em] text-[var(--brand)]">
+          <p className="text-[10px] sm:text-xs font-black uppercase tracking-[.18em] text-[var(--brand)]">
             AKADEMIK &amp; PERKULIAHAN
           </p>
-          <h1 className="font-display mt-1 text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
+          <h1 className="font-display mt-0.5 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
             Jadwal Kuliah
           </h1>
-          <p className="mt-1.5 text-xs text-[var(--muted)]">
+          <p className="mt-1 text-xs text-[var(--muted)]">
             Atur mata kuliah mingguan, pantau ruang kelas, dan akses link kuliah virtual dengan cepat.
           </p>
         </div>
 
         {/* Semester Filter */}
-        <form className="flex items-end gap-2">
+        <form className="flex items-end gap-2 shrink-0">
           <label className="block text-xs font-bold text-[var(--ink)]">
-            Semester
+            <span className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Semester</span>
             <select
               name="semester_id"
               defaultValue={targetSemesterId ?? ""}
-              className="mt-1 block min-w-[190px] rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-semibold"
+              className="mt-1 block min-w-[170px] sm:min-w-[190px] rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3 py-2 text-xs font-bold text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden"
             >
               {semesters?.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.nama_semester} {s.is_active ? "(Aktif)" : ""}
+                  {s.nama_semester} {s.is_active ? " (Aktif)" : ""}
                 </option>
               ))}
             </select>
           </label>
           <button
             type="submit"
-            className="rounded-xl bg-[#103626] px-4 py-2 text-xs font-bold text-white hover:bg-[#1d5034] transition"
+            className="rounded-xl bg-[#103626] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#1d5034] transition shrink-0"
           >
             Pilih
           </button>

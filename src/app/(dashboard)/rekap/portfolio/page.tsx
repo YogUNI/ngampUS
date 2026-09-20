@@ -47,7 +47,7 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
   const programMap = new Map((programs ?? []).map((p) => [p.id, p.nama_proker]));
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8 lg:px-10">
+    <div className="mx-auto max-w-5xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link

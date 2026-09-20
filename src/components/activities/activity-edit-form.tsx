@@ -133,14 +133,18 @@ export function ActivityEditForm({
   }
 
   const modalContent = open ? (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="relative my-auto max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[var(--line)] bg-white p-6 sm:p-7 shadow-2xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-sm font-bold text-[var(--brand)]">UBAH KEGIATAN</p>
-            <h2 className="font-display mt-1 text-2xl font-extrabold">Perbarui detail item</h2>
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 overflow-y-auto">
+      <div className="relative w-full max-w-xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto rounded-t-[2rem] sm:rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-6 shadow-2xl pb-24 sm:pb-6">
+        <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[var(--brand)]">UBAH KEGIATAN</p>
+            <h2 className="font-display mt-0.5 text-lg sm:text-2xl font-extrabold truncate">Perbarui detail item</h2>
           </div>
-          <button onClick={() => setOpen(false)} title="Tutup" className="rounded-lg p-2 hover:bg-[#f7f8f5]">
+          <button
+            onClick={() => setOpen(false)}
+            title="Tutup"
+            className="rounded-xl p-1.5 text-[var(--muted)] hover:bg-[#f7f8f5] hover:text-[var(--ink)] transition shrink-0"
+          >
             <X size={18} />
           </button>
         </div>

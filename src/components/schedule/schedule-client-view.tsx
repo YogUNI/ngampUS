@@ -96,27 +96,39 @@ export function ScheduleClientView({
   return (
     <div>
       {/* Top summary & view switcher bar */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-white p-4">
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)]">
-              <BookOpen size={18} />
+      <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-3 sm:p-4 shadow-2xs">
+        <div className="flex items-center justify-between sm:justify-start gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[var(--brand)] shrink-0">
+              <BookOpen size={16} />
             </span>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">TOTAL BEBAN</p>
-              <p className="text-sm font-extrabold text-[var(--ink)]">
+              <p className="text-[9.5px] font-black uppercase tracking-wider text-[var(--muted)]">TOTAL BEBAN</p>
+              <p className="text-xs sm:text-sm font-extrabold text-[var(--ink)] leading-tight">
                 {courses.length} Mata Kuliah <span className="text-[var(--brand)] font-black">({totalSks} SKS)</span>
               </p>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* Export to Calendar (.ics) */}
+          {/* Export to Calendar (Quick mobile icon or text) */}
           {courses.length > 0 && (
             <button
               onClick={handleExportIcs}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[#fafbf9] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-white hover:border-[#a9cdb2] transition"
+              className="inline-flex sm:hidden items-center gap-1 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-2.5 py-1.5 text-[11px] font-bold text-[var(--ink)] hover:bg-[var(--card-bg)] transition"
+              title="Export .ics"
+            >
+              <Download size={13} className="text-[var(--brand)]" />
+              <span>.ICS</span>
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between sm:justify-end gap-2 flex-wrap border-t border-[var(--line)]/50 pt-2.5 sm:border-0 sm:pt-0">
+          {/* Export to Calendar (Desktop view) */}
+          {courses.length > 0 && (
+            <button
+              onClick={handleExportIcs}
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--card-bg)] hover:border-[#a9cdb2] transition"
               title="Download file .ics untuk Google Calendar / Apple Calendar"
             >
               <Download size={14} className="text-[var(--brand)]" />
@@ -125,27 +137,27 @@ export function ScheduleClientView({
           )}
 
           {/* View Mode Toggle */}
-          <div className="flex rounded-xl bg-[#f0f4f1] p-1">
+          <div className="flex rounded-xl bg-[var(--card-subtle)] p-1 border border-[var(--line)]">
             <button
               onClick={() => setViewMode("list")}
-              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition ${
-                viewMode === "list" ? "bg-white text-[var(--ink)] shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
+              className={`rounded-lg px-2 sm:px-3 py-1 text-[11px] sm:text-xs font-bold transition ${
+                viewMode === "list" ? "bg-[var(--card-bg)] text-[var(--ink)] shadow-2xs font-extrabold" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
-              Daftar Hari
+              Hari
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition ${
-                viewMode === "grid" ? "bg-white text-[var(--ink)] shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
+              className={`rounded-lg px-2 sm:px-3 py-1 text-[11px] sm:text-xs font-bold transition ${
+                viewMode === "grid" ? "bg-[var(--card-bg)] text-[var(--ink)] shadow-2xs font-extrabold" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
-              Tabel Mingguan
+              Tabel
             </button>
             <button
               onClick={() => setViewMode("calendar")}
-              className={`rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition ${
-                viewMode === "calendar" ? "bg-white text-[var(--brand)] shadow-xs font-extrabold" : "text-[var(--muted)] hover:text-[var(--ink)]"
+              className={`rounded-lg px-2 sm:px-3 py-1 text-[11px] sm:text-xs font-bold transition ${
+                viewMode === "calendar" ? "bg-[var(--card-bg)] text-[var(--brand)] shadow-2xs font-extrabold" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
               Kalender
@@ -155,6 +167,8 @@ export function ScheduleClientView({
           <CourseFormModal
             semesters={semesters}
             activeSemesterId={activeSemesterId}
+            triggerClass="inline-flex items-center gap-1 rounded-xl bg-[#103626] px-3 py-1.5 text-[11px] sm:text-xs font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
+            triggerText="Tambah Matkul"
           />
         </div>
       </div>

@@ -51,31 +51,65 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
 
   const portfolioHref = `/rekap/portfolio${filters.semester_id ? `?semester_id=${filters.semester_id}` : ""}`;
 
-  return <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
-    <header className="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <p className="text-sm font-bold text-[var(--brand)]">REFLEKSI & LAPORAN</p>
-        <h1 className="font-display mt-1 text-4xl font-extrabold tracking-[-.045em]">Rekap aktivitas</h1>
-        <p className="mt-2 text-[var(--muted)]">Lihat ritme kerjamu, lalu bawa datanya ke laporan atau evaluasi.</p>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <Link
-          href={portfolioHref}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#103626] px-4 py-2.5 text-xs font-black text-white shadow-md hover:bg-[#1d5034] transition"
-        >
-          <Sparkles size={14} /> Lihat Portofolio CV
-        </Link>
-        <ExportCsv activities={items} fileName={`rekap-ngampus${selectedSemester ? `-${selectedSemester.nama_semester.toLowerCase().replaceAll(" ", "-")}` : ""}`}/>
-      </div>
-    </header>
+  return (
+    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
+      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <p className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[var(--brand)]">
+            REFLEKSI & LAPORAN
+          </p>
+          <h1 className="font-display mt-0.5 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
+            Rekap aktivitas
+          </h1>
+          <p className="mt-1 text-xs text-[var(--muted)]">
+            Lihat ritme kerjamu, lalu bawa datanya ke laporan atau evaluasi.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={portfolioHref}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-3.5 py-2 text-xs font-black text-white shadow-sm hover:bg-[#1d5034] transition active:scale-95"
+          >
+            <Sparkles size={13} className="text-[#c8ef70]" /> Portofolio CV
+          </Link>
+          <ExportCsv
+            activities={items}
+            fileName={`rekap-ngampus${selectedSemester ? `-${selectedSemester.nama_semester.toLowerCase().replaceAll(" ", "-")}` : ""}`}
+          />
+        </div>
+      </header>
 
-    <section className="surface-lift mt-7 rounded-2xl border border-[var(--line)] bg-white p-4">
-      <form className="flex flex-wrap items-end gap-3">
-        <label className="text-sm font-bold">Semester<select name="semester_id" defaultValue={filters.semester_id || ""} className="mt-1 block min-w-[220px] rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm font-normal"><option value="">Semua semester</option>{semesters?.map((semester) => <option key={semester.id} value={semester.id}>{semester.nama_semester}{semester.is_active ? " (aktif)" : ""}</option>)}</select></label>
-        <button className="rounded-xl bg-[#dcefe4] px-4 py-2 text-sm font-bold text-[var(--brand)] transition hover:bg-[#cbe9d4]">Terapkan</button>
-        {filters.semester_id && <Link href="/rekap" className="pb-2 text-sm font-bold text-[var(--muted)] hover:text-[var(--brand)]">Reset</Link>}
-      </form>
-    </section>
+      <section className="surface-lift mt-5 rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-3 sm:p-4">
+        <form className="flex flex-wrap items-end gap-2.5">
+          <label className="text-xs font-bold text-[var(--ink)]">
+            <span className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Semester</span>
+            <select
+              name="semester_id"
+              defaultValue={filters.semester_id || ""}
+              className="mt-1 block min-w-[190px] sm:min-w-[220px] rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-3 py-1.5 text-xs text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden"
+            >
+              <option value="">Semua semester</option>
+              {semesters?.map((semester) => (
+                <option key={semester.id} value={semester.id}>
+                  {semester.nama_semester}
+                  {semester.is_active ? " (Aktif)" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button className="rounded-xl bg-[#dcefe4] px-3.5 py-2 text-xs font-bold text-[var(--brand)] transition hover:bg-[#cbe9d4] active:scale-95">
+            Terapkan
+          </button>
+          {filters.semester_id && (
+            <Link
+              href="/rekap"
+              className="pb-2 text-xs font-bold text-[var(--muted)] hover:text-[var(--brand)]"
+            >
+              Reset
+            </Link>
+          )}
+        </form>
+      </section>
 
     <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Metric icon={<ListTodo/>} label="Total item" value={items.length} className="bg-[#e4efff] text-[#245a9a]"/>
@@ -94,7 +128,8 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
         completionRate={completionRate}
       />
     </section>
-  </div>;
+    </div>
+  );
 }
 
 function Metric({ icon, label, value, className }: { icon: React.ReactNode; label: string; value: number; className: string }) {
