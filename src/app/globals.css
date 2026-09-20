@@ -256,9 +256,6 @@ main.grid.min-h-screen input { background-color: #fbfdf9; }
 /* Campus Console — shared dashboard composition and depth. */
 .dashboard-content { position: relative; background-color: #eff2eb; background-image: radial-gradient(circle at 96% 5%, rgba(200,239,112,.22), transparent 20rem), linear-gradient(rgba(16,54,38,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(16,54,38,.028) 1px, transparent 1px); background-size: auto, 42px 42px, 42px 42px; }
 .dashboard-content > div { position: relative; }
-.dashboard-content > div > header { position: relative; padding: 1.25rem 1.4rem; border: 1px solid #d6e1d8; border-radius: 1.5rem; background: rgba(255,255,255,.92); box-shadow: 0 12px 32px rgba(16,54,38,.045); }
-.dashboard-content > div > header::after { content: "CAMPUS CONSOLE"; position: absolute; right: 1.35rem; top: 1.2rem; font-size: .58rem; font-weight: 900; letter-spacing: .15em; color: rgba(15,104,73,.34); }
-.dashboard-content > div > header h1 { max-width: calc(100% - 7rem); }
 .dashboard-hero { overflow: hidden; }
 .dashboard-hero::before { content: "FOCUS MAP / LIVE"; display: block; margin-bottom: .8rem; font-size: .6rem; font-weight: 900; letter-spacing: .17em; color: rgba(15,104,73,.54); }
 .console-stat { position: relative; overflow: hidden; }
@@ -280,9 +277,7 @@ main.grid.min-h-screen input { background-color: #fbfdf9; }
 .dashboard-sidebar nav a:hover { border-color: #c8dbcc; }
 @media (max-width: 639px) { 
   main.grid.min-h-screen > section::before, 
-  main.grid.min-h-screen > section > div::after, 
-  .dashboard-content > div > header::after { display: none; } 
-  .dashboard-content > div > header h1 { max-width: 100%; } 
+  main.grid.min-h-screen > section > div::after { display: none; } 
 }
 
 .ngampus-calendar .fc { --fc-border-color: var(--line); --fc-page-bg-color: transparent; --fc-today-bg-color: #eef7f0; --fc-button-bg-color: #f7f8f5; --fc-button-border-color: var(--line); --fc-button-text-color: var(--ink); --fc-button-hover-bg-color: #dcefe4; --fc-button-hover-border-color: #b9ddc6; --fc-event-text-color: white; font-size: .8125rem; }
@@ -441,6 +436,18 @@ html {
   letter-spacing: -0.02em;
 }
 
+/* Hero Terminal Deck — Guaranteed Rich Forest Green in all modes */
+.dashboard-atelier-hero {
+  position: relative;
+  background-color: #0c2419 !important;
+  color: #ffffff !important;
+  border: 1px solid #1c4533;
+}
+
+.dashboard-atelier-hero * {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    DARK MODE TAILORED OVERRIDES (Strictly Scoped to Dashboard Shell & Content)
    ───────────────────────────────────────────────────────────────────────────── */
@@ -455,17 +462,6 @@ html {
   background-color: #09140e !important;
   background-image: radial-gradient(circle at 96% 5%, rgba(200, 239, 112, .07), transparent 20rem), linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px) !important;
   color: #edf4ef;
-}
-
-/* Header in dashboard */
-.dark .dashboard-content > div > header {
-  background: rgba(15, 32, 23, 0.92) !important;
-  border-color: #1a3526 !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
-}
-
-.dark .dashboard-content > div > header::after {
-  color: rgba(200, 239, 112, 0.35) !important;
 }
 
 .dark .dashboard-content .dashboard-hero::before {

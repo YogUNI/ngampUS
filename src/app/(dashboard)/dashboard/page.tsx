@@ -172,7 +172,10 @@ export default async function DashboardPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-8 lg:px-10">
 
       {/* ── 00 // HERO BANNER: CAMPUS ATELIER & COMMAND DECK ── */}
-      <header className="relative overflow-hidden rounded-[2rem] border border-[#1b4332] bg-[#0c2419] p-5 sm:p-7 md:p-8 text-white shadow-xl">
+      <section 
+        className="dashboard-atelier-hero relative overflow-hidden rounded-[2rem] p-5 sm:p-7 md:p-8 text-white shadow-xl"
+        style={{ backgroundColor: "#0c2419", color: "#ffffff" }}
+      >
         {/* Archival Texture & Subtle Ledger Grid Lines */}
         <div 
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -221,18 +224,21 @@ export default async function DashboardPage() {
 
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="stamp-badge border-[#c8ef70]/30 bg-[#c8ef70]/10 text-[#d6f792]">
+                <span 
+                  className="stamp-badge border-[#c8ef70]/40 text-[#c8ef70]"
+                  style={{ backgroundColor: "rgba(200, 239, 112, 0.15)", color: "#d6f792" }}
+                >
                   {greeting}
                 </span>
-                <span className="tag-mono text-[10px] text-[#7ea38b]">
+                <span className="tag-mono text-[10px] text-[#9dc5aa]">
                   // {activeSemester ? activeSemester.nama_semester : "WORKSPACE"}
                 </span>
               </div>
-              <h1 className="font-display mt-1 text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight truncate">
+              <h1 className="font-display mt-1 text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight truncate drop-shadow-xs">
                 {profile?.full_name || firstName}
               </h1>
-              <p className="tag-mono text-[11px] text-[#a0beaa] mt-0.5 flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
+              <p className="tag-mono text-[11px] text-[#b3d3bd] mt-0.5 flex items-center gap-1.5">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#4ade80]" />
                 {activeSemester ? "Academic Terminal Active" : "Setup Semester Anda"}
               </p>
             </div>
@@ -240,13 +246,16 @@ export default async function DashboardPage() {
 
           {/* Date Stamp Block (Physical Ledger Ticket Style) */}
           <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto">
-            <div className="flex items-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-2.5 sm:px-4 sm:py-2.5 shadow-inner">
-              <div className="border-r border-white/15 pr-3 text-center">
-                <span className="tag-mono block text-[9px] font-black text-[#a0beaa]">{dayNameShort}</span>
+            <div 
+              className="flex items-center rounded-2xl border border-white/15 p-2.5 sm:px-4 sm:py-2.5 shadow-inner"
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+            >
+              <div className="border-r border-white/20 pr-3 text-center">
+                <span className="tag-mono block text-[9px] font-black text-[#a6cbb2]">{dayNameShort}</span>
                 <span className="font-display block text-2xl font-black text-[#c8ef70] leading-none mt-0.5">{dayNumber}</span>
               </div>
               <div className="pl-3">
-                <span className="tag-mono block text-[9px] font-bold text-[#86a892]">{monthYearShort}</span>
+                <span className="tag-mono block text-[9px] font-bold text-[#9dc5aa]">{monthYearShort}</span>
                 <span className="block text-xs font-bold text-white">
                   {todayClasses.length > 0 ? `${todayClasses.length} Kuliah Hari Ini` : "Bebas Kuliah 🎉"}
                 </span>
@@ -256,19 +265,22 @@ export default async function DashboardPage() {
         </div>
 
         {/* Hero Bottom Focus Strip */}
-        <div className="relative z-10 mt-6 pt-5 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="relative z-10 mt-6 pt-5 border-t border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-3">
           
           {/* Tile 1: Fokus Kuliah Hari Ini */}
-          <div className="flex items-center justify-between rounded-xl bg-white/5 border border-white/10 px-3.5 py-2.5">
+          <div 
+            className="flex items-center justify-between rounded-xl border border-white/15 px-3.5 py-2.5"
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+          >
             <div className="min-w-0">
-              <span className="tag-mono text-[9px] font-bold uppercase text-[#88ab94] block">KULIAH HARI INI</span>
+              <span className="tag-mono text-[9px] font-bold uppercase text-[#a6cbb2] block">KULIAH HARI INI</span>
               <span className="font-display text-sm font-bold text-white truncate block">
                 {todayClasses.length > 0 ? todayClasses[0].nama_matkul : "Tidak ada jadwal kelas"}
               </span>
             </div>
             <Link
               href={`/jadwal${semesterFilter}`}
-              className="shrink-0 ml-2 rounded-lg bg-white/10 p-1.5 text-[#c8ef70] hover:bg-white/20 transition"
+              className="shrink-0 ml-2 rounded-lg bg-white/15 p-1.5 text-[#c8ef70] hover:bg-white/25 transition"
               title="Buka Jadwal"
             >
               <ArrowUpRight size={14} />
@@ -276,16 +288,19 @@ export default async function DashboardPage() {
           </div>
 
           {/* Tile 2: Deadline Terdekat */}
-          <div className="flex items-center justify-between rounded-xl bg-white/5 border border-white/10 px-3.5 py-2.5">
+          <div 
+            className="flex items-center justify-between rounded-xl border border-white/15 px-3.5 py-2.5"
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+          >
             <div className="min-w-0">
-              <span className="tag-mono text-[9px] font-bold uppercase text-[#e59887] block">TENGGAT TERDEKAT</span>
+              <span className="tag-mono text-[9px] font-bold uppercase text-[#fba18d] block">TENGGAT TERDEKAT</span>
               <span className="font-display text-sm font-bold text-white truncate block">
                 {upcomingItems.length > 0 ? upcomingItems[0].judul : "Semua tugas beres ✨"}
               </span>
             </div>
             <Link
               href={`/kegiatan${semesterFilter}`}
-              className="shrink-0 ml-2 rounded-lg bg-white/10 p-1.5 text-[#e57255] hover:bg-white/20 transition"
+              className="shrink-0 ml-2 rounded-lg bg-white/15 p-1.5 text-[#f87171] hover:bg-white/25 transition"
               title="Buka Kegiatan"
             >
               <ArrowUpRight size={14} />
@@ -293,19 +308,22 @@ export default async function DashboardPage() {
           </div>
 
           {/* Tile 3: Progress Capaian */}
-          <div className="flex items-center justify-between rounded-xl bg-white/5 border border-white/10 px-3.5 py-2.5">
+          <div 
+            className="flex items-center justify-between rounded-xl border border-white/15 px-3.5 py-2.5"
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+          >
             <div className="min-w-0 flex-1 mr-2">
-              <div className="flex justify-between items-center text-[9px] font-bold text-[#88ab94]">
+              <div className="flex justify-between items-center text-[9px] font-bold text-[#a6cbb2]">
                 <span className="tag-mono uppercase">SELESAI</span>
                 <span className="text-[#c8ef70] font-black">{completionRate}%</span>
               </div>
-              <div className="mt-1 h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+              <div className="mt-1 h-1.5 w-full rounded-full bg-white/20 overflow-hidden">
                 <div className="h-full bg-[#c8ef70] rounded-full transition-all duration-500" style={{ width: `${completionRate}%` }} />
               </div>
             </div>
             <Link
               href={`/rekap${semesterFilter}`}
-              className="shrink-0 rounded-lg bg-white/10 p-1.5 text-[#c8ef70] hover:bg-white/20 transition"
+              className="shrink-0 rounded-lg bg-white/15 p-1.5 text-[#c8ef70] hover:bg-white/25 transition"
               title="Buka Rekap"
             >
               <ArrowUpRight size={14} />
@@ -313,7 +331,7 @@ export default async function DashboardPage() {
           </div>
 
         </div>
-      </header>
+      </section>
 
       {/* ── 01 // METRIC DISK / ARCHIVAL STAT DOCKET ── */}
       <div className="relative z-20 -mt-3 sm:-mt-4 px-2 sm:px-4">
