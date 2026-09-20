@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   addDays,
   differenceInCalendarDays,
@@ -60,7 +61,7 @@ export default async function DashboardPage() {
     { data: programs },
   ] = await Promise.all([
     supabase.auth.getUser(),
-    supabase.from("profiles").select("full_name").single(),
+    supabase.from("profiles").select("full_name,avatar_url").single(),
     supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai").eq("is_active", true).maybeSingle(),
     supabase.from("semesters").select("id").order("created_at", { ascending: false }),
     supabase.from("organizations").select("id,nama_organisasi,tipe").order("created_at", { ascending: false }).limit(3),
@@ -211,9 +212,19 @@ export default async function DashboardPage() {
         <div className="relative z-10 flex items-center justify-between gap-3">
           {/* User Profile Thumbnail & Info */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-base font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
-              {firstName.slice(0, 1).toUpperCase()}
-            </div>
+            {profile?.avatar_url ? (
+              <Image
+                src={profile.avatar_url}
+                alt={profile.full_name || firstName}
+                width={44}
+                height={44}
+                className="h-11 w-11 shrink-0 rounded-2xl object-cover ring-2 ring-white/25 shadow-md"
+              />
+            ) : (
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-base font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
+                {firstName.slice(0, 1).toUpperCase()}
+              </div>
+            )}
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-black uppercase tracking-wider text-[#a8d3b8]">
