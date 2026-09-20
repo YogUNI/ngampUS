@@ -196,7 +196,7 @@ export default async function DashboardPage() {
         className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2.5rem] px-5 pt-6 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 lg:-mx-10 lg:px-10"
         style={{
           background: "linear-gradient(180deg, #092015 0%, #0f3524 55%, #13422e 100%)",
-          paddingBottom: "88px",
+          paddingBottom: "54px",
         }}
       >
         {/* Subtle Ambient Radial Glows */}
@@ -250,12 +250,12 @@ export default async function DashboardPage() {
         </div>
 
         {/* Hero Quick Stat Highlight (Large Crisp Typography like POS Rp 5.477.136) */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-white/10 flex items-end justify-between">
+        <div className="relative z-10 mt-5 pt-3.5 border-t border-white/10 flex items-end justify-between">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-[#a8d3b8]">
               STATUS AKADEMIK
             </p>
-            <div className="mt-1 flex items-baseline gap-2">
+            <div className="mt-0.5 flex items-baseline gap-2">
               <span className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight">
                 {activeSemester ? activeSemester.nama_semester : "Semester Baru"}
               </span>
@@ -275,7 +275,7 @@ export default async function DashboardPage() {
       </header>
 
       {/* ── FLOATING OVERLAPPING STAT CARD (3-Column Native Metric Pill matching reference) ── */}
-      <div className="relative z-20" style={{ marginTop: "-38px" }}>
+      <div className="relative z-20" style={{ marginTop: "-26px" }}>
         <div className="grid grid-cols-3 divide-x divide-[#e8eee9] rounded-2xl sm:rounded-3xl border border-[#d2e2d5] bg-white p-3.5 sm:p-5 shadow-[0_10px_25px_rgba(0,0,0,0.06)]">
           {/* Col 1: Tugas Aktif */}
           <Link
