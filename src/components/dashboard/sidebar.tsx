@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import {
   ArrowUpRight, BarChart3, BookOpen, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Menu, Plus,
-  Settings, Sparkles, UsersRound, X,
+  Settings, Sparkles, User, UsersRound, X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -304,10 +304,14 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
 // ─────────────────────────────────────────────────────────────────────────────
 export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string; avatarUrl?: string | null; activeSemester?: string }) {
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const router   = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setProfileOpen(false);
+  }, [pathname]);
 
   async function signOut() {
     await createClient().auth.signOut();
@@ -343,26 +347,71 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
 
         <div className="flex items-center gap-2">
           <ThemeToggle variant="icon" />
-          <Link
-            href="/settings"
-            title={`Profil: ${name}`}
-            className="group flex items-center gap-1.5 rounded-full p-0.5 transition active:scale-95"
-            aria-label="Buka profil"
-          >
-            {avatarUrl ? (
-              <Image
-                src={avatarUrl}
-                alt={name}
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]"
-              />
-            ) : (
-              <div className="grid h-8 w-8 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]">
-                {name.slice(0, 1).toUpperCase()}
-              </div>
+          
+          {/* Avatar with Quick Dropdown Menu */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setProfileOpen(!profileOpen)}
+              title={`Menu Profil: ${name}`}
+              className="group flex items-center gap-1.5 rounded-full p-0.5 transition active:scale-95 cursor-pointer"
+              aria-label="Buka menu akun"
+              aria-expanded={profileOpen}
+            >
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt={name}
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]"
+                />
+              ) : (
+                <div className="grid h-8 w-8 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]">
+                  {name.slice(0, 1).toUpperCase()}
+                </div>
+              )}
+            </button>
+
+            {/* Quick Dropdown Menu */}
+            {profileOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40 bg-black/10 backdrop-blur-[1px]"
+                  onClick={() => setProfileOpen(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 z-50 w-52 rounded-2xl border border-[var(--line)] bg-white p-2 shadow-xl animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-3 py-2 border-b border-[var(--line)]/60">
+                    <p className="truncate text-xs font-extrabold text-[var(--ink)] leading-snug">{name}</p>
+                    <p className="text-[10px] font-bold text-[var(--muted)]">Personal workspace</p>
+                  </div>
+
+                  <div className="py-1 space-y-0.5">
+                    <Link
+                      href="/settings"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition active:scale-95"
+                    >
+                      <User size={15} className="text-[var(--brand)]" />
+                      <span>Lihat Profil</span>
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileOpen(false);
+                        signOut();
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[#b93c21] hover:bg-[#fff0ec] transition active:scale-95 text-left cursor-pointer"
+                    >
+                      <LogOut size={15} />
+                      <span>Keluar</span>
+                    </button>
+                  </div>
+                </div>
+              </>
             )}
-          </Link>
+          </div>
         </div>
       </header>
 

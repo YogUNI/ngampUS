@@ -27,7 +27,10 @@ import {
   KeyRound,
   Eye,
   EyeOff,
+  LogOut,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
 import { ImageCropModal } from "@/components/settings/image-crop-modal";
@@ -76,6 +79,21 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
+
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleSignOut() {
+    setIsLoggingOut(true);
+    try {
+      await createClient().auth.signOut();
+      router.push("/");
+      router.refresh();
+    } catch {
+      setIsLoggingOut(false);
+      showToast("Gagal keluar dari akun. Silakan coba lagi.", "error");
+    }
+  }
 
   // Backup values for cancelling edit
   const [backupValues, setBackupValues] = useState<Record<string, string>>({
@@ -901,6 +919,34 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 </div>
               </form>
             )}
+          </div>
+
+          {/* Sesi Akun & Keluar (Danger Zone) */}
+          <div className="rounded-3xl border border-[#f5b8a9]/60 bg-white p-6 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-display text-base font-black text-[#10261b] flex items-center gap-2">
+                  <LogOut size={16} className="text-[#b93c21]" />
+                  <span>Sesi Akun</span>
+                </h3>
+                <p className="mt-1 text-xs text-[var(--muted)]">
+                  Akun aktif: <strong className="text-[var(--ink)] font-bold">{email}</strong>
+                </p>
+                <p className="mt-0.5 text-[11px] text-[var(--muted)]">
+                  Keluar dari perangkat ini untuk mengakhiri sesi kerjamu di ngampUS.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={isLoggingOut}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#f5b8a9] bg-[#fff5f2] px-4 py-2.5 text-xs font-black text-[#b93c21] shadow-2xs hover:bg-[#ffebe5] hover:border-[#ea8a75] transition active:scale-95 disabled:opacity-60 shrink-0 cursor-pointer"
+              >
+                <LogOut size={14} />
+                <span>{isLoggingOut ? "Mengeluarkan..." : "Keluar dari Akun"}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
