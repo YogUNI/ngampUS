@@ -191,12 +191,11 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 lg:px-10">
 
-      {/* ── EXECUTIVE DARK HEADER (Native App Aesthetic) ── */}
+      {/* ── EXECUTIVE DARK HEADER (Native App Aesthetic on Mobile, Sleek Executive Command Bar on Desktop) ── */}
       <header
-        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2.5rem] px-5 pt-6 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 lg:-mx-10 lg:px-10"
+        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2.5rem] md:rounded-3xl px-5 pt-6 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 md:mx-0 md:mt-0 md:p-7 md:shadow-lg lg:p-8"
         style={{
           background: "linear-gradient(180deg, #092015 0%, #0f3524 55%, #13422e 100%)",
-          paddingBottom: "54px",
         }}
       >
         {/* Subtle Ambient Radial Glows */}
@@ -209,138 +208,214 @@ export default async function DashboardPage() {
           style={{ background: "radial-gradient(circle, rgba(34,197,94,0.5), transparent 70%)" }}
         />
 
-        <div className="relative z-10 flex items-center justify-between gap-3">
-          {/* User Profile Thumbnail & Info (Full name & subtitle without clipping) */}
-          <div className="flex items-center gap-3 min-w-0 flex-1">
+        {/* Mobile View Padding Spacer for Overlapping Card (Only on Mobile) */}
+        <div className="md:hidden pb-12">
+          <div className="relative z-10 flex items-center justify-between gap-3">
+            {/* User Profile Thumbnail & Info */}
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              {profile?.avatar_url ? (
+                <Image
+                  src={profile.avatar_url}
+                  alt={profile.full_name || firstName}
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 shrink-0 rounded-2xl object-cover ring-2 ring-white/25 shadow-md"
+                />
+              ) : (
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-base font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
+                  {firstName.slice(0, 1).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#a8d3b8]">
+                    {greeting}
+                  </span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] animate-pulse" />
+                </div>
+                <h1 className="font-display text-base sm:text-xl font-black text-white tracking-tight leading-snug">
+                  {profile?.full_name || firstName}
+                </h1>
+                <p className="text-[11px] font-medium text-[#8ca393] leading-tight">
+                  {activeSemester ? `${activeSemester.nama_semester} • Mahasiswa` : "Personal Workspace"}
+                </p>
+              </div>
+            </div>
+
+            {/* Header Date Pill Mobile */}
+            <div className="shrink-0 flex flex-col items-end">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[10.5px] font-bold text-[#c8ef70] backdrop-blur-md border border-white/10">
+                📅 {format(new Date(), "d MMM yyyy", { locale: id })}
+              </span>
+            </div>
+          </div>
+
+          {/* Hero Quick Stat Highlight Mobile */}
+          <div className="relative z-10 mt-5 pt-3.5 border-t border-white/10 flex items-end justify-between">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-[#a8d3b8]">
+                STATUS AKADEMIK
+              </p>
+              <div className="mt-0.5 flex items-baseline gap-2">
+                <span className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  {activeSemester ? activeSemester.nama_semester : "Semester Baru"}
+                </span>
+                <span className="rounded-md bg-[#c8ef70]/20 px-2 py-0.5 text-[10px] font-black text-[#c8ef70]">
+                  {activeSemester ? "Berjalan" : "Siap"}
+                </span>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#a8d3b8] block">Hari Ini</span>
+              <span className="font-display text-base sm:text-xl font-black text-[#c8ef70] leading-none">
+                {todayClasses.length > 0 ? `${todayClasses.length} Kelas` : "Bebas Kuliah"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── DESKTOP HEADER (Integrated Modern Executive Banner, No Empty Space) ── */}
+        <div className="hidden md:flex relative z-10 flex-row items-center justify-between gap-6">
+          {/* Left: Avatar + Full Name + Greeting + Academic Badge */}
+          <div className="flex items-center gap-4 min-w-0">
             {profile?.avatar_url ? (
               <Image
                 src={profile.avatar_url}
                 alt={profile.full_name || firstName}
-                width={44}
-                height={44}
-                className="h-11 w-11 shrink-0 rounded-2xl object-cover ring-2 ring-white/25 shadow-md"
+                width={56}
+                height={56}
+                className="h-14 w-14 shrink-0 rounded-2xl object-cover ring-2 ring-[#c8ef70]/40 shadow-lg"
               />
             ) : (
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-base font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
+              <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/10 text-xl font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
                 {firstName.slice(0, 1).toUpperCase()}
               </div>
             )}
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#a8d3b8]">
-                  {greeting}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-[#a8d3b8]">
+                  {greeting},
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] animate-pulse" />
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#c8ef70]/15 px-2 py-0.5 text-[10px] font-black text-[#c8ef70] border border-[#c8ef70]/30">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] animate-pulse" />
+                  {activeSemester ? "Semester Aktif" : "Workspace"}
+                </span>
               </div>
-              <h1 className="font-display text-base sm:text-xl font-black text-white tracking-tight leading-snug">
+              <h1 className="font-display text-xl lg:text-2xl font-black text-white tracking-tight leading-tight mt-0.5">
                 {profile?.full_name || firstName}
               </h1>
-              <p className="text-[11px] font-medium text-[#8ca393] leading-tight">
-                {activeSemester ? `${activeSemester.nama_semester} • Mahasiswa` : "Personal Workspace"}
+              <p className="text-xs font-medium text-[#a3b8aa] mt-0.5">
+                {activeSemester ? `${activeSemester.nama_semester} • Mahasiswa Aktif` : "Personal Academic Workspace"}
               </p>
             </div>
           </div>
 
-          {/* Quick Header Date Pill (Full date with year, clean compact badge) */}
-          <div className="shrink-0 flex flex-col items-end">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[10.5px] font-bold text-[#c8ef70] backdrop-blur-md border border-white/10">
-              📅 {format(new Date(), "d MMM yyyy", { locale: id })}
-            </span>
-          </div>
-        </div>
-
-        {/* Hero Quick Stat Highlight (Large Crisp Typography like POS Rp 5.477.136) */}
-        <div className="relative z-10 mt-5 pt-3.5 border-t border-white/10 flex items-end justify-between">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#a8d3b8]">
-              STATUS AKADEMIK
-            </p>
-            <div className="mt-0.5 flex items-baseline gap-2">
-              <span className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight">
-                {activeSemester ? activeSemester.nama_semester : "Semester Baru"}
+          {/* Right: Academic Status Card & Date Info */}
+          <div className="flex items-center gap-4 shrink-0">
+            {/* Status Hari Ini Box */}
+            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2.5 text-right">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#a8d3b8] block">
+                Agenda Hari Ini
               </span>
-              <span className="rounded-md bg-[#c8ef70]/20 px-2 py-0.5 text-[10px] font-black text-[#c8ef70]">
-                {activeSemester ? "Berjalan" : "Siap"}
+              <span className="font-display text-lg font-black text-[#c8ef70] leading-snug">
+                {todayClasses.length > 0 ? `${todayClasses.length} Kelas Perkuliahan` : "Bebas Kuliah 🎉"}
               </span>
             </div>
-          </div>
 
-          <div className="text-right">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#a8d3b8] block">Hari Ini</span>
-            <span className="font-display text-base sm:text-xl font-black text-[#c8ef70] leading-none">
-              {todayClasses.length > 0 ? `${todayClasses.length} Kelas` : "Bebas Kuliah"}
-            </span>
+            {/* Date Pill */}
+            <div className="rounded-2xl bg-[#0b2b1c] border border-white/10 px-4 py-2.5 text-center shadow-inner">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#8ca393] block">
+                Tanggal
+              </span>
+              <span className="text-xs font-black text-white">
+                {format(new Date(), "d MMMM yyyy", { locale: id })}
+              </span>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* ── FLOATING OVERLAPPING STAT CARD (3-Column Native Metric Pill matching reference) ── */}
-      <div className="relative z-20" style={{ marginTop: "-26px" }}>
-        <div className="grid grid-cols-3 divide-x divide-[#e8eee9] rounded-2xl sm:rounded-3xl border border-[#d2e2d5] bg-white p-3.5 sm:p-5 shadow-[0_10px_25px_rgba(0,0,0,0.06)]">
+      {/* ── METRIC STAT CARDS (Overlap Pill on Mobile, Sleek 3-Card Grid on Desktop) ── */}
+      <div className="relative z-20 -mt-[26px] md:mt-5">
+        <div className="grid grid-cols-3 divide-x divide-[#e8eee9] md:divide-x-0 md:gap-4 rounded-2xl sm:rounded-3xl md:rounded-2xl border border-[#d2e2d5] md:border-transparent bg-white md:bg-transparent p-3.5 sm:p-5 md:p-0 shadow-[0_10px_25px_rgba(0,0,0,0.06)] md:shadow-none">
           {/* Col 1: Tugas Aktif */}
           <Link
             href={`/kegiatan${semesterFilter}`}
             prefetch={true}
-            className="flex flex-col items-center text-center px-1 group transition active:scale-95"
+            className="flex flex-col items-center md:items-start text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
           >
             <div className="flex items-center gap-1.5 text-[#55675b]">
-              {/* Custom SVG Icon: Tugas */}
-              <svg className="h-4 w-4 text-[#0f6849]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f]">Tugas Aktif</span>
+              <div className="md:p-2 md:rounded-xl md:bg-[#dff3e5] md:text-[#0f6849]">
+                <svg className="h-4 w-4 md:h-5 md:w-5 text-[#0f6849]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30]">Tugas Aktif</span>
             </div>
-            <p className="font-display mt-1 text-lg sm:text-2xl font-black text-[#10261b] tracking-tight group-hover:text-[#0f6849] transition">
-              {activeCount ?? 0}
-            </p>
-            <span className="text-[9px] sm:text-[10px] font-extrabold text-[#0f6849] mt-0.5">Komitmen</span>
+            <div className="md:mt-2">
+              <p className="font-display mt-1 md:mt-0 text-lg sm:text-2xl md:text-3xl font-black text-[#10261b] tracking-tight group-hover:text-[#0f6849] transition">
+                {activeCount ?? 0}
+              </p>
+              <span className="text-[9px] sm:text-[10px] font-extrabold text-[#0f6849] mt-0.5 block">
+                Total Komitmen Terjadwal
+              </span>
+            </div>
           </Link>
 
           {/* Col 2: Deadline Dekat */}
           <Link
             href={`/kegiatan${semesterFilter}`}
             prefetch={true}
-            className="flex flex-col items-center text-center px-1 group transition active:scale-95"
+            className="flex flex-col items-center md:items-start text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
           >
             <div className="flex items-center gap-1.5 text-[#55675b]">
-              {/* Custom SVG Icon: Tenggat */}
-              <svg className={`h-4 w-4 ${(overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
-                <circle cx="12" cy="12" r="9" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
-              </svg>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f]">Tenggat</span>
+              <div className={`md:p-2 md:rounded-xl ${
+                (overdueCount ?? 0) > 0 ? "md:bg-[#feece7] md:text-[#c53e1c]" : "md:bg-[#fffbe6] md:text-[#8a5d00]"
+              }`}>
+                <svg className={`h-4 w-4 md:h-5 md:w-5 ${(overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                  <circle cx="12" cy="12" r="9" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30]">Tenggat</span>
             </div>
-            <p className={`font-display mt-1 text-lg sm:text-2xl font-black tracking-tight transition ${
-              (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#10261b] group-hover:text-[#8a5d00]"
-            }`}>
-              {(overdueCount ?? 0) > 0 ? `${overdueCount} Lewat` : `${upcomingItems.length} Dekat`}
-            </p>
-            <span className={`text-[9px] sm:text-[10px] font-extrabold mt-0.5 ${
-              (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"
-            }`}>
-              {(overdueCount ?? 0) > 0 ? "Butuh Tinjau" : "3 Hari Depan"}
-            </span>
+            <div className="md:mt-2">
+              <p className={`font-display mt-1 md:mt-0 text-lg sm:text-2xl md:text-3xl font-black tracking-tight transition ${
+                (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#10261b] group-hover:text-[#8a5d00]"
+              }`}>
+                {(overdueCount ?? 0) > 0 ? `${overdueCount} Lewat` : `${upcomingItems.length} Dekat`}
+              </p>
+              <span className={`text-[9px] sm:text-[10px] font-extrabold mt-0.5 block ${
+                (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"
+              }`}>
+                {(overdueCount ?? 0) > 0 ? "Perlu Ditinjau Segera" : "3 Hari Mendatang"}
+              </span>
+            </div>
           </Link>
 
           {/* Col 3: Selesai / Progress */}
           <Link
             href={`/rekap${semesterFilter}`}
             prefetch={true}
-            className="flex flex-col items-center text-center px-1 group transition active:scale-95"
+            className="flex flex-col items-center md:items-start text-center md:text-left px-1 md:p-4 md:bg-white md:rounded-2xl md:border md:border-[#d8e3da] md:shadow-xs group transition hover:shadow-md hover:border-[#a9cdb2] active:scale-95 md:active:scale-[0.99]"
           >
             <div className="flex items-center gap-1.5 text-[#55675b]">
-              {/* Custom SVG Icon: Progress Selesai */}
-              <svg className="h-4 w-4 text-[#5c3a9c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f]">Progress</span>
+              <div className="md:p-2 md:rounded-xl md:bg-[#e8e1fa] md:text-[#5c3a9c]">
+                <svg className="h-4 w-4 md:h-5 md:w-5 text-[#5c3a9c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f] md:text-[#2b3a30]">Progress</span>
             </div>
-            <p className="font-display mt-1 text-lg sm:text-2xl font-black text-[#10261b] tracking-tight group-hover:text-[#5c3a9c] transition">
-              {completionRate}%
-            </p>
-            <span className="text-[9px] sm:text-[10px] font-extrabold text-[#5c3a9c] mt-0.5">
-              {completeCount ?? 0} Selesai
-            </span>
+            <div className="md:mt-2">
+              <p className="font-display mt-1 md:mt-0 text-lg sm:text-2xl md:text-3xl font-black text-[#10261b] tracking-tight group-hover:text-[#5c3a9c] transition">
+                {completionRate}%
+              </p>
+              <span className="text-[9px] sm:text-[10px] font-extrabold text-[#5c3a9c] mt-0.5 block">
+                {completeCount ?? 0} Selesai Dikerjakan
+              </span>
+            </div>
           </Link>
         </div>
       </div>
@@ -386,16 +461,16 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* ── LAYANAN UTAMA (Clean 4x2 App Grid with custom app-grade outline icons) ── */}
-      <section className="mt-5 rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-6 shadow-xs">
-        <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#f0f4f0]">
+      {/* ── LAYANAN UTAMA (4x2 on Mobile, Sleek 8-Col Command Bar on Desktop) ── */}
+      <section className="mt-5 rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-5 md:p-6 shadow-xs">
+        <div className="flex items-center justify-between mb-3.5 pb-2 border-b border-[#f0f4f0]">
           <h2 className="font-display text-sm sm:text-base font-black uppercase tracking-wider text-[#10261b]">
             Layanan Utama
           </h2>
-          <span className="text-[11px] font-bold text-[#697c6f]">Pintasan Kampus</span>
+          <span className="text-[11px] font-bold text-[#697c6f]">Pintasan Cepat</span>
         </div>
 
-        <div className="grid grid-cols-4 gap-y-4 gap-x-2 sm:gap-6">
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-y-4 gap-x-2 sm:gap-4 md:gap-3">
           {[
             {
               id: "jadwal",
@@ -496,7 +571,7 @@ export default async function DashboardPage() {
               prefetch={true}
               className="group flex flex-col items-center text-center transition active:scale-95"
             >
-              <div className="relative grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl bg-[#f4f7f4] text-[#0f6849] transition-all duration-200 group-hover:bg-[#0f6849] group-hover:text-[#c8ef70] group-hover:shadow-md group-hover:-translate-y-0.5">
+              <div className="relative grid h-12 w-12 sm:h-13 sm:w-13 md:h-12 md:w-12 place-items-center rounded-2xl bg-[#f4f7f4] text-[#0f6849] transition-all duration-200 group-hover:bg-[#0f6849] group-hover:text-[#c8ef70] group-hover:shadow-md group-hover:-translate-y-0.5">
                 {item.svg}
                 {item.badge && (
                   <span
@@ -508,7 +583,7 @@ export default async function DashboardPage() {
                   </span>
                 )}
               </div>
-              <span className="mt-2 block text-[10.5px] sm:text-xs font-black tracking-tight text-[#2b3a30] group-hover:text-[#0f6849] transition">
+              <span className="mt-1.5 block text-[10.5px] sm:text-xs font-black tracking-tight text-[#2b3a30] group-hover:text-[#0f6849] transition">
                 {item.label}
               </span>
             </Link>
