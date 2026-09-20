@@ -152,136 +152,143 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           {/* ══ FRONT: LOGIN ══ */}
           <div
             ref={frontRef}
-            className={`card-face rounded-[1.75rem] border border-[#d5dfd6] bg-white px-6 pt-6 pb-8 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
+            className={`card-face flex flex-col justify-between rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 sm:p-7 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
               isFlipped ? "pointer-events-none" : "relative"
             }`}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3">
-              <div className="flex items-center gap-1.5">
-                <span className="grid h-[22px] w-[22px] place-items-center rounded-md bg-[#103626] text-[#c8ef70] text-[10px] font-black">01</span>
-                <span className="text-[10px] font-black uppercase tracking-[.17em] text-[#0f6849]">ACCESS POINT / LOGIN</span>
-              </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#dff3e5] px-2 py-0.5 text-[10px] font-black text-[#0f6849] border border-[#b9ddc6]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
-                AMAN
-              </span>
-            </div>
-
-            {/* Title */}
-            <div className="mt-3.5">
-              <h1 className="font-display text-[1.75rem] font-black tracking-tight text-[#10261b] leading-[1.15]">
-                Lanjutkan <span className="text-[#0f6849]">ritmemu.</span>
-              </h1>
-              <p className="mt-1 text-xs text-[#5a6d61] leading-relaxed">
-                Masuk untuk pantau jadwal kuliah, deadline tugas, dan proker aktifmu.
-              </p>
-            </div>
-
-            {/* Notices */}
-            {registeredNotice && !serverError && (
-              <p className="mt-3 rounded-xl border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-2 text-xs font-semibold text-[#17613e]">
-                Akun berhasil dibuat! Silakan masuk.
-              </p>
-            )}
-            {serverError && (
-              <p className="mt-3 rounded-xl border border-[#f5b8a9] bg-[#fff0ec] px-3 py-2 text-xs font-semibold text-[#b93c21]">
-                {serverError}
-              </p>
-            )}
-
-            {/* Form */}
-            <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="mt-4 space-y-3.5" noValidate>
-              <div>
-                <label className="block text-xs font-extrabold text-[#10261b] mb-1.5">Email Kampus / Personal</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]"><Mail size={15} /></span>
-                  <input
-                    {...loginForm.register("email")}
-                    type="email" autoComplete="email" placeholder="nama@email.com"
-                    className="w-full rounded-xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-3.5 text-sm font-semibold text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#dff3e5] transition"
-                  />
+            <div>
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="grid h-[22px] w-[22px] place-items-center rounded-md bg-[#103626] text-[#c8ef70] text-[10px] font-black">01</span>
+                  <span className="text-[10px] font-black uppercase tracking-[.17em] text-[#0f6849]">ACCESS POINT / LOGIN</span>
                 </div>
-                {loginForm.formState.errors.email && (
-                  <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">{loginForm.formState.errors.email.message}</span>
-                )}
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#dff3e5] px-2 py-0.5 text-[10px] font-black text-[#0f6849] border border-[#b9ddc6]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
+                  AMAN
+                </span>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-extrabold text-[#10261b]">Kata Sandi</label>
-                  <Link href="/forgot-password" className="text-[11px] font-black text-[#0f6849] hover:underline">Lupa password?</Link>
-                </div>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]"><Lock size={15} /></span>
-                  <input
-                    {...loginForm.register("password")}
-                    type={showLoginPassword ? "text" : "password"} autoComplete="current-password" placeholder="Minimal 8 karakter"
-                    className="w-full rounded-xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-10 text-sm font-semibold text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#dff3e5] transition"
-                  />
-                  <button type="button" onClick={() => setShowLoginPassword(!showLoginPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91] hover:text-[#10261b] transition"
-                    aria-label={showLoginPassword ? "Sembunyikan" : "Lihat"}>
-                    {showLoginPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                  </button>
-                </div>
-                {loginForm.formState.errors.password && (
-                  <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">{loginForm.formState.errors.password.message}</span>
-                )}
+              {/* Title */}
+              <div className="mt-3.5">
+                <h1 className="font-display text-[1.75rem] font-black tracking-tight text-[#10261b] leading-[1.15]">
+                  Lanjutkan <span className="text-[#0f6849]">ritmemu.</span>
+                </h1>
+                <p className="mt-1 text-xs text-[#5a6d61] leading-relaxed">
+                  Masuk untuk pantau jadwal kuliah, deadline tugas, dan proker aktifmu.
+                </p>
               </div>
 
-              <button
-                type="submit" disabled={loginForm.formState.isSubmitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#103626] py-3 text-sm font-black text-[#c8ef70] shadow-[0_5px_0_#0a2318] hover:bg-[#164330] hover:shadow-[0_3px_0_#0a2318] active:translate-y-0.5 active:shadow-[0_2px_0_#0a2318] disabled:opacity-70 transition-all cursor-pointer"
-              >
-                {loginForm.formState.isSubmitting
-                  ? <LoaderCircle className="animate-spin" size={17} />
-                  : <><span>Masuk ke Workspace</span><ArrowRight size={16} /></>}
-              </button>
-            </form>
+              {/* Notices */}
+              {registeredNotice && !serverError && (
+                <p className="mt-3 rounded-xl border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-2 text-xs font-semibold text-[#17613e]">
+                  Akun berhasil dibuat! Silakan masuk.
+                </p>
+              )}
+              {serverError && (
+                <p className="mt-3 rounded-xl border border-[#f5b8a9] bg-[#fff0ec] px-3 py-2 text-xs font-semibold text-[#b93c21]">
+                  {serverError}
+                </p>
+              )}
 
-            {/* Flip trigger */}
-            <div className="mt-5 border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
-              <p className="text-xs text-[#65746a]">Belum punya akun?</p>
-              <button type="button" onClick={() => toggleMode("register")}
-                className="inline-flex items-center gap-1 text-xs font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer">
-                <span>Daftar Sekarang — Gratis</span>
-                <RotateCw size={11} />
-              </button>
+              {/* Form */}
+              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="mt-4 space-y-3.5" noValidate>
+                <div>
+                  <label className="block text-xs font-extrabold text-[#10261b] mb-1.5">Email Kampus / Personal</label>
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]"><Mail size={15} /></span>
+                    <input
+                      {...loginForm.register("email")}
+                      type="email" autoComplete="email" placeholder="nama@email.com"
+                      className="w-full rounded-xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-3.5 text-sm font-semibold text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#dff3e5] transition"
+                    />
+                  </div>
+                  {loginForm.formState.errors.email && (
+                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">{loginForm.formState.errors.email.message}</span>
+                  )}
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-extrabold text-[#10261b]">Kata Sandi</label>
+                    <Link href="/forgot-password" className="text-[11px] font-black text-[#0f6849] hover:underline">Lupa password?</Link>
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]"><Lock size={15} /></span>
+                    <input
+                      {...loginForm.register("password")}
+                      type={showLoginPassword ? "text" : "password"} autoComplete="current-password" placeholder="Minimal 8 karakter"
+                      className="w-full rounded-xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-10 text-sm font-semibold text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#dff3e5] transition"
+                    />
+                    <button type="button" onClick={() => setShowLoginPassword(!showLoginPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91] hover:text-[#10261b] transition"
+                      aria-label={showLoginPassword ? "Sembunyikan" : "Lihat"}>
+                      {showLoginPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                  {loginForm.formState.errors.password && (
+                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">{loginForm.formState.errors.password.message}</span>
+                  )}
+                </div>
+
+                <button
+                  type="submit" disabled={loginForm.formState.isSubmitting}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#103626] py-3 text-sm font-black text-[#c8ef70] shadow-[0_5px_0_#0a2318] hover:bg-[#164330] hover:shadow-[0_3px_0_#0a2318] active:translate-y-0.5 active:shadow-[0_2px_0_#0a2318] disabled:opacity-70 transition-all cursor-pointer"
+                >
+                  {loginForm.formState.isSubmitting
+                    ? <LoaderCircle className="animate-spin" size={17} />
+                    : <><span>Masuk ke Workspace</span><ArrowRight size={16} /></>}
+                </button>
+              </form>
             </div>
 
-            {/* ── Feature chips — fills the extra height from card equalization ── */}
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {[
-                { icon: <CalendarDays size={15} className="text-[#0f6849]" />, label: "Jadwal Kuliah" },
-                { icon: <NotebookPen size={15} className="text-[#0f6849]" />, label: "Deadline Tugas" },
-                { icon: <Users size={15} className="text-[#0f6849]" />, label: "Proker Org" },
-              ].map(({ icon, label }) => (
-                <div key={label} className="flex items-center gap-1.5 rounded-xl border border-[#e0ece2] bg-[#f7fbf8] px-2.5 py-2">
-                  {icon}
-                  <span className="text-[10.5px] font-extrabold text-[#2d5040] leading-tight">{label}</span>
-                </div>
-              ))}
+            {/* Bottom section of login card */}
+            <div className="mt-6 pt-2">
+              {/* Flip trigger */}
+              <div className="border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
+                <p className="text-xs text-[#65746a]">Belum punya akun?</p>
+                <button type="button" onClick={() => toggleMode("register")}
+                  className="inline-flex items-center gap-1 text-xs font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer">
+                  <span>Daftar Sekarang — Gratis</span>
+                  <RotateCw size={11} />
+                </button>
+              </div>
+
+              {/* ── Feature chips positioned nicely near the bottom ── */}
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {[
+                  { icon: <CalendarDays size={15} className="text-[#0f6849]" />, label: "Jadwal Kuliah" },
+                  { icon: <NotebookPen size={15} className="text-[#0f6849]" />, label: "Deadline Tugas" },
+                  { icon: <Users size={15} className="text-[#0f6849]" />, label: "Proker Org" },
+                ].map(({ icon, label }) => (
+                  <div key={label} className="flex items-center gap-1.5 rounded-xl border border-[#e0ece2] bg-[#f7fbf8] px-2.5 py-2">
+                    {icon}
+                    <span className="text-[10.5px] font-extrabold text-[#2d5040] leading-tight">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+
 
           {/* ══ BACK: REGISTER ══ */}
           <div
             ref={backRef}
-            className={`card-face card-face-back rounded-[1.75rem] border border-[#d5dfd6] bg-white px-6 pt-6 pb-8 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
+            className={`card-face card-face-back flex flex-col justify-between rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 sm:p-7 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
               !isFlipped ? "pointer-events-none" : ""
             }`}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3">
-              <div className="flex items-center gap-1.5">
-                <span className="grid h-[22px] w-[22px] place-items-center rounded-md bg-[#0f6849] text-white text-[10px] font-black">02</span>
-                <span className="text-[10px] font-black uppercase tracking-[.17em] text-[#0f6849]">CREATE ATLAS / REGISTER</span>
+            <div>
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="grid h-[22px] w-[22px] place-items-center rounded-md bg-[#0f6849] text-white text-[10px] font-black">02</span>
+                  <span className="text-[10px] font-black uppercase tracking-[.17em] text-[#0f6849]">CREATE ATLAS / REGISTER</span>
+                </div>
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#fff0c9] px-2 py-0.5 text-[10px] font-black text-[#8a5d00] border border-[#fae5a8]">
+                  ✦ 100% GRATIS
+                </span>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#fff0c9] px-2 py-0.5 text-[10px] font-black text-[#8a5d00] border border-[#fae5a8]">
-                ✦ 100% GRATIS
-              </span>
-            </div>
 
             {/* Title */}
             <div className="mt-3.5">
@@ -371,9 +378,12 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                   : <><span>Buat Workspace Sekarang</span><ArrowRight size={16} /></>}
               </button>
             </form>
+          </div>
 
+          {/* Bottom section of register card */}
+          <div className="mt-6 pt-2">
             {/* Flip trigger */}
-            <div className="mt-5 border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
+            <div className="border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
               <p className="text-xs text-[#65746a]">Sudah punya akun?</p>
               <button type="button" onClick={() => toggleMode("login")}
                 className="inline-flex items-center gap-1 text-xs font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer">
@@ -382,6 +392,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </div>
           </div>
+        </div>
 
         </div>
       </div>
