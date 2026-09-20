@@ -245,41 +245,42 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Hero Stat / Focus Rhythm Banner */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Hero Quick Stat Highlight (Like POS Rp 5.477.136 in reference) */}
+        <div className="relative z-10 mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
           <div>
-            <p className="text-[11px] font-bold text-[#b4d8c1] uppercase tracking-wider">Fokus Akademik</p>
-            <p className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight mt-0.5">
-              {(overdueCount ?? 0) > 0
-                ? `${overdueCount} Deadline Mendesak`
-                : todaySchedule.length > 0
-                ? `${todaySchedule.length} Agenda Hari Ini`
-                : "Semua Komitmen Terkendali"}
+            <p className="text-[10.5px] font-bold uppercase tracking-widest text-[#a8d3b8]">
+              {activeSemester ? "SEMESTER AKTIF" : "STATUS MAHASISWA"}
             </p>
-            <p className="text-xs text-[#a8d3b8] mt-0.5">
-              {(overdueCount ?? 0) > 0
-                ? "Prioritaskan tugas yang lewat tenggat waktu untuk ketenangan belajar."
-                : todaySchedule.length > 0
-                ? "Jaga ritme dan fokus pada jadwal kelas serta tugas aktif."
-                : "Tidak ada beban mendesak. Manfaatkan waktu untuk eksplorasi dan istirahat."}
-            </p>
+            <div className="flex items-baseline gap-2 mt-0.5">
+              <span className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight">
+                {activeSemester?.nama_semester || "ngampUS Student"}
+              </span>
+              <span className="text-xs font-bold text-[#c8ef70]">• {activeSemester ? "Berjalan" : "Siap"}</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] font-bold text-[#a8d3b8] block">Hari Ini</span>
+            <span className="font-display text-base sm:text-lg font-black text-[#c8ef70]">
+              {todayClasses.length} Kuliah
+            </span>
           </div>
         </div>
       </header>
 
-      {/* ── FLOATING OVERLAPPING STAT CARD (3-Column Native Metric Pill) ── */}
-      <div className="relative z-20 -mt-8 sm:-mt-10">
-        <div className="grid grid-cols-3 divide-x divide-[#e2ede4] rounded-2xl sm:rounded-3xl border border-[#d2e2d5] bg-white p-3.5 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.07)] backdrop-blur-md">
-          {/* Col 1: Kegiatan Aktif */}
+      {/* ── FLOATING OVERLAPPING STAT CARD (3-Column Native Metric Pill matching reference) ── */}
+      <div className="relative z-20 -mt-6 sm:-mt-8">
+        <div className="grid grid-cols-3 divide-x divide-[#e8eee9] rounded-2xl sm:rounded-3xl border border-[#d2e2d5] bg-white p-3.5 sm:p-5 shadow-[0_10px_25px_rgba(0,0,0,0.06)]">
+          {/* Col 1: Tugas Aktif */}
           <Link
             href={`/kegiatan${semesterFilter}`}
             prefetch={true}
             className="flex flex-col items-center text-center px-1 group transition active:scale-95"
           >
             <div className="flex items-center gap-1.5 text-[#55675b]">
-              <span className="grid h-5 w-5 place-items-center rounded-md bg-[#dff3e5] text-[#0f6849]">
-                <CalendarDays size={13} strokeWidth={2.5} />
-              </span>
+              {/* Custom SVG Icon: Tugas */}
+              <svg className="h-4 w-4 text-[#0f6849]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f]">Tugas Aktif</span>
             </div>
             <p className="font-display mt-1 text-lg sm:text-2xl font-black text-[#10261b] tracking-tight group-hover:text-[#0f6849] transition">
@@ -295,11 +296,11 @@ export default async function DashboardPage() {
             className="flex flex-col items-center text-center px-1 group transition active:scale-95"
           >
             <div className="flex items-center gap-1.5 text-[#55675b]">
-              <span className={`grid h-5 w-5 place-items-center rounded-md ${
-                (overdueCount ?? 0) > 0 ? "bg-[#feece7] text-[#c53e1c]" : "bg-[#fff0cc] text-[#8a5d00]"
-              }`}>
-                <Clock3 size={13} strokeWidth={2.5} />
-              </span>
+              {/* Custom SVG Icon: Tenggat */}
+              <svg className={`h-4 w-4 ${(overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#8a5d00]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                <circle cx="12" cy="12" r="9" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
+              </svg>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f]">Tenggat</span>
             </div>
             <p className={`font-display mt-1 text-lg sm:text-2xl font-black tracking-tight transition ${
@@ -321,9 +322,10 @@ export default async function DashboardPage() {
             className="flex flex-col items-center text-center px-1 group transition active:scale-95"
           >
             <div className="flex items-center gap-1.5 text-[#55675b]">
-              <span className="grid h-5 w-5 place-items-center rounded-md bg-[#e8e1fa] text-[#5c3a9c]">
-                <CheckCircle2 size={13} strokeWidth={2.5} />
-              </span>
+              {/* Custom SVG Icon: Progress Selesai */}
+              <svg className="h-4 w-4 text-[#5c3a9c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.3">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#697c6f]">Progress</span>
             </div>
             <p className="font-display mt-1 text-lg sm:text-2xl font-black text-[#10261b] tracking-tight group-hover:text-[#5c3a9c] transition">
@@ -357,28 +359,28 @@ export default async function DashboardPage() {
         </Link>
       )}
 
-      {/* ── Overdue Alert (If any) ── */}
+      {/* ── Overdue Alert (Clean subtle notification pill) ── */}
       {(overdueCount ?? 0) > 0 && (
-        <div className="mt-3.5 flex items-center justify-between gap-3 rounded-2xl border border-[#f7c8be] bg-[#fff6f4] p-3 sm:p-3.5 shadow-2xs">
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-[#f7c8be] bg-[#fff6f4] px-4 py-2.5 shadow-2xs">
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="grid h-7 w-7 sm:h-8 sm:w-8 shrink-0 place-items-center rounded-lg bg-[#feece7] text-[#c53e1c]">
-              <AlertTriangle size={15} strokeWidth={2.5} />
+            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#feece7] text-[#c53e1c]">
+              <AlertTriangle size={13} strokeWidth={2.5} />
             </span>
-            <p className="min-w-0 text-xs sm:text-sm font-semibold text-[#a33218] leading-tight truncate">
+            <p className="min-w-0 text-xs font-semibold text-[#a33218] leading-tight truncate">
               <b>{overdueCount} kegiatan</b> lewat batas deadline
             </p>
           </div>
           <Link 
             href={`/kegiatan${semesterFilter}`} 
-            className="shrink-0 rounded-xl bg-[#c53e1c] px-3 py-1.5 text-[11px] sm:text-xs font-black text-white shadow-2xs hover:bg-[#a93012] transition"
+            className="shrink-0 rounded-xl bg-[#c53e1c] px-3 py-1 text-[11px] font-black text-white shadow-2xs hover:bg-[#a93012] transition"
           >
             Tinjau →
           </Link>
         </div>
       )}
 
-      {/* ── LAYANAN UTAMA (4x2 Minimalist App Grid - Pure Icon & Label) ── */}
-      <section className="mt-6 rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-6 shadow-xs">
+      {/* ── LAYANAN UTAMA (Clean 4x2 App Grid with custom app-grade outline icons) ── */}
+      <section className="mt-5 rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-6 shadow-xs">
         <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#f0f4f0]">
           <h2 className="font-display text-sm sm:text-base font-black uppercase tracking-wider text-[#10261b]">
             Layanan Utama
@@ -389,84 +391,121 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-4 gap-y-4 gap-x-2 sm:gap-6">
           {[
             {
-              icon: BookOpen,
+              id: "jadwal",
               label: "JADWAL",
               href: `/jadwal${semesterFilter}`,
               badge: todayClasses.length > 0 ? `${todayClasses.length}` : null,
               badgeColor: "bg-[#0f6849] text-[#c8ef70]",
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              ),
             },
             {
-              icon: CalendarPlus,
+              id: "catat",
               label: "CATAT",
               href: "/kegiatan?new=1",
               badge: null,
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              ),
             },
             {
-              icon: CalendarDays,
+              id: "kegiatan",
               label: "KEGIATAN",
               href: `/kegiatan${semesterFilter}`,
               badge: (overdueCount ?? 0) > 0 ? "!" : null,
               badgeColor: "bg-[#c53e1c] text-white",
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              ),
             },
             {
-              icon: FileText,
+              id: "modul",
               label: "MODUL",
               href: `/modul${semesterFilter}`,
               badge: null,
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+                </svg>
+              ),
             },
             {
-              icon: Building2,
+              id: "organisasi",
               label: "ORGANISASI",
               href: "/organisasi",
               badge: organizations?.length ? `${organizations.length}` : null,
               badgeColor: "bg-[#5c3a9c] text-white",
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              ),
             },
             {
-              icon: Target,
+              id: "semester",
               label: "SEMESTER",
               href: "/semester",
               badge: null,
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              ),
             },
             {
-              icon: BarChart3,
+              id: "portofolio",
               label: "PORTOFOLIO",
               href: `/rekap/portfolio${semesterFilter}`,
               badge: null,
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                </svg>
+              ),
             },
             {
-              icon: Sparkles,
+              id: "rekap",
               label: "REKAP AI",
               href: `/rekap${semesterFilter}`,
               badge: "PRO",
               badgeColor: "bg-[#c8ef70] text-[#0f3524]",
+              svg: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.9">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              ),
             },
-          ].map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                prefetch={true}
-                className="group flex flex-col items-center text-center transition active:scale-95"
-              >
-                <div className="relative grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl bg-[#f4f7f4] text-[#103626] transition-all duration-200 group-hover:bg-[#0f6849] group-hover:text-[#c8ef70] group-hover:shadow-md group-hover:-translate-y-0.5">
-                  <Icon size={22} strokeWidth={2.2} className="transition-transform group-hover:scale-110" />
-                  {item.badge && (
-                    <span
-                      className={`absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[9px] font-black shadow-xs ${
-                        item.badgeColor || "bg-[#0f6849] text-white"
-                      }`}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-                <span className="mt-2 block text-[10.5px] sm:text-xs font-black tracking-tight text-[#2b3a30] group-hover:text-[#0f6849] transition">
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
+          ].map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              prefetch={true}
+              className="group flex flex-col items-center text-center transition active:scale-95"
+            >
+              <div className="relative grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl bg-[#f4f7f4] text-[#0f6849] transition-all duration-200 group-hover:bg-[#0f6849] group-hover:text-[#c8ef70] group-hover:shadow-md group-hover:-translate-y-0.5">
+                {item.svg}
+                {item.badge && (
+                  <span
+                    className={`absolute -top-1 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[9px] font-black shadow-xs ${
+                      item.badgeColor || "bg-[#0f6849] text-white"
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+              <span className="mt-2 block text-[10.5px] sm:text-xs font-black tracking-tight text-[#2b3a30] group-hover:text-[#0f6849] transition">
+                {item.label}
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
