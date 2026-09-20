@@ -112,28 +112,33 @@ export default async function ModulPage({
               Pilih Semester
             </label>
             <div 
-              className="flex items-center rounded-2xl border border-white/15 p-1.5 sm:px-3 sm:py-1.5 shadow-inner"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+              className="flex items-center rounded-2xl border border-white/20 p-1.5 sm:px-3 sm:py-1.5 shadow-inner"
+              style={{ backgroundColor: "rgba(10, 30, 20, 0.75)" }}
             >
-              <span className="tag-mono mr-2 text-[10px] font-bold text-[#9dc5aa] hidden xs:inline-block">
+              <span className="tag-mono mr-2 text-[10px] font-black tracking-wider text-[#9dc5aa] hidden xs:inline-block">
                 SEMESTER:
               </span>
-              <select
-                id="semester-selector"
-                name="semester_id"
-                defaultValue={targetSemesterId ?? ""}
-                aria-label="Pilih semester akademik"
-                className="rounded-xl border-0 bg-transparent py-1 pl-1 pr-6 text-xs font-black text-white focus:outline-none cursor-pointer [color-scheme:dark]"
-              >
-                {semesters?.map((s) => (
-                  <option key={s.id} value={s.id} className="bg-[#0c2419] text-white">
-                    {s.nama_semester} {s.is_active ? "★" : ""}
-                  </option>
-                ))}
-              </select>
+              <div className="relative inline-block">
+                <select
+                  id="semester-selector"
+                  name="semester_id"
+                  defaultValue={targetSemesterId ?? ""}
+                  aria-label="Pilih semester akademik"
+                  className="appearance-none rounded-xl border border-white/10 bg-[#071d13] py-1.5 pl-3 pr-8 text-xs font-black text-[#c8ef70] focus:outline-none focus:ring-1 focus:ring-[#c8ef70] cursor-pointer"
+                >
+                  {semesters?.map((s) => (
+                    <option key={s.id} value={s.id} className="bg-[#0c2419] text-white">
+                      {s.nama_semester} {s.is_active ? "★ (Aktif)" : ""}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-[#9dc5aa]">
+                  ▼
+                </span>
+              </div>
               <button
                 type="submit"
-                className="ml-1 rounded-xl bg-[#c8ef70] px-3 py-1 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 shadow-2xs"
+                className="ml-2 rounded-xl bg-[#c8ef70] px-3.5 py-1.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 shadow-sm cursor-pointer"
                 title="Pindah semester"
               >
                 PILIH
