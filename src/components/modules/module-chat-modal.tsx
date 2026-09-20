@@ -1,8 +1,8 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import {
+  ArrowLeft,
   Bot,
   FileCheck,
   MessageSquare,
@@ -17,6 +17,7 @@ import {
   getModuleChatHistory,
   clearModuleChatHistory,
 } from "@/app/(dashboard)/modul/ai-actions";
+import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/components/ui/toast-provider";
 import { FormattedMarkdown } from "@/components/ui/formatted-markdown";
 
@@ -42,6 +43,7 @@ export function ModuleChatModal({
   const [loading, setLoading] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [fetchingHistory, setFetchingHistory] = useState(true);
+  const [userProfile, setUserProfile] = useState<{ avatar_url?: string | null; full_name?: string | null } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { showToast } = useToast();
 
@@ -54,6 +56,20 @@ export function ModuleChatModal({
 
   useEffect(() => {
     if (isOpen) {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user) {
+          supabase
+            .from("profiles")
+            .select("full_name, avatar_url")
+            .eq("id", user.id)
+            .maybeSingle()
+            .then(({ data }) => {
+              if (data) setUserProfile(data);
+            });
+        }
+      });
+
       setFetchingHistory(true);
       getModuleChatHistory(moduleId)
         .then((hist) => {
@@ -111,32 +127,44 @@ export function ModuleChatModal({
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 animate-in fade-in duration-200">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={onClose} />
 
-      <div className="relative z-10 flex h-[88vh] max-h-[700px] w-full max-w-xl flex-col rounded-3xl border border-[var(--line)] bg-[var(--background)] shadow-2xl overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--line)] p-4 bg-[var(--card-subtle)] shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--brand)] text-white shadow-xs">
+      <div className="relative z-10 flex h-[92vh] sm:h-[88vh] max-h-[820px] w-full max-w-2xl flex-col rounded-t-[2rem] sm:rounded-3xl border border-[#d8e3da] bg-white shadow-2xl overflow-hidden">
+        {/* Header with Back/Close Button & Engine Badge */}
+        <div className="flex items-center justify-between border-b border-[#f0f4f0] p-3.5 sm:p-4 bg-[#fbfdfb] shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+            {/* Back Button for mobile & desktop */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#f0f4f0] text-[#0f6849] hover:bg-[#dff3e5] transition active:scale-95"
+              title="Kembali / Tutup Obrolan"
+              aria-label="Kembali"
+            >
+              <ArrowLeft size={18} strokeWidth={2.5} />
+            </button>
+
+            <span className="grid h-9 w-9 sm:h-10 sm:w-10 shrink-0 place-items-center rounded-2xl bg-[#0f6849] text-[#c8ef70] shadow-xs">
               <Bot size={20} />
             </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)]">
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-display text-sm sm:text-base font-black text-[#10261b] leading-tight">
                   Tanya Dosen AI
                 </h3>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 dark:border-emerald-700/60 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[9.5px] font-black text-emerald-800 dark:text-emerald-300 shadow-2xs">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1 rounded-full border border-[#b9ddc6] bg-[#dff3e5] px-2 py-0.5 text-[9px] font-black text-[#0f6849]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
                   ngampUS AI Engine
                 </span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <p className="text-[11px] text-[var(--muted)] truncate max-w-[200px] sm:max-w-xs">
+                <p className="text-[11px] text-[#697c6f] truncate max-w-[180px] sm:max-w-xs font-medium">
                   P{pertemuan}: {moduleTopik} {courseName ? `· ${courseName}` : ""}
                 </p>
                 {fileName && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800/60 px-1.5 py-0.5 text-[9.5px] font-bold text-sky-700 dark:text-sky-300 shrink-0" title={`RAG Grounded: Membaca dokumen ${fileName}`}>
+                  <span className="hidden xs:inline-flex items-center gap-1 rounded-md bg-[#eef2ff] border border-[#c7d2fe] px-1.5 py-0.2 text-[9px] font-bold text-[#4338ca] shrink-0" title={`Membaca dokumen: ${fileName}`}>
                     <FileCheck size={10} />
                     Dokumen Terhubung
                   </span>
@@ -145,32 +173,33 @@ export function ModuleChatModal({
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 shrink-0 ml-2">
             <button
               type="button"
               onClick={handleClearHistory}
               disabled={clearing || loading}
               title="Reset / Bersihkan percakapan"
-              className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-bg)] hover:text-rose-500 transition disabled:opacity-50"
+              className="rounded-xl p-2 text-[#7d9284] hover:bg-[#fff0ec] hover:text-[#c53e1c] transition disabled:opacity-50 active:scale-95"
             >
               <RotateCcw size={16} />
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-bg)] hover:text-[var(--ink)] transition"
+              title="Tutup Obrolan"
+              className="grid h-9 w-9 place-items-center rounded-xl text-[#7d9284] hover:bg-[#f0f4f0] hover:text-[#10261b] transition active:scale-95"
             >
-              <X size={18} />
+              <X size={18} strokeWidth={2.3} />
             </button>
           </div>
         </div>
 
-        {/* Message Chat Body */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
+        {/* Message Chat Body with Real User Avatar */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-[#fafbfa]">
           {fetchingHistory ? (
             <div className="py-20 text-center">
-              <div className="mx-auto h-8 w-8 rounded-full border-2 border-[var(--brand)]/20 border-t-[var(--brand)] animate-spin" />
-              <p className="mt-2 text-xs text-[var(--muted)]">Memuat percakapan...</p>
+              <div className="mx-auto h-8 w-8 rounded-full border-2 border-[#0f6849]/20 border-t-[#0f6849] animate-spin" />
+              <p className="mt-2 text-xs font-bold text-[#697c6f]">Memuat percakapan...</p>
             </div>
           ) : (
             messages.map((msg, idx) => {
@@ -178,23 +207,34 @@ export function ModuleChatModal({
               return (
                 <div
                   key={idx}
-                  className={`flex items-start gap-2.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+                  className={`flex items-start gap-2.5 sm:gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}
                 >
-                  <span
-                    className={`grid h-7 w-7 shrink-0 place-items-center rounded-xl text-xs font-bold ${
-                      isUser
-                        ? "bg-[#103626] text-[#c8ef70]"
-                        : "bg-[var(--brand-soft)] text-[var(--brand)]"
-                    }`}
-                  >
-                    {isUser ? <User size={14} /> : <Bot size={14} />}
-                  </span>
+                  {/* User Profile Avatar / AI Bot Avatar */}
+                  {isUser ? (
+                    userProfile?.avatar_url ? (
+                      <Image
+                        src={userProfile.avatar_url}
+                        alt={userProfile.full_name || "User"}
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 shrink-0 rounded-xl object-cover ring-2 ring-[#0f6849]/20 shadow-xs"
+                      />
+                    ) : (
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#103626] text-xs font-black text-[#c8ef70] shadow-xs">
+                        {userProfile?.full_name ? userProfile.full_name.slice(0, 1).toUpperCase() : <User size={15} />}
+                      </span>
+                    )
+                  ) : (
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[#0f6849] border border-[#b9ddc6] shadow-xs">
+                      <Bot size={16} />
+                    </span>
+                  )}
 
                   <div
-                    className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
+                    className={`max-w-[88%] sm:max-w-[80%] rounded-2xl p-3.5 text-xs sm:text-[13px] leading-relaxed shadow-2xs ${
                       isUser
                         ? "bg-[#103626] text-white rounded-tr-xs whitespace-pre-wrap"
-                        : "bg-[var(--card-bg)] text-[var(--ink)] border border-[var(--line)] shadow-2xs rounded-tl-xs"
+                        : "bg-white text-[#10261b] border border-[#d8e3da] rounded-tl-xs"
                     }`}
                   >
                     {isUser ? (
@@ -226,8 +266,8 @@ export function ModuleChatModal({
         </div>
 
         {/* Quick Question Suggestions */}
-        <div className="flex items-center gap-1.5 overflow-x-auto px-4 py-2 bg-[var(--card-bg)] border-t border-[var(--line)] scrollbar-none">
-          <span className="text-[10px] font-bold text-[var(--muted)] shrink-0">Cepat tanya:</span>
+        <div className="flex items-center gap-1.5 overflow-x-auto px-4 py-2 bg-white border-t border-[#f0f4f0] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <span className="text-[10px] font-bold text-[#697c6f] shrink-0">Cepat tanya:</span>
           {[
             "Jelaskan dengan bahasa sederhana dong",
             "Beri 1 contoh kasus nyata",
@@ -241,7 +281,7 @@ export function ModuleChatModal({
               onClick={() => {
                 setInputMessage(promptText);
               }}
-              className="shrink-0 rounded-full border border-[var(--line)] bg-[var(--card-subtle)] px-2.5 py-1 text-[10px] font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition disabled:opacity-50"
+              className="shrink-0 rounded-full border border-[#d8e3da] bg-[#f7f9f7] px-3 py-1 text-[10.5px] font-bold text-[#33463a] hover:border-[#0f6849] hover:bg-[#dff3e5] hover:text-[#0f6849] transition active:scale-95 disabled:opacity-50"
             >
               {promptText}
             </button>
@@ -251,23 +291,24 @@ export function ModuleChatModal({
         {/* Input Bar */}
         <form
           onSubmit={handleSend}
-          className="border-t border-[var(--line)] p-3 bg-[var(--card-subtle)] flex items-center gap-2 shrink-0"
+          className="border-t border-[#f0f4f0] p-3 sm:p-3.5 bg-white flex items-center gap-2 shrink-0 pb-6 sm:pb-3.5"
         >
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             disabled={loading}
-            placeholder="Tanyakan konsep, minta contoh soal, atau penjelasan materi ini..."
-            className="flex-1 rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3.5 py-2.5 text-xs text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden disabled:opacity-50"
+            placeholder="Tanyakan konsep, minta contoh soal, atau penjelasan materi..."
+            className="flex-1 rounded-2xl border border-[#d8e3da] bg-[#f7f9f7] px-4 py-2.5 text-xs sm:text-sm font-medium text-[#10261b] placeholder:text-[#8b9e91] focus:border-[#0f6849] focus:bg-white focus:outline-none transition disabled:opacity-50"
           />
 
           <button
             type="submit"
             disabled={loading || !inputMessage.trim()}
-            className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--brand)] text-white shadow-xs transition hover:bg-[var(--brand-dark)] active:scale-95 disabled:opacity-50"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#0f6849] text-[#c8ef70] shadow-md transition hover:bg-[#1a4a34] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Kirim pesan"
           >
-            <Send size={15} />
+            <Send size={16} />
           </button>
         </form>
       </div>
