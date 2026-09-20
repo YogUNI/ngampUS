@@ -33,7 +33,7 @@ export default async function OrganizationsPage() {
         const orgPrograms = programs?.filter((item) => item.organization_id === organization.id) ?? [];
         const { logoUrl, notes } = extractOrgLogoAndNotes(organization.catatan);
 
-        return <article key={organization.id} className="surface-lift flex flex-col justify-between rounded-2xl border border-[var(--line)] bg-white p-5 transition hover:border-[#b9ddc6]">
+        return <article key={organization.id} className="surface-lift flex flex-col justify-between rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-5 transition hover:border-[#b9ddc6]">
           <div>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">

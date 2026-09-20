@@ -472,47 +472,115 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
 // ─────────────────────────────────────────────────────────────────────────────
 // MOBILE BOTTOM NAVIGATION (App-like 5 items with central CTA and tour tags)
 // ─────────────────────────────────────────────────────────────────────────────
-const mobileTabs = [
-  { href: "/dashboard",   label: "Beranda",  icon: LayoutDashboard, tourId: "mob-nav-dashboard" },
-  { href: "/jadwal",      label: "Jadwal",   icon: BookOpen,        tourId: "mob-nav-jadwal"    },
-  { href: "/kegiatan",    label: "Kegiatan", icon: CalendarDays,    tourId: "mob-nav-kegiatan"  },
-  { href: "/modul",       label: "Modul",    icon: FolderOpen,      tourId: "mob-nav-modul"     },
-  { href: "/rekap",       label: "Rekap",    icon: BarChart3,       tourId: "mob-nav-rekap"     },
-];
-
+// ─────────────────────────────────────────────────────────────────────────────
+// MOBILE BOTTOM NAVIGATION (App-like Dock with Center FAB + modal trigger)
+// ─────────────────────────────────────────────────────────────────────────────
 export function MobileBottomNav() {
   const pathname = usePathname();
 
   return (
     <nav
-      className="dashboard-mobile-nav fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-[#d8e2da] bg-white/95 px-2 py-1.5 backdrop-blur-lg md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+      className="dashboard-mobile-nav fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between border-t border-[#d8e2da] bg-white/95 px-3 py-1.5 backdrop-blur-xl md:hidden shadow-[0_-4px_24px_rgba(0,0,0,0.06)]"
       style={{ paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))" }}
     >
-      {mobileTabs.map(({ href, label, icon: Icon, tourId }) => {
-        const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
-        return (
-          <Link
-            key={href}
-            href={href}
-            prefetch={true}
-            data-tour={tourId}
-            className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[10px] font-extrabold transition active:scale-90 select-none ${
-              active ? "text-[#0f6849]" : "text-[var(--muted)] opacity-75 hover:opacity-100"
-            }`}
-          >
-            <span
-              className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
-                active ? "bg-[#dff3e5] text-[#0f6849] shadow-xs scale-105" : "text-[#50705e]"
-              }`}
-            >
-              <Icon size={18} strokeWidth={active ? 2.5 : 2} />
-            </span>
-            <span className={`truncate text-[10px] leading-tight ${active ? "font-black text-[#0f6849]" : "font-semibold"}`}>
-              {label}
-            </span>
-          </Link>
-        );
-      })}
+      {/* 1. Beranda */}
+      <Link
+        href="/dashboard"
+        prefetch={true}
+        data-tour="mob-nav-dashboard"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
+          pathname === "/dashboard" ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        }`}
+      >
+        <span
+          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
+            pathname === "/dashboard" ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
+          }`}
+        >
+          <LayoutDashboard size={18} strokeWidth={pathname === "/dashboard" ? 2.5 : 2} />
+        </span>
+        <span className={`text-[10px] leading-tight ${pathname === "/dashboard" ? "font-black text-[#0f6849]" : "font-semibold"}`}>
+          Beranda
+        </span>
+      </Link>
+
+      {/* 2. Jadwal */}
+      <Link
+        href="/jadwal"
+        prefetch={true}
+        data-tour="mob-nav-jadwal"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
+          pathname.startsWith("/jadwal") ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        }`}
+      >
+        <span
+          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
+            pathname.startsWith("/jadwal") ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
+          }`}
+        >
+          <BookOpen size={18} strokeWidth={pathname.startsWith("/jadwal") ? 2.5 : 2} />
+        </span>
+        <span className={`text-[10px] leading-tight ${pathname.startsWith("/jadwal") ? "font-black text-[#0f6849]" : "font-semibold"}`}>
+          Jadwal
+        </span>
+      </Link>
+
+      {/* 3. CENTER FAB (+) Catat Kegiatan/Tugas */}
+      <div className="relative -top-4 flex flex-1 items-center justify-center">
+        <Link
+          href="/kegiatan?new=1"
+          prefetch={true}
+          title="Catat Kegiatan Baru"
+          data-tour="mob-nav-fab"
+          aria-label="Tambah kegiatan baru"
+          className="group relative flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-tr from-[#0f6849] to-[#147a56] text-[#c8ef70] shadow-[0_8px_20px_rgba(15,104,73,0.35)] ring-4 ring-white transition-all duration-200 hover:scale-105 active:scale-95 active:shadow-md"
+        >
+          <Plus size={24} strokeWidth={3} className="transition-transform group-hover:rotate-90 duration-300" />
+          <span className="sr-only">Tambah Kegiatan</span>
+        </Link>
+      </div>
+
+      {/* 4. Kegiatan / Modul */}
+      <Link
+        href="/kegiatan"
+        prefetch={true}
+        data-tour="mob-nav-kegiatan"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
+          pathname.startsWith("/kegiatan") ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        }`}
+      >
+        <span
+          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
+            pathname.startsWith("/kegiatan") ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
+          }`}
+        >
+          <CalendarDays size={18} strokeWidth={pathname.startsWith("/kegiatan") ? 2.5 : 2} />
+        </span>
+        <span className={`text-[10px] leading-tight ${pathname.startsWith("/kegiatan") ? "font-black text-[#0f6849]" : "font-semibold"}`}>
+          Kegiatan
+        </span>
+      </Link>
+
+      {/* 5. Rekap / Modul */}
+      <Link
+        href="/rekap"
+        prefetch={true}
+        data-tour="mob-nav-rekap"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
+          pathname.startsWith("/rekap") ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        }`}
+      >
+        <span
+          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
+            pathname.startsWith("/rekap") ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
+          }`}
+        >
+          <BarChart3 size={18} strokeWidth={pathname.startsWith("/rekap") ? 2.5 : 2} />
+        </span>
+        <span className={`text-[10px] leading-tight ${pathname.startsWith("/rekap") ? "font-black text-[#0f6849]" : "font-semibold"}`}>
+          Rekap
+        </span>
+      </Link>
     </nav>
   );
 }

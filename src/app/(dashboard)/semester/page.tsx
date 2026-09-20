@@ -33,8 +33,8 @@ export default async function SemesterPage() {
               key={semester.id}
               className={`surface-lift flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 rounded-2xl border p-4 sm:p-5 transition ${
                 semester.is_active
-                  ? "border-[var(--brand)] bg-[#f5fbf7] ring-2 ring-[var(--brand)]/10"
-                  : "border-[var(--line)] bg-white"
+                  ? "border-[var(--brand)] bg-[var(--brand-soft)]/20 ring-2 ring-[var(--brand)]/20"
+                  : "border-[var(--line)] bg-[var(--card-bg)] hover:border-[#a9cdb2]"
               }`}
             >
               <div className="flex items-center gap-3.5 min-w-0">

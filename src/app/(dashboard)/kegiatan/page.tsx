@@ -129,15 +129,15 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
               programs={mappedPrograms}
             />
           ) : (
-            <div className="rounded-2xl border border-[var(--line)] bg-white p-5 sm:p-6">
-              <div className="flex items-center justify-between">
+            <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-4 sm:p-6 shadow-xs">
+              <div className="flex items-center justify-between border-b border-[var(--line)]/60 pb-3">
                 <div>
-                  <h2 className="font-display text-xl font-extrabold">Daftar kegiatan</h2>
-                  <p className="mt-1 text-sm text-[var(--muted)]">Status berjalan otomatis aktif saat waktu jadwal tiba. Centang untuk tandai selesai.</p>
+                  <h2 className="font-display text-lg sm:text-xl font-extrabold text-[var(--ink)]">Daftar kegiatan</h2>
+                  <p className="mt-0.5 text-xs text-[var(--muted)]">Status berjalan otomatis aktif saat waktu jadwal tiba. Centang untuk tandai selesai.</p>
                 </div>
-                <span className="rounded-full bg-[#f7f8f5] px-2.5 py-1 text-xs font-bold">{activities?.length || 0} item</span>
+                <span className="rounded-full bg-[var(--card-subtle)] border border-[var(--line)] px-2.5 py-1 text-xs font-bold text-[var(--muted)]">{activities?.length || 0} item</span>
               </div>
-              <div className="mt-5 space-y-3">
+              <div className="mt-4 space-y-3">
                 {activities?.length ? (
                   activities.map((activity) => {
                     const isSelesai = activity.status === "selesai";
