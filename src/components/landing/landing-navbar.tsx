@@ -29,7 +29,7 @@ export function LandingNavbar() {
       setIsScrolled(scrollY > 40);
 
       const sectionIds = ["features", "how-it-works", "faq"];
-      const scrollPosition = scrollY + 180; // Offset for sticky navbar height
+      const scrollPosition = scrollY + 180; // Offset for navbar height
 
       let current = "";
       for (const id of sectionIds) {
@@ -93,10 +93,10 @@ export function LandingNavbar() {
       {/* ── Outer Floating Header Container ── */}
       <header className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 transition-all duration-300">
         <nav
-          className={`hero-stagger-1 relative mx-auto flex items-center justify-between rounded-full border transition-all duration-300 ${
+          className={`hero-stagger-1 relative mx-auto flex items-center justify-between rounded-full border border-white/15 px-3.5 py-2.5 sm:px-6 sm:py-3 transition-all duration-300 ${
             isScrolled
-              ? "border-white/20 bg-[#0b2419]/95 py-2 sm:py-2.5 px-3 sm:px-5 shadow-[0_12px_35px_rgba(0,0,0,0.5)] backdrop-blur-2xl ring-1 ring-white/10"
-              : "border-white/15 bg-white/[.08] py-2.5 sm:py-3 px-3.5 sm:px-6 backdrop-blur-xl"
+              ? "bg-white/[.12] backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25)] ring-1 ring-white/10"
+              : "bg-white/[.07] backdrop-blur-xl"
           }`}
         >
           {/* Brand Logo */}
@@ -117,8 +117,8 @@ export function LandingNavbar() {
             </span>
           </Link>
 
-          {/* Desktop Navigation Links with Active Scrollspy Pill Indicator */}
-          <div className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-black/25 border border-white/5 backdrop-blur-md">
+          {/* Desktop Navigation Links — pure glass, no black bg, clean active text indicator */}
+          <div className="hidden md:flex items-center gap-6 text-xs font-bold text-[#cad7ce]">
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.sectionId;
               return (
@@ -126,13 +126,16 @@ export function LandingNavbar() {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
-                  className={`relative px-4 py-1.5 text-xs font-black transition-all duration-200 rounded-full ${
+                  className={`relative py-1 transition-all duration-200 ${
                     isActive
-                      ? "bg-[#c8ef70] text-[#103626] shadow-[0_2px_10px_rgba(200,239,112,0.35)] font-black scale-105"
-                      : "text-[#cad7ce] hover:text-white hover:bg-white/10"
+                      ? "text-[#c8ef70] font-black"
+                      : "text-[#cad7ce] hover:text-white"
                   }`}
                 >
-                  {link.name}
+                  <span>{link.name}</span>
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#c8ef70] shadow-[0_0_8px_#c8ef70]" />
+                  )}
                 </a>
               );
             })}
@@ -142,7 +145,7 @@ export function LandingNavbar() {
           <div className="hidden sm:flex items-center gap-2 text-xs sm:text-sm font-bold">
             <Link
               href="/login"
-              className="rounded-full px-3.5 py-1.5 sm:py-2 text-[#c9dbce] hover:bg-white/10 hover:text-white transition active:scale-95"
+              className="rounded-full px-3.5 py-2 text-[#c9dbce] hover:bg-white/10 hover:text-white transition active:scale-95"
             >
               Masuk
             </Link>
@@ -217,15 +220,15 @@ export function LandingNavbar() {
                     key={link.name}
                     href={link.href}
                     onClick={(e) => handleSmoothScroll(e, link.href)}
-                    className={`rounded-xl px-3.5 py-2.5 text-sm font-black transition flex items-center justify-between ${
+                    className={`rounded-xl px-3.5 py-2.5 text-sm font-bold transition flex items-center justify-between ${
                       isActive
-                        ? "bg-[#c8ef70] text-[#103626]"
+                        ? "bg-white/10 text-[#c8ef70] font-black"
                         : "text-[#cad7ce] hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <span>{link.name}</span>
                     {isActive && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#103626]" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] shadow-[0_0_6px_#c8ef70]" />
                     )}
                   </a>
                 );
