@@ -344,10 +344,24 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
         <div className="flex items-center gap-2">
           <ThemeToggle variant="icon" />
           <Link
-            href="/kegiatan?new=1"
-            className="inline-flex items-center gap-1 rounded-xl bg-[#c8ef70] px-3 py-1.5 text-xs font-black text-[#103626]"
+            href="/settings"
+            title={`Profil: ${name}`}
+            className="group flex items-center gap-1.5 rounded-full p-0.5 transition active:scale-95"
+            aria-label="Buka profil"
           >
-            <Plus size={14} /> Catat
+            {avatarUrl ? (
+              <Image
+                src={avatarUrl}
+                alt={name}
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]"
+              />
+            ) : (
+              <div className="grid h-8 w-8 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]">
+                {name.slice(0, 1).toUpperCase()}
+              </div>
+            )}
           </Link>
         </div>
       </header>
