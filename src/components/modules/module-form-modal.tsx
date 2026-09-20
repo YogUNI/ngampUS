@@ -229,19 +229,22 @@ export function ModuleFormModal({
             />
 
             {/* Modal Dialog Content */}
-            <div className="relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[var(--line)] bg-[var(--background)] p-5 sm:p-7 shadow-2xl transition-all">
+            <div className="relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[#d6e2d8] bg-white p-5 sm:p-7 shadow-2xl transition-all">
               {/* Header */}
-              <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-4">
+              <div className="flex items-start justify-between gap-3 border-b border-[#edf2ee] pb-4">
                 <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dff3e5] text-[var(--brand)]">
-                    <BookOpen size={20} strokeWidth={2.2} />
+                  <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#103626] text-[#c8ef70] shadow-sm">
+                    <BookOpen size={20} strokeWidth={2.5} />
                   </span>
                   <div>
-                    <h2 className="font-display text-lg sm:text-xl font-black tracking-tight text-[var(--ink)]">
-                      {isEdit ? "Edit Modul Kuliah" : "Tambah Modul Kuliah"}
+                    <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
+                      {isEdit ? "CODEX // EDIT MODUL" : "CODEX // MODUL BARU"}
+                    </span>
+                    <h2 className="font-display text-lg sm:text-xl font-black tracking-tight text-[#10261b] mt-0.5">
+                      {isEdit ? "Edit Arsip Modul Kuliah" : "Tambah Dokumen & Modul Kuliah"}
                     </h2>
-                    <p className="mt-0.5 text-xs text-[var(--muted)]">
-                      Upload langsung file materi dosen (PDF, Word, PPT) atau lampirkan link.
+                    <p className="tag-mono mt-0.5 text-[11px] text-[#697c6f]">
+                      Unggah slide PDF/Word dosen atau sematkan tautan Google Drive.
                     </p>
                   </div>
                 </div>
@@ -249,7 +252,7 @@ export function ModuleFormModal({
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="rounded-xl p-2 text-[var(--muted)] transition hover:bg-[#eaf5eb] hover:text-[var(--ink)]"
+                  className="rounded-xl p-2 text-[#697c6f] transition hover:bg-[#f0f4f0] hover:text-[#10261b] cursor-pointer"
                 >
                   <X size={18} />
                 </button>

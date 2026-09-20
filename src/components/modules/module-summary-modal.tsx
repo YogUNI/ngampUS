@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
@@ -63,21 +63,21 @@ export function ModuleSummaryModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={onClose} />
 
-      <div className="relative z-10 max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-[var(--line)] bg-[var(--background)] p-5 sm:p-7 shadow-2xl">
+      <div className="relative z-10 max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-[#d6e2d8] bg-white p-5 sm:p-7 shadow-2xl">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-4">
+        <div className="flex items-start justify-between gap-3 border-b border-[#edf2ee] pb-4">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dff3e5] text-[var(--brand)]">
-              <Sparkles size={20} strokeWidth={2.2} />
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#103626] text-[#c8ef70] shadow-sm">
+              <Sparkles size={20} strokeWidth={2.5} />
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded-md bg-[var(--card-subtle)] px-2 py-0.5 text-[10px] font-black uppercase text-[var(--brand)] border border-[var(--line)]">
-                  Rangkuman AI · P{pertemuan}
+                <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
+                  RANGKUMAN AI · P-{pertemuan < 10 ? `0${pertemuan}` : pertemuan}
                 </span>
-                {courseName && <span className="text-xs font-bold text-[var(--muted)]">· {courseName}</span>}
+                {courseName && <span className="tag-mono text-xs font-bold text-[#697c6f]">· {courseName}</span>}
               </div>
-              <h2 className="font-display mt-0.5 text-base sm:text-lg font-black tracking-tight text-[var(--ink)]">
+              <h2 className="font-display mt-1 text-base sm:text-lg font-black tracking-tight text-[#10261b]">
                 {moduleTopik}
               </h2>
             </div>
@@ -86,7 +86,7 @@ export function ModuleSummaryModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-subtle)] hover:text-[var(--ink)] transition"
+            className="rounded-xl p-2 text-[#697c6f] hover:bg-[#f0f4f0] hover:text-[#10261b] transition cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -96,20 +96,20 @@ export function ModuleSummaryModal({
         {!summary && !loading ? (
           /* Empty / Trigger State */
           <div className="py-12 text-center">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-[#dff3e5] text-[var(--brand)] shadow-xs">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-[#dff3e5] text-[#0f6849] shadow-xs">
               <BookOpen size={28} />
             </div>
-            <h3 className="font-display mt-4 text-lg font-black text-[var(--ink)]">
+            <h3 className="font-display mt-4 text-lg font-black text-[#10261b]">
               Belum Ada Rangkuman AI
             </h3>
-            <p className="mx-auto mt-1.5 max-w-md text-xs text-[var(--muted)] leading-relaxed">
-              Biarkan Google Gemini AI menganalisis materi pertemuan ini dan merangkum poin esensial, konsep kunci, dan kisi-kisi ujian.
+            <p className="mx-auto mt-1.5 max-w-md text-xs text-[#697c6f] leading-relaxed">
+              Biarkan AI menganalisis materi pertemuan ini dan merangkum poin esensial, konsep kunci, dan kisi-kisi ujian.
             </p>
             <div className="mt-6">
               <button
                 type="button"
                 onClick={handleGenerate}
-                className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-xs font-black text-white shadow-md hover:bg-[var(--brand-dark)] transition active:scale-95"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[#103626] px-6 py-3 text-xs font-black text-[#c8ef70] shadow-md hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
               >
                 <Sparkles size={16} /> Rangkum Sekarang dengan AI
               </button>
@@ -118,24 +118,24 @@ export function ModuleSummaryModal({
         ) : loading ? (
           /* Loading State */
           <div className="py-16 text-center">
-            <div className="mx-auto h-12 w-12 rounded-full border-4 border-[var(--brand)]/20 border-t-[var(--brand)] animate-spin" />
-            <h4 className="font-display mt-4 text-sm font-black text-[var(--ink)]">
+            <div className="mx-auto h-12 w-12 rounded-full border-4 border-[#0f6849]/20 border-t-[#0f6849] animate-spin" />
+            <h4 className="font-display mt-4 text-sm font-black text-[#10261b]">
               Sedang Membaca &amp; Merangkum Dokumen...
             </h4>
-            <p className="mt-1 text-xs text-[var(--muted)]">
+            <p className="tag-mono mt-1 text-xs text-[#697c6f]">
               Mengekstraksi poin penting dan kisi-kisi pemahaman materi.
             </p>
           </div>
         ) : (
           /* Result Summary View */
-          <div className="mt-5 space-y-5">
+          <div className="mt-5 space-y-4">
             {/* Esensi Materi */}
-            <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-4 sm:p-5 shadow-2xs">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[var(--brand)] mb-2">
+            <div className="rounded-2xl border border-[#d6e2d8] bg-[#fcfdfc] p-4 sm:p-5 shadow-2xs">
+              <div className="tag-mono flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#0f6849] mb-2">
                 <BookOpen size={15} />
                 <span>Ringkasan Inti Materi</span>
               </div>
-              <p className="text-xs sm:text-sm text-[var(--ink)] leading-relaxed whitespace-pre-line">
+              <p className="text-xs sm:text-sm text-[#10261b] leading-relaxed whitespace-pre-line font-sans">
                 {summary}
               </p>
             </div>

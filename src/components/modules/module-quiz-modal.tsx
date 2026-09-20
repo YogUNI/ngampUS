@@ -100,21 +100,21 @@ export function ModuleQuizModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={onClose} />
 
-      <div className="relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[var(--line)] bg-[var(--background)] p-5 sm:p-7 shadow-2xl">
+      <div className="relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-3xl border border-[#d6e2d8] bg-white p-5 sm:p-7 shadow-2xl">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-4">
+        <div className="flex items-start justify-between gap-3 border-b border-[#edf2ee] pb-4">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff0cc] text-[#9a6900]">
-              <Sparkles size={20} strokeWidth={2.2} />
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#103626] text-[#c8ef70] shadow-sm">
+              <Trophy size={20} strokeWidth={2.5} />
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded-md bg-[var(--card-subtle)] px-2 py-0.5 text-[10px] font-black uppercase text-[var(--brand)] border border-[var(--line)]">
-                  Kuis AI · Pertemuan {pertemuan}
+                <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
+                  KUIS AI · P-{pertemuan < 10 ? `0${pertemuan}` : pertemuan}
                 </span>
-                {courseName && <span className="text-xs font-bold text-[var(--muted)]">· {courseName}</span>}
+                {courseName && <span className="tag-mono text-xs font-bold text-[#697c6f]">· {courseName}</span>}
               </div>
-              <h2 className="font-display mt-0.5 text-base sm:text-lg font-black tracking-tight text-[var(--ink)]">
+              <h2 className="font-display mt-1 text-base sm:text-lg font-black tracking-tight text-[#10261b]">
                 {moduleTopik}
               </h2>
             </div>
@@ -123,7 +123,7 @@ export function ModuleQuizModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--card-subtle)] hover:text-[var(--ink)] transition"
+            className="rounded-xl p-2 text-[#697c6f] hover:bg-[#f0f4f0] hover:text-[#10261b] transition cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -133,13 +133,13 @@ export function ModuleQuizModal({
         {!quizData && !loading ? (
           /* Start Screen */
           <div className="py-10 text-center">
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-[#dff3e5] text-[var(--brand)] shadow-xs">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-[#dff3e5] text-[#0f6849] shadow-xs">
               <Trophy size={28} />
             </div>
-            <h3 className="font-display mt-4 text-lg font-black text-[var(--ink)]">
+            <h3 className="font-display mt-4 text-lg font-black text-[#10261b]">
               Uji Pemahaman Pertemuan {pertemuan}
             </h3>
-            <p className="mx-auto mt-1.5 max-w-md text-xs text-[var(--muted)] leading-relaxed">
+            <p className="mx-auto mt-1.5 max-w-md text-xs text-[#697c6f] leading-relaxed">
               AI akan menganalisis materi pertemuan ini dan meracik 5 soal pilihan ganda interaktif lengkap dengan penjelasan kunci jawaban.
             </p>
 
@@ -147,7 +147,7 @@ export function ModuleQuizModal({
               <button
                 type="button"
                 onClick={handleStartGenerate}
-                className="inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-xs font-black text-white shadow-md hover:bg-[var(--brand-dark)] transition active:scale-95"
+                className="inline-flex items-center gap-2 rounded-2xl bg-[#103626] px-6 py-3 text-xs font-black text-[#c8ef70] shadow-md hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
               >
                 <Sparkles size={16} /> Mulai Racik Kuis AI
               </button>
@@ -169,28 +169,32 @@ export function ModuleQuizModal({
           <div className="py-8 text-center">
             <div
               className={`mx-auto grid h-16 w-16 place-items-center rounded-3xl text-white shadow-lg ${
-                finalScore >= 80 ? "bg-[var(--brand)]" : finalScore >= 60 ? "bg-amber-500" : "bg-red-500"
+                finalScore >= 80 ? "bg-[#103626] text-[#c8ef70]" : finalScore >= 60 ? "bg-amber-600 text-amber-50" : "bg-red-600 text-red-50"
               }`}
             >
               <Trophy size={32} />
             </div>
 
-            <h3 className="font-display mt-4 text-2xl font-black text-[var(--ink)]">
-              Skor Kamu: {finalScore} / 100
+            <span className="mt-4 inline-block font-mono text-[11px] font-black uppercase tracking-widest text-[#0f6849]">
+              [EVALUATION REPORT // SCORE CARD]
+            </span>
+
+            <h3 className="font-display mt-1 text-3xl font-black text-[#10261b]">
+              {finalScore} <span className="text-lg font-bold text-[#697c6f]">/ 100</span>
             </h3>
-            <p className="mt-1 text-xs text-[var(--muted)]">
+            <p className="mx-auto mt-2 max-w-sm text-xs font-medium text-[#425a4c] leading-relaxed">
               {finalScore >= 80
-                ? "Luar biasa! Pemahamanmu pada modul pertemuan ini sangat matang. 🌟"
+                ? "Luar biasa! Pemahaman konsep modul ini sudah sangat matang dan siap menghadapi ujian. 🌟"
                 : finalScore >= 60
-                ? "Cukup baik! Masih ada beberapa konsep yang bisa diperdalam lagi. 💪"
-                : "Yuk ulas kembali rangkuman dan slide dosen agar persiapan ujian makin mantap! 📖"}
+                ? "Cukup baik! Masih ada celah konsep yang bisa diperkuat dengan membaca ulang rangkuman. 💪"
+                : "Yuk ulas kembali rangkuman dan slide kuliah agar penguasaan materi makin maksimal! 📖"}
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-2.5">
               <button
                 type="button"
                 onClick={handleStartGenerate}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-4 py-2.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--card-subtle)] transition"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#d8e2dc] bg-white px-4 py-2.5 text-xs font-bold text-[#10261b] hover:bg-[#f0f4f0] transition cursor-pointer"
               >
                 <RotateCcw size={14} /> Coba Kuis Baru
               </button>
@@ -198,7 +202,7 @@ export function ModuleQuizModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-5 py-2.5 text-xs font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-5 py-2.5 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
               >
                 Selesai
               </button>
@@ -208,23 +212,25 @@ export function ModuleQuizModal({
           /* Question Playing Screen */
           <div className="mt-5 space-y-4">
             {/* Progress Counter */}
-            <div className="flex items-center justify-between text-xs font-bold text-[var(--muted)]">
-              <span>Soal {currentIdx + 1} dari {quizData.questions.length}</span>
-              <span className="text-[var(--brand)]">
+            <div className="flex items-center justify-between text-xs font-bold text-[#425a4c]">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-[#0f6849]">
+                SOAL {currentIdx + 1} / {quizData.questions.length}
+              </span>
+              <span className="font-mono text-xs font-black text-[#10261b]">
                 {Math.round(((currentIdx + 1) / quizData.questions.length) * 100)}%
               </span>
             </div>
 
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--card-subtle)] border border-[var(--line)]">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-[#e8efe9] border border-[#d8e2dc]">
               <div
-                className="h-full rounded-full bg-[var(--brand)] transition-all duration-300"
+                className="h-full rounded-full bg-[#103626] transition-all duration-300"
                 style={{ width: `${((currentIdx + 1) / quizData.questions.length) * 100}%` }}
               />
             </div>
 
             {/* Question Text */}
-            <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-4">
-              <p className="text-xs sm:text-sm font-black text-[var(--ink)] leading-relaxed">
+            <div className="rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] p-4">
+              <p className="text-xs sm:text-sm font-black text-[#10261b] leading-relaxed">
                 {currentQ.question}
               </p>
             </div>
@@ -236,15 +242,15 @@ export function ModuleQuizModal({
                 const isCorrect = oIdx === currentQ.correct_index;
                 const isAnswered = answeredChoice !== undefined;
 
-                let optClass = "border-[var(--line)] bg-[var(--card-bg)] text-[var(--ink)] hover:border-[var(--brand)]";
+                let optClass = "border-[#d8e2dc] bg-white text-[#10261b] hover:border-[#103626] hover:bg-[#f0f4f0]";
 
                 if (isAnswered) {
                   if (isCorrect) {
-                    optClass = "border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-500/20";
+                    optClass = "border-emerald-600 bg-emerald-50 text-emerald-950 ring-2 ring-emerald-600/30";
                   } else if (isSelected && !isCorrect) {
-                    optClass = "border-red-500 bg-red-50 text-red-900 ring-2 ring-red-500/20";
+                    optClass = "border-red-500 bg-red-50 text-red-950 ring-2 ring-red-500/30";
                   } else {
-                    optClass = "border-[var(--line)] opacity-50 bg-[var(--card-bg)]";
+                    optClass = "border-[#d8e2dc] opacity-40 bg-white text-[#697c6f]";
                   }
                 }
 
@@ -254,10 +260,12 @@ export function ModuleQuizModal({
                     type="button"
                     disabled={isAnswered}
                     onClick={() => handleSelectOption(oIdx)}
-                    className={`flex w-full items-center justify-between rounded-xl border p-3 text-left text-xs font-bold transition ${optClass}`}
+                    className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-xs font-bold transition cursor-pointer ${optClass}`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-[var(--card-subtle)] text-[10px] font-black">
+                      <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-lg text-[10px] font-black ${
+                        isAnswered && isCorrect ? "bg-emerald-600 text-white" : isAnswered && isSelected ? "bg-red-500 text-white" : "bg-[#e8efe9] text-[#10261b]"
+                      }`}>
                         {String.fromCharCode(65 + oIdx)}
                       </span>
                       <span className="truncate">{opt}</span>
@@ -279,12 +287,12 @@ export function ModuleQuizModal({
 
             {/* Explanation box */}
             {showExplanation && (
-              <div className="rounded-2xl border border-[var(--brand)]/30 bg-[var(--brand-soft)] p-3.5 text-xs text-[var(--ink)] animate-in fade-in duration-200">
-                <div className="flex items-center gap-1.5 font-black text-[var(--brand)] mb-1">
+              <div className="rounded-2xl border border-[#0f6849]/30 bg-[#dff3e5] p-3.5 text-xs text-[#10261b] animate-in fade-in duration-200">
+                <div className="flex items-center gap-1.5 font-black text-[#0f6849] mb-1">
                   <Lightbulb size={14} />
-                  <span>Pembahasan Dosen AI:</span>
+                  <span className="font-mono text-[11px] uppercase tracking-wider">PEMBAHASAN DOSEN AI:</span>
                 </div>
-                <p className="leading-relaxed">{currentQ.explanation}</p>
+                <p className="leading-relaxed font-medium text-[#10261b]">{currentQ.explanation}</p>
               </div>
             )}
 
@@ -294,7 +302,7 @@ export function ModuleQuizModal({
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-5 py-2.5 text-xs font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-5 py-2.5 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
                 >
                   {currentIdx < quizData.questions.length - 1 ? "Soal Berikutnya →" : "Lihat Skor Akhir 🏆"}
                 </button>

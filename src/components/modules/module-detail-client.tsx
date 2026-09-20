@@ -362,16 +362,16 @@ export function ModuleDetailClient({
         </div>
       </header>
 
-      {/* ── Modern Navigation Tabs (Clean, Spacious, Sticky-Friendly) ── */}
-      <div className="border-b border-[var(--line)]">
-        <nav className="flex space-x-2 sm:space-x-4 overflow-x-auto pb-1 scrollbar-none">
+      {/* ── Modern Navigation Tabs (Archival Ledger Tab Dividers) ── */}
+      <div className="border-b border-[#d8e2dc]">
+        <nav className="flex space-x-2 sm:space-x-3 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <button
             type="button"
             onClick={() => setActiveTab("materi")}
-            className={`inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap ${
+            className={`inline-flex items-center gap-2 rounded-t-2xl px-4 sm:px-5 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap cursor-pointer ${
               activeTab === "materi"
-                ? "border-[var(--brand)] text-[var(--brand)]"
-                : "border-transparent text-[var(--muted)] hover:text-[var(--ink)] hover:border-[var(--line)]"
+                ? "border-[#103626] bg-white text-[#10261b] shadow-xs"
+                : "border-transparent text-[#697c6f] hover:text-[#10261b] hover:bg-white/50"
             }`}
           >
             <Paperclip size={15} />
@@ -381,31 +381,31 @@ export function ModuleDetailClient({
           <button
             type="button"
             onClick={() => setActiveTab("rangkuman")}
-            className={`inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap ${
+            className={`inline-flex items-center gap-2 rounded-t-2xl px-4 sm:px-5 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap cursor-pointer ${
               activeTab === "rangkuman"
-                ? "border-[var(--brand)] text-[var(--brand)]"
-                : "border-transparent text-[var(--muted)] hover:text-[var(--ink)] hover:border-[var(--line)]"
+                ? "border-[#103626] bg-white text-[#10261b] shadow-xs"
+                : "border-transparent text-[#697c6f] hover:text-[#10261b] hover:bg-white/50"
             }`}
           >
             <BookOpen size={15} />
             <span>Rangkuman AI</span>
             {summary && (
-              <span className="h-2 w-2 rounded-full bg-emerald-500" title="Rangkuman tersedia" />
+              <span className="h-2 w-2 rounded-full bg-[#0f6849]" title="Rangkuman tersedia" />
             )}
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("tanya")}
-            className={`inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap ${
+            className={`inline-flex items-center gap-2 rounded-t-2xl px-4 sm:px-5 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap cursor-pointer ${
               activeTab === "tanya"
-                ? "border-[var(--brand)] text-[var(--brand)]"
-                : "border-transparent text-[var(--muted)] hover:text-[var(--ink)] hover:border-[var(--line)]"
+                ? "border-[#103626] bg-white text-[#10261b] shadow-xs"
+                : "border-transparent text-[#697c6f] hover:text-[#10261b] hover:bg-white/50"
             }`}
           >
             <Bot size={15} />
             <span>Tanya Dosen AI</span>
-            <span className="rounded-full bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 text-[10px] font-black text-emerald-800 dark:text-emerald-300">
+            <span className="rounded-full bg-[#dff3e5] border border-[#0f6849]/20 px-2 py-0.5 text-[10px] font-black text-[#0f6849]">
               Gemini 3.6
             </span>
           </button>
@@ -413,16 +413,16 @@ export function ModuleDetailClient({
           <button
             type="button"
             onClick={() => setActiveTab("kuis")}
-            className={`inline-flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap ${
+            className={`inline-flex items-center gap-2 rounded-t-2xl px-4 sm:px-5 py-3 text-xs sm:text-sm font-black border-b-2 transition whitespace-nowrap cursor-pointer ${
               activeTab === "kuis"
-                ? "border-[var(--brand)] text-[var(--brand)]"
-                : "border-transparent text-[var(--muted)] hover:text-[var(--ink)] hover:border-[var(--line)]"
+                ? "border-[#103626] bg-white text-[#10261b] shadow-xs"
+                : "border-transparent text-[#697c6f] hover:text-[#10261b] hover:bg-white/50"
             }`}
           >
             <Trophy size={15} />
             <span>Kuis Evaluasi</span>
             {quizData && (
-              <span className="rounded-full bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 text-[10px] font-black text-amber-800 dark:text-amber-300">
+              <span className="rounded-full bg-amber-100 border border-amber-300 px-2 py-0.5 text-[10px] font-black text-amber-900">
                 5 Soal
               </span>
             )}
@@ -435,22 +435,22 @@ export function ModuleDetailClient({
         <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
           <div className="space-y-6">
             {/* File Dokumen Utama */}
-            <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-xs">
-              <h2 className="text-sm font-black uppercase tracking-wider text-[var(--brand)] mb-3 flex items-center gap-2">
+            <div className="rounded-3xl border border-[#d8e2dc] bg-white p-5 sm:p-6 shadow-xs">
+              <h2 className="tag-mono text-xs font-black uppercase tracking-wider text-[#0f6849] mb-3 flex items-center gap-2">
                 <FileText size={16} /> Berkas Dokumen Perkuliahan
               </h2>
 
               {module.file_url ? (
-                <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+                <div className="rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[var(--brand)] text-white shadow-2xs">
+                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#103626] text-[#c8ef70] shadow-xs">
                       <FileCheck size={24} />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-black text-[var(--ink)]">
+                      <p className="truncate text-sm font-black text-[#10261b]">
                         {module.file_name}
                       </p>
-                      <p className="text-xs text-[var(--muted)] font-medium">
+                      <p className="tag-mono text-xs text-[#55675b] font-medium">
                         Ukuran: {formatBytes(module.file_size)} · Tipe: {module.file_type || "Dokumen"}
                       </p>
                     </div>
@@ -461,26 +461,26 @@ export function ModuleDetailClient({
                       href={module.file_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3.5 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[var(--card-subtle)] transition"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-[#d8e2dc] bg-white px-3.5 py-2 text-xs font-bold text-[#10261b] hover:bg-[#f0f4f0] transition cursor-pointer"
                     >
                       <ExternalLink size={13} /> Buka Tab Baru
                     </a>
                     <a
                       href={module.file_url}
                       download={module.file_name}
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-4 py-2 text-xs font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-4 py-2 text-xs font-black text-[#c8ef70] shadow-xs hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
                     >
                       <Download size={13} /> Unduh Dokumen
                     </a>
                   </div>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-[var(--line)] p-8 text-center bg-[var(--card-subtle)]">
-                  <p className="text-xs text-[var(--muted)]">Belum ada file dokumen yang diunggah untuk modul ini.</p>
+                <div className="rounded-2xl border border-dashed border-[#d8e2dc] p-8 text-center bg-[#f7faf8]">
+                  <p className="text-xs font-medium text-[#697c6f]">Belum ada file dokumen yang diunggah untuk modul ini.</p>
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--brand)] hover:underline"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-black text-[#0f6849] hover:underline cursor-pointer"
                   >
                     + Unggah Dokumen Materi Sekarang
                   </button>
@@ -489,21 +489,21 @@ export function ModuleDetailClient({
             </div>
 
             {/* Catatan & Resume Kuliah */}
-            <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-xs">
-              <h2 className="text-sm font-black uppercase tracking-wider text-[var(--brand)] mb-3 flex items-center gap-2">
+            <div className="rounded-3xl border border-[#d8e2dc] bg-white p-5 sm:p-6 shadow-xs">
+              <h2 className="tag-mono text-xs font-black uppercase tracking-wider text-[#0f6849] mb-3 flex items-center gap-2">
                 📝 Catatan &amp; Catatan Khusus Mahasiswa
               </h2>
               {module.catatan ? (
-                <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-4 sm:p-5 text-xs sm:text-sm text-[var(--ink)] leading-relaxed whitespace-pre-wrap font-mono">
+                <div className="rounded-2xl border border-[#d8e2dc] bg-[#fcfdfc] p-4 sm:p-5 text-xs sm:text-sm text-[#10261b] leading-relaxed whitespace-pre-wrap font-mono">
                   {module.catatan}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-[var(--line)] p-8 text-center bg-[var(--card-subtle)]">
-                  <p className="text-xs text-[var(--muted)]">Belum ada catatan kuliah yang kamu tulis.</p>
+                <div className="rounded-2xl border border-dashed border-[#d8e2dc] p-8 text-center bg-[#f7faf8]">
+                  <p className="text-xs font-medium text-[#697c6f]">Belum ada catatan kuliah yang kamu tulis.</p>
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--brand)] hover:underline"
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-black text-[#0f6849] hover:underline cursor-pointer"
                   >
                     + Tambah Catatan Pembelajaran
                   </button>
@@ -515,8 +515,8 @@ export function ModuleDetailClient({
           {/* Right Column: Links & Quick AI Gateway */}
           <div className="space-y-6">
             {/* Tautan & Tugas */}
-            <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-xs">
-              <h2 className="text-sm font-black uppercase tracking-wider text-[var(--brand)] mb-4 flex items-center gap-2">
+            <div className="rounded-3xl border border-[#d8e2dc] bg-white p-5 sm:p-6 shadow-xs">
+              <h2 className="tag-mono text-xs font-black uppercase tracking-wider text-[#0f6849] mb-4 flex items-center gap-2">
                 <Link2 size={16} /> Tautan Pendukung
               </h2>
 
@@ -526,18 +526,18 @@ export function ModuleDetailClient({
                     href={module.link_modul}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-3.5 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] transition group"
+                    className="flex items-center justify-between rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] p-3.5 text-xs font-bold text-[#10261b] hover:border-[#103626] transition group"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#103626] text-[#c8ef70]">
                         <Link2 size={15} />
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate text-xs font-black text-[var(--ink)]">Tautan Modul / Drive</p>
-                        <p className="truncate text-[10px] text-[var(--muted)]">{module.link_modul}</p>
+                        <p className="truncate text-xs font-black text-[#10261b]">Tautan Modul / Drive</p>
+                        <p className="truncate text-[10px] text-[#697c6f]">{module.link_modul}</p>
                       </div>
                     </div>
-                    <ExternalLink size={14} className="text-[var(--muted)] group-hover:text-[var(--brand)] shrink-0" />
+                    <ExternalLink size={14} className="text-[#697c6f] group-hover:text-[#0f6849] shrink-0" />
                   </a>
                 ) : null}
 
@@ -546,55 +546,55 @@ export function ModuleDetailClient({
                     href={module.link_tugas}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-3.5 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] transition group"
+                    className="flex items-center justify-between rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] p-3.5 text-xs font-bold text-[#10261b] hover:border-[#103626] transition group"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-amber-100 text-amber-800">
                         <ExternalLink size={15} />
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate text-xs font-black text-[var(--ink)]">Pengumpulan Tugas Kuliah</p>
-                        <p className="truncate text-[10px] text-[var(--muted)]">{module.link_tugas}</p>
+                        <p className="truncate text-xs font-black text-[#10261b]">Pengumpulan Tugas Kuliah</p>
+                        <p className="truncate text-[10px] text-[#697c6f]">{module.link_tugas}</p>
                       </div>
                     </div>
-                    <ExternalLink size={14} className="text-[var(--muted)] group-hover:text-[var(--brand)] shrink-0" />
+                    <ExternalLink size={14} className="text-[#697c6f] group-hover:text-[#0f6849] shrink-0" />
                   </a>
                 ) : null}
 
                 {!module.link_modul && !module.link_tugas && (
-                  <p className="text-xs text-[var(--muted)] italic">Tidak ada tautan eksternal.</p>
+                  <p className="text-xs text-[#697c6f] italic">Tidak ada tautan eksternal.</p>
                 )}
               </div>
             </div>
 
             {/* AI Companion Quick Card */}
-            <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-xs space-y-4">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[var(--brand)]">
+            <div className="rounded-3xl border border-[#d8e2dc] bg-white p-5 sm:p-6 shadow-xs space-y-4">
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#0f6849]">
                 <Sparkles size={16} />
-                <span>ngampUS AI Companion</span>
+                <span className="tag-mono">STUDY AI SUITE</span>
               </div>
-              <p className="text-xs text-[var(--muted)] leading-relaxed">
-                Manfaatkan ngampUS AI Engine untuk membedah dokumen materi pertemuan ini, merangkum poin esensial, dan melatih pemahamanmu dengan kuis interaktif.
+              <p className="text-xs text-[#55675b] leading-relaxed font-medium">
+                Gunakan AI Tutor untuk membedah dokumen materi pertemuan ini, mengekstrak konsep esensial, dan menguji pemahaman dengan kuis instan.
               </p>
               <div className="grid grid-cols-2 gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setActiveTab("rangkuman")}
-                  className="flex flex-col items-center justify-center p-3 rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] hover:border-[var(--brand)] transition text-center"
+                  className="flex flex-col items-center justify-center p-3.5 rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] hover:border-[#103626] hover:bg-[#dff3e5]/50 transition text-center cursor-pointer active:scale-95"
                 >
-                  <BookOpen size={18} className="text-[var(--brand)] mb-1" />
-                  <span className="text-xs font-black text-[var(--ink)]">Rangkuman AI</span>
-                  <span className="text-[10px] text-[var(--muted)]">Ekstrak konsep inti</span>
+                  <BookOpen size={18} className="text-[#0f6849] mb-1" />
+                  <span className="text-xs font-black text-[#10261b]">Rangkuman AI</span>
+                  <span className="text-[10px] text-[#697c6f]">Ekstrak konsep inti</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab("kuis")}
-                  className="flex flex-col items-center justify-center p-3 rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] hover:border-[var(--brand)] transition text-center"
+                  className="flex flex-col items-center justify-center p-3.5 rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] hover:border-[#103626] hover:bg-[#dff3e5]/50 transition text-center cursor-pointer active:scale-95"
                 >
-                  <Trophy size={18} className="text-amber-500 mb-1" />
-                  <span className="text-xs font-black text-[var(--ink)]">Kuis Modul</span>
-                  <span className="text-[10px] text-[var(--muted)]">Uji pemahaman</span>
+                  <Trophy size={18} className="text-amber-600 mb-1" />
+                  <span className="text-xs font-black text-[#10261b]">Kuis Modul</span>
+                  <span className="text-[10px] text-[#697c6f]">Uji pemahaman</span>
                 </button>
               </div>
             </div>
@@ -604,44 +604,44 @@ export function ModuleDetailClient({
 
       {/* ── TAB CONTENT 2: RANGKUMAN AI ── */}
       {activeTab === "rangkuman" && (
-        <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-8 shadow-xs">
+        <div className="rounded-3xl border border-[#d8e2dc] bg-white p-5 sm:p-8 shadow-xs">
           {!summary && !summaryLoading ? (
             <div className="py-14 text-center">
-              <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#dff3e5] dark:bg-[#103626] text-[var(--brand)] shadow-xs">
+              <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#dff3e5] text-[#0f6849] shadow-xs">
                 <BookOpen size={30} />
               </div>
-              <h2 className="font-display mt-4 text-xl font-extrabold text-[var(--ink)]">
+              <h2 className="font-display mt-4 text-xl font-black text-[#10261b]">
                 Belum Ada Rangkuman AI
               </h2>
-              <p className="mx-auto mt-2 max-w-md text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
-                Biarkan ngampUS AI Engine membaca dokumen materi perkuliahan ini dan menyusun rangkuman esensi, poin kunci, serta prediksi kisi-kisi ujian.
+              <p className="mx-auto mt-2 max-w-md text-xs sm:text-sm text-[#55675b] leading-relaxed font-medium">
+                Biarkan AI Tutor membaca dokumen materi perkuliahan ini dan menyusun rangkuman esensi, poin kunci, serta prediksi kisi-kisi ujian.
               </p>
               <button
                 type="button"
                 onClick={handleGenerateSummary}
-                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-xs font-black text-white shadow-md hover:bg-[var(--brand-dark)] transition active:scale-95"
+                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#103626] px-6 py-3 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
               >
                 <Sparkles size={16} /> Rangkum Sekarang dengan AI
               </button>
             </div>
           ) : summaryLoading ? (
             <div className="py-20 text-center">
-              <div className="mx-auto h-12 w-12 rounded-full border-4 border-[var(--brand)]/20 border-t-[var(--brand)] animate-spin" />
-              <h3 className="font-display mt-4 text-base font-black text-[var(--ink)]">
+              <div className="mx-auto h-12 w-12 rounded-full border-4 border-[#0f6849]/20 border-t-[#0f6849] animate-spin" />
+              <h3 className="font-display mt-4 text-base font-black text-[#10261b]">
                 Sedang Membaca &amp; Merangkum Materi...
               </h3>
-              <p className="mt-1 text-xs text-[var(--muted)]">
+              <p className="mt-1 text-xs text-[#697c6f]">
                 Mengekstrak poin penting, rumus, dan kisi-kisi ujian dari dokumen modul.
               </p>
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#d8e2dc] pb-4">
                 <div>
-                  <h2 className="font-display text-lg sm:text-xl font-black text-[var(--ink)]">
+                  <h2 className="font-display text-lg sm:text-xl font-black text-[#10261b]">
                     Rangkuman Esensi Materi Pertemuan {module.pertemuan}
                   </h2>
-                  <p className="text-xs text-[var(--muted)]">
+                  <p className="text-xs text-[#55675b]">
                     Dihasilkan secara cerdas berbasis dokumen dan silabus kuliah.
                   </p>
                 </div>
@@ -649,32 +649,32 @@ export function ModuleDetailClient({
                   type="button"
                   onClick={handleGenerateSummary}
                   disabled={summaryLoading}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-3.5 py-2 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#d8e2dc] bg-white px-3.5 py-2 text-xs font-bold text-[#10261b] hover:border-[#103626] hover:bg-[#f0f4f0] transition cursor-pointer"
                 >
                   <RotateCw size={13} /> Generate Ulang
                 </button>
               </div>
 
               {/* Ringkasan Inti */}
-              <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-5 sm:p-6 shadow-2xs">
-                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[var(--brand)] mb-3">
+              <div className="rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] p-5 sm:p-6 shadow-xs">
+                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#0f6849] mb-3">
                   <BookOpen size={16} />
-                  <span>Ringkasan Inti Konsep</span>
+                  <span className="tag-mono">RINGKASAN INTI KONSEP</span>
                 </div>
                 <FormattedMarkdown content={summary} />
               </div>
 
               {/* Poin Kunci */}
               {keyPoints.length > 0 && (
-                <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-6">
-                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[var(--brand)] mb-4">
+                <div className="rounded-2xl border border-[#d8e2dc] bg-white p-5 sm:p-6 shadow-xs">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#0f6849] mb-4">
                     <CheckCircle2 size={16} />
-                    <span>Poin Kunci &amp; Definisi Penting</span>
+                    <span className="tag-mono">POIN KUNCI &amp; DEFINISI PENTING</span>
                   </div>
                   <ul className="space-y-3">
                     {keyPoints.map((point, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-[var(--ink)]">
-                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--brand-soft)] text-[var(--brand)] text-xs font-black mt-0.5">
+                      <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-[#10261b]">
+                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#dff3e5] text-[#0f6849] text-xs font-black mt-0.5">
                           {idx + 1}
                         </span>
                         <span className="leading-relaxed font-semibold">{point}</span>
@@ -686,14 +686,14 @@ export function ModuleDetailClient({
 
               {/* Kisi-kisi Ujian */}
               {examTips.length > 0 && (
-                <div className="rounded-2xl border border-amber-300 dark:border-amber-800 bg-amber-50/70 dark:bg-amber-950/30 p-5 sm:p-6">
-                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 mb-3">
+                <div className="rounded-2xl border border-amber-300 bg-amber-50/80 p-5 sm:p-6 shadow-xs">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-900 mb-3">
                     <Lightbulb size={16} />
-                    <span>Prediksi Kisi-kisi &amp; Hal yang Perlu Diwaspadai saat Ujian</span>
+                    <span className="tag-mono">PREDIKSI KISI-KISI &amp; HAL PENTING SAAT UJIAN</span>
                   </div>
                   <ul className="space-y-2.5">
                     {examTips.map((tip, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-amber-900 dark:text-amber-200">
+                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-amber-950">
                         <span className="font-bold">💡</span>
                         <span className="leading-relaxed font-medium">{tip}</span>
                       </li>
@@ -708,24 +708,24 @@ export function ModuleDetailClient({
 
       {/* ── TAB CONTENT 3: TANYA DOSEN AI (FULL-HEIGHT CHAT WORKSPACE) ── */}
       {activeTab === "tanya" && (
-        <div className="flex h-[720px] max-h-[80vh] flex-col rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] shadow-xs overflow-hidden">
+        <div className="flex h-[720px] max-h-[80vh] flex-col rounded-3xl border border-[#d8e2dc] bg-white shadow-xs overflow-hidden">
           {/* Chat Header */}
-          <div className="flex items-center justify-between border-b border-[var(--line)] px-5 py-3.5 bg-[var(--card-subtle)] shrink-0">
+          <div className="flex items-center justify-between border-b border-[#d8e2dc] px-5 py-3.5 bg-[#f7faf8] shrink-0">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--brand)] text-white shadow-xs">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#103626] text-[#c8ef70] shadow-xs">
                 <Bot size={20} />
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)]">
+                  <h3 className="font-display text-sm sm:text-base font-black text-[#10261b]">
                     Tanya Dosen AI · Pertemuan {module.pertemuan}
                   </h3>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 dark:border-emerald-700/60 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[9.5px] font-black text-emerald-800 dark:text-emerald-300 shadow-2xs">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    ngampUS AI Engine
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0f6849]/20 bg-[#dff3e5] px-2.5 py-0.5 text-[9.5px] font-black text-[#0f6849]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
+                    AI Engine
                   </span>
                 </div>
-                <p className="text-[11px] text-[var(--muted)]">
+                <p className="text-[11px] text-[#55675b]">
                   {module.topik} {module.courses?.nama_matkul ? `· ${module.courses.nama_matkul}` : ""}
                 </p>
               </div>
@@ -736,14 +736,14 @@ export function ModuleDetailClient({
               onClick={handleClearChat}
               disabled={chatClearing || chatLoading}
               title="Reset / Bersihkan percakapan"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3 py-1.5 text-xs font-bold text-[var(--muted)] hover:text-rose-500 transition disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d8e2dc] bg-white px-3 py-1.5 text-xs font-bold text-[#697c6f] hover:text-[#c53e1c] hover:bg-[#fff0ec] transition disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw size={14} /> Reset Obrolan
             </button>
           </div>
 
           {/* Messages Body */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-[#fcfdfc]">
             {chatMessages.map((msg, idx) => {
               const isUser = msg.role === "user";
               return (
@@ -755,7 +755,7 @@ export function ModuleDetailClient({
                     className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl text-xs font-bold ${
                       isUser
                         ? "bg-[#103626] text-[#c8ef70]"
-                        : "bg-[var(--brand-soft)] text-[var(--brand)]"
+                        : "bg-[#dff3e5] text-[#0f6849] border border-[#b9ddc6]"
                     }`}
                   >
                     {isUser ? <User size={16} /> : <Bot size={16} />}
@@ -765,7 +765,7 @@ export function ModuleDetailClient({
                     className={`max-w-[85%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-2xs ${
                       isUser
                         ? "bg-[#103626] text-white rounded-tr-xs whitespace-pre-wrap"
-                        : "bg-[var(--card-subtle)] text-[var(--ink)] border border-[var(--line)] rounded-tl-xs"
+                        : "bg-white text-[#10261b] border border-[#d8e2dc] rounded-tl-xs"
                     }`}
                   >
                     {isUser ? (
@@ -794,8 +794,8 @@ export function ModuleDetailClient({
           </div>
 
           {/* Quick Prompts */}
-          <div className="flex items-center gap-2 overflow-x-auto px-4 sm:px-6 py-2 bg-[var(--card-bg)] border-t border-[var(--line)] scrollbar-none">
-            <span className="text-[10px] font-bold text-[var(--muted)] shrink-0">Cepat tanya:</span>
+          <div className="flex items-center gap-2 overflow-x-auto px-4 sm:px-6 py-2 bg-white border-t border-[#d8e2dc] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <span className="text-[10px] font-bold text-[#697c6f] shrink-0">Cepat tanya:</span>
             {[
               "Jelaskan dengan bahasa sederhana dong",
               "Beri 1 contoh kasus nyata",
@@ -807,7 +807,7 @@ export function ModuleDetailClient({
                 type="button"
                 disabled={chatLoading}
                 onClick={() => setChatInput(pText)}
-                className="shrink-0 rounded-full border border-[var(--line)] bg-[var(--card-subtle)] px-3 py-1 text-[11px] font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition disabled:opacity-50"
+                className="shrink-0 rounded-full border border-[#d8e2dc] bg-[#f7faf8] px-3 py-1 text-[11px] font-bold text-[#10261b] hover:border-[#103626] hover:bg-[#dff3e5] hover:text-[#0f6849] transition disabled:opacity-50 cursor-pointer"
               >
                 {pText}
               </button>
@@ -817,7 +817,7 @@ export function ModuleDetailClient({
           {/* Input Box */}
           <form
             onSubmit={handleSendChat}
-            className="border-t border-[var(--line)] p-4 bg-[var(--card-subtle)] flex items-center gap-2.5 shrink-0"
+            className="border-t border-[#d8e2dc] p-4 bg-white flex items-center gap-2.5 shrink-0"
           >
             <input
               type="text"
@@ -825,12 +825,12 @@ export function ModuleDetailClient({
               onChange={(e) => setChatInput(e.target.value)}
               disabled={chatLoading}
               placeholder="Tanyakan konsep, minta contoh soal, atau rumus dari materi ini..."
-              className="flex-1 rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-4 py-3 text-xs sm:text-sm text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden disabled:opacity-50"
+              className="flex-1 rounded-xl border border-[#d8e2dc] bg-[#f7faf8] px-4 py-3 text-xs sm:text-sm text-[#10261b] placeholder:text-[#8b9e91] focus:border-[#103626] focus:bg-white focus:outline-none transition disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={chatLoading || !chatInput.trim()}
-              className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--brand)] text-white shadow-xs transition hover:bg-[var(--brand-dark)] active:scale-95 disabled:opacity-50"
+              className="grid h-11 w-11 place-items-center rounded-xl bg-[#103626] text-[#c8ef70] shadow-sm transition hover:bg-[#1a4a34] active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               <Send size={16} />
             </button>
@@ -840,33 +840,33 @@ export function ModuleDetailClient({
 
       {/* ── TAB CONTENT 4: KUIS EVALUASI ── */}
       {activeTab === "kuis" && (
-        <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-8 shadow-xs">
+        <div className="rounded-3xl border border-[#d8e2dc] bg-white p-5 sm:p-8 shadow-xs">
           {!quizData && !quizLoading ? (
             <div className="py-14 text-center">
-              <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#dff3e5] dark:bg-[#103626] text-[var(--brand)] shadow-xs">
+              <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#dff3e5] text-[#0f6849] shadow-xs">
                 <Trophy size={30} />
               </div>
-              <h2 className="font-display mt-4 text-xl font-extrabold text-[var(--ink)]">
+              <h2 className="font-display mt-4 text-xl font-black text-[#10261b]">
                 Uji Pemahaman Pertemuan {module.pertemuan}
               </h2>
-              <p className="mx-auto mt-2 max-w-md text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
-                Gemini AI akan meracik 5 soal pilihan ganda berkualitas tinggi berdasarkan dokumen modul pertemuan ini lengkap dengan pembahasan kunci jawaban.
+              <p className="mx-auto mt-2 max-w-md text-xs sm:text-sm text-[#55675b] leading-relaxed font-medium">
+                AI akan meracik 5 soal pilihan ganda berkualitas tinggi berdasarkan dokumen modul pertemuan ini lengkap dengan pembahasan kunci jawaban.
               </p>
               <button
                 type="button"
                 onClick={handleStartQuiz}
-                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[var(--brand)] px-6 py-3 text-xs font-black text-white shadow-md hover:bg-[var(--brand-dark)] transition active:scale-95"
+                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#103626] px-6 py-3 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
               >
                 <Sparkles size={16} /> Mulai Racik Kuis AI
               </button>
             </div>
           ) : quizLoading ? (
             <div className="py-20 text-center">
-              <div className="mx-auto h-12 w-12 rounded-full border-4 border-[var(--brand)]/20 border-t-[var(--brand)] animate-spin" />
-              <h3 className="font-display mt-4 text-base font-black text-[var(--ink)]">
+              <div className="mx-auto h-12 w-12 rounded-full border-4 border-[#0f6849]/20 border-t-[#0f6849] animate-spin" />
+              <h3 className="font-display mt-4 text-base font-black text-[#10261b]">
                 Sedang Meracik 5 Soal Kuis...
               </h3>
-              <p className="mt-1 text-xs text-[var(--muted)]">
+              <p className="mt-1 text-xs text-[#697c6f]">
                 Menganalisis konsep dan menyusun opsi jawaban serta pembahasan.
               </p>
             </div>
@@ -874,16 +874,20 @@ export function ModuleDetailClient({
             <div className="py-12 text-center max-w-md mx-auto">
               <div
                 className={`mx-auto grid h-20 w-20 place-items-center rounded-3xl text-white shadow-lg ${
-                  quizScore >= 80 ? "bg-[var(--brand)]" : quizScore >= 60 ? "bg-amber-500" : "bg-red-500"
+                  quizScore >= 80 ? "bg-[#103626] text-[#c8ef70]" : quizScore >= 60 ? "bg-amber-600 text-amber-50" : "bg-red-600 text-red-50"
                 }`}
               >
                 <Trophy size={38} />
               </div>
 
-              <h2 className="font-display mt-5 text-3xl font-black text-[var(--ink)]">
-                Skor Kamu: {quizScore} / 100
+              <span className="mt-4 inline-block font-mono text-[11px] font-black uppercase tracking-widest text-[#0f6849]">
+                [EVALUATION REPORT // SCORE CARD]
+              </span>
+
+              <h2 className="font-display mt-1 text-3xl font-black text-[#10261b]">
+                Skor Kamu: {quizScore} <span className="text-lg font-bold text-[#697c6f]">/ 100</span>
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
+              <p className="mt-2 text-xs sm:text-sm text-[#55675b] leading-relaxed font-medium">
                 {quizScore >= 80
                   ? "Luar biasa! Pemahamanmu pada modul pertemuan ini sangat matang. 🌟"
                   : quizScore >= 60
@@ -895,14 +899,14 @@ export function ModuleDetailClient({
                 <button
                   type="button"
                   onClick={handleStartQuiz}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-5 py-2.5 text-xs font-bold text-[var(--ink)] hover:border-[var(--brand)] transition"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[#d8e2dc] bg-white px-5 py-2.5 text-xs font-bold text-[#10261b] hover:bg-[#f0f4f0] transition cursor-pointer"
                 >
                   <RotateCcw size={14} /> Coba Kuis Baru
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab("rangkuman")}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-6 py-2.5 text-xs font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#103626] px-6 py-2.5 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
                 >
                   Baca Rangkuman
                 </button>
@@ -912,23 +916,25 @@ export function ModuleDetailClient({
             <div className="max-w-2xl mx-auto space-y-6">
               {/* Progress */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-[var(--muted)]">
-                  <span>Soal {currentQIdx + 1} dari {quizData.questions.length}</span>
-                  <span className="text-[var(--brand)]">
+                <div className="flex items-center justify-between text-xs font-bold text-[#425a4c]">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-[#0f6849]">
+                    SOAL {currentQIdx + 1} / {quizData.questions.length}
+                  </span>
+                  <span className="font-mono text-xs font-black text-[#10261b]">
                     {Math.round(((currentQIdx + 1) / quizData.questions.length) * 100)}%
                   </span>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--card-subtle)] border border-[var(--line)]">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-[#e8efe9] border border-[#d8e2dc]">
                   <div
-                    className="h-full rounded-full bg-[var(--brand)] transition-all duration-300"
+                    className="h-full rounded-full bg-[#103626] transition-all duration-300"
                     style={{ width: `${((currentQIdx + 1) / quizData.questions.length) * 100}%` }}
                   />
                 </div>
               </div>
 
               {/* Question */}
-              <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-5">
-                <p className="text-sm sm:text-base font-black text-[var(--ink)] leading-relaxed">
+              <div className="rounded-2xl border border-[#d8e2dc] bg-[#f7faf8] p-5">
+                <p className="text-sm sm:text-base font-black text-[#10261b] leading-relaxed">
                   {quizData.questions[currentQIdx]?.question}
                 </p>
               </div>
@@ -940,14 +946,14 @@ export function ModuleDetailClient({
                   const isCorrect = oIdx === quizData.questions[currentQIdx]?.correct_index;
                   const isAnswered = selectedAnswers[currentQIdx] !== undefined;
 
-                  let optClass = "border-[var(--line)] bg-[var(--card-bg)] text-[var(--ink)] hover:border-[var(--brand)]";
+                  let optClass = "border-[#d8e2dc] bg-white text-[#10261b] hover:border-[#103626] hover:bg-[#f0f4f0]";
                   if (isAnswered) {
                     if (isCorrect) {
-                      optClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 ring-2 ring-emerald-500/20";
+                      optClass = "border-emerald-600 bg-emerald-50 text-emerald-950 ring-2 ring-emerald-600/30";
                     } else if (isSelected && !isCorrect) {
-                      optClass = "border-red-500 bg-red-50 dark:bg-red-950/50 text-red-900 dark:text-red-200 ring-2 ring-red-500/20";
+                      optClass = "border-red-500 bg-red-50 text-red-950 ring-2 ring-red-500/30";
                     } else {
-                      optClass = "border-[var(--line)] opacity-50 bg-[var(--card-bg)]";
+                      optClass = "border-[#d8e2dc] opacity-40 bg-white text-[#697c6f]";
                     }
                   }
 
@@ -957,10 +963,12 @@ export function ModuleDetailClient({
                       type="button"
                       disabled={isAnswered}
                       onClick={() => handleSelectQuizOption(oIdx)}
-                      className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-xs sm:text-sm font-bold transition ${optClass}`}
+                      className={`flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-xs sm:text-sm font-bold transition cursor-pointer ${optClass}`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-[var(--card-subtle)] text-xs font-black">
+                        <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-lg text-xs font-black ${
+                          isAnswered && isCorrect ? "bg-emerald-600 text-white" : isAnswered && isSelected ? "bg-red-500 text-white" : "bg-[#e8efe9] text-[#10261b]"
+                        }`}>
                           {String.fromCharCode(65 + oIdx)}
                         </span>
                         <span>{opt}</span>
@@ -970,7 +978,7 @@ export function ModuleDetailClient({
                           {isCorrect ? (
                             <CheckCircle2 size={18} className="text-emerald-600" />
                           ) : isSelected ? (
-                            <span className="text-red-500 font-bold">✕</span>
+                            <span className="text-red-600 font-bold">✕</span>
                           ) : null}
                         </span>
                       )}
@@ -981,12 +989,12 @@ export function ModuleDetailClient({
 
               {/* Explanation */}
               {showExplanation && (
-                <div className="rounded-2xl border border-[var(--brand)]/30 bg-[var(--brand-soft)] p-4 text-xs sm:text-sm text-[var(--ink)] animate-in fade-in duration-200">
-                  <div className="flex items-center gap-1.5 font-black text-[var(--brand)] mb-1">
+                <div className="rounded-2xl border border-[#0f6849]/30 bg-[#dff3e5] p-4 text-xs sm:text-sm text-[#10261b] animate-in fade-in duration-200">
+                  <div className="flex items-center gap-1.5 font-black text-[#0f6849] mb-1">
                     <Lightbulb size={16} />
-                    <span>Pembahasan Dosen AI:</span>
+                    <span className="tag-mono">PEMBAHASAN DOSEN AI:</span>
                   </div>
-                  <p className="leading-relaxed">{quizData.questions[currentQIdx]?.explanation}</p>
+                  <p className="leading-relaxed font-medium text-[#10261b]">{quizData.questions[currentQIdx]?.explanation}</p>
                 </div>
               )}
 
@@ -996,7 +1004,7 @@ export function ModuleDetailClient({
                   <button
                     type="button"
                     onClick={handleNextQuestion}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-6 py-3 text-xs sm:text-sm font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#103626] px-6 py-3 text-xs sm:text-sm font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
                   >
                     {currentQIdx < quizData.questions.length - 1 ? "Soal Berikutnya →" : "Lihat Skor Akhir 🏆"}
                   </button>

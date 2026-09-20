@@ -250,14 +250,14 @@ export function ModuleChatModal({
 
           {loading && (
             <div className="flex items-start gap-2.5">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand)]">
-                <Bot size={14} />
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-[#dff3e5] text-[#0f6849] border border-[#b9ddc6]">
+                <Bot size={16} />
               </span>
-              <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-3 text-xs text-[var(--muted)] shadow-2xs flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce" />
-                <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce delay-100" />
-                <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce delay-200" />
-                <span className="text-[11px] font-semibold ml-1">ngampUS AI sedang menganalisis materi kuliah...</span>
+              <div className="rounded-2xl border border-[#d8e3da] bg-white p-3 text-xs text-[#425a4c] shadow-xs flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-[#0f6849] animate-bounce" />
+                <div className="h-2 w-2 rounded-full bg-[#0f6849] animate-bounce delay-100" />
+                <div className="h-2 w-2 rounded-full bg-[#0f6849] animate-bounce delay-200" />
+                <span className="text-[11px] font-bold text-[#10261b] ml-1">AI Tutor sedang menganalisis materi modul...</span>
               </div>
             </div>
           )}
