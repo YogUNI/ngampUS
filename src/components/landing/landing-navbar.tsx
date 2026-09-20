@@ -26,7 +26,8 @@ export function LandingNavbar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 40);
+      // When scrolled past hero (~350px), navbar transitions to frosted light theme
+      setIsScrolled(scrollY > 300);
 
       const sectionIds = ["features", "how-it-works", "faq"];
       const scrollPosition = scrollY + 180; // Offset for navbar height
@@ -93,10 +94,10 @@ export function LandingNavbar() {
       {/* ── Outer Floating Header Container ── */}
       <header className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 transition-all duration-300">
         <nav
-          className={`hero-stagger-1 relative mx-auto flex items-center justify-between rounded-full border border-white/15 px-3.5 py-2.5 sm:px-6 sm:py-3 transition-all duration-300 ${
+          className={`hero-stagger-1 relative mx-auto flex items-center justify-between rounded-full px-3.5 py-2.5 sm:px-6 sm:py-3 transition-all duration-300 ${
             isScrolled
-              ? "bg-white/[.12] backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25)] ring-1 ring-white/10"
-              : "bg-white/[.07] backdrop-blur-xl"
+              ? "border border-[#d8e3da]/80 bg-[#f7f8f5]/85 backdrop-blur-2xl shadow-[0_10px_30px_rgba(16,38,27,0.08)] ring-1 ring-black/[0.04]"
+              : "border border-white/15 bg-white/[.07] backdrop-blur-xl"
           }`}
         >
           {/* Brand Logo */}
@@ -112,13 +113,13 @@ export function LandingNavbar() {
               className="h-7 w-7 sm:h-8 sm:w-8 object-contain drop-shadow-xs"
               priority
             />
-            <span className="text-white">
-              ngamp<span className="text-[#c8ef70]">US</span>
+            <span className={isScrolled ? "text-[#103626]" : "text-white"}>
+              ngamp<span className={isScrolled ? "text-[#0f6849]" : "text-[#c8ef70]"}>US</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation Links — pure glass, no black bg, clean active text indicator */}
-          <div className="hidden md:flex items-center gap-6 text-xs font-bold text-[#cad7ce]">
+          {/* Desktop Navigation Links (Clean text, adaptive contrast, no dark box) */}
+          <div className="hidden md:flex items-center gap-6 text-xs font-bold">
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.sectionId;
               return (
@@ -127,14 +128,24 @@ export function LandingNavbar() {
                   href={link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
                   className={`relative py-1 transition-all duration-200 ${
-                    isActive
+                    isScrolled
+                      ? isActive
+                        ? "text-[#0f6849] font-black"
+                        : "text-[#55675b] hover:text-[#103626]"
+                      : isActive
                       ? "text-[#c8ef70] font-black"
                       : "text-[#cad7ce] hover:text-white"
                   }`}
                 >
                   <span>{link.name}</span>
                   {isActive && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#c8ef70] shadow-[0_0_8px_#c8ef70]" />
+                    <span
+                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full ${
+                        isScrolled
+                          ? "bg-[#0f6849] shadow-[0_0_6px_#0f6849]"
+                          : "bg-[#c8ef70] shadow-[0_0_8px_#c8ef70]"
+                      }`}
+                    />
                   )}
                 </a>
               );
@@ -145,13 +156,21 @@ export function LandingNavbar() {
           <div className="hidden sm:flex items-center gap-2 text-xs sm:text-sm font-bold">
             <Link
               href="/login"
-              className="rounded-full px-3.5 py-2 text-[#c9dbce] hover:bg-white/10 hover:text-white transition active:scale-95"
+              className={`rounded-full px-3.5 py-2 transition active:scale-95 ${
+                isScrolled
+                  ? "text-[#103626] hover:bg-black/5"
+                  : "text-[#c9dbce] hover:bg-white/10 hover:text-white"
+              }`}
             >
               Masuk
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-[#c8ef70] px-4 sm:px-5 py-2 sm:py-2.5 text-[#103626] font-black shadow-[0_4px_14px_rgba(200,239,112,.35)] transition-all hover:-translate-y-0.5 hover:bg-[#d6f888] active:scale-95"
+              className={`rounded-full px-4 sm:px-5 py-2 sm:py-2.5 font-black transition-all hover:-translate-y-0.5 active:scale-95 ${
+                isScrolled
+                  ? "bg-[#103626] text-[#c8ef70] shadow-md hover:bg-[#1a4a34]"
+                  : "bg-[#c8ef70] text-[#103626] shadow-[0_4px_14px_rgba(200,239,112,.35)] hover:bg-[#d6f888]"
+              }`}
             >
               Mulai Gratis →
             </Link>
@@ -161,13 +180,17 @@ export function LandingNavbar() {
           <div className="flex sm:hidden items-center gap-1.5">
             <Link
               href="/login"
-              className="rounded-full px-2.5 py-1 text-xs font-bold text-[#c9dbce] hover:text-white transition"
+              className={`rounded-full px-2.5 py-1 text-xs font-bold transition ${
+                isScrolled ? "text-[#103626]" : "text-[#c9dbce] hover:text-white"
+              }`}
             >
               Masuk
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-[#c8ef70] px-3 py-1.5 text-xs font-black text-[#103626] shadow-xs active:scale-95 transition"
+              className={`rounded-full px-3 py-1.5 text-xs font-black shadow-xs active:scale-95 transition ${
+                isScrolled ? "bg-[#103626] text-[#c8ef70]" : "bg-[#c8ef70] text-[#103626]"
+              }`}
             >
               Mulai →
             </Link>
@@ -175,7 +198,11 @@ export function LandingNavbar() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Tutup menu" : "Buka menu navigasi"}
-              className="ml-1 grid h-8 w-8 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20 transition active:scale-95"
+              className={`ml-1 grid h-8 w-8 place-items-center rounded-full transition active:scale-95 ${
+                isScrolled
+                  ? "bg-black/5 text-[#103626] hover:bg-black/10"
+                  : "bg-white/10 text-white hover:bg-white/20"
+              }`}
             >
               {mobileMenuOpen ? <X size={17} /> : <Menu size={17} />}
             </button>
