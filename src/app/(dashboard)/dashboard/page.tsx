@@ -192,7 +192,7 @@ export default async function DashboardPage() {
 
       {/* ── EXECUTIVE DARK HEADER (Native App Aesthetic) ── */}
       <header
-        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2rem] sm:rounded-b-[2.5rem] px-5 pt-7 pb-14 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 sm:pb-16 lg:-mx-10 lg:px-10"
+        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2rem] sm:rounded-b-[2.5rem] px-5 pt-6 pb-16 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 sm:pb-20 lg:-mx-10 lg:px-10"
         style={{
           background: "linear-gradient(180deg, #092015 0%, #0f3524 55%, #13422e 100%)",
         }}
@@ -207,61 +207,56 @@ export default async function DashboardPage() {
           style={{ background: "radial-gradient(circle, rgba(34,197,94,0.5), transparent 70%)" }}
         />
 
-        <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative z-10 flex items-center justify-between gap-3">
           {/* User Profile Thumbnail & Info */}
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10 text-base font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-base font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
               {firstName.slice(0, 1).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#a8d3b8]">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#a8d3b8]">
                   {greeting}
                 </span>
                 <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] animate-pulse" />
               </div>
-              <h1 className="font-display truncate text-xl sm:text-2xl font-black text-white tracking-tight">
+              <h1 className="font-display truncate text-lg sm:text-2xl font-black text-white tracking-tight leading-snug">
                 {profile?.full_name || firstName}
               </h1>
-              <p className="truncate text-xs font-semibold text-[#8ca393] mt-0.5">
-                {activeSemester ? `${activeSemester.nama_semester} · Aktif` : "Belum Ada Semester Aktif"}
+              <p className="truncate text-[11px] font-medium text-[#8ca393]">
+                {activeSemester ? `${activeSemester.nama_semester} • Mahasiswa Aktif` : "Personal Workspace"}
               </p>
             </div>
           </div>
 
-          {/* Quick Header Right Badge & Action */}
-          <div className="flex items-center gap-2.5 self-start sm:self-auto">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[10px] font-black text-[#c8ef70] backdrop-blur-md border border-white/10">
-              📅 {dateHeading}
+          {/* Quick Header Date Pill (Right Aligned) */}
+          <div className="shrink-0">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold text-[#c8ef70] backdrop-blur-md border border-white/10">
+              📅 {dateHeading.split(",")[0]}, {dateHeading.split(",")[1]?.trim()?.slice(0, 6)}
             </span>
-            <Link
-              href="/kegiatan?new=1"
-              prefetch={true}
-              data-tour="hero-add-kegiatan"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#c8ef70] px-3.5 py-1.5 text-xs font-black text-[#0f3524] shadow-sm transition hover:bg-[#d8f58b] active:scale-95"
-            >
-              <Plus size={14} strokeWidth={3} /> Catat
-            </Link>
           </div>
         </div>
 
-        {/* Hero Quick Stat Highlight (Like POS Rp 5.477.136 in reference) */}
-        <div className="relative z-10 mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
+        {/* Hero Quick Stat Highlight (Large Crisp Typography like POS Rp 5.477.136) */}
+        <div className="relative z-10 mt-6 pt-4 border-t border-white/10 flex items-end justify-between">
           <div>
-            <p className="text-[10.5px] font-bold uppercase tracking-widest text-[#a8d3b8]">
-              {activeSemester ? "SEMESTER AKTIF" : "STATUS MAHASISWA"}
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#a8d3b8]">
+              STATUS AKADEMIK
             </p>
-            <div className="flex items-baseline gap-2 mt-0.5">
+            <div className="mt-1 flex items-baseline gap-2">
               <span className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight">
-                {activeSemester?.nama_semester || "ngampUS Student"}
+                {activeSemester ? activeSemester.nama_semester : "Semester Baru"}
               </span>
-              <span className="text-xs font-bold text-[#c8ef70]">• {activeSemester ? "Berjalan" : "Siap"}</span>
+              <span className="rounded-md bg-[#c8ef70]/20 px-2 py-0.5 text-[10px] font-black text-[#c8ef70]">
+                {activeSemester ? "Berjalan" : "Siap"}
+              </span>
             </div>
           </div>
+
           <div className="text-right">
-            <span className="text-[10px] font-bold text-[#a8d3b8] block">Hari Ini</span>
-            <span className="font-display text-base sm:text-lg font-black text-[#c8ef70]">
-              {todayClasses.length} Kuliah
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#a8d3b8] block">Hari Ini</span>
+            <span className="font-display text-base sm:text-xl font-black text-[#c8ef70] leading-none">
+              {todayClasses.length > 0 ? `${todayClasses.length} Kelas` : "Bebas Kuliah"}
             </span>
           </div>
         </div>
