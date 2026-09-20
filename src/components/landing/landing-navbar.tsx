@@ -91,12 +91,12 @@ export function LandingNavbar() {
   return (
     <>
       {/* ── Outer Floating Header Container ── */}
-      <header className="sticky top-3 sm:top-4 z-50 mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 transition-all duration-300">
+      <header className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 transition-all duration-300">
         <nav
           className={`hero-stagger-1 relative mx-auto flex items-center justify-between rounded-full border transition-all duration-300 ${
             isScrolled
-              ? "border-white/20 bg-[#0b2419]/90 py-2 sm:py-2.5 px-3 sm:px-5 shadow-[0_12px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl ring-1 ring-white/10"
-              : "border-white/15 bg-white/[.07] py-2.5 sm:py-3 px-3.5 sm:px-6 backdrop-blur-xl"
+              ? "border-white/20 bg-[#0b2419]/95 py-2 sm:py-2.5 px-3 sm:px-5 shadow-[0_12px_35px_rgba(0,0,0,0.5)] backdrop-blur-2xl ring-1 ring-white/10"
+              : "border-white/15 bg-white/[.08] py-2.5 sm:py-3 px-3.5 sm:px-6 backdrop-blur-xl"
           }`}
         >
           {/* Brand Logo */}

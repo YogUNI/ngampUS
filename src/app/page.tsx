@@ -35,10 +35,17 @@ export default function Home() {
   ];
 
   return (
-    <main className="atlas-page landing-page min-h-screen overflow-hidden bg-[#f7f8f5] text-[#10261b]">
+    <main className="atlas-page landing-page min-h-screen bg-[#f7f8f5] text-[#10261b]">
+
+      {/* ── STICKY FLOATING NAVBAR (Page-Wide) ── */}
+      <div className="fixed top-3 sm:top-4 inset-x-0 z-50 pointer-events-none">
+        <div className="pointer-events-auto">
+          <LandingNavbar />
+        </div>
+      </div>
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="atlas-hero relative min-h-screen bg-[#103626] px-4 pb-16 pt-3 text-[#f6f8f1] sm:px-8 sm:pb-20 sm:pt-6 lg:px-12 overflow-hidden w-full">
+      <section className="atlas-hero relative min-h-screen bg-[#103626] px-4 pb-16 pt-20 sm:pt-24 text-[#f6f8f1] sm:px-8 sm:pb-20 lg:px-12 overflow-hidden w-full">
 
         {/* Ambient grain */}
         <div className="atlas-grain absolute inset-0 opacity-25 pointer-events-none" />
@@ -57,11 +64,8 @@ export default function Home() {
           style={{ background: "radial-gradient(circle, rgba(200,239,112,.15), transparent 65%)", filter: "blur(3px)" }}
         />
 
-        {/* Nav */}
-        <LandingNavbar />
-
         {/* Hero Content Grid */}
-        <div className="relative z-10 mx-auto w-full min-w-0 grid max-w-7xl gap-8 sm:gap-12 pb-8 pt-8 sm:pt-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:pt-20">
+        <div className="relative z-10 mx-auto w-full min-w-0 grid max-w-7xl gap-8 sm:gap-12 pb-8 pt-4 sm:pt-8 lg:grid-cols-[1fr_1fr] lg:items-center lg:pt-12">
 
           {/* Left Column — Sharp Copywriting */}
           <div className="w-full min-w-0">
