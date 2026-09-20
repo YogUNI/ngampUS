@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -48,8 +48,31 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [flipperHeight, setFlipperHeight] = useState<number | undefined>(undefined);
+
+  const frontRef = useRef<HTMLDivElement>(null);
+  const backRef = useRef<HTMLDivElement>(null);
 
   const isFlipped = mode === "register";
+
+  // Measure both card heights and use the taller one so flip looks seamless
+  useLayoutEffect(() => {
+    const measure = () => {
+      const frontH = frontRef.current?.scrollHeight ?? 0;
+      const backH = backRef.current?.scrollHeight ?? 0;
+      const maxH = Math.max(frontH, backH);
+      if (maxH > 0) setFlipperHeight(maxH);
+    };
+
+    measure();
+
+    // Re-measure if content changes (e.g. error messages appear)
+    const ro = new ResizeObserver(measure);
+    if (frontRef.current) ro.observe(frontRef.current);
+    if (backRef.current) ro.observe(backRef.current);
+    return () => ro.disconnect();
+  }, []);
+
 
   // Form states
   const loginForm = useForm<LoginValues>({
@@ -160,11 +183,15 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
       {/* ── REAL 3D CARD FLIP CONTAINER ── */}
       <div className="perspective-container w-full">
-        <div className={`card-flipper ${isFlipped ? "flipped" : ""}`}>
+        <div
+          className={`card-flipper ${isFlipped ? "flipped" : ""}`}
+          style={flipperHeight ? { height: flipperHeight } : undefined}
+        >
           {/* ══════════════════════════════════════════════════════════
               CARD FRONT: LOGIN SIDE
              ══════════════════════════════════════════════════════════ */}
           <div
+            ref={frontRef}
             className={`card-face rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)] ${
               isFlipped ? "pointer-events-none" : "relative"
             }`}
@@ -315,6 +342,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               CARD BACK: REGISTER SIDE (180deg Rotated Face)
              ══════════════════════════════════════════════════════════ */}
           <div
+            ref={backRef}
             className={`card-face card-face-back rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)] ${
               !isFlipped ? "pointer-events-none" : ""
             }`}
