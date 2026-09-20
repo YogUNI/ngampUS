@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { BookOpen, ChevronDown, ChevronRight, FolderOpen, Plus, Search, Sparkles } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, FolderOpen, Plus, Search, Sparkles } from "lucide-react";
 import { CourseModuleData, CourseOption, ModuleFormModal } from "./module-form-modal";
 import { ModuleCard } from "./module-card";
 
@@ -72,20 +72,47 @@ export function ModuleList({
     (c) => selectedCourseTab === "all" || c.id === selectedCourseTab
   );
 
+  const scrollTabsRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = () => {
+    const el = scrollTabsRef.current;
+    if (el) {
+      setCanScrollLeft(el.scrollLeft > 4);
+      setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [courses]);
+
+  const scrollTabs = (direction: "left" | "right") => {
+    const el = scrollTabsRef.current;
+    if (el) {
+      const scrollAmount = direction === "left" ? -180 : 180;
+      el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      setTimeout(checkScroll, 300);
+    }
+  };
+
   return (
     <div className="mt-5 space-y-4 sm:space-y-6">
-      {/* ── STREAMLINED STAT STRIP (Compact on Mobile, Balanced 3-Card on Desktop) ── */}
+      {/* ── STREAMLINED STAT STRIP (Aligned Metrics & Progress Bar) ── */}
       <div className="rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          {/* Quick Metrics */}
+          {/* Quick Metrics (Strict Vertical Alignment) */}
           <div className="grid grid-cols-3 divide-x divide-[#e8eee9] sm:divide-x-0 sm:flex sm:items-center sm:gap-6 flex-1">
             {/* Total Modul */}
-            <div className="text-center sm:text-left px-2 sm:px-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] block">
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-1 sm:px-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] block min-h-[26px] sm:min-h-[16px] flex items-center justify-center sm:justify-start">
                 Total Modul
               </span>
-              <div className="mt-0.5 flex items-baseline justify-center sm:justify-start gap-1">
-                <span className="font-display text-xl sm:text-2xl font-black text-[#10261b]">
+              <div className="mt-1 flex items-baseline justify-center sm:justify-start gap-1">
+                <span className="font-display text-xl sm:text-2xl font-black text-[#10261b] leading-none">
                   {totalModules}
                 </span>
                 <span className="text-[10px] sm:text-xs font-bold text-[#697c6f]">Materi</span>
@@ -93,12 +120,12 @@ export function ModuleList({
             </div>
 
             {/* Sudah Dibaca */}
-            <div className="text-center sm:text-left px-2 sm:px-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#0f6849] block">
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-1 sm:px-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#0f6849] block min-h-[26px] sm:min-h-[16px] flex items-center justify-center sm:justify-start">
                 Selesai Dibaca
               </span>
-              <div className="mt-0.5 flex items-baseline justify-center sm:justify-start gap-1">
-                <span className="font-display text-xl sm:text-2xl font-black text-[#0f6849]">
+              <div className="mt-1 flex items-baseline justify-center sm:justify-start gap-1">
+                <span className="font-display text-xl sm:text-2xl font-black text-[#0f6849] leading-none">
                   {readModules}
                 </span>
                 <span className="text-[10px] sm:text-xs font-bold text-[#0f6849]">Modul</span>
@@ -106,12 +133,12 @@ export function ModuleList({
             </div>
 
             {/* Progress Rate */}
-            <div className="text-center sm:text-left px-2 sm:px-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#5c3a9c] block">
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-1 sm:px-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#5c3a9c] block min-h-[26px] sm:min-h-[16px] flex items-center justify-center sm:justify-start">
                 Pemahaman
               </span>
-              <div className="mt-0.5 flex items-baseline justify-center sm:justify-start gap-1">
-                <span className="font-display text-xl sm:text-2xl font-black text-[#5c3a9c]">
+              <div className="mt-1 flex items-baseline justify-center sm:justify-start gap-1">
+                <span className="font-display text-xl sm:text-2xl font-black text-[#5c3a9c] leading-none">
                   {completedRate}%
                 </span>
                 <span className="text-[10px] sm:text-xs font-bold text-[#5c3a9c]">Tuntas</span>
@@ -160,53 +187,84 @@ export function ModuleList({
           </div>
         </div>
 
-        {/* ── SUBJECT HORIZONTAL TAB SWITCHER (One-Tap Thumb Friendly) ── */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-t border-[#f0f4f0] pt-3">
-          <button
-            type="button"
-            onClick={() => setSelectedCourseTab("all")}
-            className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
-              selectedCourseTab === "all"
-                ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
-                : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
-            }`}
+        {/* ── SUBJECT HORIZONTAL TAB SWITCHER WITH FLOATING SCROLL ARROWS ── */}
+        <div className="relative border-t border-[#f0f4f0] pt-3">
+          {/* Floating Left Arrow */}
+          {canScrollLeft && (
+            <button
+              type="button"
+              onClick={() => scrollTabs("left")}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 grid h-7 w-7 place-items-center rounded-full bg-white/95 text-[#0f6849] shadow-md border border-[#d8e3da] hover:bg-[#dff3e5] transition active:scale-90"
+              aria-label="Geser tab ke kiri"
+            >
+              <ChevronLeft size={16} strokeWidth={2.5} />
+            </button>
+          )}
+
+          {/* Floating Right Arrow */}
+          {canScrollRight && (
+            <button
+              type="button"
+              onClick={() => scrollTabs("right")}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 grid h-7 w-7 place-items-center rounded-full bg-white/95 text-[#0f6849] shadow-md border border-[#d8e3da] hover:bg-[#dff3e5] transition active:scale-90"
+              aria-label="Geser tab ke kanan"
+            >
+              <ChevronRight size={16} strokeWidth={2.5} />
+            </button>
+          )}
+
+          {/* Horizontal Scroll Track */}
+          <div
+            ref={scrollTabsRef}
+            onScroll={checkScroll}
+            className="flex items-center gap-1.5 overflow-x-auto pb-1 px-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth"
           >
-            <span>Semua Matkul</span>
-            <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
-              selectedCourseTab === "all" ? "bg-[#c8ef70]/20 text-[#c8ef70]" : "bg-[#e2eae4] text-[#55675b]"
-            }`}>
-              {courses.length}
-            </span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCourseTab("all")}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
+                selectedCourseTab === "all"
+                  ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
+                  : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
+              }`}
+            >
+              <span>Semua Matkul</span>
+              <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+                selectedCourseTab === "all" ? "bg-[#c8ef70]/20 text-[#c8ef70]" : "bg-[#e2eae4] text-[#55675b]"
+              }`}>
+                {courses.length}
+              </span>
+            </button>
 
-          {courses.map((c) => {
-            const courseModCount = modules.filter((m) => m.course_id === c.id).length;
-            const isTabActive = selectedCourseTab === c.id;
+            {courses.map((c) => {
+              const courseModCount = modules.filter((m) => m.course_id === c.id).length;
+              const isTabActive = selectedCourseTab === c.id;
 
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => setSelectedCourseTab(c.id)}
-                className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
-                  isTabActive
-                    ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
-                    : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
-                }`}
-              >
-                <span
-                  className="h-2 w-2 rounded-full shrink-0 ring-1 ring-white/60"
-                  style={{ backgroundColor: c.warna_label || "#0f6849" }}
-                />
-                <span className="truncate max-w-[150px] sm:max-w-[200px]">{c.nama_matkul}</span>
-                <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
-                  isTabActive ? "bg-[#c8ef70]/20 text-[#c8ef70]" : "bg-[#e2eae4] text-[#55675b]"
-                }`}>
-                  {courseModCount}
-                </span>
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setSelectedCourseTab(c.id)}
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
+                    isTabActive
+                      ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
+                      : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
+                  }`}
+                >
+                  <span
+                    className="h-2 w-2 rounded-full shrink-0 ring-1 ring-white/60"
+                    style={{ backgroundColor: c.warna_label || "#0f6849" }}
+                  />
+                  <span className="truncate max-w-[150px] sm:max-w-[200px]">{c.nama_matkul}</span>
+                  <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+                    isTabActive ? "bg-[#c8ef70]/20 text-[#c8ef70]" : "bg-[#e2eae4] text-[#55675b]"
+                  }`}>
+                    {courseModCount}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Accordion Expand / Collapse All Controls */}
