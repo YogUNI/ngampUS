@@ -210,8 +210,8 @@ export default async function DashboardPage() {
         />
 
         <div className="relative z-10 flex items-center justify-between gap-3">
-          {/* User Profile Thumbnail & Info */}
-          <div className="flex items-center gap-3 min-w-0">
+          {/* User Profile Thumbnail & Info (Full name & subtitle without clipping) */}
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             {profile?.avatar_url ? (
               <Image
                 src={profile.avatar_url}
@@ -232,19 +232,19 @@ export default async function DashboardPage() {
                 </span>
                 <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] animate-pulse" />
               </div>
-              <h1 className="font-display truncate text-lg sm:text-2xl font-black text-white tracking-tight leading-snug">
+              <h1 className="font-display text-base sm:text-xl font-black text-white tracking-tight leading-snug">
                 {profile?.full_name || firstName}
               </h1>
-              <p className="truncate text-[11px] font-medium text-[#8ca393]">
-                {activeSemester ? `${activeSemester.nama_semester} • Mahasiswa Aktif` : "Personal Workspace"}
+              <p className="text-[11px] font-medium text-[#8ca393] leading-tight">
+                {activeSemester ? `${activeSemester.nama_semester} • Mahasiswa` : "Personal Workspace"}
               </p>
             </div>
           </div>
 
-          {/* Quick Header Date Pill (Right Aligned) */}
-          <div className="shrink-0">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[10px] font-bold text-[#c8ef70] backdrop-blur-md border border-white/10">
-              📅 {dateHeading.split(",")[0]}, {dateHeading.split(",")[1]?.trim()?.slice(0, 6)}
+          {/* Quick Header Date Pill (Full date with year, clean compact badge) */}
+          <div className="shrink-0 flex flex-col items-end">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[10.5px] font-bold text-[#c8ef70] backdrop-blur-md border border-white/10">
+              📅 {format(new Date(), "d MMM yyyy", { locale: id })}
             </span>
           </div>
         </div>
