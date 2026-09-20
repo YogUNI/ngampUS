@@ -114,7 +114,6 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
           filters={filters}
           semesters={(semesters ?? []).map((s) => ({ id: s.id, name: s.nama_semester }))}
           organizations={(organizations ?? []).map((o) => ({ id: o.id, name: o.nama_organisasi }))}
-          makeHref={makeHref}
           calendar={calendar}
           totalItems={activities?.length || 0}
         />

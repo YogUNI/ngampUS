@@ -24,18 +24,29 @@ const CATEGORIES = [
   { id: "lainnya", label: "📎 Lainnya" },
 ];
 
+function buildHref(filters: FilterState, updates: Partial<FilterState> = {}, view?: "list" | "calendar") {
+  const merged = { ...filters, ...updates };
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(merged)) {
+    if (value && key !== "view") params.set(key, value);
+  }
+  if (view === "calendar" || (!view && merged.view === "calendar")) {
+    params.set("view", "calendar");
+  }
+  const query = params.toString();
+  return `/kegiatan${query ? `?${query}` : ""}`;
+}
+
 export function ActivityFilterBar({
   filters,
   semesters,
   organizations,
-  makeHref,
   calendar,
   totalItems,
 }: {
   filters: FilterState;
   semesters: Option[];
   organizations: Option[];
-  makeHref: (f: FilterState, v?: "list" | "calendar") => string;
   calendar: boolean;
   totalItems: number;
 }) {
@@ -101,7 +112,7 @@ export function ActivityFilterBar({
               className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
                 !calendar ? "bg-[var(--card-bg)] text-[var(--brand)] shadow-2xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
-              href={makeHref(filters, "list")}
+              href={buildHref(filters, {}, "list")}
             >
               List
             </Link>
@@ -109,7 +120,7 @@ export function ActivityFilterBar({
               className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
                 calendar ? "bg-[var(--card-bg)] text-[var(--brand)] shadow-2xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
-              href={makeHref(filters, "calendar")}
+              href={buildHref(filters, {}, "calendar")}
             >
               Kalender
             </Link>
@@ -121,8 +132,9 @@ export function ActivityFilterBar({
       <div className="mt-2.5 flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {CATEGORIES.map((cat) => {
           const isActive = (filters.kategori || "") === cat.id;
-          const href = makeHref(
-            { ...filters, kategori: cat.id || undefined },
+          const href = buildHref(
+            filters,
+            { kategori: cat.id || undefined },
             calendar ? "calendar" : "list"
           );
           return (
