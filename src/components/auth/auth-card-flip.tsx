@@ -152,7 +152,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           {/* ══ FRONT: LOGIN ══ */}
           <div
             ref={frontRef}
-            className={`card-face rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
+            className={`card-face rounded-[1.75rem] border border-[#d5dfd6] bg-white px-6 pt-6 pb-8 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
               isFlipped ? "pointer-events-none" : "relative"
             }`}
           >
@@ -241,7 +241,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             </form>
 
             {/* Flip trigger */}
-            <div className="mt-4 border-t border-[#f0f4f1] pt-3 flex items-center justify-between">
+            <div className="mt-5 border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
               <p className="text-xs text-[#65746a]">Belum punya akun?</p>
               <button type="button" onClick={() => toggleMode("register")}
                 className="inline-flex items-center gap-1 text-xs font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer">
@@ -268,7 +268,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           {/* ══ BACK: REGISTER ══ */}
           <div
             ref={backRef}
-            className={`card-face card-face-back rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
+            className={`card-face card-face-back rounded-[1.75rem] border border-[#d5dfd6] bg-white px-6 pt-6 pb-8 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
               !isFlipped ? "pointer-events-none" : ""
             }`}
           >
@@ -373,7 +373,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             </form>
 
             {/* Flip trigger */}
-            <div className="mt-4 border-t border-[#f0f4f1] pt-3 flex items-center justify-between">
+            <div className="mt-5 border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
               <p className="text-xs text-[#65746a]">Sudah punya akun?</p>
               <button type="button" onClick={() => toggleMode("login")}
                 className="inline-flex items-center gap-1 text-xs font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer">
