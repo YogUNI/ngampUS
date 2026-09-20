@@ -45,29 +45,40 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
-      {/* Page Header */}
-      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <p className="text-[10px] sm:text-xs font-black uppercase tracking-[.18em] text-[var(--brand)]">
-            AKADEMIK &amp; PERKULIAHAN
-          </p>
-          <h1 className="font-display mt-0.5 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
+      {/* ── Executive Header for Jadwal ── */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#0f6849]">
+              AKADEMIK & PERKULIAHAN
+            </span>
+            {currentSemester && (
+              <span className="inline-flex rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[10.5px] font-bold text-[#0f6849] border border-[#b9ddc6]">
+                {currentSemester.nama_semester}
+              </span>
+            )}
+          </div>
+          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b]">
             Jadwal Kuliah
           </h1>
-          <p className="mt-1 text-xs text-[var(--muted)]">
+          <p className="mt-0.5 text-xs text-[#697c6f]">
             Atur mata kuliah mingguan, pantau ruang kelas, dan akses link kuliah virtual dengan cepat.
           </p>
         </div>
 
-        {/* Semester Filter */}
-        <form className="flex items-end gap-2 shrink-0">
-          <label className="block text-xs font-bold text-[var(--ink)]">
-            <span className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Semester</span>
+        {/* Instant Semester Filter Form */}
+        <form className="flex items-center gap-2 shrink-0">
+          <label className="sr-only" htmlFor="jadwal-semester-select">
+            Pilih Semester
+          </label>
+          <div className="relative">
             <select
+              id="jadwal-semester-select"
               name="semester_id"
               defaultValue={targetSemesterId ?? ""}
-              className="mt-1 block min-w-[170px] sm:min-w-[190px] rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3 py-2 text-xs font-bold text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden"
+              aria-label="Pilih semester akademik"
+              className="appearance-none rounded-2xl border border-[#d8e3da] bg-white py-2 pl-3.5 pr-8 text-xs font-bold text-[#10261b] focus:border-[#0f6849] focus:outline-none transition shadow-2xs"
             >
               {semesters?.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -75,12 +86,15 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
                 </option>
               ))}
             </select>
-          </label>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[#697c6f]">
+              ▼
+            </span>
+          </div>
           <button
             type="submit"
-            className="rounded-xl bg-[#103626] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#1d5034] transition shrink-0"
+            className="rounded-2xl bg-[#f0f4f0] px-3.5 py-2 text-xs font-black text-[#0f6849] border border-[#d8e3da] hover:bg-[#dff3e5] transition active:scale-95"
           >
-            Pilih
+            Terapkan
           </button>
         </form>
       </header>
