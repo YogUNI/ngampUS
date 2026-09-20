@@ -191,15 +191,20 @@ export default async function DashboardPage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 lg:px-10">
 
       {/* ── EXECUTIVE DARK HEADER (Native App Aesthetic) ── */}
-      <header className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2rem] sm:rounded-b-[2.5rem] bg-gradient-to-b from-[#0a2318] via-[#0f3524] to-[#123e2b] px-5 pt-7 pb-14 text-white shadow-lg sm:-mx-8 sm:px-8 sm:pt-8 sm:pb-16 lg:-mx-10 lg:px-10">
+      <header
+        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2rem] sm:rounded-b-[2.5rem] px-5 pt-7 pb-14 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 sm:pb-16 lg:-mx-10 lg:px-10"
+        style={{
+          background: "linear-gradient(180deg, #092015 0%, #0f3524 55%, #13422e 100%)",
+        }}
+      >
         {/* Subtle Ambient Radial Glows */}
         <div
-          className="pointer-events-none absolute -right-12 -top-12 h-64 w-64 rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, #c8ef70, transparent 70%)" }}
+          className="pointer-events-none absolute -right-12 -top-12 h-64 w-64 rounded-full opacity-25 blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(200,239,112,0.6), transparent 70%)" }}
         />
         <div
-          className="pointer-events-none absolute -left-12 bottom-0 h-48 w-48 rounded-full opacity-15 blur-2xl"
-          style={{ background: "radial-gradient(circle, #22c55e, transparent 70%)" }}
+          className="pointer-events-none absolute -left-12 bottom-0 h-48 w-48 rounded-full opacity-20 blur-2xl"
+          style={{ background: "radial-gradient(circle, rgba(34,197,94,0.5), transparent 70%)" }}
         />
 
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
