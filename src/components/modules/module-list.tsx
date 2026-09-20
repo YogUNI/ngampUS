@@ -164,33 +164,33 @@ export function ModuleList({
                   className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] shadow-2xs overflow-hidden"
                 >
                   {/* Course Group Header */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 bg-[var(--card-subtle)] border-b border-[var(--line)]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-5 bg-[var(--card-subtle)] border-b border-[var(--line)]">
                     <button
                       type="button"
                       onClick={() => toggleCourseExpand(course.id)}
-                      className="flex items-center gap-3 text-left min-w-0 flex-1 hover:opacity-80 transition"
+                      className="flex items-start sm:items-center gap-2.5 sm:gap-3 text-left min-w-0 flex-1 hover:opacity-80 transition"
                     >
-                      <span className="text-[var(--muted)]">
+                      <span className="text-[var(--muted)] mt-0.5 sm:mt-0 shrink-0">
                         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                       </span>
 
                       <span
-                        className="h-3.5 w-3.5 rounded-full shrink-0 ring-2 ring-white shadow-2xs"
+                        className="h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-full shrink-0 ring-2 ring-white shadow-2xs mt-1 sm:mt-0"
                         style={{ backgroundColor: course.warna_label || "var(--brand)" }}
                       />
 
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h2 className="font-display text-sm sm:text-base font-black text-[var(--ink)] truncate">
+                          <h2 className="font-display text-sm sm:text-base font-black text-[var(--ink)] leading-snug break-words">
                             {course.nama_matkul}
                           </h2>
                           {course.kode_matkul && (
-                            <span className="rounded-md bg-[var(--card-bg)] px-2 py-0.5 text-[10px] font-black uppercase text-[var(--muted)] border border-[var(--line)]">
+                            <span className="rounded-md bg-[var(--card-bg)] px-1.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase text-[var(--muted)] border border-[var(--line)] shrink-0">
                               {course.kode_matkul}
                             </span>
                           )}
                           {course.sks && (
-                            <span className="text-[10px] font-bold text-[var(--muted)]">
+                            <span className="text-[10px] sm:text-xs font-bold text-[var(--muted)] shrink-0">
                               · {course.sks} SKS
                             </span>
                           )}
@@ -198,8 +198,8 @@ export function ModuleList({
                       </div>
                     </button>
 
-                    <div className="flex items-center gap-2.5">
-                      <span className="rounded-full bg-[var(--card-bg)] px-3 py-1 text-[11px] font-black text-[var(--brand)] border border-[var(--line)]">
+                    <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t border-[var(--line)]/60 pt-2.5 sm:border-0 sm:pt-0">
+                      <span className="rounded-full bg-[var(--card-bg)] px-2.5 py-1 text-[10px] sm:text-[11px] font-black text-[var(--brand)] border border-[var(--line)]">
                         {courseModules.length} Modul
                       </span>
 
@@ -208,7 +208,7 @@ export function ModuleList({
                         defaultCourseId={course.id}
                         defaultPertemuan={nextPertemuan}
                         triggerText={`+ Pertemuan ${nextPertemuan}`}
-                        triggerClass="inline-flex items-center gap-1 rounded-xl bg-[var(--card-bg)] px-3 py-1.5 text-xs font-black text-[var(--brand)] border border-[var(--brand)]/30 hover:bg-[var(--brand)] hover:text-white transition shadow-2xs"
+                        triggerClass="inline-flex items-center gap-1 rounded-xl bg-[var(--card-bg)] px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-black text-[var(--brand)] border border-[var(--brand)]/30 hover:bg-[var(--brand)] hover:text-white transition shadow-2xs"
                       />
                     </div>
                   </div>

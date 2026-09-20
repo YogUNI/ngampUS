@@ -120,13 +120,13 @@ export function ModuleCard({
       >
         <div>
           {/* Top row: Pertemuan & Status */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md bg-[var(--card-subtle)] px-2.5 py-1 text-[11px] font-black tracking-wide text-[var(--brand)] border border-[var(--line)]">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+              <span className="inline-flex items-center gap-1 rounded-md bg-[var(--card-subtle)] px-2 py-0.5 text-[11px] font-black tracking-wide text-[var(--brand)] border border-[var(--line)] shrink-0">
                 Pertemuan {module.pertemuan}
               </span>
               {courseName && (
-                <span className="truncate text-xs font-bold text-[var(--muted)]">
+                <span className="text-xs font-bold text-[var(--muted)] truncate max-w-[140px] sm:max-w-[200px]">
                   · {courseName}
                 </span>
               )}
@@ -138,7 +138,7 @@ export function ModuleCard({
               onClick={handleCycleStatus}
               disabled={isUpdatingStatus}
               title="Klik untuk mengubah status baca"
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider transition hover:scale-105 active:scale-95 disabled:opacity-50 ${cfg.badge}`}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider transition hover:scale-105 active:scale-95 disabled:opacity-50 ${cfg.badge}`}
             >
               <StatusIcon size={12} strokeWidth={2.5} />
               <span>{cfg.label}</span>
@@ -150,9 +150,9 @@ export function ModuleCard({
             href={`/modul/${module.id}`}
             className="group/title mt-2.5 block"
           >
-            <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)] group-hover/title:text-[var(--brand)] transition flex items-center gap-1.5">
-              <span>{module.topik}</span>
-              <ArrowRight size={14} className="opacity-0 -translate-x-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all text-[var(--brand)] shrink-0" />
+            <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)] group-hover/title:text-[var(--brand)] transition flex items-start gap-1.5 leading-snug">
+              <span className="break-words">{module.topik}</span>
+              <ArrowRight size={14} className="mt-0.5 opacity-0 -translate-x-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 transition-all text-[var(--brand)] shrink-0" />
             </h3>
           </Link>
 
@@ -165,12 +165,12 @@ export function ModuleCard({
 
           {/* Direct File Document Badge / Download Box */}
           {module.file_url && module.file_name && (
-            <div className="mt-3 flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] p-2.5 transition hover:bg-[var(--card-bg)]">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className={`rounded-md border px-1.5 py-0.5 text-[9px] font-black ${fileBadge.color}`}>
+            <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] p-2.5 transition hover:bg-[var(--card-bg)]">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <span className={`shrink-0 rounded-md border px-1.5 py-0.5 text-[9px] font-black ${fileBadge.color}`}>
                   {fileBadge.label}
                 </span>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="truncate text-xs font-bold text-[var(--ink)]">
                     {module.file_name}
                   </p>
@@ -187,10 +187,10 @@ export function ModuleCard({
                 download={module.file_name}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[var(--brand)] px-2.5 py-1 text-[11px] font-black text-white shadow-2xs hover:bg-[var(--brand-dark)] transition active:scale-95"
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-[var(--brand)] px-2 py-1 text-[10px] sm:text-[11px] font-black text-white shadow-2xs hover:bg-[var(--brand-dark)] transition active:scale-95"
                 title="Unduh file dokumen"
               >
-                <Download size={12} /> Unduh
+                <Download size={11} /> Unduh
               </a>
             </div>
           )}
@@ -206,20 +206,20 @@ export function ModuleCard({
           )}
 
           {/* ── AI STUDY COMPANION TOOLBAR ── */}
-          <div className="mt-3.5 rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-2">
-            <div className="flex items-center justify-between px-1 mb-1.5">
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[var(--brand)]">
-                <Sparkles size={12} /> AI Study Companion
+          <div className="mt-3.5 rounded-2xl border border-[var(--line)] bg-[var(--card-subtle)] p-2 sm:p-2.5">
+            <div className="flex items-center justify-between px-1 mb-2 gap-1.5">
+              <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[var(--brand)] truncate">
+                <Sparkles size={12} className="shrink-0" /> Study AI
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 {module.ai_summary && (
-                  <span className="text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="hidden xs:inline-block text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400">
                     ✓ Rangkuman Siap
                   </span>
                 )}
                 <Link
                   href={`/modul/${module.id}`}
-                  className="inline-flex items-center gap-1 text-[10.5px] font-black text-[var(--brand)] hover:underline"
+                  className="inline-flex items-center gap-0.5 text-[10.5px] font-black text-[var(--brand)] hover:underline shrink-0"
                   title="Buka ruang belajar penuh untuk modul ini"
                 >
                   Ruang Belajar →
@@ -227,38 +227,38 @@ export function ModuleCard({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
               {/* 1. Rangkuman AI */}
               <button
                 type="button"
                 onClick={() => setIsSummaryOpen(true)}
-                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-2 text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs"
+                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs text-center"
                 title="Rangkum materi dengan AI"
               >
-                <BookOpen size={12} className="text-[var(--brand)]" />
-                <span>Rangkuman</span>
+                <BookOpen size={11} className="text-[var(--brand)] shrink-0" />
+                <span className="truncate">Rangkum</span>
               </button>
 
               {/* 2. Tanya AI */}
               <button
                 type="button"
                 onClick={() => setIsChatOpen(true)}
-                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-2 text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs"
+                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[var(--card-bg)] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-bold text-[var(--ink)] border border-[var(--line)] hover:border-[var(--brand)] hover:text-[var(--brand)] transition shadow-2xs text-center"
                 title="Tanya AI seputar materi pertemuan ini"
               >
-                <Bot size={12} className="text-[var(--brand)]" />
-                <span>Tanya AI</span>
+                <Bot size={11} className="text-[var(--brand)] shrink-0" />
+                <span className="truncate">Tanya AI</span>
               </button>
 
               {/* 3. Kuis AI */}
               <button
                 type="button"
                 onClick={() => setIsQuizOpen(true)}
-                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#103626] py-1.5 px-2 text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95"
+                className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#103626] py-1.5 px-1 sm:px-2 text-[10.5px] sm:text-[11px] font-black text-[#c8ef70] shadow-2xs hover:bg-[#1a4a34] transition active:scale-95 text-center"
                 title="Uji pemahaman dengan Kuis AI"
               >
-                <Trophy size={12} />
-                <span>Kuis Modul</span>
+                <Trophy size={11} className="shrink-0" />
+                <span className="truncate">Kuis AI</span>
               </button>
             </div>
           </div>

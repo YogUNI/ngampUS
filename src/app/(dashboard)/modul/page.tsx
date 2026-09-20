@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { BookOpen, FolderOpen, Plus, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ModuleList } from "@/components/modules/module-list";
@@ -59,7 +59,7 @@ export default async function ModulPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
+    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
