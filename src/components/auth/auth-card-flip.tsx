@@ -8,10 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowRight,
   Building2,
-  CheckCircle2,
   Eye,
   EyeOff,
-  GraduationCap,
   LoaderCircle,
   Lock,
   Mail,
@@ -131,7 +129,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* ── Mobile Top Brand Ambient Banner ── */}
+      {/* ── Top Brand Bar & Mode Switcher ── */}
       <div className="mb-4 flex items-center justify-between px-1">
         <Link
           href="/"
@@ -149,11 +147,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           </span>
         </Link>
 
-        {/* Quick Flip Toggle Button */}
+        {/* Quick Flip Button */}
         <button
           type="button"
           onClick={() => toggleMode(mode === "login" ? "register" : "login")}
-          className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e3da] bg-white/90 px-3 py-1 text-xs font-black text-[#103626] shadow-2xs hover:bg-[#eff5ef] hover:border-[#b9ddc6] transition active:scale-95"
+          className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e3da] bg-white px-3 py-1 text-xs font-black text-[#103626] shadow-2xs hover:bg-[#eff5ef] hover:border-[#b9ddc6] transition active:scale-95 cursor-pointer"
         >
           <RotateCw size={12} className="text-[#0f6849] transition-transform duration-500 hover:rotate-180" />
           <span>{mode === "login" ? "Buka Form Daftar" : "Buka Form Masuk"}</span>
@@ -162,13 +160,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
       {/* ── 3D FLIP CONTAINER ── */}
       <div
-        className="perspective-[1400px] w-full"
+        className="w-full"
         style={{ perspective: "1400px" }}
       >
         <div
-          className={`relative w-full transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] transform-style-3d ${
-            isFlipped ? "rotate-y-180" : ""
-          }`}
+          className="relative w-full transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
           style={{
             transformStyle: "preserve-3d",
             transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -178,18 +174,18 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               CARD FRONT: LOGIN SIDE
              ══════════════════════════════════════════════════════════ */}
           <div
-            className={`w-full rounded-[2rem] border border-[#d5dfd6] bg-white/95 p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.09)] backdrop-blur-xl ${
-              isFlipped ? "pointer-events-none invisible" : "visible"
+            className={`w-full rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)] ${
+              isFlipped ? "pointer-events-none" : "relative z-10"
             }`}
             style={{
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
             }}
           >
-            {/* Header / ID Badge style */}
-            <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-4">
+            {/* Header Badge */}
+            <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3.5">
               <div className="flex items-center gap-2">
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#103626] text-[#c8ef70] text-xs font-black shadow-xs">
+                <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#103626] text-[#c8ef70] text-[11px] font-black shadow-2xs">
                   01
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-[.18em] text-[#0f6849]">
@@ -202,25 +198,25 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </span>
             </div>
 
-            {/* Title & Microcopy */}
-            <div className="mt-5">
-              <h1 className="font-display text-3xl sm:text-4xl font-black tracking-tight text-[#10261b] leading-[1.05]">
+            {/* Title */}
+            <div className="mt-4">
+              <h1 className="font-display text-3xl font-black tracking-tight text-[#10261b] leading-tight">
                 Lanjutkan<br />
                 <span className="text-[#0f6849]">ritmemu.</span>
               </h1>
-              <p className="mt-2 text-xs sm:text-sm text-[#5a6d61] leading-relaxed">
+              <p className="mt-1.5 text-xs text-[#5a6d61] leading-relaxed">
                 Masuk untuk pantau jadwal kuliah, deadline tugas terdekat, dan proker aktifmu.
               </p>
             </div>
 
-            {/* Server Error / Success Notice */}
+            {/* Notice / Errors */}
             {registeredNotice && !serverError && (
-              <p className="mt-4 rounded-xl border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-2 text-xs font-semibold text-[#17613e]">
+              <p className="mt-3.5 rounded-xl border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-2 text-xs font-semibold text-[#17613e]">
                 Akun berhasil dibuat! Silakan masuk dengan email kamu.
               </p>
             )}
             {serverError && (
-              <p className="mt-4 rounded-xl border border-[#f5b8a9] bg-[#fff0ec] px-3 py-2 text-xs font-semibold text-[#b93c21]">
+              <p className="mt-3.5 rounded-xl border border-[#f5b8a9] bg-[#fff0ec] px-3 py-2 text-xs font-semibold text-[#b93c21]">
                 {serverError}
               </p>
             )}
@@ -228,7 +224,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             {/* Login Form */}
             <form
               onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-              className="mt-6 space-y-4"
+              className="mt-5 space-y-4"
               noValidate
             >
               {/* Email */}
@@ -299,7 +295,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               <button
                 type="submit"
                 disabled={loginForm.formState.isSubmitting}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#103626] py-3.5 text-xs sm:text-sm font-black text-[#c8ef70] shadow-[0_6px_0_#0a2318] hover:bg-[#164330] hover:shadow-[0_4px_0_#0a2318] active:translate-y-0.5 active:shadow-[0_2px_0_#0a2318] disabled:opacity-70 transition-all"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#103626] py-3.5 text-xs sm:text-sm font-black text-[#c8ef70] shadow-[0_6px_0_#0a2318] hover:bg-[#164330] hover:shadow-[0_4px_0_#0a2318] active:translate-y-0.5 active:shadow-[0_2px_0_#0a2318] disabled:opacity-70 transition-all cursor-pointer"
               >
                 {loginForm.formState.isSubmitting ? (
                   <LoaderCircle className="animate-spin" size={18} />
@@ -312,15 +308,15 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </form>
 
-            {/* 3D Flip Trigger to Register */}
-            <div className="mt-6 border-t border-[#f0f4f1] pt-4 text-center">
+            {/* Flip Trigger to Register */}
+            <div className="mt-5 border-t border-[#f0f4f1] pt-3.5 text-center">
               <p className="text-xs text-[#65746a]">
                 Belum punya akun nGampUS?
               </p>
               <button
                 type="button"
                 onClick={() => toggleMode("register")}
-                className="mt-1.5 inline-flex items-center gap-1.5 font-display text-xs sm:text-sm font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95"
+                className="mt-1 inline-flex items-center gap-1.5 font-display text-xs sm:text-sm font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer"
               >
                 <span>Daftar Sekarang (Gratis)</span>
                 <RotateCw size={13} className="text-[#0f6849]" />
@@ -329,22 +325,26 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           </div>
 
           {/* ══════════════════════════════════════════════════════════
-              CARD BACK: REGISTER SIDE (180deg Rotated)
+              CARD BACK: REGISTER SIDE (Absolute Overlay, 180deg)
              ══════════════════════════════════════════════════════════ */}
           <div
-            className={`w-full rounded-[2rem] border border-[#d5dfd6] bg-white/95 p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.09)] backdrop-blur-xl ${
-              !isFlipped ? "pointer-events-none invisible absolute inset-0" : "visible"
+            className={`w-full rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)] ${
+              !isFlipped ? "pointer-events-none" : "relative z-10"
             }`}
             style={{
+              position: !isFlipped ? "absolute" : "relative",
+              top: 0,
+              left: 0,
+              right: 0,
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
             }}
           >
-            {/* Header / ID Badge style */}
-            <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-4">
+            {/* Header Badge */}
+            <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3.5">
               <div className="flex items-center gap-2">
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#0f6849] text-white text-xs font-black shadow-xs">
+                <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#0f6849] text-white text-[11px] font-black shadow-2xs">
                   02
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-[.18em] text-[#0f6849]">
@@ -356,20 +356,20 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </span>
             </div>
 
-            {/* Title & Microcopy */}
-            <div className="mt-5">
-              <h2 className="font-display text-3xl sm:text-4xl font-black tracking-tight text-[#10261b] leading-[1.05]">
+            {/* Title */}
+            <div className="mt-4">
+              <h2 className="font-display text-3xl font-black tracking-tight text-[#10261b] leading-tight">
                 Mulai lebih<br />
                 <span className="text-[#0f6849]">terarah.</span>
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-[#5a6d61] leading-relaxed">
+              <p className="mt-1.5 text-xs text-[#5a6d61] leading-relaxed">
                 Buat satu workspace terpadu untuk kelas, organisasi, dan portofolio CV-mu.
               </p>
             </div>
 
             {/* Server Error */}
             {serverError && (
-              <p className="mt-4 rounded-xl border border-[#f5b8a9] bg-[#fff0ec] px-3 py-2 text-xs font-semibold text-[#b93c21]">
+              <p className="mt-3.5 rounded-xl border border-[#f5b8a9] bg-[#fff0ec] px-3 py-2 text-xs font-semibold text-[#b93c21]">
                 {serverError}
               </p>
             )}
@@ -377,7 +377,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             {/* Register Form */}
             <form
               onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-              className="mt-5 space-y-3.5"
+              className="mt-4 space-y-3"
               noValidate
             >
               {/* Full Name */}
@@ -405,9 +405,9 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </div>
 
               {/* Campus Info Box (Optional) */}
-              <div className="rounded-xl border border-[#b9ddc6] bg-[#dff3e5]/40 p-3 space-y-2.5">
-                <div className="flex items-center gap-1.5 text-[11px] font-black text-[#0f6849]">
-                  <Building2 size={14} />
+              <div className="rounded-xl border border-[#b9ddc6] bg-[#dff3e5]/40 p-2.5 space-y-2">
+                <div className="flex items-center gap-1.5 text-[10.5px] font-black text-[#0f6849]">
+                  <Building2 size={13} />
                   <span>Info Kampus (Opsional)</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -415,13 +415,13 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                     {...registerForm.register("university")}
                     type="text"
                     placeholder="Universitas / Institut"
-                    className="w-full rounded-lg border border-[#c7decb] bg-white py-1.5 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none"
+                    className="w-full rounded-lg border border-[#c7decb] bg-white py-1 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none"
                   />
                   <input
                     {...registerForm.register("major")}
                     type="text"
                     placeholder="Jurusan / Prodi"
-                    className="w-full rounded-lg border border-[#c7decb] bg-white py-1.5 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none"
+                    className="w-full rounded-lg border border-[#c7decb] bg-white py-1 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none"
                   />
                 </div>
               </div>
@@ -486,7 +486,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               <button
                 type="submit"
                 disabled={registerForm.formState.isSubmitting}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f6849] py-3.5 text-xs sm:text-sm font-black text-white shadow-[0_6px_0_#0a3726] hover:bg-[#103626] hover:shadow-[0_4px_0_#0a3726] active:translate-y-0.5 active:shadow-[0_2px_0_#0a3726] disabled:opacity-70 transition-all"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f6849] py-3.5 text-xs sm:text-sm font-black text-white shadow-[0_6px_0_#0a3726] hover:bg-[#103626] hover:shadow-[0_4px_0_#0a3726] active:translate-y-0.5 active:shadow-[0_2px_0_#0a3726] disabled:opacity-70 transition-all cursor-pointer"
               >
                 {registerForm.formState.isSubmitting ? (
                   <LoaderCircle className="animate-spin" size={18} />
@@ -499,15 +499,15 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </form>
 
-            {/* 3D Flip Trigger back to Login */}
-            <div className="mt-5 border-t border-[#f0f4f1] pt-3 text-center">
+            {/* Flip Trigger back to Login */}
+            <div className="mt-4 border-t border-[#f0f4f1] pt-3 text-center">
               <p className="text-xs text-[#65746a]">
                 Sudah memiliki akun?
               </p>
               <button
                 type="button"
                 onClick={() => toggleMode("login")}
-                className="mt-1 inline-flex items-center gap-1.5 font-display text-xs sm:text-sm font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95"
+                className="mt-1 inline-flex items-center gap-1.5 font-display text-xs sm:text-sm font-black text-[#0f6849] hover:text-[#103626] transition hover:underline active:scale-95 cursor-pointer"
               >
                 <span>Masuk ke Workspace</span>
                 <RotateCw size={13} className="text-[#0f6849]" />
@@ -518,7 +518,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       </div>
 
       {/* ── Micro Trust Proof Badge at the Bottom ── */}
-      <div className="mt-5 flex items-center justify-center gap-4 text-[11px] font-bold text-[#718578]">
+      <div className="mt-4 flex items-center justify-center gap-4 text-[11px] font-bold text-[#718578]">
         <span className="flex items-center gap-1">
           <Shield size={13} className="text-[#0f6849]" /> Terenkripsi Supabase RLS
         </span>

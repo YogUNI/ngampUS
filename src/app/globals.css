@@ -209,8 +209,8 @@ main.grid.min-h-screen { background: radial-gradient(circle at 92% 10%, rgba(200
 main.grid.min-h-screen > aside { border-right: 1px solid rgba(200,239,112,.12); background-image: radial-gradient(circle at 85% 20%, rgba(200,239,112,.14), transparent 20rem), linear-gradient(135deg, #0b2c1e, #174932); }
 main.grid.min-h-screen > section { position: relative; background-image: linear-gradient(rgba(16,54,38,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(16,54,38,.03) 1px, transparent 1px); background-size: 34px 34px; }
 main.grid.min-h-screen > section::before { content: "SECURE CAMPUS ACCESS / 2026"; position: absolute; right: 2rem; top: 1.75rem; font-size: .62rem; font-weight: 900; letter-spacing: .16em; color: rgba(16,54,38,.42); }
-main.grid.min-h-screen > section > div { position: relative; border-color: #d5dfd6 !important; background: rgba(250,252,248,.86) !important; box-shadow: 16px 18px 0 rgba(16,54,38,.06), 0 22px 60px rgba(16,54,38,.11) !important; }
-main.grid.min-h-screen > section > div::after { content: "nG / ACCESS"; position: absolute; right: 1.5rem; top: 1.5rem; font-size: .58rem; font-weight: 900; letter-spacing: .16em; color: rgba(15,104,73,.38); }
+.auth-atlas-card { position: relative; border-color: #d5dfd6 !important; background: rgba(250,252,248,.86) !important; box-shadow: 16px 18px 0 rgba(16,54,38,.06), 0 22px 60px rgba(16,54,38,.11) !important; border-radius: 1.5rem; padding: 2rem; }
+.auth-atlas-card::after { content: "nG / ACCESS"; position: absolute; right: 1.5rem; top: 1.5rem; font-size: .58rem; font-weight: 900; letter-spacing: .16em; color: rgba(15,104,73,.38); }
 main.grid.min-h-screen input { background-color: #fbfdf9; }
 .auth-atlas-card > form { margin-top: 2rem; }
 .auth-atlas-card > form > button[type="submit"] { border-radius: 1rem; background: #103626; box-shadow: 0 6px 0 #0a261a; }
