@@ -204,6 +204,37 @@ input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--background) inse
   animation: shimmer-drift 3s linear infinite;
 }
 
+/* ─── 3D Card Flip System ─── */
+.perspective-container {
+  perspective: 1600px;
+  -webkit-perspective: 1600px;
+}
+.card-flipper {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.card-flipper.flipped {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+.card-face {
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateX(0deg);
+}
+.card-face-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
 /* Auth Atlas — a focused, editorial login experience. */
 main.grid.min-h-screen { background: radial-gradient(circle at 92% 10%, rgba(200,239,112,.18), transparent 22rem), #eff2eb; }
 main.grid.min-h-screen > aside { border-right: 1px solid rgba(200,239,112,.12); background-image: radial-gradient(circle at 85% 20%, rgba(200,239,112,.14), transparent 20rem), linear-gradient(135deg, #0b2c1e, #174932); }

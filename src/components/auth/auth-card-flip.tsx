@@ -49,7 +49,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [serverError, setServerError] = useState("");
 
-  const isRegister = mode === "register";
+  const isFlipped = mode === "register";
 
   // Form states
   const loginForm = useForm<LoginValues>({
@@ -129,7 +129,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* ── Top Brand Bar & Segmented Pill Switcher ── */}
+      {/* ── Top Brand Bar & Mode Switcher ── */}
       <div className="mb-4 flex items-center justify-between px-1">
         <Link
           href="/"
@@ -147,40 +147,28 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           </span>
         </Link>
 
-        {/* Segmented Pill Tabs */}
-        <div className="flex rounded-full bg-white/90 p-1 border border-[#d8e3da] shadow-2xs">
-          <button
-            type="button"
-            onClick={() => toggleMode("login")}
-            className={`rounded-full px-3 py-1 text-xs font-black transition-all ${
-              !isRegister
-                ? "bg-[#103626] text-[#c8ef70] shadow-xs"
-                : "text-[#65746a] hover:text-[#10261b]"
-            }`}
-          >
-            Masuk
-          </button>
-          <button
-            type="button"
-            onClick={() => toggleMode("register")}
-            className={`rounded-full px-3 py-1 text-xs font-black transition-all ${
-              isRegister
-                ? "bg-[#103626] text-[#c8ef70] shadow-xs"
-                : "text-[#65746a] hover:text-[#10261b]"
-            }`}
-          >
-            Daftar
-          </button>
-        </div>
+        {/* 3D Flip Quick Switcher */}
+        <button
+          type="button"
+          onClick={() => toggleMode(mode === "login" ? "register" : "login")}
+          className="inline-flex items-center gap-1.5 rounded-full border border-[#d8e3da] bg-white px-3 py-1 text-xs font-black text-[#103626] shadow-2xs hover:bg-[#eff5ef] hover:border-[#b9ddc6] transition active:scale-95 cursor-pointer"
+        >
+          <RotateCw size={12} className="text-[#0f6849] transition-transform duration-500 hover:rotate-180" />
+          <span>{mode === "login" ? "Buka Form Daftar" : "Buka Form Masuk"}</span>
+        </button>
       </div>
 
-      {/* ── AUTH CARD (Smooth Content Transition, No Broken Overlap) ── */}
-      <div className="w-full rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)]">
-        {!isRegister ? (
-          /* ══════════════════════════════════════════════════════════
-              LOGIN VIEW
-             ══════════════════════════════════════════════════════════ */
-          <div className="animate-in fade-in zoom-in-95 duration-200">
+      {/* ── REAL 3D CARD FLIP CONTAINER ── */}
+      <div className="perspective-container w-full">
+        <div className={`card-flipper ${isFlipped ? "flipped" : ""}`}>
+          {/* ══════════════════════════════════════════════════════════
+              CARD FRONT: LOGIN SIDE
+             ══════════════════════════════════════════════════════════ */}
+          <div
+            className={`card-face rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)] ${
+              isFlipped ? "pointer-events-none" : "relative"
+            }`}
+          >
             {/* Header Badge */}
             <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3.5">
               <div className="flex items-center gap-2">
@@ -307,7 +295,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </form>
 
-            {/* Bottom Link to Register */}
+            {/* Flip Trigger to Register */}
             <div className="mt-5 border-t border-[#f0f4f1] pt-3.5 text-center">
               <p className="text-xs text-[#65746a]">
                 Belum punya akun nGampUS?
@@ -322,11 +310,15 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </div>
           </div>
-        ) : (
-          /* ══════════════════════════════════════════════════════════
-              REGISTER VIEW
-             ══════════════════════════════════════════════════════════ */
-          <div className="animate-in fade-in zoom-in-95 duration-200">
+
+          {/* ══════════════════════════════════════════════════════════
+              CARD BACK: REGISTER SIDE (180deg Rotated Face)
+             ══════════════════════════════════════════════════════════ */}
+          <div
+            className={`card-face card-face-back rounded-[2rem] border border-[#d5dfd6] bg-white p-6 sm:p-8 shadow-[0_20px_50px_rgba(16,38,27,0.08)] ${
+              !isFlipped ? "pointer-events-none" : ""
+            }`}
+          >
             {/* Header Badge */}
             <div className="flex items-center justify-between border-b border-[#f0f4f1] pb-3.5">
               <div className="flex items-center gap-2">
@@ -485,7 +477,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </form>
 
-            {/* Bottom Link to Login */}
+            {/* Flip Trigger back to Login */}
             <div className="mt-4 border-t border-[#f0f4f1] pt-3 text-center">
               <p className="text-xs text-[#65746a]">
                 Sudah memiliki akun?
@@ -500,7 +492,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* ── Micro Trust Proof Badge at the Bottom ── */}
