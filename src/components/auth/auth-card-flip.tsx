@@ -58,13 +58,13 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
   const isFlipped = mode === "register";
 
-  // Measure both card heights and lock flipper to the taller one
+  // Measure both card heights and lock flipper to the taller one with safety bottom padding
   useLayoutEffect(() => {
     const measure = () => {
       const frontH = frontRef.current?.scrollHeight ?? 0;
       const backH = backRef.current?.scrollHeight ?? 0;
       const maxH = Math.max(frontH, backH);
-      if (maxH > 0) setFlipperHeight(maxH);
+      if (maxH > 0) setFlipperHeight(maxH + 28);
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -243,7 +243,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             </div>
 
             {/* Bottom section of login card */}
-            <div className="mt-6 pt-2">
+            <div className="mt-6 pt-2 pb-2 sm:pb-3">
               {/* Flip trigger */}
               <div className="border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
                 <p className="text-xs text-[#65746a]">Belum punya akun?</p>
@@ -381,7 +381,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
           </div>
 
           {/* Bottom section of register card */}
-          <div className="mt-6 pt-2">
+          <div className="mt-5 pt-2 pb-2 sm:pb-3">
             {/* Flip trigger */}
             <div className="border-t border-[#f0f4f1] pt-3.5 flex items-center justify-between">
               <p className="text-xs text-[#65746a]">Sudah punya akun?</p>
