@@ -59,18 +59,31 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const isFlipped = mode === "register";
 
   // Measure both card heights and lock flipper to the taller one with safety bottom padding
-  useLayoutEffect(() => {
+  useEffect(() => {
     const measure = () => {
-      const frontH = frontRef.current?.scrollHeight ?? 0;
-      const backH = backRef.current?.scrollHeight ?? 0;
+      // Use offsetHeight or scrollHeight
+      const frontH = frontRef.current ? Math.max(frontRef.current.scrollHeight, frontRef.current.offsetHeight) : 0;
+      const backH = backRef.current ? Math.max(backRef.current.scrollHeight, backRef.current.offsetHeight) : 0;
       const maxH = Math.max(frontH, backH);
-      if (maxH > 0) setFlipperHeight(maxH + 28);
+      if (maxH > 100) {
+        setFlipperHeight(maxH + 20);
+      }
     };
+
+    // Run measurement immediately and on next tick
     measure();
-    const ro = new ResizeObserver(measure);
+    const timer = setTimeout(measure, 50);
+
+    const ro = new ResizeObserver(() => {
+      measure();
+    });
     if (frontRef.current) ro.observe(frontRef.current);
     if (backRef.current) ro.observe(backRef.current);
-    return () => ro.disconnect();
+
+    return () => {
+      clearTimeout(timer);
+      ro.disconnect();
+    };
   }, []);
 
   const loginForm = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
@@ -146,14 +159,14 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       <div className="perspective-container w-full">
         <div
           className={`card-flipper ${isFlipped ? "flipped" : ""}`}
-          style={flipperHeight ? { height: flipperHeight } : undefined}
+          style={{ minHeight: flipperHeight || 540, height: flipperHeight }}
         >
 
           {/* ══ FRONT: LOGIN ══ */}
           <div
             ref={frontRef}
             className={`card-face flex flex-col justify-between rounded-[1.75rem] border border-[#d5dfd6] bg-white p-6 sm:p-7 shadow-[0_20px_48px_rgba(16,38,27,0.09)] ${
-              isFlipped ? "pointer-events-none" : "relative"
+              isFlipped ? "pointer-events-none" : ""
             }`}
           >
             <div>
