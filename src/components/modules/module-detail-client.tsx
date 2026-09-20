@@ -155,11 +155,11 @@ export function ModuleDetailClient({
   // ── Chat State ──
   const initialGreeting = {
     role: "assistant" as const,
-    content: `Halo! Saya asisten studi AI untuk mata kuliah ${
+    content: `Halo! Saya **ngampUS AI Tutor** untuk mata kuliah ${
       module.courses?.nama_matkul || "ini"
     }, pertemuan ke-${module.pertemuan} (${module.topik}).${
-      module.file_name ? ` Dokumen modul **"${module.file_name}"** telah saya baca.` : ""
-    } Ada bagian materi, konsep, atau rumus yang ingin kamu tanyakan?`,
+      module.file_name ? ` Dokumen materi **"${module.file_name}"** telah terhubung ke sistem.` : ""
+    } Ada konsep, rumus, atau soal yang ingin kamu diskusikan?`,
   };
 
   const [chatMessages, setChatMessages] = useState<{ role: "user" | "assistant"; content: string }[]>(
@@ -571,10 +571,10 @@ export function ModuleDetailClient({
             <div className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-xs space-y-4">
               <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[var(--brand)]">
                 <Sparkles size={16} />
-                <span>AI Study Companion</span>
+                <span>ngampUS AI Companion</span>
               </div>
               <p className="text-xs text-[var(--muted)] leading-relaxed">
-                Manfaatkan Gemini AI untuk membaca dokumen materi ini, membuat kisi-kisi ujian, dan melatih pemahamanmu dengan kuis interaktif.
+                Manfaatkan ngampUS AI Engine untuk membedah dokumen materi pertemuan ini, merangkum poin esensial, dan melatih pemahamanmu dengan kuis interaktif.
               </p>
               <div className="grid grid-cols-2 gap-2 pt-2">
                 <button
@@ -614,7 +614,7 @@ export function ModuleDetailClient({
                 Belum Ada Rangkuman AI
               </h2>
               <p className="mx-auto mt-2 max-w-md text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
-                Biarkan Google Gemini AI membaca dokumen materi perkuliahan ini dan menyusun rangkuman esensi, poin kunci, serta prediksi kisi-kisi ujian.
+                Biarkan ngampUS AI Engine membaca dokumen materi perkuliahan ini dan menyusun rangkuman esensi, poin kunci, serta prediksi kisi-kisi ujian.
               </p>
               <button
                 type="button"
@@ -720,9 +720,9 @@ export function ModuleDetailClient({
                   <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)]">
                     Tanya Dosen AI · Pertemuan {module.pertemuan}
                   </h3>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 text-[9.5px] font-black text-emerald-800 dark:text-emerald-300">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 dark:border-emerald-700/60 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[9.5px] font-black text-emerald-800 dark:text-emerald-300 shadow-2xs">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Gemini 3.6
+                    ngampUS AI Engine
                   </span>
                 </div>
                 <p className="text-[11px] text-[var(--muted)]">
@@ -787,7 +787,7 @@ export function ModuleDetailClient({
                   <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce" />
                   <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce delay-100" />
                   <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce delay-200" />
-                  <span className="font-semibold ml-1">AI sedang menganalisis dokumen materi...</span>
+                  <span className="font-semibold ml-1">ngampUS AI sedang menganalisis silabus & materi...</span>
                 </div>
               </div>
             )}

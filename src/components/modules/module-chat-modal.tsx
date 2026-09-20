@@ -47,9 +47,9 @@ export function ModuleChatModal({
 
   const initialGreeting = {
     role: "assistant" as const,
-    content: `Halo! Saya asisten studi AI untuk mata kuliah ${courseName || "ini"}, pertemuan ke-${pertemuan} (${moduleTopik}).${
-      fileName ? ` Dokumen modul **"${fileName}"** telah dibaca.` : ""
-    } Ada bagian materi, konsep, atau rumus yang ingin kamu tanyakan?`,
+    content: `Halo! Saya **ngampUS AI Tutor** untuk mata kuliah ${courseName || "ini"}, pertemuan ke-${pertemuan} (${moduleTopik}).${
+      fileName ? ` Dokumen modul **"${fileName}"** sudah terhubung dan siap dibedah.` : ""
+    } Apa konsep, rumus, atau soal yang ingin kamu tanyakan?`,
   };
 
   useEffect(() => {
@@ -126,9 +126,9 @@ export function ModuleChatModal({
                 <h3 className="font-display text-sm sm:text-base font-black text-[var(--ink)]">
                   Tanya Dosen AI
                 </h3>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[9.5px] font-black text-emerald-800">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 dark:border-emerald-700/60 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[9.5px] font-black text-emerald-800 dark:text-emerald-300 shadow-2xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Gemini 3.6
+                  ngampUS AI Engine
                 </span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -138,7 +138,7 @@ export function ModuleChatModal({
                 {fileName && (
                   <span className="inline-flex items-center gap-1 rounded-md bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800/60 px-1.5 py-0.5 text-[9.5px] font-bold text-sky-700 dark:text-sky-300 shrink-0" title={`RAG Grounded: Membaca dokumen ${fileName}`}>
                     <FileCheck size={10} />
-                    Dokumen Siap
+                    Dokumen Terhubung
                   </span>
                 )}
               </div>
@@ -217,7 +217,7 @@ export function ModuleChatModal({
                 <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce" />
                 <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce delay-100" />
                 <div className="h-2 w-2 rounded-full bg-[var(--brand)] animate-bounce delay-200" />
-                <span className="text-[11px] font-semibold ml-1">AI sedang menganalisis materi...</span>
+                <span className="text-[11px] font-semibold ml-1">ngampUS AI sedang menganalisis materi kuliah...</span>
               </div>
             </div>
           )}
