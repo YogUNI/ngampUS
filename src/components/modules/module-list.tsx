@@ -101,64 +101,145 @@ export function ModuleList({
 
   return (
     <div className="mt-5 space-y-4 sm:space-y-6">
-      {/* ── STREAMLINED STAT STRIP (Aligned Metrics & Progress Bar) ── */}
-      <div className="rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-5 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          {/* Quick Metrics (Strict Vertical Alignment) */}
-          <div className="grid grid-cols-3 divide-x divide-[#e8eee9] sm:divide-x-0 sm:flex sm:items-center sm:gap-6 flex-1">
-            {/* Total Modul */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-1 sm:px-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] block min-h-[26px] sm:min-h-[16px] flex items-center justify-center sm:justify-start">
-                Total Modul
+      {/* ── STREAMLINED STAT STRIP (Compact Single-Strip on Mobile, 4-Card Executive Grid on Desktop) ── */}
+      {/* Mobile View (< md) */}
+      <div className="md:hidden rounded-3xl border border-[#d8e3da] bg-white p-4 shadow-xs">
+        <div className="grid grid-cols-3 divide-x divide-[#e8eee9]">
+          {/* Total Modul */}
+          <div className="flex flex-col items-center text-center px-1">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] block min-h-[26px] flex items-center justify-center">
+              Total Modul
+            </span>
+            <div className="mt-1 flex items-baseline justify-center gap-1">
+              <span className="font-display text-xl font-black text-[#10261b] leading-none">
+                {totalModules}
               </span>
-              <div className="mt-1 flex items-baseline justify-center sm:justify-start gap-1">
-                <span className="font-display text-xl sm:text-2xl font-black text-[#10261b] leading-none">
-                  {totalModules}
-                </span>
-                <span className="text-[10px] sm:text-xs font-bold text-[#697c6f]">Materi</span>
-              </div>
-            </div>
-
-            {/* Sudah Dibaca */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-1 sm:px-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#0f6849] block min-h-[26px] sm:min-h-[16px] flex items-center justify-center sm:justify-start">
-                Selesai Dibaca
-              </span>
-              <div className="mt-1 flex items-baseline justify-center sm:justify-start gap-1">
-                <span className="font-display text-xl sm:text-2xl font-black text-[#0f6849] leading-none">
-                  {readModules}
-                </span>
-                <span className="text-[10px] sm:text-xs font-bold text-[#0f6849]">Modul</span>
-              </div>
-            </div>
-
-            {/* Progress Rate */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left px-1 sm:px-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#5c3a9c] block min-h-[26px] sm:min-h-[16px] flex items-center justify-center sm:justify-start">
-                Pemahaman
-              </span>
-              <div className="mt-1 flex items-baseline justify-center sm:justify-start gap-1">
-                <span className="font-display text-xl sm:text-2xl font-black text-[#5c3a9c] leading-none">
-                  {completedRate}%
-                </span>
-                <span className="text-[10px] sm:text-xs font-bold text-[#5c3a9c]">Tuntas</span>
-              </div>
+              <span className="text-[10px] font-bold text-[#697c6f]">Materi</span>
             </div>
           </div>
 
-          {/* Progress Bar & Semester Context */}
-          <div className="sm:max-w-xs w-full pt-3 sm:pt-0 border-t border-[#f0f4f0] sm:border-0 flex flex-col justify-center">
-            <div className="flex items-center justify-between text-[11px] font-bold text-[#697c6f] mb-1.5">
-              <span>Progress Belajar</span>
-              <span className="font-black text-[#0f6849]">{readModules} dari {totalModules} materi</span>
+          {/* Sudah Dibaca */}
+          <div className="flex flex-col items-center text-center px-1">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#0f6849] block min-h-[26px] flex items-center justify-center">
+              Selesai Dibaca
+            </span>
+            <div className="mt-1 flex items-baseline justify-center gap-1">
+              <span className="font-display text-xl font-black text-[#0f6849] leading-none">
+                {readModules}
+              </span>
+              <span className="text-[10px] font-bold text-[#0f6849]">Modul</span>
             </div>
-            <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#f0f4f0] border border-[#d8e3da]">
+          </div>
+
+          {/* Progress Rate */}
+          <div className="flex flex-col items-center text-center px-1">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#5c3a9c] block min-h-[26px] flex items-center justify-center">
+              Pemahaman
+            </span>
+            <div className="mt-1 flex items-baseline justify-center gap-1">
+              <span className="font-display text-xl font-black text-[#5c3a9c] leading-none">
+                {completedRate}%
+              </span>
+              <span className="text-[10px] font-bold text-[#5c3a9c]">Tuntas</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Bar Mobile */}
+        <div className="mt-3 pt-3 border-t border-[#f0f4f0]">
+          <div className="flex items-center justify-between text-[11px] font-bold text-[#697c6f] mb-1.5">
+            <span>Progress Belajar</span>
+            <span className="font-black text-[#0f6849]">{readModules} dari {totalModules} materi</span>
+          </div>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#f0f4f0] border border-[#d8e3da]">
+            <div
+              className="h-full rounded-full bg-[#0f6849] transition-all duration-500"
+              style={{ width: `${completedRate}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop View (>= md): 4 Solid Metric Cards matching Executive Dashboard aesthetic */}
+      <div className="hidden md:grid md:grid-cols-4 gap-4">
+        {/* Card 1: Total Modul */}
+        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#a9cdb2]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#697c6f]">
+              Total Modul
+            </span>
+            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#f0f4f0] text-[#0f6849]">
+              <BookOpen size={16} />
+            </div>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-display text-3xl font-black text-[#10261b]">
+              {totalModules}
+            </span>
+            <span className="text-xs font-bold text-[#697c6f]">Pertemuan Tersimpan</span>
+          </div>
+          <p className="mt-1 text-[11px] text-[#8b9e91]">Seluruh mata kuliah semester ini</p>
+        </div>
+
+        {/* Card 2: Sudah Dibaca */}
+        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#a9cdb2]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#0f6849]">
+              Selesai Dibaca
+            </span>
+            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[#0f6849]">
+              <Sparkles size={16} />
+            </div>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-display text-3xl font-black text-[#0f6849]">
+              {readModules}
+            </span>
+            <span className="text-xs font-bold text-[#0f6849]">Modul Tuntas</span>
+          </div>
+          <p className="mt-1 text-[11px] text-[#8b9e91]">Materi siap dipelajari & diuji</p>
+        </div>
+
+        {/* Card 3: Belum Dibaca */}
+        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#a9cdb2]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#8a5d00]">
+              Belum Dibaca
+            </span>
+            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#fffbe6] text-[#8a5d00]">
+              <FolderOpen size={16} />
+            </div>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-display text-3xl font-black text-[#8a5d00]">
+              {Math.max(0, totalModules - readModules)}
+            </span>
+            <span className="text-xs font-bold text-[#8a5d00]">Perlu Ditinjau</span>
+          </div>
+          <p className="mt-1 text-[11px] text-[#8b9e91]">Persiapan sebelum perkuliahan</p>
+        </div>
+
+        {/* Card 4: Progress Belajar */}
+        <div className="rounded-2xl border border-[#d8e3da] bg-white p-4 shadow-xs flex flex-col justify-between transition hover:shadow-md hover:border-[#a9cdb2]">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#5c3a9c]">
+                Tingkat Selesai
+              </span>
+              <span className="font-display text-xl font-black text-[#5c3a9c]">
+                {completedRate}%
+              </span>
+            </div>
+            <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-[#f0f4f0] border border-[#d8e3da]">
               <div
-                className="h-full rounded-full bg-[#0f6849] transition-all duration-500"
+                className="h-full rounded-full bg-[#5c3a9c] transition-all duration-500"
                 style={{ width: `${completedRate}%` }}
               />
             </div>
           </div>
+          <p className="mt-2 text-[11px] font-bold text-[#697c6f]">
+            {readModules} dari {totalModules} materi tuntas
+          </p>
         </div>
       </div>
 
