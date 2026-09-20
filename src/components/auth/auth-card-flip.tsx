@@ -336,6 +336,27 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                 <RotateCw size={13} className="text-[#0f6849]" />
               </button>
             </div>
+
+            {/* ── Mini Feature Strip (fills extra height from card equalization) ── */}
+            <div className="mt-5 rounded-2xl border border-[#e8f0ea] bg-[#f7fbf8] px-4 py-3.5">
+              <p className="mb-2.5 text-[10px] font-black uppercase tracking-[.14em] text-[#8aaa93]">
+                Yang bisa kamu kelola
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="flex flex-col items-center gap-1.5 rounded-xl border border-[#dff0e4] bg-white py-2.5 px-1 shadow-2xs">
+                  <span className="text-base">📅</span>
+                  <span className="text-center text-[10px] font-extrabold leading-tight text-[#2d5040]">Jadwal<br/>Kuliah</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 rounded-xl border border-[#dff0e4] bg-white py-2.5 px-1 shadow-2xs">
+                  <span className="text-base">📋</span>
+                  <span className="text-center text-[10px] font-extrabold leading-tight text-[#2d5040]">Deadline<br/>Tugas</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 rounded-xl border border-[#dff0e4] bg-white py-2.5 px-1 shadow-2xs">
+                  <span className="text-base">🏛️</span>
+                  <span className="text-center text-[10px] font-extrabold leading-tight text-[#2d5040]">Proker<br/>Organisasi</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ══════════════════════════════════════════════════════════
@@ -506,7 +527,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             </form>
 
             {/* Flip Trigger back to Login */}
-            <div className="mt-4 border-t border-[#f0f4f1] pt-3 text-center">
+            <div className="mt-5 border-t border-[#f0f4f1] pt-4 pb-2 text-center">
               <p className="text-xs text-[#65746a]">
                 Sudah memiliki akun?
               </p>
