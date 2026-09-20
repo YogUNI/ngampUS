@@ -59,29 +59,40 @@ export default async function ModulPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
-      {/* Header */}
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[.18em] text-[var(--brand)]">
-            ARSIP AKADEMIK &amp; PERKULIAHAN
-          </p>
-          <h1 className="font-display mt-1 text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
-            Modul &amp; Materi Kuliah
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
+      {/* ── Executive Header for Modul ── */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#0f6849]">
+              ARSIP AKADEMIK & PERKULIAHAN
+            </span>
+            {currentSemester && (
+              <span className="inline-flex rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[10.5px] font-bold text-[#0f6849] border border-[#b9ddc6]">
+                {currentSemester.nama_semester}
+              </span>
+            )}
+          </div>
+          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b]">
+            Modul & Materi Kuliah
           </h1>
-          <p className="mt-1.5 text-xs text-[var(--muted)]">
-            Simpan slide dosen, link Google Drive, materi PDF, dan resume catatan tiap pertemuan kuliah.
+          <p className="mt-0.5 text-xs text-[#697c6f]">
+            Koleksi slide dosen, berkas PDF, link Google Drive, dan catatan resume perkuliahan.
           </p>
         </div>
 
-        {/* Semester Selector Form */}
-        <form className="flex items-end gap-2">
-          <label className="block text-xs font-bold text-[var(--ink)]">
-            Semester
+        {/* Instant Semester Selector Form */}
+        <form className="flex items-center gap-2 shrink-0">
+          <label className="sr-only" htmlFor="semester-selector">
+            Pilih Semester
+          </label>
+          <div className="relative">
             <select
+              id="semester-selector"
               name="semester_id"
               defaultValue={targetSemesterId ?? ""}
-              className="mt-1 block min-w-[190px] rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3 py-2 text-xs font-bold text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden"
+              aria-label="Pilih semester akademik"
+              className="appearance-none rounded-2xl border border-[#d8e3da] bg-white py-2 pl-3.5 pr-8 text-xs font-bold text-[#10261b] focus:border-[#0f6849] focus:outline-none transition shadow-2xs"
             >
               {semesters?.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -89,12 +100,15 @@ export default async function ModulPage({
                 </option>
               ))}
             </select>
-          </label>
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[#697c6f]">
+              ▼
+            </span>
+          </div>
           <button
             type="submit"
-            className="rounded-xl border border-[var(--line)] bg-[var(--card-bg)] px-3 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[var(--card-subtle)] transition"
+            className="rounded-2xl bg-[#f0f4f0] px-3.5 py-2 text-xs font-black text-[#0f6849] border border-[#d8e3da] hover:bg-[#dff3e5] transition active:scale-95"
           >
-            Pilih
+            Terapkan
           </button>
         </form>
       </header>

@@ -15,12 +15,12 @@ export function ModuleList({
   selectedSemesterName?: string;
 }) {
   const [search, setSearch] = useState("");
-  const [selectedCourseFilter, setSelectedCourseFilter] = useState<string>("all");
+  const [selectedCourseTab, setSelectedCourseTab] = useState<string>("all");
   const [expandedCourses, setExpandedCourses] = useState<Record<string, boolean>>(() => {
-    // Default expand all
+    // Default: expand only first course if multiple courses exist to save vertical space
     const init: Record<string, boolean> = {};
-    courses.forEach((c) => {
-      init[c.id] = true;
+    courses.forEach((c, idx) => {
+      init[c.id] = idx === 0 || courses.length === 1;
     });
     return init;
   });
@@ -30,6 +30,22 @@ export function ModuleList({
       ...prev,
       [courseId]: !prev[courseId],
     }));
+  };
+
+  const expandAll = () => {
+    const next: Record<string, boolean> = {};
+    courses.forEach((c) => {
+      next[c.id] = true;
+    });
+    setExpandedCourses(next);
+  };
+
+  const collapseAll = () => {
+    const next: Record<string, boolean> = {};
+    courses.forEach((c) => {
+      next[c.id] = false;
+    });
+    setExpandedCourses(next);
   };
 
   // Filter modules
@@ -42,7 +58,7 @@ export function ModuleList({
       (m.catatan && m.catatan.toLowerCase().includes(search.toLowerCase())) ||
       courseName.toLowerCase().includes(search.toLowerCase());
 
-    const matchesCourse = selectedCourseFilter === "all" || m.course_id === selectedCourseFilter;
+    const matchesCourse = selectedCourseTab === "all" || m.course_id === selectedCourseTab;
 
     return matchesSearch && matchesCourse;
   });
@@ -52,205 +68,325 @@ export function ModuleList({
   const readModules = modules.filter((m) => m.status === "sudah_baca" || m.status === "dipelajari").length;
   const completedRate = totalModules > 0 ? Math.round((readModules / totalModules) * 100) : 0;
 
+  const coursesToRender = courses.filter(
+    (c) => selectedCourseTab === "all" || c.id === selectedCourseTab
+  );
+
   return (
-    <div className="mt-6 space-y-6">
-      {/* Top Stat Bar */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-4 shadow-2xs">
-          <p className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">TOTAL MODUL</p>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-3xl font-black text-[var(--ink)]">
-              {totalModules.toString().padStart(2, "0")}
-            </span>
-            <span className="text-xs font-bold text-[var(--muted)]">pertemuan tersimpan</span>
-          </div>
-        </div>
+    <div className="mt-5 space-y-4 sm:space-y-6">
+      {/* ── STREAMLINED STAT STRIP (Compact on Mobile, Balanced 3-Card on Desktop) ── */}
+      <div className="rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Quick Metrics */}
+          <div className="grid grid-cols-3 divide-x divide-[#e8eee9] sm:divide-x-0 sm:flex sm:items-center sm:gap-6 flex-1">
+            {/* Total Modul */}
+            <div className="text-center sm:text-left px-2 sm:px-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] block">
+                Total Modul
+              </span>
+              <div className="mt-0.5 flex items-baseline justify-center sm:justify-start gap-1">
+                <span className="font-display text-xl sm:text-2xl font-black text-[#10261b]">
+                  {totalModules}
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold text-[#697c6f]">Materi</span>
+              </div>
+            </div>
 
-        <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-4 shadow-2xs">
-          <p className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">SUDAH DIBACA / DIPELAJARI</p>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-3xl font-black text-[var(--brand)]">
-              {readModules.toString().padStart(2, "0")}
-            </span>
-            <span className="text-xs font-bold text-[var(--muted)]">dari {totalModules} materi</span>
-          </div>
-        </div>
+            {/* Sudah Dibaca */}
+            <div className="text-center sm:text-left px-2 sm:px-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#0f6849] block">
+                Selesai Dibaca
+              </span>
+              <div className="mt-0.5 flex items-baseline justify-center sm:justify-start gap-1">
+                <span className="font-display text-xl sm:text-2xl font-black text-[#0f6849]">
+                  {readModules}
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold text-[#0f6849]">Modul</span>
+              </div>
+            </div>
 
-        <div className="rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-4 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-black uppercase tracking-wider text-[var(--muted)]">PROGRESS MATERI</p>
-            <span className="text-xs font-black text-[var(--brand)]">{completedRate}%</span>
+            {/* Progress Rate */}
+            <div className="text-center sm:text-left px-2 sm:px-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#5c3a9c] block">
+                Pemahaman
+              </span>
+              <div className="mt-0.5 flex items-baseline justify-center sm:justify-start gap-1">
+                <span className="font-display text-xl sm:text-2xl font-black text-[#5c3a9c]">
+                  {completedRate}%
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold text-[#5c3a9c]">Tuntas</span>
+              </div>
+            </div>
           </div>
-          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[var(--card-subtle)] border border-[var(--line)]">
-            <div
-              className="h-full rounded-full bg-[var(--brand)] transition-all duration-500"
-              style={{ width: `${completedRate}%` }}
-            />
+
+          {/* Progress Bar & Semester Context */}
+          <div className="sm:max-w-xs w-full pt-3 sm:pt-0 border-t border-[#f0f4f0] sm:border-0 flex flex-col justify-center">
+            <div className="flex items-center justify-between text-[11px] font-bold text-[#697c6f] mb-1.5">
+              <span>Progress Belajar</span>
+              <span className="font-black text-[#0f6849]">{readModules} dari {totalModules} materi</span>
+            </div>
+            <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#f0f4f0] border border-[#d8e3da]">
+              <div
+                className="h-full rounded-full bg-[#0f6849] transition-all duration-500"
+                style={{ width: `${completedRate}%` }}
+              />
+            </div>
           </div>
-          <p className="mt-1.5 text-[10px] text-[var(--muted)] font-semibold">
-            {selectedSemesterName ? `Konteks: ${selectedSemesterName}` : "Seluruh semester"}
-          </p>
         </div>
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-[var(--card-bg)] p-3 sm:p-4">
-        <div className="relative min-w-[200px] flex-1 max-w-md">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari materi kuliah, topik, atau kata kunci catatan..."
-            className="w-full rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] py-2 pl-9 pr-3 text-xs text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden"
-          />
+      {/* ── SEARCH & ACTION BAR ── */}
+      <div className="rounded-3xl border border-[#d8e3da] bg-white p-3.5 sm:p-5 shadow-xs space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2.5">
+          <div className="relative min-w-[200px] flex-1 max-w-md">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#7d9284] pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari materi, slide, atau topik..."
+              className="w-full rounded-2xl border border-[#d8e3da] bg-[#f7f9f7] py-2 sm:py-2.5 pl-10 pr-3.5 text-xs sm:text-sm font-medium text-[#10261b] placeholder:text-[#8b9e91] focus:border-[#0f6849] focus:bg-white focus:outline-none transition"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            {courses.length > 0 && (
+              <ModuleFormModal
+                courses={courses}
+                triggerClass="inline-flex items-center gap-1.5 rounded-2xl bg-[#103626] px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-black text-[#c8ef70] shadow-md hover:bg-[#1a4a34] transition active:scale-95"
+                triggerText="+ Tambah Modul Baru"
+              />
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <label className="text-xs font-bold text-[var(--muted)]">Filter Matkul:</label>
-          <select
-            value={selectedCourseFilter}
-            onChange={(e) => setSelectedCourseFilter(e.target.value)}
-            className="rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-3 py-2 text-xs font-bold text-[var(--ink)] focus:border-[var(--brand)] focus:outline-hidden"
+        {/* ── SUBJECT HORIZONTAL TAB SWITCHER (One-Tap Thumb Friendly) ── */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-t border-[#f0f4f0] pt-3">
+          <button
+            type="button"
+            onClick={() => setSelectedCourseTab("all")}
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
+              selectedCourseTab === "all"
+                ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
+                : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
+            }`}
           >
-            <option value="all">Semua Mata Kuliah ({courses.length})</option>
-            {courses.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.nama_matkul}
-              </option>
-            ))}
-          </select>
+            <span>Semua Matkul</span>
+            <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+              selectedCourseTab === "all" ? "bg-[#c8ef70]/20 text-[#c8ef70]" : "bg-[#e2eae4] text-[#55675b]"
+            }`}>
+              {courses.length}
+            </span>
+          </button>
 
-          {courses.length > 0 && (
-            <ModuleFormModal
-              courses={courses}
-              triggerText="Tambah Modul"
-            />
-          )}
+          {courses.map((c) => {
+            const courseModCount = modules.filter((m) => m.course_id === c.id).length;
+            const isTabActive = selectedCourseTab === c.id;
+
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setSelectedCourseTab(c.id)}
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 ${
+                  isTabActive
+                    ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
+                    : "bg-[#f4f7f4] text-[#55675b] hover:bg-[#eaf1ec] hover:text-[#10261b]"
+                }`}
+              >
+                <span
+                  className="h-2 w-2 rounded-full shrink-0 ring-1 ring-white/60"
+                  style={{ backgroundColor: c.warna_label || "#0f6849" }}
+                />
+                <span className="truncate max-w-[150px] sm:max-w-[200px]">{c.nama_matkul}</span>
+                <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+                  isTabActive ? "bg-[#c8ef70]/20 text-[#c8ef70]" : "bg-[#e2eae4] text-[#55675b]"
+                }`}>
+                  {courseModCount}
+                </span>
+              </button>
+            );
+          })}
         </div>
+
+        {/* Accordion Expand / Collapse All Controls */}
+        {selectedCourseTab === "all" && courses.length > 1 && (
+          <div className="flex items-center justify-between text-[11px] font-bold text-[#697c6f] pt-1">
+            <span>Daftar Mata Kuliah Semester Ini</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={expandAll}
+                className="text-[#0f6849] hover:underline"
+              >
+                Buka Semua
+              </button>
+              <span>•</span>
+              <button
+                type="button"
+                onClick={collapseAll}
+                className="text-[#697c6f] hover:underline"
+              >
+                Tutup Semua
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Courses Grouped Content */}
+      {/* ── COURSES GROUPED ACCORDION / LIST CONTENT ── */}
       {courses.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-[var(--line)] bg-[var(--card-bg)] p-8 sm:p-12 text-center">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#dff3e5] text-[var(--brand)]">
-            <BookOpen size={24} />
+        <div className="rounded-3xl border border-dashed border-[#d8e3da] bg-white p-8 sm:p-12 text-center shadow-xs">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#f0f4f0] text-[#0f6849]">
+            <BookOpen size={28} />
           </div>
-          <h3 className="font-display mt-3 text-base sm:text-lg font-black text-[var(--ink)]">
+          <h3 className="font-display mt-3 text-base sm:text-lg font-black text-[#10261b]">
             Belum ada Mata Kuliah di semester ini
           </h3>
-          <p className="mt-1 text-xs text-[var(--muted)] max-w-md mx-auto">
-            Tambahkan mata kuliah terlebih dahulu di menu Jadwal Kuliah agar modul perkuliahan bisa dikelompokkan dengan rapi.
+          <p className="mt-1 text-xs text-[#697c6f] max-w-md mx-auto">
+            Tambahkan mata kuliah terlebih dahulu di menu Jadwal Kuliah agar materi perkuliahan bisa diarsipkan dengan rapi per mata kuliah.
           </p>
         </div>
       ) : (
-        <div className="space-y-6">
-          {courses
-            .filter((c) => selectedCourseFilter === "all" || c.id === selectedCourseFilter)
-            .map((course) => {
-              const courseModules = filteredModules
-                .filter((m) => m.course_id === course.id)
-                .sort((a, b) => a.pertemuan - b.pertemuan);
+        <div className="space-y-4">
+          {coursesToRender.map((course) => {
+            const courseModules = filteredModules
+              .filter((m) => m.course_id === course.id)
+              .sort((a, b) => a.pertemuan - b.pertemuan);
 
-              const isExpanded = expandedCourses[course.id] ?? true;
-              const nextPertemuan =
-                courseModules.length > 0
-                  ? Math.max(...courseModules.map((m) => m.pertemuan)) + 1
-                  : 1;
+            // In specific course tab, always expand
+            const isExpanded = selectedCourseTab !== "all" ? true : (expandedCourses[course.id] ?? true);
+            const nextPertemuan =
+              courseModules.length > 0
+                ? Math.max(...courseModules.map((m) => m.pertemuan)) + 1
+                : 1;
 
-              return (
-                <section
-                  key={course.id}
-                  className="rounded-3xl border border-[var(--line)] bg-[var(--card-bg)] shadow-2xs overflow-hidden"
-                >
-                  {/* Course Group Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-5 bg-[var(--card-subtle)] border-b border-[var(--line)]">
-                    <button
-                      type="button"
-                      onClick={() => toggleCourseExpand(course.id)}
-                      className="flex items-start sm:items-center gap-2.5 sm:gap-3 text-left min-w-0 flex-1 hover:opacity-80 transition"
-                    >
-                      <span className="text-[var(--muted)] mt-0.5 sm:mt-0 shrink-0">
-                        {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-                      </span>
+            const courseReadCount = courseModules.filter(
+              (m) => m.status === "sudah_baca" || m.status === "dipelajari"
+            ).length;
 
-                      <span
-                        className="h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-full shrink-0 ring-2 ring-white shadow-2xs mt-1 sm:mt-0"
-                        style={{ backgroundColor: course.warna_label || "var(--brand)" }}
-                      />
+            return (
+              <section
+                key={course.id}
+                className="rounded-3xl border border-[#d8e3da] bg-white shadow-xs overflow-hidden transition"
+              >
+                {/* Course Group Accordion Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-5 bg-[#fafbfa] border-b border-[#f0f4f0]">
+                  <button
+                    type="button"
+                    onClick={() => toggleCourseExpand(course.id)}
+                    className="flex items-start sm:items-center gap-2.5 sm:gap-3 text-left min-w-0 flex-1 group transition active:scale-[0.99]"
+                  >
+                    <span className="text-[#697c6f] group-hover:text-[#10261b] mt-0.5 sm:mt-0 shrink-0 transition">
+                      {isExpanded ? <ChevronDown size={19} /> : <ChevronRight size={19} />}
+                    </span>
 
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h2 className="font-display text-sm sm:text-base font-black text-[var(--ink)] leading-snug break-words">
-                            {course.nama_matkul}
-                          </h2>
-                          {course.kode_matkul && (
-                            <span className="rounded-md bg-[var(--card-bg)] px-1.5 py-0.5 text-[9px] sm:text-[10px] font-black uppercase text-[var(--muted)] border border-[var(--line)] shrink-0">
-                              {course.kode_matkul}
-                            </span>
-                          )}
-                          {course.sks && (
-                            <span className="text-[10px] sm:text-xs font-bold text-[var(--muted)] shrink-0">
-                              · {course.sks} SKS
-                            </span>
-                          )}
-                        </div>
+                    <span
+                      className="h-3.5 w-3.5 rounded-full shrink-0 ring-2 ring-white shadow-xs mt-1 sm:mt-0"
+                      style={{ backgroundColor: course.warna_label || "#0f6849" }}
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="font-display text-sm sm:text-base font-black text-[#10261b] leading-snug break-words group-hover:text-[#0f6849] transition">
+                          {course.nama_matkul}
+                        </h2>
+                        {course.kode_matkul && (
+                          <span className="rounded-md bg-white px-1.5 py-0.5 text-[9.5px] font-black uppercase text-[#697c6f] border border-[#d8e3da] shrink-0">
+                            {course.kode_matkul}
+                          </span>
+                        )}
+                        {course.sks && (
+                          <span className="text-[10px] sm:text-xs font-bold text-[#697c6f] shrink-0">
+                            · {course.sks} SKS
+                          </span>
+                        )}
                       </div>
-                    </button>
+                    </div>
+                  </button>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t border-[var(--line)]/60 pt-2.5 sm:border-0 sm:pt-0">
-                      <span className="rounded-full bg-[var(--card-bg)] px-2.5 py-1 text-[10px] sm:text-[11px] font-black text-[var(--brand)] border border-[var(--line)]">
-                        {courseModules.length} Modul
+                  <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 border-t border-[#f0f4f0] pt-2.5 sm:border-0 sm:pt-0">
+                    <span className="rounded-full bg-white px-2.5 py-1 text-[10.5px] font-black text-[#0f6849] border border-[#d8e3da]">
+                      {courseReadCount}/{courseModules.length} Modul Selesai
+                    </span>
+
+                    <ModuleFormModal
+                      courses={courses}
+                      defaultCourseId={course.id}
+                      defaultPertemuan={nextPertemuan}
+                      triggerText={`+ Pertemuan ${nextPertemuan}`}
+                      triggerClass="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] px-3 py-1.5 text-[11px] sm:text-xs font-black text-white hover:bg-[#0c4e37] transition shadow-2xs"
+                    />
+                  </div>
+                </div>
+
+                {/* ── PERTEMUAN QUICK JUMP CHIPS (When many modules exist) ── */}
+                {isExpanded && courseModules.length > 0 && (
+                  <div className="px-4 pt-3 pb-1 border-b border-[#f0f4f0] bg-white">
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-[#697c6f] shrink-0 mr-1">
+                        Pertemuan:
                       </span>
-
-                      <ModuleFormModal
-                        courses={courses}
-                        defaultCourseId={course.id}
-                        defaultPertemuan={nextPertemuan}
-                        triggerText={`+ Pertemuan ${nextPertemuan}`}
-                        triggerClass="inline-flex items-center gap-1 rounded-xl bg-[var(--card-bg)] px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-black text-[var(--brand)] border border-[var(--brand)]/30 hover:bg-[var(--brand)] hover:text-white transition shadow-2xs"
-                      />
+                      {courseModules.map((m) => {
+                        const isDone = m.status === "sudah_baca" || m.status === "dipelajari";
+                        return (
+                          <a
+                            key={m.id}
+                            href={`#module-${m.id}`}
+                            className={`grid h-6 min-w-[24px] px-1.5 place-items-center rounded-lg text-[10px] font-black transition active:scale-95 shrink-0 border ${
+                              isDone
+                                ? "bg-[#dff3e5] text-[#0f6849] border-[#b9ddc6]"
+                                : "bg-[#f4f7f4] text-[#697c6f] border-[#d8e3da] hover:bg-white"
+                            }`}
+                            title={`Lompat ke Pertemuan ${m.pertemuan}: ${m.topik}`}
+                          >
+                            P{m.pertemuan}
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
+                )}
 
-                  {/* Modules Cards Grid */}
-                  {isExpanded && (
-                    <div className="p-4 sm:p-5">
-                      {courseModules.length === 0 ? (
-                        <div className="rounded-2xl border border-dashed border-[var(--line)] bg-[var(--card-subtle)] p-6 text-center">
-                          <p className="text-xs font-bold text-[var(--muted)]">
-                            Belum ada modul yang dicatat untuk mata kuliah ini.
-                          </p>
-                          <p className="mt-1 text-[11px] text-[var(--muted)]">
-                            Simpan slide, materi PDF, atau link Google Drive dari dosen setiap pertemuan.
-                          </p>
-                          <div className="mt-3">
-                            <ModuleFormModal
-                              courses={courses}
-                              defaultCourseId={course.id}
-                              defaultPertemuan={1}
-                              triggerText="Simpan Modul Pertama"
-                            />
-                          </div>
+                {/* Modules Cards Grid */}
+                {isExpanded && (
+                  <div className="p-4 sm:p-5">
+                    {courseModules.length === 0 ? (
+                      <div className="rounded-2xl border border-dashed border-[#d8e3da] bg-[#fafbfa] p-6 text-center">
+                        <p className="text-xs font-bold text-[#697c6f]">
+                          Belum ada modul perkuliahan yang disimpan.
+                        </p>
+                        <p className="mt-1 text-[11px] text-[#8b9e91]">
+                          Simpan slide dosen, link materi, atau rangkuman pertemuan kuliah ini.
+                        </p>
+                        <div className="mt-3">
+                          <ModuleFormModal
+                            courses={courses}
+                            defaultCourseId={course.id}
+                            defaultPertemuan={1}
+                            triggerText="Simpan Modul Pertama"
+                          />
                         </div>
-                      ) : (
-                        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-                          {courseModules.map((m) => (
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+                        {courseModules.map((m) => (
+                          <div key={m.id} id={`module-${m.id}`}>
                             <ModuleCard
-                              key={m.id}
                               module={m}
                               courses={courses}
                               courseName={course.nama_matkul}
                               courseColor={course.warna_label}
                             />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </section>
-              );
-            })}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+            );
+          })}
         </div>
       )}
     </div>
