@@ -192,9 +192,10 @@ export default async function DashboardPage() {
 
       {/* ── EXECUTIVE DARK HEADER (Native App Aesthetic) ── */}
       <header
-        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2rem] sm:rounded-b-[2.5rem] px-5 pt-6 pb-16 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 sm:pb-20 lg:-mx-10 lg:px-10"
+        className="relative -mx-4 -mt-6 overflow-hidden rounded-b-[2.5rem] px-5 pt-6 text-white shadow-xl sm:-mx-8 sm:px-8 sm:pt-8 lg:-mx-10 lg:px-10"
         style={{
           background: "linear-gradient(180deg, #092015 0%, #0f3524 55%, #13422e 100%)",
+          paddingBottom: "88px",
         }}
       >
         {/* Subtle Ambient Radial Glows */}
@@ -263,7 +264,7 @@ export default async function DashboardPage() {
       </header>
 
       {/* ── FLOATING OVERLAPPING STAT CARD (3-Column Native Metric Pill matching reference) ── */}
-      <div className="relative z-20 -mt-6 sm:-mt-8">
+      <div className="relative z-20" style={{ marginTop: "-38px" }}>
         <div className="grid grid-cols-3 divide-x divide-[#e8eee9] rounded-2xl sm:rounded-3xl border border-[#d2e2d5] bg-white p-3.5 sm:p-5 shadow-[0_10px_25px_rgba(0,0,0,0.06)]">
           {/* Col 1: Tugas Aktif */}
           <Link
