@@ -26,10 +26,11 @@ import { LandingNavbar } from "@/components/landing/landing-navbar";
 export default function Home() {
   const tickerItems = [
     { text: "RUANG KULIAH TERTATA", dot: "#d9684e" },
+    { text: "AI STUDY COMPANION & MODUL", dot: "#c8ef70" },
     { text: "RITME ORGANISASI JELAS", dot: "#0f6849" },
     { text: "DEADLINE TERKONTROL", dot: "#d1ae2c" },
+    { text: "EXPORT KALENDER (.ICS)", dot: "#22c55e" },
     { text: "REKAP PORTOFOLIO CV", dot: "#7b6cee" },
-    { text: "ZERO DATA OVERWHELM", dot: "#e57255" },
     { text: "BUILT FOR INDONESIAN STUDENTS", dot: "#103626" },
   ];
 
@@ -137,7 +138,7 @@ export default function Home() {
       </div>
 
       {/* ── BENTO GRID SECTION: CORE WORKSPACE SYSTEM ──────────── */}
-      <section id="features" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section id="features" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12 scroll-mt-20">
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#0f6849]/20 bg-[#dff3e5] px-3.5 py-1 text-xs font-black tracking-wider text-[#0f6849]">
@@ -170,35 +171,38 @@ export default function Home() {
 
               <div className="mt-6 max-w-md">
                 <h3 className="font-display text-2xl font-black text-[#103626] tracking-tight">
-                  Jadwal Kuliah dengan 1-Click Link Pertemuan & Materi
+                  Jadwal Kuliah dengan 1-Click Link Pertemuan & Export .ICS
                 </h3>
                 <p className="mt-2.5 text-sm leading-relaxed text-[#55675b]">
-                  Tautkan link Zoom, Google Meet, dan Google Drive materi kuliah langsung ke mata kuliah terkait. Tak perlu lagi scroll chat WhatsApp panik saat jam masuk kuliah.
+                  Tautkan link Zoom, Google Meet, dan Google Drive materi kuliah langsung ke mata kuliah terkait. Dilengkapi filter hari pintar dan fitur export ke Google Calendar / Apple Calendar.
                 </p>
               </div>
 
               {/* Realistic Mockup UI Snippet */}
               <div className="mt-8 rounded-2xl border border-[#e2eae3] bg-[#f9faf8] p-4 shadow-inner">
                 <div className="flex items-center justify-between border-b border-[#e5ece5] pb-2.5 text-xs font-bold text-[#55675b]">
-                  <span>HARI SENIN (HARI INI)</span>
-                  <span className="text-[#0f6849]">2 Kelas Tersedia</span>
+                  <div className="flex items-center gap-2">
+                    <span>HARI SENIN</span>
+                    <span className="rounded-full bg-[#103626] px-2 py-0.2 text-[9px] font-black text-[#c8ef70]">HARI INI</span>
+                  </div>
+                  <span className="text-[#0f6849] font-bold">2 Kelas Tersedia</span>
                 </div>
                 <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-white p-3 border border-[#d8e3da]">
                   <div>
                     <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
                       08:00 - 09:40 WIB
                     </span>
-                    <h5 className="font-display font-bold text-sm text-[#103626] mt-1">
+                    <h5 className="font-display font-bold text-sm text-[#10261b] mt-1">
                       Algoritma & Pemrograman Lanjut (3 SKS)
                     </h5>
                     <p className="text-xs text-[#6e7f74]">Lab Komputer B • Dr. Ir. Gunawan</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1 rounded-lg bg-[#103626] px-3 py-1.5 text-xs font-bold text-[#c8ef70]">
-                      Join Meet
+                      Masuk Kelas
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-lg bg-[#eff4ef] px-3 py-1.5 text-xs font-bold text-[#3d5244]">
-                      Drive Materi
+                      Materi & Modul
                     </span>
                   </div>
                 </div>
@@ -242,7 +246,50 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* Bento Card 3: Organisasi & Proker (1 Col) */}
+          {/* Bento Card 3: Modul Kuliah & AI Study Companion (Wide 2 Cols) */}
+          <Reveal delay={2} className="md:col-span-2">
+            <div className="group relative overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 lg:p-9 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
+              <div className="flex items-center justify-between">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#c8ef70]/25 text-[#103626]">
+                  <Sparkles size={24} className="text-[#0f6849]" />
+                </span>
+                <span className="font-mono text-xs font-black text-[#75887b] uppercase tracking-wider">
+                  03 / Modul & AI Study Companion
+                </span>
+              </div>
+
+              <div className="mt-6 max-w-md">
+                <h3 className="font-display text-2xl font-black text-[#103626] tracking-tight">
+                  Manajemen Modul P1-P16 & Tanya AI Instan
+                </h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-[#55675b]">
+                  Kelompokkan slide kuliah, catatan, dan link drive per pertemuan (P1–P16). Bingung konsep kuliah yang rumit? Cukup klik <strong>Tanya AI</strong> untuk rangkuman dan tanya jawab langsung.
+                </p>
+              </div>
+
+              {/* Mockup AI Discussion */}
+              <div className="mt-8 rounded-2xl border border-[#d8e3da] bg-[#fafbfa] p-4 space-y-2.5">
+                <div className="flex items-center justify-between border-b border-[#e5ece5] pb-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-[#0f6849]">P5: Kompleksitas Algoritma (Big-O)</span>
+                    <span className="rounded bg-[#dff3e5] px-2 py-0.2 text-[9px] font-extrabold text-[#0f6849]">Selesai Dibaca</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#65746a]">Slide PDF & Catatan</span>
+                </div>
+                <div className="rounded-xl bg-white p-3 border border-[#e2eae3] text-xs space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-[11px] font-black text-[#103626]">
+                    <span className="grid h-4 w-4 place-items-center rounded-full bg-[#103626] text-[#c8ef70] text-[8px]">AI</span>
+                    <span>Asisten AI Modul:</span>
+                  </div>
+                  <p className="text-[11px] text-[#55675b] leading-relaxed">
+                    "Intinya, O(1) konstan, O(n) linier bertambah sesuai input, dan O(n²) biasanya terjadi pada nested loop. Mau kita bedah contoh kode pengujiannya?"
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Bento Card 4: Organisasi & Proker (1 Col) */}
           <Reveal delay={2}>
             <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
               <div>
@@ -251,7 +298,7 @@ export default function Home() {
                     <Users size={24} />
                   </span>
                   <span className="font-mono text-xs font-black text-[#75887b] uppercase tracking-wider">
-                    03 / Struktur
+                    04 / Struktur
                   </span>
                 </div>
 
@@ -277,19 +324,19 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* Bento Card 4: Portofolio & CV Otomatis (Wide 2 Cols) */}
-          <Reveal delay={3} className="md:col-span-2">
+          {/* Bento Card 5: Portofolio & CV Otomatis (Wide 3 Cols) */}
+          <Reveal delay={3} className="md:col-span-3">
             <div className="group relative overflow-hidden rounded-3xl sm:rounded-[2rem] border border-[#d8e3da] bg-white p-5 sm:p-8 lg:p-9 shadow-sm transition hover:shadow-xl hover:border-[#b4d2bd]">
               <div className="flex items-center justify-between">
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#f0ecfc] text-[#644fe2]">
                   <Award size={24} />
                 </span>
                 <span className="font-mono text-xs font-black text-[#75887b] uppercase tracking-wider">
-                  04 / Portofolio Auto-Curated
+                  05 / Portofolio Auto-Curated
                 </span>
               </div>
 
-              <div className="mt-6 max-w-md">
+              <div className="mt-6 max-w-xl">
                 <h3 className="font-display text-2xl font-black text-[#103626] tracking-tight">
                   Ubah Riwayat Proker Menjadi CV ATS-Ready
                 </h3>
@@ -318,7 +365,7 @@ export default function Home() {
       </section>
 
       {/* ── THE ATLAS METHOD (HOW IT WORKS) ────────────────────── */}
-      <section id="how-it-works" className="border-t border-[#d8e3da] bg-[#f0f4ed] px-4 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section id="how-it-works" className="border-t border-[#d8e3da] bg-[#f0f4ed] px-4 py-16 sm:px-8 sm:py-24 lg:px-12 scroll-mt-20">
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -341,7 +388,7 @@ export default function Home() {
       </section>
 
       {/* ── FAQ SECTION ────────────────────────────────────────── */}
-      <section id="faq" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section id="faq" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12 scroll-mt-20">
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-black tracking-widest text-[#0f6849] uppercase">

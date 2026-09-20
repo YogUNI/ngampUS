@@ -123,10 +123,16 @@ export function InteractivePreview() {
                         </h5>
                         <p className="text-[11px] text-[#526357]">R. Lab Komputer 3 • Dr. Ir. Hendra Gunawan</p>
                       </div>
-                      <span className="inline-flex items-center gap-1 rounded-lg bg-[#103626] px-2.5 py-1.5 text-[11px] font-bold text-[#c8ef70] shadow-sm cursor-pointer hover:opacity-90">
-                        <Video size={12} />
-                        <span>Link Meet</span>
-                      </span>
+                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-[#103626] px-2.5 py-1 text-[11px] font-bold text-[#c8ef70] shadow-sm">
+                          <Video size={12} />
+                          <span>Meet</span>
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-[#dff3e5] px-2 py-1 text-[10.5px] font-bold text-[#0f6849]">
+                          <Sparkles size={11} />
+                          <span>Tanya AI</span>
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -153,9 +159,9 @@ export function InteractivePreview() {
               {/* Bottom Quick Context */}
               <div className="rounded-xl border border-dashed border-[#b8cbbd] bg-[#eff4ef]/60 p-2.5 flex items-center justify-between text-xs">
                 <span className="text-[#3b4b41] font-medium flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-[#0f6849]" /> Dosen pengampu, SKS & ruang terpetakan
+                  <Sparkles size={14} className="text-[#0f6849]" /> Terhubung Modul P1-P16 & Tanya AI Assistant
                 </span>
-                <span className="font-bold text-[#0f6849]">Rapi</span>
+                <span className="font-bold text-[#0f6849]">Export .ICS</span>
               </div>
             </div>
           )}
