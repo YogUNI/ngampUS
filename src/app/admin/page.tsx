@@ -16,7 +16,10 @@ import {
   ShieldCheck,
   Activity,
   Cpu,
-  Database
+  Database,
+  Bot,
+  Zap,
+  Gauge
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { VisualAnalyticsCharts } from "./visual-analytics-charts";
@@ -200,6 +203,96 @@ export default async function AdminOverviewPage() {
         }}
         topCampuses={topCampusesFormatted}
       />
+
+      {/* ── AI Engine & Token Limit Telemetry Deck ── */}
+      <div className="rounded-3xl border border-[#1b4332] bg-gradient-to-r from-[#0c2419] via-[#0f2d20] to-[#091f15] p-5 sm:p-7 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/10 border border-[#c8ef70]/30 text-[#c8ef70]">
+              <Bot size={20} />
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-[#c8ef70]">
+                  [INTELLIGENCE // GEMINI AI TELEMETRY]
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-ping" />
+              </div>
+              <h3 className="font-display text-base sm:text-lg font-black text-white mt-0.5">
+                AI Engine & Token Quota Monitor
+              </h3>
+              <p className="text-xs text-[#9dc5aa]">
+                Status operasional dan limitasi kapasitas token model Google Gemini AI yang menggerakkan fitur asisten cerdas ngampUS.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
+              <Zap size={14} className="text-[#c8ef70]" />
+              <span>Multi-Model Fallback Active</span>
+            </span>
+          </div>
+        </div>
+
+        {/* 4 Cards: Primary Model, Input Token Limit, Output Token Limit, Rate Limits */}
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Active Model */}
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              PRIMARY ENGINE
+            </span>
+            <div className="flex items-baseline gap-2 mt-1.5">
+              <span className="text-lg font-black text-white">Gemini 2.5 Flash</span>
+            </div>
+            <p className="text-[11px] text-[#9dc5aa] mt-1">
+              Google DeepMind Multimodal Engine dengan dukungan auto-failover ke Flash 3.5 & Lite.
+            </p>
+          </div>
+
+          {/* Input Token Limit */}
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              MAX INPUT CONTEXT
+            </span>
+            <div className="flex items-baseline gap-2 mt-1.5">
+              <span className="text-lg font-black text-[#c8ef70]">1,048,576</span>
+              <span className="font-mono text-[10px] text-[#789a84]">Tokens / Req</span>
+            </div>
+            <p className="text-[11px] text-[#9dc5aa] mt-1">
+              Mampu memproses hingga ~750.000 kata materi PDF, slide kuliah, atau rangkuman semester sekaligus.
+            </p>
+          </div>
+
+          {/* Output Token Limit */}
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              MAX OUTPUT RESPONSE
+            </span>
+            <div className="flex items-baseline gap-2 mt-1.5">
+              <span className="text-lg font-black text-[#c8ef70]">65,536</span>
+              <span className="font-mono text-[10px] text-[#789a84]">Tokens / Res</span>
+            </div>
+            <p className="text-[11px] text-[#9dc5aa] mt-1">
+              Batas jawaban hasil generasi penjelasan modul, kuis interaktif, dan jawaban tutor akademik.
+            </p>
+          </div>
+
+          {/* Free Tier Quota & Rate Limit */}
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              RATE LIMIT BUDGET
+            </span>
+            <div className="flex items-baseline gap-2 mt-1.5">
+              <span className="text-lg font-black text-white">15 RPM</span>
+              <span className="font-mono text-[10px] text-[#789a84]">/ 1,500 RPD</span>
+            </div>
+            <p className="text-[11px] text-[#9dc5aa] mt-1">
+              Batas 15 request per menit dan 1.500 per hari dengan proteksi 429 backoff otomatis.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* ── Middle Grid: Top Campuses Leaderboard & Recent Users ── */}
       <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
