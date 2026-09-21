@@ -498,6 +498,7 @@ export default async function DashboardPage() {
           {[
             {
               id: "jadwal",
+              tourId: "action-card-jadwal",
               label: "Jadwal",
               sub: "Kelas",
               href: `/jadwal${semesterFilter}`,
@@ -511,6 +512,7 @@ export default async function DashboardPage() {
             },
             {
               id: "catat",
+              tourId: "action-card-catat",
               label: "Catat",
               sub: "+ Baru",
               href: "/kegiatan?new=1",
@@ -523,6 +525,7 @@ export default async function DashboardPage() {
             },
             {
               id: "kegiatan",
+              tourId: "action-card-kegiatan",
               label: "Kegiatan",
               sub: "Tugas",
               href: `/kegiatan${semesterFilter}`,
@@ -536,6 +539,7 @@ export default async function DashboardPage() {
             },
             {
               id: "modul",
+              tourId: "action-card-modul",
               label: "Modul",
               sub: "Materi",
               href: `/modul${semesterFilter}`,
@@ -548,6 +552,7 @@ export default async function DashboardPage() {
             },
             {
               id: "organisasi",
+              tourId: "action-card-organisasi",
               label: "Organisasi",
               sub: "Ormawa",
               href: "/organisasi",
@@ -561,6 +566,7 @@ export default async function DashboardPage() {
             },
             {
               id: "semester",
+              tourId: "action-card-semester",
               label: "Semester",
               sub: "Kurikulum",
               href: "/semester",
@@ -573,6 +579,7 @@ export default async function DashboardPage() {
             },
             {
               id: "portofolio",
+              tourId: "action-card-portofolio",
               label: "Portofolio",
               sub: "Karier & CV",
               href: `/rekap/portfolio${semesterFilter}`,
@@ -585,6 +592,7 @@ export default async function DashboardPage() {
             },
             {
               id: "rekap",
+              tourId: "action-card-rekap",
               label: "Rekap AI",
               sub: "Analitik",
               href: `/rekap${semesterFilter}`,
@@ -601,6 +609,7 @@ export default async function DashboardPage() {
               key={item.id}
               href={item.href}
               prefetch={true}
+              data-tour={item.tourId}
               className="group flex flex-col items-center justify-center rounded-2xl border border-[#e2eae3] bg-[#fafbfa] p-2.5 sm:p-3 text-center transition-all duration-200 hover:bg-white hover:border-[#0f6849]/40 hover:shadow-xs active:scale-95"
             >
               <div className="relative grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl bg-white border border-[#d6e1d8] text-[#0f6849] transition-all duration-200 group-hover:bg-[#103626] group-hover:text-[#c8ef70] group-hover:border-[#103626] shadow-2xs">

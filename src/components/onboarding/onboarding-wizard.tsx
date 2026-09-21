@@ -10,29 +10,29 @@ import { SpotlightTour, TourStep } from "./spotlight-tour";
 
 const TOUR_STEPS: TourStep[] = [
   {
-    targetSelector: '[data-tour="mob-nav-jadwal"], [data-tour="nav-jadwal"]',
+    targetSelector: '[data-tour="action-card-jadwal"], [data-tour="mob-nav-jadwal"], [data-tour="nav-jadwal"]',
     title: "Jadwal Kuliah Mingguan 📅",
-    description: "Atur jadwal kuliah, ruangan, dosen, link Zoom, dan materi kelas di sini. Mata kuliah yang kamu isi di sini otomatis bisa dikaitkan ke tugas kuliah!",
+    description: "Atur jadwal kuliah, ruangan, dosen, link kelas, dan materi mingguan di sini. Mata kuliah yang kamu atur akan terhubung langsung ke tugasmu!",
   },
   {
-    targetSelector: '[data-tour="hero-add-kegiatan"], [data-tour="mob-nav-kegiatan"], [data-tour="nav-kegiatan"]',
-    title: "Catat Tugas & Deadline 📝",
-    description: "Klik tombol ini kapan saja untuk mencatat tugas, reminder ujian, atau agenda kegiatan kampus lainnya agar tidak terlewat.",
+    targetSelector: '[data-tour="action-card-catat"], [data-tour="hero-add-kegiatan"], [data-tour="mob-nav-kegiatan"]',
+    title: "Pusat Catat Tugas & Agenda 📝",
+    description: "Klik tombol cepat ini untuk mencatat tugas baru, deadline ujian, hingga agenda kampus penting agar tidak terlewat.",
   },
   {
-    targetSelector: '[data-tour="mob-nav-modul"], [data-tour="nav-modul"]',
-    title: "Modul & Catatan Matkul 📂",
-    description: "Unggah materi kuliah, rangkum otomatis, atau gunakan Tanya AI & kuis interaktif untuk belajar lebih cepat.",
+    targetSelector: '[data-tour="action-card-modul"], [data-tour="mob-nav-modul"], [data-tour="nav-modul"]',
+    title: "Modul & Catatan AI 📂",
+    description: "Unggah modul PDF materi kuliah, rangkum otomatis dalam hitungan detik, atau buat kuis interaktif dengan AI!",
   },
   {
-    targetSelector: '[data-tour="mob-nav-rekap"], [data-tour="nav-rekap"]',
-    title: "Rekap & Portofolio CV 🏆",
-    description: "Kegiatan organisasi, lomba, dan kepanitiaanmu otomatis dirangkum jadi portofolio siap ekspor ke CV!",
+    targetSelector: '[data-tour="action-card-organisasi"], [data-tour="action-organisasi"], [data-tour="nav-organisasi"]',
+    title: "Organisasi & Proker Kampus 🏢",
+    description: "Kelola jabatan kepengurusan, pantau program kerja, dan koordinasi divisi organisasi kampusmu di satu wadah.",
   },
   {
-    targetSelector: '[data-tour="action-organisasi"], [data-tour="nav-organisasi"], [data-tour="mobile-menu-trigger"]',
-    title: "Organisasi & Proker 🏢",
-    description: "Akses ruang organisasi untuk mengelola jabatan kepengurusan, memantau program kerja, dan tim divisimu.",
+    targetSelector: '[data-tour="action-card-rekap"], [data-tour="action-card-portofolio"], [data-tour="mob-nav-rekap"]',
+    title: "Rekap AI & Portofolio Karier 🏆",
+    description: "Pantau analitik produktivitas belajar serta ekspor seluruh keikutsertaan organisasi dan prestasimu jadi CV portofolio instan!",
   },
 ];
 
@@ -169,7 +169,7 @@ export function OnboardingWizard({
 
               <form onSubmit={handleSemesterSubmit} className="mt-5 space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-[#374151]">
+                  <label className="block text-xs font-bold text-[#111827]">
                     Nama Semester <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -178,16 +178,16 @@ export function OnboardingWizard({
                     value={namaSemester}
                     onChange={(e) => setNamaSemester(e.target.value)}
                     placeholder="Contoh: Semester 1 (2026/2027)"
-                    className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3.5 py-2.5 text-sm font-semibold outline-none focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/10"
+                    className="mt-1.5 w-full rounded-xl border-2 border-[#94a3b8] bg-[#f8fafc] px-3.5 py-2.5 text-sm font-bold text-[#0f172a] placeholder:text-[#64748b] placeholder:font-normal outline-none focus:border-[#0f6849] focus:bg-white focus:ring-2 focus:ring-[#0f6849]/15 shadow-2xs transition"
                   />
-                  <p className="mt-1 text-[11px] text-[var(--muted)]">
+                  <p className="mt-1 text-[11px] font-medium text-[#475569]">
                     Bisa diubah kapan saja di menu Semester.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-[#374151]">
+                    <label className="block text-xs font-bold text-[#111827]">
                       Tanggal Mulai
                     </label>
                     <input
@@ -195,11 +195,11 @@ export function OnboardingWizard({
                       type="date"
                       value={tanggalMulai}
                       onChange={(e) => setTanggalMulai(e.target.value)}
-                      className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3 py-2 text-xs font-medium outline-none focus:border-[var(--brand)]"
+                      className="mt-1.5 w-full rounded-xl border-2 border-[#94a3b8] bg-[#f8fafc] px-3 py-2 text-xs font-bold text-[#0f172a] outline-none focus:border-[#0f6849] focus:bg-white shadow-2xs transition"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-[#374151]">
+                    <label className="block text-xs font-bold text-[#111827]">
                       Perkiraan Selesai
                     </label>
                     <input
@@ -207,23 +207,23 @@ export function OnboardingWizard({
                       type="date"
                       value={tanggalSelesai}
                       onChange={(e) => setTanggalSelesai(e.target.value)}
-                      className="mt-1.5 w-full rounded-xl border border-[var(--line)] px-3 py-2 text-xs font-medium outline-none focus:border-[var(--brand)]"
+                      className="mt-1.5 w-full rounded-xl border-2 border-[#94a3b8] bg-[#f8fafc] px-3 py-2 text-xs font-bold text-[#0f172a] outline-none focus:border-[#0f6849] focus:bg-white shadow-2xs transition"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center justify-between gap-3 pt-3 border-t border-[var(--line)]">
+                <div className="mt-6 flex items-center justify-between gap-3 pt-3 border-t border-[#e2e8f0]">
                   <button
                     type="button"
                     onClick={handleDismissSetup}
-                    className="text-xs font-bold text-[var(--muted)] hover:text-black transition"
+                    className="text-xs font-bold text-[#64748b] hover:text-[#0f172a] transition"
                   >
                     Atur Nanti Saja
                   </button>
 
                   <button
                     disabled={submitting}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-[#1f6a48]/20 hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#0f6849] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-[#0f6849]/20 hover:bg-[#0a432f] transition active:scale-95 disabled:opacity-50 cursor-pointer"
                   >
                     {submitting ? "Menyimpan..." : "Simpan & Lanjut"}
                     <ChevronRight size={15} />
