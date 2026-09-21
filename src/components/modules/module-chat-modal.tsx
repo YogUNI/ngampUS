@@ -118,7 +118,19 @@ export function ModuleChatModal({
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Gagal mengirim pesan.";
-      showToast(msg, "error");
+      
+      // If error is about killswitch or temporary pause, show graceful bubble message
+      if (msg.includes("diistirahatkan sejenak") || msg.includes("optimalisasi kuota")) {
+        setMessages((prev) => [
+          ...prev, 
+          { 
+            role: "assistant", 
+            content: "Halo! 🍃 Layanan AI saat ini sedang diistirahatkan sejenak oleh kampus untuk pemeliharaan kuota dan server. Jangan khawatir, catatan dan modulmu tetap tersimpan aman. Silakan coba kembali beberapa saat lagi ya!" 
+          }
+        ]);
+      } else {
+        showToast(msg, "error");
+      }
     } finally {
       setLoading(false);
     }

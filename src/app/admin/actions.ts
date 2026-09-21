@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { logAdminActivity } from "@/lib/audit-logger";
 
 async function requireSuperadmin() {
   const supabase = await createClient();
@@ -33,6 +34,7 @@ const announcementSchema = z.object({
   tipe: z.enum(["info", "update", "warning", "maintenance"]).default("info"),
   target_university: z.string().trim().max(150).nullable().optional(),
   expires_at: z.string().nullable().optional(),
+  is_emergency_sticky: z.boolean().default(false),
   tautan: z
     .string()
     .trim()
@@ -56,6 +58,7 @@ export async function createBroadcastAnnouncement(formData: FormData) {
     tipe: formData.get("tipe") || "info",
     target_university: targetUnivRaw ? String(targetUnivRaw).trim() || null : null,
     expires_at: expiresAtRaw ? new Date(String(expiresAtRaw)).toISOString() : null,
+    is_emergency_sticky: formData.get("is_emergency_sticky") === "true" || formData.get("is_emergency_sticky") === "on",
     tautan: formData.get("tautan") || null,
     is_active: formData.get("is_active") === "true" || formData.get("is_active") === "on",
   });
@@ -69,17 +72,14 @@ export async function createBroadcastAnnouncement(formData: FormData) {
     author_id: user.id,
   };
 
-  if (validated.target_university) {
-    payload.target_university = validated.target_university;
-  }
-  if (validated.expires_at) {
-    payload.expires_at = validated.expires_at;
-  }
+  if (validated.target_university !== undefined) payload.target_university = validated.target_university;
+  if (validated.expires_at !== undefined) payload.expires_at = validated.expires_at;
+  if (validated.is_emergency_sticky !== undefined) payload.is_emergency_sticky = validated.is_emergency_sticky;
 
   const { error } = await supabase.from("broadcast_announcements").insert(payload);
 
   if (error) {
-    // If error is about missing column (target_university/expires_at), retry with base payload
+    // If error is about missing column (target_university/expires_at/is_emergency_sticky), retry with base payload
     if (error.message?.includes("column") || error.code === "PGRST204") {
       const { error: retryError } = await supabase.from("broadcast_announcements").insert({
         judul: validated.judul,
@@ -94,6 +94,13 @@ export async function createBroadcastAnnouncement(formData: FormData) {
       throw new Error(error.message || "Gagal membuat pengumuman sistem.");
     }
   }
+
+  // Record Audit Trail
+  await logAdminActivity({
+    actionType: "CREATE_ANNOUNCEMENT",
+    description: `Membuat broadcast pengumuman "${validated.judul}" (Tipe: ${validated.tipe}${validated.target_university ? `, Target: ${validated.target_university}` : ", Semua Mahasiswa"})`,
+    details: { judul: validated.judul, tipe: validated.tipe, target: validated.target_university, sticky: validated.is_emergency_sticky },
+  });
 
   revalidatePath("/admin/announcements");
   revalidatePath("/dashboard");
@@ -117,6 +124,13 @@ export async function updateSystemSetting(key: string, value: boolean): Promise<
     if (error) {
       return { success: false, error: error.message || `Gagal memperbarui pengaturan ${key}.` };
     }
+
+    // Record Audit Trail
+    await logAdminActivity({
+      actionType: "TOGGLE_SYSTEM_SETTING",
+      description: `Mengubah saklar sistem "${key}" menjadi: ${value ? "AKTIF (ON)" : "NONAKTIF (OFF)"}`,
+      details: { setting_key: key, next_value: value },
+    });
 
     revalidatePath("/admin/system-controls");
     revalidatePath("/admin");
@@ -145,6 +159,13 @@ export async function toggleAnnouncementStatus(id: string, currentStatus: boolea
     throw new Error(error.message || "Gagal mengubah status pengumuman.");
   }
 
+  // Record Audit Trail
+  await logAdminActivity({
+    actionType: "TOGGLE_ANNOUNCEMENT",
+    description: `Mengubah status broadcast ID ${id} menjadi: ${!currentStatus ? "AKTIF" : "NONAKTIF"}`,
+    details: { announcement_id: id, is_active: !currentStatus },
+  });
+
   revalidatePath("/admin/announcements");
   revalidatePath("/dashboard");
 }
@@ -160,6 +181,13 @@ export async function deleteBroadcastAnnouncement(id: string) {
   if (error) {
     throw new Error(error.message || "Gagal menghapus pengumuman.");
   }
+
+  // Record Audit Trail
+  await logAdminActivity({
+    actionType: "DELETE_ANNOUNCEMENT",
+    description: `Menghapus broadcast pengumuman ID ${id}`,
+    details: { announcement_id: id },
+  });
 
   revalidatePath("/admin/announcements");
   revalidatePath("/dashboard");
@@ -181,8 +209,15 @@ export async function updateUserRole(targetUserId: string, newRole: "student" | 
     .eq("id", targetUserId);
 
   if (error) {
-    throw new Error(error.message || "Gagal memperbarui role akun mahasiswa.");
+    throw new Error(error.message || "Gagal memperbarui role akun.");
   }
+
+  // Record Audit Trail
+  await logAdminActivity({
+    actionType: "UPDATE_USER_ROLE",
+    description: `Mengubah role akun ID ${targetUserId} menjadi "${newRole}"`,
+    details: { target_user_id: targetUserId, new_role: newRole },
+  });
 
   revalidatePath("/admin/users");
   revalidatePath("/admin");

@@ -7,7 +7,8 @@ import {
   Users, 
   Megaphone, 
   Cpu,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Activity
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AdminLogoutButton } from "./admin-logout-button";
@@ -102,6 +103,13 @@ export default async function AdminLayout({
             >
               <SlidersHorizontal size={15} className="text-[#c8ef70]" />
               <span>Controls</span>
+            </Link>
+            <Link
+              href="/admin/audit-logs"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <Activity size={15} className="text-[#c8ef70]" />
+              <span>Audit Log</span>
             </Link>
           </nav>
 

@@ -37,31 +37,40 @@ export function AdminUserTableClient({ initialUsers }: { initialUsers: UserProfi
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
   const [activeUserId, setActiveUserId] = useState<string | null>(null);
 
-  const handleRoleToggle = (user: UserProfile) => {
-    const nextRole = user.role === "superadmin" ? "student" : "superadmin";
-    const confirmMessage =
-      nextRole === "superadmin"
-        ? `Jadikan ${user.full_name || user.email} sebagai Superadmin? User ini akan mendapatkan akses kontrol penuh.`
-        : `Turunkan status ${user.full_name || user.email} kembali menjadi Mahasiswa (student)?`;
+  // Custom Modal Confirmation State
+  const [roleModal, setRoleModal] = useState<{
+    isOpen: boolean;
+    user: UserProfile;
+    nextRole: "student" | "superadmin";
+  } | null>(null);
 
-    if (!window.confirm(confirmMessage)) return;
-
+  const executeRoleChange = (user: UserProfile, nextRole: "student" | "superadmin") => {
     setActionError(null);
     setActionSuccess(null);
     setActiveUserId(user.id);
 
     startTransition(async () => {
       try {
-        await updateUserRole(user.id, nextRole as "student" | "superadmin");
+        await updateUserRole(user.id, nextRole);
         setUsers((prev) =>
           prev.map((u) => (u.id === user.id ? { ...u, role: nextRole } : u))
         );
-        setActionSuccess(`Role untuk ${user.full_name || user.email} berhasil diubah ke ${nextRole}.`);
+        setActionSuccess(`Role untuk ${user.full_name || user.email} berhasil diubah ke ${nextRole.toUpperCase()}.`);
       } catch (err: any) {
         setActionError(err.message || "Gagal mengubah role user.");
       } finally {
         setActiveUserId(null);
+        setRoleModal(null);
       }
+    });
+  };
+
+  const handleRoleToggle = (user: UserProfile) => {
+    const nextRole = user.role === "superadmin" ? "student" : "superadmin";
+    setRoleModal({
+      isOpen: true,
+      user,
+      nextRole,
     });
   };
 
@@ -242,6 +251,102 @@ export function AdminUserTableClient({ initialUsers }: { initialUsers: UserProfi
           </table>
         </div>
       </div>
+
+      {/* ── Custom Animated Role Confirmation Modal ── */}
+      {roleModal && roleModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div 
+            className="relative w-full max-w-md rounded-3xl border border-white/15 bg-[#091e14] p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.7)] animate-in zoom-in-95 duration-200 space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Accent Warning Bar */}
+            <div 
+              className={`absolute top-0 inset-x-8 h-1 rounded-full ${
+                roleModal.nextRole === "superadmin"
+                  ? "bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent"
+                  : "bg-gradient-to-r from-transparent via-amber-500 to-transparent"
+              }`} 
+            />
+
+            <div className="flex items-start gap-4">
+              <div 
+                className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border ${
+                  roleModal.nextRole === "superadmin"
+                    ? "bg-[#c8ef70]/15 text-[#c8ef70] border-[#c8ef70]/30"
+                    : "bg-amber-500/15 text-amber-400 border-amber-500/30"
+                }`}
+              >
+                {roleModal.nextRole === "superadmin" ? (
+                  <ShieldAlert size={24} className="animate-pulse" />
+                ) : (
+                  <GraduationCap size={24} />
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <span className="font-mono text-[10px] font-black uppercase tracking-wider text-[#c8ef70]">
+                  MANAJEMEN HAK AKSES SISTEM
+                </span>
+                <h3 className="font-display text-lg sm:text-xl font-black text-white">
+                  {roleModal.nextRole === "superadmin"
+                    ? "Promosikan ke Superadmin?"
+                    : "Turunkan ke Mahasiswa?"}
+                </h3>
+              </div>
+            </div>
+
+            <div className="text-xs text-[#9dc5aa] space-y-2 leading-relaxed">
+              <p>
+                Anda akan mengubah role akun milik:{" "}
+                <strong className="text-white">{roleModal.user.full_name || roleModal.user.email}</strong>.
+              </p>
+              {roleModal.nextRole === "superadmin" ? (
+                <div className="rounded-2xl border border-[#c8ef70]/20 bg-[#c8ef70]/5 p-3 text-[11px] text-[#b4d8c1] space-y-1">
+                  <span className="font-bold text-[#c8ef70]">⚠️ Peringatan Akses Root:</span>
+                  <p>User ini akan memiliki akses penuh ke pusat kontrol sistem, AI gateway, broadcast pengumuman, dan data seluruh mahasiswa.</p>
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-3 text-[11px] text-amber-200 space-y-1">
+                  <span className="font-bold text-amber-300">ℹ️ Pencabutan Hak Akses:</span>
+                  <p>User ini akan kehilangan seluruh akses ke console Superadmin dan hanya dapat mengakses dashboard mahasiswa biasa.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => setRoleModal(null)}
+                disabled={isPending}
+                className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50 cursor-pointer"
+              >
+                Batalkan
+              </button>
+
+              <button
+                type="button"
+                onClick={() => executeRoleChange(roleModal.user, roleModal.nextRole)}
+                disabled={isPending}
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black transition active:scale-95 cursor-pointer shadow-lg disabled:opacity-50 ${
+                  roleModal.nextRole === "superadmin"
+                    ? "bg-[#c8ef70] text-[#103626] hover:bg-[#d8faa1] shadow-[#c8ef70]/20"
+                    : "bg-amber-500 text-[#10261b] hover:bg-amber-400 shadow-amber-500/20"
+                }`}
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    <span>Mengeksekusi...</span>
+                  </>
+                ) : (
+                  <span>Konfirmasi & Terapkan</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -33,6 +33,7 @@ type Announcement = {
   expires_at?: string | null;
   tautan: string | null;
   is_active: boolean;
+  is_emergency_sticky?: boolean;
   created_at: string;
 };
 
@@ -179,6 +180,11 @@ export function AnnouncementClientManager({
                         <IconComponent size={12} />
                         {a.tipe}
                       </span>
+                      {a.is_emergency_sticky && (
+                        <span className="rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide">
+                          🚨 Sticky Darurat
+                        </span>
+                      )}
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                           a.is_active
@@ -371,17 +377,36 @@ export function AnnouncementClientManager({
                 />
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
-                <input
-                  type="checkbox"
-                  id="is_active"
-                  name="is_active"
-                  defaultChecked
-                  className="h-4 w-4 rounded accent-[#c8ef70]"
-                />
-                <label htmlFor="is_active" className="text-xs font-bold text-white cursor-pointer">
-                  Langsung publikasikan sekarang (Status Aktif)
-                </label>
+              <div className="space-y-2 pt-1 border-t border-white/5">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="is_active"
+                    name="is_active"
+                    defaultChecked
+                    className="h-4 w-4 rounded accent-[#c8ef70]"
+                  />
+                  <label htmlFor="is_active" className="text-xs font-bold text-white cursor-pointer">
+                    Langsung publikasikan sekarang (Status Aktif)
+                  </label>
+                </div>
+
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="is_emergency_sticky"
+                    name="is_emergency_sticky"
+                    className="h-4 w-4 rounded accent-rose-500 mt-0.5"
+                  />
+                  <div>
+                    <label htmlFor="is_emergency_sticky" className="text-xs font-bold text-rose-300 cursor-pointer flex items-center gap-1">
+                      <span>🚨 Jadikan Banner Darurat Menempel (Emergency Sticky)</span>
+                    </label>
+                    <p className="text-[10px] text-[#7da88c] mt-0.5">
+                      Banner akan terus menempel di bagian paling atas layar dan tidak dapat ditutup (un-dismissable) oleh mahasiswa sampai statusnya dinonaktifkan superadmin.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
