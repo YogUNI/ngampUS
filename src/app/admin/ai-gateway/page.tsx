@@ -12,7 +12,12 @@ import {
   ArrowRight,
   Server,
   RefreshCw,
-  Sliders
+  Sliders,
+  Radio,
+  Workflow,
+  Wifi,
+  CornerDownRight,
+  Database
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -67,37 +72,42 @@ export default async function AdminAiGatewayPage() {
   const liveModels = await getLiveGeminiModels();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* ── Top Header Banner ── */}
       <div className="rounded-3xl border border-[#1b4332] bg-gradient-to-r from-[#0c2419] via-[#0f2d20] to-[#071710] p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        {/* Subtle Cyber Grid Texture */}
         <div 
-          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: "linear-gradient(#c8ef70 1px, transparent 1px), linear-gradient(90deg, #c8ef70 1px, transparent 1px)",
             backgroundSize: "28px 28px"
           }}
         />
 
+        {/* Ambient Glows */}
+        <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[#c8ef70]/10 blur-3xl" />
+        <div className="pointer-events-none absolute -left-10 -bottom-10 h-48 w-48 rounded-full bg-[#22c55e]/10 blur-3xl" />
+
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="font-mono text-[11px] font-black uppercase tracking-widest text-[#c8ef70]">
-                [AI ENGINE // ROUTER & TOKEN METRICS]
+                [AI ENGINE // REAL-TIME TOKEN ROUTER & TELEMETRY]
               </span>
-              <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-ping" />
+              <span className="h-2 w-2 rounded-full bg-[#22c55e] animate-ping" />
             </div>
             <h1 className="font-display mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
               AI Engine & Token Quota Gateway
             </h1>
             <p className="mt-1.5 text-xs sm:text-sm text-[#b3d3bd] max-w-2xl leading-relaxed">
-              Pemantau real-time kapasitas token, router model, status fallback, dan kuota API Google Gemini yang mentenagai fitur cerdas ngampUS.
+              Arsitektur cerdas router token multi-model bergaya 9Router. Memantau kapasitas token, sisa limitasi per menit/hari, dan kabel jalur fallback engine secara visual dan real-time.
             </p>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1.5 rounded-2xl border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-3.5 py-2 text-xs font-bold text-[#c8ef70]">
-              <Activity size={14} className="animate-pulse" />
-              <span>Live Engine Connected</span>
+            <span className="inline-flex items-center gap-2 rounded-2xl border border-[#c8ef70]/30 bg-[#0c2419] px-4 py-2 text-xs font-bold text-[#c8ef70] shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
+              <span>Gateway Online (Google API)</span>
             </span>
           </div>
         </div>
@@ -105,7 +115,8 @@ export default async function AdminAiGatewayPage() {
 
       {/* ── Key Token & Quota Metrics ── */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs">
+        {/* Metric 1 */}
+        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <Gauge size={20} />
@@ -113,21 +124,29 @@ export default async function AdminAiGatewayPage() {
             <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">MAX CONTEXT</span>
           </div>
           <p className="mt-4 text-2xl sm:text-3xl font-black text-white">1,048,576</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Input Tokens / Req</p>
+          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Input Tokens / Req (~750K Kata)</p>
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#1b4332]">
+            <div className="h-full rounded-full bg-[#c8ef70] w-full" />
+          </div>
         </div>
 
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs">
+        {/* Metric 2 */}
+        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <Zap size={20} />
             </span>
-            <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">GENERATION LIMIT</span>
+            <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">MAX GENERATION</span>
           </div>
           <p className="mt-4 text-2xl sm:text-3xl font-black text-[#c8ef70]">65,536</p>
           <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Output Tokens / Res</p>
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#1b4332]">
+            <div className="h-full rounded-full bg-[#c8ef70] w-full" />
+          </div>
         </div>
 
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs">
+        {/* Metric 3 */}
+        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <Layers size={20} />
@@ -135,10 +154,14 @@ export default async function AdminAiGatewayPage() {
             <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">FALLBACK CHAIN</span>
           </div>
           <p className="mt-4 text-2xl sm:text-3xl font-black text-white">4 Model</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Auto Failover Router</p>
+          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Failover Routing Pipeline</p>
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#1b4332]">
+            <div className="h-full rounded-full bg-emerald-400 w-full" />
+          </div>
         </div>
 
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs">
+        {/* Metric 4 */}
+        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <ShieldCheck size={20} />
@@ -146,71 +169,215 @@ export default async function AdminAiGatewayPage() {
             <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">FREE TIER BUDGET</span>
           </div>
           <p className="mt-4 text-2xl sm:text-3xl font-black text-white">15 RPM</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">1,500 Requests / Day</p>
+          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">1,500 Requests / Hari</p>
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#1b4332]">
+            <div className="h-full rounded-full bg-emerald-400 w-full" />
+          </div>
         </div>
       </div>
 
-      {/* ── Active Router Pipeline (9Router Architecture Style) ── */}
-      <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 sm:p-7 shadow-xs">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <div className="flex items-center gap-2">
-            <Sliders size={18} className="text-[#c8ef70]" />
-            <h2 className="font-display text-base sm:text-lg font-black text-white">
-              Model Routing & Multi-Engine Pipeline
-            </h2>
+      {/* ── VISUAL 9ROUTER CIRCUIT & PIPELINE CANVAS (DENGAN KABEL ELEKTRONIK) ── */}
+      <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/95 p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5">
+          <div>
+            <div className="flex items-center gap-2">
+              <Workflow size={18} className="text-[#c8ef70]" />
+              <h2 className="font-display text-lg sm:text-xl font-black text-white">
+                Interactive 9Router Circuit & Fallback Cable Topology
+              </h2>
+            </div>
+            <p className="text-xs text-[#9dc5aa] mt-1">
+              Topologi kabel jalur otomatis pengalihan trafik (Smart Failover) saat batas token atau kuota RPM tercapai.
+            </p>
           </div>
-          <span className="font-mono text-[10px] text-[#c8ef70] font-bold">ROUTER STATUS: OPTIMAL</span>
+          <span className="font-mono text-[10px] text-[#c8ef70] font-black tracking-widest uppercase bg-[#1b4332] px-3 py-1 rounded-full border border-[#c8ef70]/30 self-start sm:self-auto">
+            ⚡ CIRCUIT ACTIVE
+          </span>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="rounded-2xl border border-[#c8ef70]/40 bg-[#071710] p-4 relative">
-            <span className="absolute top-3 right-3 rounded-full bg-[#c8ef70] px-2 py-0.5 text-[9px] font-black text-[#103626]">
-              PRIORITAS #1
-            </span>
-            <span className="font-mono text-[10px] font-bold text-[#789a84]">TIER 1 (PRIMARY)</span>
-            <h3 className="text-sm font-black text-white mt-1">gemini-3.7-flash</h3>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Model generasi terbaru dengan penalaran reasoning super cepat untuk tutor dan modul.
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2 text-[10px] font-mono text-[#789a84]">
-              <span>Context: 1M Tokens</span>
-              <span className="text-emerald-400 font-bold">Primary</span>
+        {/* ── The 9Router Visual Flow with Connected Nodes & Cables ── */}
+        <div className="mt-8 space-y-6">
+          {/* Top Entry Ingress: Mahasiswa Request */}
+          <div className="flex justify-center">
+            <div className="flex items-center gap-3 rounded-2xl border border-[#c8ef70]/50 bg-[#071710] px-5 py-3 shadow-[0_0_20px_rgba(200,239,112,0.15)]">
+              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black">
+                <Bot size={18} />
+              </span>
+              <div>
+                <span className="font-mono text-[9px] font-black uppercase tracking-wider text-[#c8ef70]">
+                  INGRESS GATEWAY // CLIENT REQUEST
+                </span>
+                <p className="text-xs font-bold text-white">
+                  Tutor Mahasiswa, Ringkasan Modul & AI Chatbot
+                </p>
+              </div>
+              <div className="flex items-center gap-1 pl-2">
+                <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-ping" />
+              </div>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#071710] p-4 relative">
-            <span className="font-mono text-[10px] font-bold text-[#789a84]">TIER 2 (FALLBACK)</span>
-            <h3 className="text-sm font-black text-white mt-1">gemini-3.5-flash</h3>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Jalur cadangan pertama jika kuota permintaan per menit model 3.7 mengalami antrean tinggi.
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2 text-[10px] font-mono text-[#789a84]">
-              <span>Context: 1M Tokens</span>
-              <span className="text-[#b4d8c1]">Standby</span>
+          {/* Vertical Bus Cable */}
+          <div className="relative flex justify-center h-8">
+            <div className="w-1 bg-gradient-to-b from-[#c8ef70] via-[#22c55e] to-[#20553c] relative shadow-[0_0_10px_rgba(200,239,112,0.5)]">
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-2.5 rounded-full bg-[#c8ef70] animate-pulse" />
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#071710] p-4 relative">
-            <span className="font-mono text-[10px] font-bold text-[#789a84]">TIER 3 (LITE ENGINE)</span>
-            <h3 className="text-sm font-black text-white mt-1">gemini-3.1-flash-lite</h3>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Optimalisasi latensi paling rendah untuk tugas pencarian cepat dan perangkum teks pendek.
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2 text-[10px] font-mono text-[#789a84]">
-              <span>Context: 1M Tokens</span>
-              <span className="text-[#b4d8c1]">Standby</span>
+          {/* Horizontal Bus Distribution Cable */}
+          <div className="relative hidden md:block">
+            <div className="mx-auto w-[76%] h-1 bg-[#20553c] relative">
+              {/* Cable Pulses */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent opacity-80 animate-pulse" />
+              {/* Dropdown connectors to each tier */}
+              <div className="absolute left-[12%] -bottom-4 w-1 h-4 bg-[#20553c]" />
+              <div className="absolute left-[38%] -bottom-4 w-1 h-4 bg-[#20553c]" />
+              <div className="absolute left-[62%] -bottom-4 w-1 h-4 bg-[#20553c]" />
+              <div className="absolute left-[88%] -bottom-4 w-1 h-4 bg-[#20553c]" />
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-[#071710] p-4 relative">
-            <span className="font-mono text-[10px] font-bold text-[#789a84]">TIER 4 (STABLE SAFETY)</span>
-            <h3 className="text-sm font-black text-white mt-1">gemini-3.6-flash</h3>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Model pelindung batas akhir untuk memastikan user tidak pernah menerima pesan error server.
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2 text-[10px] font-mono text-[#789a84]">
-              <span>Context: 1M Tokens</span>
-              <span className="text-[#b4d8c1]">Standby</span>
+          {/* The 4 Model Tiers */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5 pt-2">
+            {/* Tier 1 (Primary) */}
+            <div className="relative rounded-2xl border-2 border-[#c8ef70] bg-[#071710] p-5 shadow-[0_0_25px_rgba(200,239,112,0.15)] flex flex-col justify-between">
+              {/* Glowing Top Pin Cable */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <span className="rounded-full bg-[#c8ef70] px-2.5 py-0.5 text-[9px] font-black text-[#103626] uppercase shadow-sm">
+                  NODE 01 • PRIMARY
+                </span>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="font-mono text-[9px] text-[#c8ef70] font-bold">LATENCY: ~400ms</span>
+                  <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
+                </div>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.7-flash</h3>
+                <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
+                  Engine mutakhir dengan penalaran reasoning paling tajam dan presisi untuk membedah materi kuliah.
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-[11px] font-mono">
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Max Context:</span>
+                  <span className="text-[#c8ef70] font-bold">1,048,576 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Generation:</span>
+                  <span className="text-white font-bold">65,536 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Kabel Status:</span>
+                  <span className="text-emerald-400 font-black">ACTIVE ROUTE</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tier 2 (First Fallback) */}
+            <div className="relative rounded-2xl border border-white/15 bg-[#071710] p-5 flex flex-col justify-between">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <span className="rounded-full bg-[#183929] border border-white/20 px-2.5 py-0.5 text-[9px] font-bold text-[#b4d8c1] uppercase">
+                  NODE 02 • FAILOVER 1
+                </span>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="font-mono text-[9px] text-[#789a84]">STANDBY ROUTE</span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
+                </div>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.5-flash</h3>
+                <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
+                  Kabel penyangga otomatis pertama jika kuota RPM model 3.7 mengalami status 429 / resource exhausted.
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-[11px] font-mono">
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Max Context:</span>
+                  <span className="text-[#b4d8c1]">1,048,576 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Generation:</span>
+                  <span className="text-white">65,536 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Kabel Status:</span>
+                  <span className="text-[#b4d8c1]">Hot Standby</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tier 3 (Lite Engine) */}
+            <div className="relative rounded-2xl border border-white/15 bg-[#071710] p-5 flex flex-col justify-between">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <span className="rounded-full bg-[#183929] border border-white/20 px-2.5 py-0.5 text-[9px] font-bold text-[#b4d8c1] uppercase">
+                  NODE 03 • FAILOVER 2
+                </span>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="font-mono text-[9px] text-[#789a84]">STANDBY ROUTE</span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
+                </div>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.1-flash-lite</h3>
+                <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
+                  Jalur kabel berlatensi ultra-rendah untuk pemrosesan teks cepat dan menghemat kuota token komputasi.
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-[11px] font-mono">
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Max Context:</span>
+                  <span className="text-[#b4d8c1]">1,048,576 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Generation:</span>
+                  <span className="text-white">65,536 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Kabel Status:</span>
+                  <span className="text-[#b4d8c1]">Hot Standby</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tier 4 (Stable Safety) */}
+            <div className="relative rounded-2xl border border-white/15 bg-[#071710] p-5 flex flex-col justify-between">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <span className="rounded-full bg-[#183929] border border-white/20 px-2.5 py-0.5 text-[9px] font-bold text-[#b4d8c1] uppercase">
+                  NODE 04 • FAILOVER 3
+                </span>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="font-mono text-[9px] text-[#789a84]">SAFETY ROUTE</span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
+                </div>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.6-flash</h3>
+                <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
+                  Kabel penahan beban lapis terakhir untuk memastikan mahasiswa tidak pernah gagal mendapatkan respon.
+                </p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-[11px] font-mono">
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Max Context:</span>
+                  <span className="text-[#b4d8c1]">1,048,576 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Generation:</span>
+                  <span className="text-white">65,536 Token</span>
+                </div>
+                <div className="flex justify-between text-[#789a84]">
+                  <span>Kabel Status:</span>
+                  <span className="text-[#b4d8c1]">Ready Backup</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
