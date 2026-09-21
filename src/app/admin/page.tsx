@@ -19,6 +19,7 @@ import {
   Database
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { VisualAnalyticsCharts } from "./visual-analytics-charts";
 
 export const dynamic = "force-dynamic";
 
@@ -44,13 +45,22 @@ export default async function AdminOverviewPage() {
     supabase.from("broadcast_announcements").select("*", { count: "exact", head: true }),
   ]);
 
-  // ── 2. Campus Analytics (Group and count real universities) ──
-  const { data: allCampuses } = await supabase
-    .from("profiles")
-    .select("university");
+  // ── 2. Real Aggregations for Visual Telemetry ──
+  const [
+    { data: allProfilesWithDates },
+    { count: activitiesDone },
+    { count: activitiesInProgress },
+    { count: activitiesTodo },
+  ] = await Promise.all([
+    supabase.from("profiles").select("created_at, university"),
+    supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "selesai"),
+    supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "berlangsung"),
+    supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "belum_mulai"),
+  ]);
 
+  // Campus Analytics (Group and count real universities)
   const campusCountMap: Record<string, number> = {};
-  (allCampuses || []).forEach((p) => {
+  (allProfilesWithDates || []).forEach((p) => {
     const uni = (p.university || "Universitas Belum Diisi").trim();
     campusCountMap[uni] = (campusCountMap[uni] || 0) + 1;
   });
@@ -59,7 +69,35 @@ export default async function AdminOverviewPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
+  const topCampusesFormatted = sortedCampuses.map(([name, count]) => ({
+    name,
+    count,
+    percentage: totalStudents ? Math.round((count / totalStudents) * 100) : 0,
+  }));
+
   const totalDistinctUniversities = Object.keys(campusCountMap).length;
+
+  // Monthly Registration Curve (Last 6 Months)
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  const now = new Date();
+  const last6Months: { month: string; yearMonth: string; users: number }[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = `${monthNames[d.getMonth()]} ${String(d.getFullYear()).slice(-2)}`;
+    last6Months.push({ month: label, yearMonth: key, users: 0 });
+  }
+
+  (allProfilesWithDates || []).forEach((p) => {
+    if (!p.created_at) return;
+    const pDate = new Date(p.created_at);
+    const key = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, "0")}`;
+    const target = last6Months.find((m) => m.yearMonth === key);
+    if (target) {
+      target.users += 1;
+    }
+  });
 
   return (
     <div className="space-y-6">
@@ -150,6 +188,18 @@ export default async function AdminOverviewPage() {
           <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Komitmen & {totalOrganizations ?? 0} Org</p>
         </div>
       </div>
+
+      {/* ── Visual Analytics & Interactive Graphic Deck ── */}
+      <VisualAnalyticsCharts
+        monthlyRegistration={last6Months.map((m) => ({ month: m.month, users: m.users }))}
+        moduleDistribution={[]}
+        activityHealth={{
+          selesai: activitiesDone ?? 0,
+          berlangsung: activitiesInProgress ?? 0,
+          belumMulai: activitiesTodo ?? 0,
+        }}
+        topCampuses={topCampusesFormatted}
+      />
 
       {/* ── Middle Grid: Top Campuses Leaderboard & Recent Users ── */}
       <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">

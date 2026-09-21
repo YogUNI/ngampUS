@@ -59,15 +59,24 @@ export default async function AdminUsersPage({
               [DIRECTORY // STUDENT ACCOUNTS]
             </span>
             <span className="rounded-full bg-[#1b4332] px-2 py-0.5 text-[10px] font-bold text-[#c8ef70]">
-              {users?.length || 0} Akun
+              {users?.length || 0} Akun Terfilter
             </span>
           </div>
           <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black text-white tracking-tight">
             Direktori Mahasiswa
           </h1>
           <p className="mt-1 text-xs text-[#9dc5aa]">
-            Daftar seluruh akun mahasiswa yang terdaftar di platform ngampUS beserta informasi akademik dasarnya.
+            Daftar seluruh akun mahasiswa yang terdaftar di platform ngampUS beserta metadata universitas (tanpa mengakses tugas atau catatan privat).
           </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div className="rounded-2xl border border-white/10 bg-[#0c2419] px-4 py-2 text-right">
+            <span className="block font-mono text-[9px] font-bold text-[#789a84]">KAMPUS TERJANGKAU</span>
+            <span className="font-display text-sm font-black text-[#c8ef70]">
+              {uniqueCampuses.length} Universitas
+            </span>
+          </div>
         </div>
       </div>
 

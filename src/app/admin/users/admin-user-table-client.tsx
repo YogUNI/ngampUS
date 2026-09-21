@@ -12,7 +12,8 @@ import {
   CheckCircle2, 
   AlertCircle,
   Loader2,
-  ChevronDown
+  ChevronDown,
+  Download
 } from "lucide-react";
 import { updateUserRole } from "../actions";
 
@@ -64,6 +65,30 @@ export function AdminUserTableClient({ initialUsers }: { initialUsers: UserProfi
     });
   };
 
+  const handleExportCsv = () => {
+    const headers = ["Nama", "Email", "Universitas", "Program Studi", "NIM", "Angkatan", "No HP", "Role", "Terdaftar Pada"];
+    const rows = users.map((u) => [
+      `"${(u.full_name || "").replace(/"/g, '""')}"`,
+      `"${(u.email || "").replace(/"/g, '""')}"`,
+      `"${(u.university || "").replace(/"/g, '""')}"`,
+      `"${(u.major || "").replace(/"/g, '""')}"`,
+      `"${(u.student_id || "").replace(/"/g, '""')}"`,
+      `"${(u.angkatan || "").replace(/"/g, '""')}"`,
+      `"${(u.phone || "").replace(/"/g, '""')}"`,
+      `"${u.role}"`,
+      `"${new Date(u.created_at).toISOString()}"`,
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `ngampus-mahasiswa-export-${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (users.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-[#183929] bg-[#0c2419]/40 p-12 text-center">
@@ -89,6 +114,21 @@ export function AdminUserTableClient({ initialUsers }: { initialUsers: UserProfi
           <span>{actionError}</span>
         </div>
       )}
+
+      {/* Table Header Bar with CSV Export */}
+      <div className="flex items-center justify-between gap-3 px-1">
+        <div className="text-xs text-[#9dc5aa] font-bold">
+          Menampilkan <span className="text-white font-black">{users.length}</span> akun mahasiswa
+        </div>
+        <button
+          onClick={handleExportCsv}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#0c2419] px-3 py-2 text-xs font-bold text-[#c8ef70] hover:bg-[#143d2b] transition active:scale-95 cursor-pointer shadow-xs"
+          title="Download data mahasiswa terfilter dalam format CSV"
+        >
+          <Download size={14} />
+          <span>Export CSV</span>
+        </button>
+      </div>
 
       {/* Desktop & Tablet Table */}
       <div className="overflow-hidden rounded-2xl border border-[#183929] bg-[#0c2419]/90 shadow-sm">
