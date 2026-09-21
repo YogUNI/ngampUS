@@ -18,7 +18,6 @@ interface UniversityComboboxProps {
   disabled?: boolean;
   className?: string;
   inputClassName?: string;
-  dropdownAlign?: "left" | "right" | "auto";
 }
 
 export function UniversityCombobox({
@@ -54,7 +53,6 @@ export function UniversityCombobox({
   const filteredUniversities = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
     if (!q) {
-      // Show top universities by default
       return (universitiesData as UniversityItem[]).slice(0, 20);
     }
 
@@ -123,7 +121,7 @@ export function UniversityCombobox({
       >
         <span
           title={value || placeholder}
-          className={`truncate ${!value ? "text-[#99a89d] font-normal" : "text-[#10261b] dark:text-[#f0f7f2] font-semibold"}`}
+          className={`truncate ${!value ? "text-[#99a89d] font-normal" : "text-[#10261b] font-semibold"}`}
         >
           {value || placeholder}
         </span>
@@ -132,7 +130,7 @@ export function UniversityCombobox({
             <span
               role="button"
               onClick={handleClear}
-              className="p-0.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-[#8b9d91] hover:text-[#10261b] transition"
+              className="p-0.5 rounded-full hover:bg-black/5 text-[#8b9d91] hover:text-[#10261b] transition"
             >
               <X size={12} />
             </span>
@@ -144,15 +142,18 @@ export function UniversityCombobox({
         </div>
       </div>
 
-      {/* Popover Dropdown - responsive full-bleed width with min 320px to prevent text clipping */}
+      {/* Popover Dropdown - Dedicated Clean High-Contrast Palette */}
       {isOpen && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 w-[min(380px,92vw)] sm:w-[380px] max-w-[calc(100vw-2rem)] flex flex-col overflow-hidden rounded-2xl border border-[#d5dfd6] dark:border-[#22392c] bg-white dark:bg-[#112117] shadow-[0_16px_40px_rgba(16,38,27,0.22)]">
+        <div
+          className="absolute left-0 top-full mt-1.5 z-50 w-[min(380px,92vw)] sm:w-[380px] max-w-[calc(100vw-2rem)] flex flex-col overflow-hidden rounded-2xl border border-[#cbe0d3] bg-[#ffffff] shadow-[0_20px_48px_rgba(16,38,27,0.24)]"
+          style={{ backgroundColor: "#ffffff" }}
+        >
           {/* Search Box Header */}
-          <div className="p-2.5 border-b border-[#eef4f0] dark:border-[#1a3324] bg-[#f8faf8] dark:bg-[#0d1a12]">
+          <div className="p-2.5 border-b border-[#e8f0ea] bg-[#f7faf8]">
             <div className="relative flex items-center">
               <Search
                 size={14}
-                className="absolute left-3 text-[#0f6849] dark:text-[#22c55e] pointer-events-none"
+                className="absolute left-3 text-[#0f6849] pointer-events-none"
               />
               <input
                 ref={inputRef}
@@ -172,25 +173,30 @@ export function UniversityCombobox({
                   }
                 }}
                 placeholder="Cari nama kampus atau singkatan (UI, UMB, UGM)..."
-                className="w-full rounded-xl border border-[#cdddd1] dark:border-[#2b4b37] bg-white dark:bg-[#15271d] py-2 pl-9 pr-8 text-xs font-semibold text-[#10261b] dark:text-white placeholder:text-[#8b9d91] dark:placeholder:text-[#6a8775] outline-none focus:border-[#0f6849] focus:ring-2 focus:ring-[#0f6849]/20"
+                className="w-full rounded-xl border border-[#c4ded0] bg-white py-2 pl-9 pr-8 text-xs font-bold text-[#10261b] placeholder:text-[#8ba294] placeholder:font-medium outline-none focus:border-[#0f6849] focus:ring-2 focus:ring-[#0f6849]/20"
+                style={{
+                  color: "#10261b",
+                  backgroundColor: "#ffffff",
+                  caretColor: "#0f6849",
+                }}
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-2.5 text-[#8b9d91] hover:text-[#10261b] dark:hover:text-white"
+                  className="absolute right-2.5 text-[#768e7f] hover:text-[#10261b] transition"
                 >
-                  <X size={13} />
+                  <X size={14} />
                 </button>
               )}
             </div>
           </div>
 
           {/* List options */}
-          <div className="flex-1 overflow-y-auto p-1.5 space-y-1 max-h-64 divide-y divide-[#f2f6f3] dark:divide-[#182d20]">
+          <div className="flex-1 overflow-y-auto p-1.5 space-y-1 max-h-64 divide-y divide-[#f0f5f2] bg-[#ffffff]">
             {filteredUniversities.length === 0 ? (
               <div className="p-4 text-center">
-                <p className="text-xs text-[#6e8275] dark:text-[#8ea295]">
+                <p className="text-xs text-[#52665a] font-medium">
                   Kampus &quot;{searchTerm}&quot; tidak ada dalam daftar standar.
                 </p>
                 {searchTerm.trim() && (
@@ -217,7 +223,7 @@ export function UniversityCombobox({
                       className={`flex w-full items-center justify-between gap-3 rounded-xl p-2.5 text-left transition cursor-pointer ${
                         isSelected
                           ? "bg-[#0f6849] text-white font-bold shadow-xs"
-                          : "text-[#10261b] dark:text-[#e4efe8] hover:bg-[#ebf6ee] dark:hover:bg-[#192f22]"
+                          : "text-[#10261b] hover:bg-[#ebf6ee]"
                       }`}
                     >
                       <div className="flex items-start gap-2.5 min-w-0 flex-1">
@@ -225,21 +231,23 @@ export function UniversityCombobox({
                           className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg ${
                             isSelected
                               ? "bg-white/20 text-[#c8ef70]"
-                              : "bg-[#eaf5ee] dark:bg-[#162e20] text-[#0f6849] dark:text-[#22c55e]"
+                              : "bg-[#eaf5ee] text-[#0f6849]"
                           }`}
                         >
                           <Building2 size={13} />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <span className="block text-xs font-bold leading-tight break-words">
+                          <span
+                            className={`block text-xs font-bold leading-tight break-words ${
+                              isSelected ? "text-white" : "text-[#10261b]"
+                            }`}
+                          >
                             {univ.name}
                           </span>
                           {(univ.acronym || univ.type || univ.city) && (
                             <div
                               className={`mt-0.5 flex flex-wrap items-center gap-1 text-[10.5px] ${
-                                isSelected
-                                  ? "text-white/80"
-                                  : "text-[#657a6c] dark:text-[#8ea496]"
+                                isSelected ? "text-white/80" : "text-[#587262]"
                               }`}
                             >
                               {univ.acronym && (
@@ -270,13 +278,13 @@ export function UniversityCombobox({
                   );
                 })}
 
-                {/* Optional Fallback if user wants custom name even if list has matches */}
+                {/* Custom fallback entry */}
                 {searchTerm.trim() && !isCustomTermExactMatch && (
                   <div className="pt-1.5">
                     <button
                       type="button"
                       onClick={handleCustomSubmit}
-                      className="flex w-full items-center gap-2 rounded-xl p-2 text-xs text-[#0f6849] dark:text-[#22c55e] hover:bg-[#eaf5ee] dark:hover:bg-[#192f22] transition cursor-pointer font-bold"
+                      className="flex w-full items-center gap-2 rounded-xl p-2 text-xs text-[#0f6849] hover:bg-[#eaf5ee] transition cursor-pointer font-bold"
                     >
                       <Plus size={14} className="shrink-0" />
                       <span className="truncate">
