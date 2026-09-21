@@ -232,6 +232,13 @@ export default async function AdminOverviewPage() {
               <Zap size={14} className="text-[#c8ef70]" />
               <span>Multi-Model Fallback Active</span>
             </span>
+            <Link
+              href="/admin/ai-gateway"
+              className="inline-flex items-center gap-1 rounded-xl bg-[#1b4332] px-3 py-1.5 text-xs font-bold text-[#c8ef70] hover:bg-[#235841] transition"
+            >
+              <span>Router Gateway</span>
+              <ArrowRight size={13} />
+            </Link>
           </div>
         </div>
 

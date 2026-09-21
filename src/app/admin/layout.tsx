@@ -10,7 +10,8 @@ import {
   ExternalLink,
   ShieldCheck,
   Server,
-  Shield
+  Shield,
+  Cpu
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AdminLogoutButton } from "./admin-logout-button";
@@ -95,6 +96,13 @@ export default async function AdminLayout({
             >
               <Users size={15} className="text-[#c8ef70]" />
               <span>Mahasiswa</span>
+            </Link>
+            <Link
+              href="/admin/ai-gateway"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <Cpu size={15} className="text-[#c8ef70]" />
+              <span>AI Engine</span>
             </Link>
             <Link
               href="/admin/announcements"
