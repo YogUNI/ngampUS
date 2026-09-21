@@ -99,29 +99,35 @@ export async function createBroadcastAnnouncement(formData: FormData) {
   revalidatePath("/dashboard");
 }
 
-export async function updateSystemSetting(key: string, value: boolean) {
-  const { supabase, user } = await requireSuperadmin();
+export async function updateSystemSetting(key: string, value: boolean): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase, user } = await requireSuperadmin();
 
-  // Upsert into system_settings table
-  const { error } = await supabase.from("system_settings").upsert(
-    {
-      key,
-      value,
-      updated_at: new Date().toISOString(),
-      updated_by_email: user.email,
-    },
-    { onConflict: "key" }
-  );
+    // Upsert into system_settings table
+    const { error } = await supabase.from("system_settings").upsert(
+      {
+        key,
+        value,
+        updated_at: new Date().toISOString(),
+        updated_by_email: user.email,
+      },
+      { onConflict: "key" }
+    );
 
-  if (error) {
-    throw new Error(error.message || `Gagal memperbarui pengaturan ${key}.`);
+    if (error) {
+      return { success: false, error: error.message || `Gagal memperbarui pengaturan ${key}.` };
+    }
+
+    revalidatePath("/admin/system-controls");
+    revalidatePath("/admin");
+    revalidatePath("/dashboard");
+    revalidatePath("/login");
+    revalidatePath("/register");
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || `Terjadi kesalahan saat memperbarui ${key}.` };
   }
-
-  revalidatePath("/admin/system-controls");
-  revalidatePath("/admin");
-  revalidatePath("/dashboard");
-  revalidatePath("/login");
-  revalidatePath("/register");
 }
 
 export async function toggleAnnouncementStatus(id: string, currentStatus: boolean) {

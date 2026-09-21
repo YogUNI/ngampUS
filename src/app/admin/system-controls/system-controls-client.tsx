@@ -44,7 +44,15 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
 
     startTransition(async () => {
       try {
-        await updateSystemSetting(key, nextValue);
+        const res = await updateSystemSetting(key, nextValue);
+        if (!res.success) {
+          setFeedback({
+            type: "error",
+            message: res.error || `Gagal mengubah status ${label}. Pastikan tabel sistem sudah siap.`,
+          });
+          return;
+        }
+
         setFlags((prev) => ({
           ...prev,
           [key]: nextValue,
