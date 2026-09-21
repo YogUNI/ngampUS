@@ -9,9 +9,11 @@ import {
   ArrowLeft, 
   ExternalLink,
   ShieldCheck,
-  Server
+  Server,
+  Shield
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { AdminLogoutButton } from "./admin-logout-button";
 
 export const metadata = {
   title: "Superadmin Command Console | ngampUS",
@@ -51,9 +53,9 @@ export default async function AdminLayout({
           {/* Brand & Mode Tag */}
           <div className="flex items-center gap-3">
             <Link
-              href="/dashboard"
+              href="/dashboard?view=student"
               className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-bold text-[#b4d8c1] hover:bg-white/10 transition"
-              title="Kembali ke tampilan Mahasiswa"
+              title="Buka tampilan Mahasiswa"
             >
               <ArrowLeft size={14} />
               <span className="hidden sm:inline">Workspace Mahasiswa</span>
@@ -116,6 +118,7 @@ export default async function AdminLayout({
             <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#1b4332] text-xs font-black text-[#c8ef70] ring-1 ring-white/20">
               {profile?.full_name ? profile.full_name[0].toUpperCase() : "A"}
             </div>
+            <AdminLogoutButton />
           </div>
         </div>
       </header>

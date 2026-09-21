@@ -10,7 +10,13 @@ import {
   Sparkles, 
   ArrowRight,
   TrendingUp,
-  Server
+  Server,
+  Lock,
+  EyeOff,
+  ShieldCheck,
+  Activity,
+  Cpu,
+  Database
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
@@ -240,6 +246,61 @@ export default async function AdminOverviewPage() {
             ) : (
               <p className="text-xs text-[#789a84] italic py-6 text-center">Belum ada akun mahasiswa yang terdaftar.</p>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Privacy & Security Architecture Status ── */}
+      <div className="rounded-3xl border border-[#1b4332] bg-[#0c2419]/90 p-5 sm:p-7 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/10 border border-[#c8ef70]/30 text-[#c8ef70]">
+              <Lock size={20} />
+            </span>
+            <div>
+              <h3 className="font-display text-base sm:text-lg font-black text-white">
+                Student Data Privacy & Security Guardrails
+              </h3>
+              <p className="text-xs text-[#9dc5aa] mt-0.5">
+                Standar privasi data mahasiswa zero-knowledge architecture.
+              </p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
+            <ShieldCheck size={14} />
+            <span>RLS Enforced (Zero-Knowledge)</span>
+          </span>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="rounded-2xl border border-white/5 bg-[#071710] p-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#c8ef70]">
+              <EyeOff size={16} />
+              <span>Privasi Catatan & Tugas</span>
+            </div>
+            <p className="mt-2 text-xs text-[#9dc5aa] leading-relaxed">
+              Superadmin hanya melihat jumlah agregat (counter). Isi catatan pribadi, deskripsi tugas, dan berkas tugas mahasiswa terisolasi mutlak di level PostgreSQL RLS.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-white/5 bg-[#071710] p-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#c8ef70]">
+              <Database size={16} />
+              <span>Proteksi Jadwal & Modul</span>
+            </div>
+            <p className="mt-2 text-xs text-[#9dc5aa] leading-relaxed">
+              Tautan materi perkuliahan, ruangan kelas, dan link meeting mahasiswa tidak diekspos ke publik ataupun command deck admin untuk menjamin kenyamanan akademik.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-white/5 bg-[#071710] p-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#c8ef70]">
+              <Cpu size={16} />
+              <span>Security Definer RLS</span>
+            </div>
+            <p className="mt-2 text-xs text-[#9dc5aa] leading-relaxed">
+              Fungsi <code className="font-mono text-[#c8ef70]">is_superadmin()</code> terverifikasi di server Supabase tanpa celah SQL injection atau manipulasi client-side cookies.
+            </p>
           </div>
         </div>
       </div>

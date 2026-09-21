@@ -73,16 +73,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 3. If superadmin accesses student dashboard, redirect them straight to /admin console
+  // 3. If superadmin accesses root or student dashboard without ?view=student, redirect them straight to /admin console
   if (user && (pathname === "/dashboard" || pathname === "/")) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
+    const isExplicitStudentView = request.nextUrl.searchParams.get("view") === "student";
+    if (!isExplicitStudentView) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    if (profile?.role === "superadmin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
+      if (profile?.role === "superadmin") {
+        return NextResponse.redirect(new URL("/admin", request.url));
+      }
     }
   }
 
