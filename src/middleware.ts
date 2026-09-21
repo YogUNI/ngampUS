@@ -46,8 +46,8 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 0. Maintenance Mode Check: redirect non-superadmins if maintenance_mode is enabled
-  // Exemptions: /admin, /login, /maintenance, and static assets
-  const isMaintenanceExempt = pathname.startsWith("/admin") || pathname.startsWith("/login") || pathname.startsWith("/maintenance");
+  // Exemptions: /admin, /login, /maintenance, /api/health-check, and static assets
+  const isMaintenanceExempt = pathname.startsWith("/admin") || pathname.startsWith("/login") || pathname.startsWith("/maintenance") || pathname.startsWith("/api/health-check");
   if (!isMaintenanceExempt) {
     const { data: settingData } = await supabase
       .from("system_settings")
