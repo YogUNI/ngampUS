@@ -29,16 +29,17 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const handleToggle = (key: keyof SystemFlags, currentValue: boolean, label: string) => {
-    const nextValue = !currentValue;
-    
-    // Safety confirmation for critical actions
-    if (key === "maintenance_mode" && nextValue) {
-      if (!window.confirm("PERINGATAN KRITIS: Mengaktifkan Maintenance Mode akan mengalihkan semua mahasiswa ke halaman pemeliharaan. Akun Superadmin tetap bisa akses penuh. Lanjutkan?")) {
-        return;
-      }
-    }
+  // Custom Modal Confirmation State
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    key: keyof SystemFlags;
+    nextValue: boolean;
+    label: string;
+    title: string;
+    description: string;
+  } | null>(null);
 
+  const executeToggle = (key: keyof SystemFlags, nextValue: boolean, label: string) => {
     setActiveKey(key);
     setFeedback(null);
 
@@ -69,8 +70,41 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
         });
       } finally {
         setActiveKey(null);
+        setConfirmModal(null);
       }
     });
+  };
+
+  const handleToggle = (key: keyof SystemFlags, currentValue: boolean, label: string) => {
+    const nextValue = !currentValue;
+    
+    // Trigger custom modal for critical actions instead of ugly window.confirm
+    if (key === "maintenance_mode" && nextValue) {
+      setConfirmModal({
+        isOpen: true,
+        key,
+        nextValue,
+        label,
+        title: "Aktifkan Mode Pemeliharaan?",
+        description: "Semua mahasiswa yang sedang aktif akan langsung dialihkan ke halaman pemeliharaan (/maintenance). Akun Superadmin tetap memiliki akses penuh tanpa terkunci (Zero-Lockout).",
+      });
+      return;
+    }
+
+    if (key === "ai_service_active" && !nextValue) {
+      setConfirmModal({
+        isOpen: true,
+        key,
+        nextValue,
+        label,
+        title: "Matikan AI Engine (Killswitch)?",
+        description: "Semua fitur cerdas Gemini (kuis, rangkuman, modul AI) akan dinonaktifkan sementara dan dialihkan ke pesan istirahat server yang sopan bagi mahasiswa.",
+      });
+      return;
+    }
+
+    // Direct execute for non-critical toggles
+    executeToggle(key, nextValue, label);
   };
 
   return (
@@ -317,6 +351,76 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
           </span>
         )}
       </div>
+
+      {/* ── Custom Animated Confirmation Modal ── */}
+      {confirmModal && confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div 
+            className="relative w-full max-w-md rounded-3xl border border-rose-500/40 bg-[#091e14] p-6 sm:p-7 shadow-[0_25px_70px_rgba(244,63,94,0.2)] animate-in zoom-in-95 duration-200 space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Accent Warning Bar */}
+            <div className="absolute top-0 inset-x-8 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent rounded-full" />
+
+            <div className="flex items-start gap-4">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                <Flame size={24} className="animate-pulse" />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[10px] font-black uppercase tracking-wider text-rose-400">
+                    KONFIRMASI AKSI KRITIS
+                  </span>
+                </div>
+                <h3 className="font-display text-lg sm:text-xl font-black text-white">
+                  {confirmModal.title}
+                </h3>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-[#9dc5aa] leading-relaxed pl-1">
+              {confirmModal.description}
+            </p>
+
+            <div className="rounded-2xl border border-white/5 bg-black/40 p-3.5 flex items-center gap-2.5 text-xs text-[#8ca393]">
+              <Lock size={15} className="text-[#c8ef70] shrink-0" />
+              <span>Proteksi <strong>Zero-Lockout</strong> aktif: Akses Superadmin tidak akan pernah terputus.</span>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setConfirmModal(null)}
+                disabled={isPending}
+                className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50"
+              >
+                Batalkan
+              </button>
+
+              <button
+                type="button"
+                onClick={() => executeToggle(confirmModal.key, confirmModal.nextValue, confirmModal.label)}
+                disabled={isPending}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 px-5 py-2.5 text-xs font-black text-white shadow-lg shadow-rose-500/25 hover:from-rose-500 hover:to-rose-400 active:scale-95 transition cursor-pointer disabled:opacity-50"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    <span>Mengeksekusi...</span>
+                  </>
+                ) : (
+                  <>
+                    <Flame size={14} />
+                    <span>Lanjutkan & Eksekusi</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
