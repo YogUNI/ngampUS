@@ -54,10 +54,26 @@ export async function callGemini(
 
       if (res.ok) {
         const data = await res.json();
+        const usage = data?.usageMetadata;
+        // Record telemetry asynchronously
+        import("./ai-telemetry").then(({ recordAiUsage }) => {
+          recordAiUsage(
+            model,
+            usage?.promptTokenCount || 0,
+            usage?.candidatesTokenCount || 0,
+            false
+          );
+        }).catch(() => {});
+
         return data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
       }
 
       const errorText = await res.text();
+      if (res.status === 429) {
+        import("./ai-telemetry").then(({ recordAiUsage }) => {
+          recordAiUsage(model, 0, 0, true);
+        }).catch(() => {});
+      }
       lastError = `[${model}] ${res.status}: ${errorText}`;
       console.warn(`Gemini call failed with ${model}:`, res.status, errorText);
 
@@ -112,10 +128,26 @@ export async function callGeminiChat(
 
       if (res.ok) {
         const data = await res.json();
+        const usage = data?.usageMetadata;
+        // Record telemetry asynchronously
+        import("./ai-telemetry").then(({ recordAiUsage }) => {
+          recordAiUsage(
+            model,
+            usage?.promptTokenCount || 0,
+            usage?.candidatesTokenCount || 0,
+            false
+          );
+        }).catch(() => {});
+
         return data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
       }
 
       const errorText = await res.text();
+      if (res.status === 429) {
+        import("./ai-telemetry").then(({ recordAiUsage }) => {
+          recordAiUsage(model, 0, 0, true);
+        }).catch(() => {});
+      }
       lastError = `[${model}] ${res.status}: ${errorText}`;
       console.warn(`Gemini chat failed with ${model}:`, res.status, errorText);
 

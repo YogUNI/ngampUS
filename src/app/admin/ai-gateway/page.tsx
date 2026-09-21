@@ -17,8 +17,12 @@ import {
   Workflow,
   Wifi,
   CornerDownRight,
-  Database
+  Database,
+  BarChart3,
+  Flame,
+  AlertTriangle
 } from "lucide-react";
+import { getAiDailyTelemetry, DAILY_REQUEST_LIMIT } from "@/lib/ai-telemetry";
 
 export const dynamic = "force-dynamic";
 
@@ -69,7 +73,15 @@ async function getLiveGeminiModels(): Promise<ModelSpec[]> {
 }
 
 export default async function AdminAiGatewayPage() {
-  const liveModels = await getLiveGeminiModels();
+  const [liveModels, telemetry] = await Promise.all([
+    getLiveGeminiModels(),
+    getAiDailyTelemetry(),
+  ]);
+
+  const usedReqs = telemetry.total_requests || 0;
+  const remainingReqs = Math.max(0, DAILY_REQUEST_LIMIT - usedReqs);
+  const percentUsed = Math.min(100, Math.round((usedReqs / DAILY_REQUEST_LIMIT) * 100));
+  const isNearlyDepleted = percentUsed >= 85;
 
   return (
     <div className="space-y-8">
@@ -109,6 +121,129 @@ export default async function AdminAiGatewayPage() {
               <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
               <span>Gateway Online (Google API)</span>
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── LIVE DAILY QUOTA & DEPLETION ALERT BANNER ── */}
+      <div
+        className={`rounded-3xl border p-5 sm:p-6 transition-all ${
+          isNearlyDepleted
+            ? "border-amber-500/50 bg-gradient-to-r from-amber-950/40 via-[#0c2419] to-[#071710] shadow-[0_0_30px_rgba(245,158,11,0.15)]"
+            : "border-[#1e4631] bg-[#0c2419]/95"
+        }`}
+      >
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <span
+              className={`grid h-11 w-11 place-items-center rounded-2xl border ${
+                isNearlyDepleted
+                  ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                  : "bg-[#c8ef70]/15 text-[#c8ef70] border-[#c8ef70]/30"
+              }`}
+            >
+              {isNearlyDepleted ? <AlertTriangle size={22} /> : <BarChart3 size={22} />}
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-black text-white">
+                  Live Quota Tracker & Telemetri Harian
+                </h2>
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider ${
+                    isNearlyDepleted
+                      ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse"
+                      : "bg-[#183929] text-[#c8ef70] border border-[#c8ef70]/30"
+                  }`}
+                >
+                  {isNearlyDepleted ? "KUOTA MENIPIS" : "KUOTA SEHAT"}
+                </span>
+              </div>
+              <p className="text-xs text-[#9dc5aa] mt-0.5">
+                Mencatat penggunaan request dan akumulasi token mahasiswa hari ini (reset otomatis jam 07:00 WIB).
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="text-right font-mono">
+              <span className="text-xs text-[#789a84]">Sisa Kuota Hari Ini:</span>
+              <p className="text-lg font-black text-white">
+                {remainingReqs.toLocaleString("id-ID")}{" "}
+                <span className="text-xs font-normal text-[#9dc5aa]">
+                  / {DAILY_REQUEST_LIMIT} Req
+                </span>
+              </p>
+            </div>
+            <a
+              href="https://aistudio.google.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <span>Google AI Studio</span>
+              <ExternalLink size={12} />
+            </a>
+          </div>
+        </div>
+
+        {/* Progress Bar & Sub metrics */}
+        <div className="mt-5 space-y-4">
+          <div>
+            <div className="flex justify-between text-xs font-bold mb-1.5">
+              <span className="text-[#9dc5aa]">
+                Penggunaan Request Hari Ini: {usedReqs} ({percentUsed}%)
+              </span>
+              <span className={isNearlyDepleted ? "text-amber-300" : "text-[#c8ef70]"}>
+                {remainingReqs} Request Tersisa
+              </span>
+            </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-[#183929]">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  isNearlyDepleted
+                    ? "bg-gradient-to-r from-amber-500 to-rose-500"
+                    : "bg-gradient-to-r from-[#22c55e] to-[#c8ef70]"
+                }`}
+                style={{ width: `${Math.max(2, percentUsed)}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+              <span className="text-[10px] font-mono uppercase text-[#789a84]">Total Token Terpakai</span>
+              <p className="text-base font-black text-white font-mono mt-0.5">
+                {telemetry.total_tokens.toLocaleString("id-ID")}
+              </p>
+              <span className="text-[10px] text-[#557763]">Prompt + Output</span>
+            </div>
+
+            <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+              <span className="text-[10px] font-mono uppercase text-[#789a84]">Model Aktif Terakhir</span>
+              <p className="text-xs font-bold text-[#c8ef70] font-mono mt-1 truncate">
+                {telemetry.last_model_used || "gemini-3.7-flash"}
+              </p>
+              <span className="text-[10px] text-[#557763]">Primary Tier</span>
+            </div>
+
+            <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+              <span className="text-[10px] font-mono uppercase text-[#789a84]">Insiden 429 (Quota Limit)</span>
+              <p className={`text-base font-black font-mono mt-0.5 ${telemetry.error_429_count > 0 ? "text-amber-400" : "text-white"}`}>
+                {telemetry.error_429_count} Kali
+              </p>
+              <span className="text-[10px] text-[#557763]">Otomatis di-failover</span>
+            </div>
+
+            <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+              <span className="text-[10px] font-mono uppercase text-[#789a84]">Panggilan Terakhir</span>
+              <p className="text-xs font-bold text-white font-mono mt-1">
+                {telemetry.last_request_at
+                  ? new Date(telemetry.last_request_at).toLocaleTimeString("id-ID")
+                  : "Belum ada"}
+              </p>
+              <span className="text-[10px] text-[#557763]">Waktu WIB</span>
+            </div>
           </div>
         </div>
       </div>
@@ -166,12 +301,15 @@ export default async function AdminAiGatewayPage() {
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <ShieldCheck size={20} />
             </span>
-            <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">FREE TIER BUDGET</span>
+            <span className="font-mono text-[9px] text-[#789a84] font-black uppercase">DAILY STATUS</span>
           </div>
-          <p className="mt-4 text-2xl sm:text-3xl font-black text-white">15 RPM</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">1,500 Requests / Hari</p>
+          <p className="mt-4 text-2xl sm:text-3xl font-black text-white">{100 - percentUsed}% Sisa</p>
+          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">{remainingReqs} dari 1,500 RPD</p>
           <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#1b4332]">
-            <div className="h-full rounded-full bg-emerald-400 w-full" />
+            <div
+              className={`h-full rounded-full ${isNearlyDepleted ? "bg-amber-400" : "bg-emerald-400"}`}
+              style={{ width: `${Math.max(5, 100 - percentUsed)}%` }}
+            />
           </div>
         </div>
       </div>
