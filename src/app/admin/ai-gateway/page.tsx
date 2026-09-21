@@ -112,7 +112,7 @@ export default async function AdminAiGatewayPage() {
               AI Engine & Token Quota Gateway
             </h1>
             <p className="mt-1.5 text-xs sm:text-sm text-[#b3d3bd] max-w-2xl leading-relaxed">
-              Arsitektur cerdas router token multi-model bergaya 9Router. Memantau kapasitas token, sisa limitasi per menit/hari, dan kabel jalur fallback engine secara visual dan real-time.
+              Arsitektur cerdas distribusi token multi-model ngampUS Engine. Memantau kapasitas token, sisa limitasi per menit/hari, dan kabel jalur transmisi fallback engine secara visual dan real-time.
             </p>
           </div>
 
@@ -314,74 +314,122 @@ export default async function AdminAiGatewayPage() {
         </div>
       </div>
 
-      {/* ── VISUAL 9ROUTER CIRCUIT & PIPELINE CANVAS (DENGAN KABEL ELEKTRONIK) ── */}
+      {/* ── VISUAL NGAMPUS SMART AI PIPELINE (DENGAN KABEL ELEKTRONIK MENGALIR NYATA) ── */}
       <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/95 p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5">
+        {/* Subtle Cyber Grid Texture */}
+        <div 
+          className="pointer-events-none absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage: "linear-gradient(#c8ef70 1px, transparent 1px), linear-gradient(90deg, #c8ef70 1px, transparent 1px)",
+            backgroundSize: "24px 24px"
+          }}
+        />
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-5 relative z-10">
           <div>
             <div className="flex items-center gap-2">
               <Workflow size={18} className="text-[#c8ef70]" />
               <h2 className="font-display text-lg sm:text-xl font-black text-white">
-                Interactive 9Router Circuit & Fallback Cable Topology
+                Topologi Sirkuit Kabel & Aliran Cerdas AI Gateway
               </h2>
             </div>
             <p className="text-xs text-[#9dc5aa] mt-1">
-              Topologi kabel jalur otomatis pengalihan trafik (Smart Failover) saat batas token atau kuota RPM tercapai.
+              Jalur aliran data beranimasi real-time dengan mekanisme Smart Failover otomatis saat kuota RPM atau batas token tercapai.
             </p>
           </div>
-          <span className="font-mono text-[10px] text-[#c8ef70] font-black tracking-widest uppercase bg-[#1b4332] px-3 py-1 rounded-full border border-[#c8ef70]/30 self-start sm:self-auto">
-            ⚡ CIRCUIT ACTIVE
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[10px] text-[#c8ef70] font-black tracking-widest uppercase bg-[#1b4332] px-3.5 py-1.5 rounded-full border border-[#c8ef70]/40 flex items-center gap-1.5 shadow-xs">
+              <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-ping" />
+              <span>LIVE TRANSMISSION FLOWING</span>
+            </span>
+          </div>
         </div>
 
-        {/* ── The 9Router Visual Flow with Connected Nodes & Cables ── */}
-        <div className="mt-8 space-y-6">
+        {/* ── Visual Flow: Connected Nodes & Flowing Cables ── */}
+        <div className="mt-8 space-y-6 relative z-10">
           {/* Top Entry Ingress: Mahasiswa Request */}
           <div className="flex justify-center">
-            <div className="flex items-center gap-3 rounded-2xl border border-[#c8ef70]/50 bg-[#071710] px-5 py-3 shadow-[0_0_20px_rgba(200,239,112,0.15)]">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black">
-                <Bot size={18} />
+            <div className="relative flex items-center gap-3 rounded-2xl border-2 border-[#c8ef70]/70 bg-[#071710] px-6 py-3.5 shadow-[0_0_30px_rgba(200,239,112,0.2)]">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black shadow-xs">
+                <Bot size={20} />
               </span>
               <div>
-                <span className="font-mono text-[9px] font-black uppercase tracking-wider text-[#c8ef70]">
-                  INGRESS GATEWAY // CLIENT REQUEST
+                <span className="font-mono text-[9.5px] font-black uppercase tracking-wider text-[#c8ef70]">
+                  INGRESS GATEWAY // CLIENT REQUEST SOURCE
                 </span>
-                <p className="text-xs font-bold text-white">
+                <p className="text-xs sm:text-sm font-bold text-white">
                   Tutor Mahasiswa, Ringkasan Modul & AI Chatbot
                 </p>
               </div>
-              <div className="flex items-center gap-1 pl-2">
+              <div className="flex items-center gap-1.5 pl-3 border-l border-white/10">
                 <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-ping" />
+                <span className="font-mono text-[9px] text-[#c8ef70] font-bold">STREAMING</span>
               </div>
             </div>
           </div>
 
-          {/* Vertical Bus Cable */}
-          <div className="relative flex justify-center h-8">
-            <div className="w-1 bg-gradient-to-b from-[#c8ef70] via-[#22c55e] to-[#20553c] relative shadow-[0_0_10px_rgba(200,239,112,0.5)]">
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-2.5 rounded-full bg-[#c8ef70] animate-pulse" />
+          {/* Vertical Main Feed Cable with Flowing Laser Pulse */}
+          <div className="relative flex justify-center h-10">
+            <div className="w-1.5 bg-[#184631] relative rounded-full overflow-hidden shadow-[0_0_12px_rgba(200,239,112,0.4)]">
+              {/* Flowing Laser Packet */}
+              <div className="cable-pulse-vertical shadow-[0_0_10px_#c8ef70]" />
             </div>
           </div>
 
-          {/* Horizontal Bus Distribution Cable */}
+          {/* Distribution Hub Junction Node */}
+          <div className="flex justify-center">
+            <div className="rounded-full border border-[#c8ef70]/40 bg-[#0f2d20] px-4 py-1 text-[10px] font-mono text-[#c8ef70] font-black shadow-inner flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] animate-ping" />
+              <span>SMART LOAD DISTRIBUTION SWITCH</span>
+            </div>
+          </div>
+
+          {/* Vertical Link to Bus */}
+          <div className="relative flex justify-center h-4">
+            <div className="w-1.5 bg-[#184631] relative rounded-full overflow-hidden">
+              <div className="cable-pulse-vertical shadow-[0_0_10px_#c8ef70]" />
+            </div>
+          </div>
+
+          {/* Horizontal Bus Distribution Cable with Real-Time Flow Pulses */}
           <div className="relative hidden md:block">
-            <div className="mx-auto w-[76%] h-1 bg-[#20553c] relative">
-              {/* Cable Pulses */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent opacity-80 animate-pulse" />
-              {/* Dropdown connectors to each tier */}
-              <div className="absolute left-[12%] -bottom-4 w-1 h-4 bg-[#20553c]" />
-              <div className="absolute left-[38%] -bottom-4 w-1 h-4 bg-[#20553c]" />
-              <div className="absolute left-[62%] -bottom-4 w-1 h-4 bg-[#20553c]" />
-              <div className="absolute left-[88%] -bottom-4 w-1 h-4 bg-[#20553c]" />
+            <div className="mx-auto w-[82%] h-1.5 bg-[#184631] relative rounded-full overflow-hidden shadow-[0_0_15px_rgba(200,239,112,0.25)]">
+              {/* Left-to-Right Flowing Energy Beam */}
+              <div className="cable-pulse-horizontal shadow-[0_0_14px_#c8ef70]" />
+            </div>
+
+            {/* Downward Drop Cables to each Node Box with Flowing Electrons */}
+            <div className="mx-auto w-[82%] relative h-6">
+              {/* Node 1 Drop Cable */}
+              <div className="absolute left-[12%] top-0 w-1.5 h-6 bg-[#184631] rounded-b-md overflow-hidden shadow-[0_0_10px_rgba(200,239,112,0.3)]">
+                <div className="cable-pulse-vertical" style={{ animationDelay: '0s' }} />
+              </div>
+              {/* Node 2 Drop Cable */}
+              <div className="absolute left-[38%] top-0 w-1.5 h-6 bg-[#184631] rounded-b-md overflow-hidden">
+                <div className="cable-pulse-vertical" style={{ animationDelay: '0.35s' }} />
+              </div>
+              {/* Node 3 Drop Cable */}
+              <div className="absolute left-[62%] top-0 w-1.5 h-6 bg-[#184631] rounded-b-md overflow-hidden">
+                <div className="cable-pulse-vertical" style={{ animationDelay: '0.7s' }} />
+              </div>
+              {/* Node 4 Drop Cable */}
+              <div className="absolute left-[88%] top-0 w-1.5 h-6 bg-[#184631] rounded-b-md overflow-hidden">
+                <div className="cable-pulse-vertical" style={{ animationDelay: '1.05s' }} />
+              </div>
             </div>
           </div>
 
           {/* The 4 Model Tiers */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5 pt-2">
             {/* Tier 1 (Primary) */}
-            <div className="relative rounded-2xl border-2 border-[#c8ef70] bg-[#071710] p-5 shadow-[0_0_25px_rgba(200,239,112,0.15)] flex flex-col justify-between">
+            <div className="relative rounded-2xl border-2 border-[#c8ef70] bg-[#071710] p-5 shadow-[0_0_30px_rgba(200,239,112,0.2)] flex flex-col justify-between overflow-hidden">
+              {/* Top Laser Accent Strip */}
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent animate-pulse" />
+
               {/* Glowing Top Pin Cable */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
-                <span className="rounded-full bg-[#c8ef70] px-2.5 py-0.5 text-[9px] font-black text-[#103626] uppercase shadow-sm">
+                <span className="rounded-full bg-[#c8ef70] px-2.5 py-0.5 text-[9px] font-black text-[#103626] uppercase shadow-sm flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#103626] animate-ping" />
                   NODE 01 • PRIMARY
                 </span>
               </div>
@@ -389,7 +437,7 @@ export default async function AdminAiGatewayPage() {
               <div>
                 <div className="flex items-center justify-between pt-1">
                   <span className="font-mono text-[9px] text-[#c8ef70] font-bold">LATENCY: ~400ms</span>
-                  <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
+                  <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-ping" />
                 </div>
                 <h3 className="text-base font-black text-white mt-2">gemini-3.7-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
@@ -408,7 +456,10 @@ export default async function AdminAiGatewayPage() {
                 </div>
                 <div className="flex justify-between text-[#789a84]">
                   <span>Kabel Status:</span>
-                  <span className="text-emerald-400 font-black">ACTIVE ROUTE</span>
+                  <span className="text-emerald-400 font-black flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    FLOWING NOW
+                  </span>
                 </div>
               </div>
             </div>
