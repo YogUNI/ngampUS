@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -12,6 +12,8 @@ const moduleSchema = z.object({
   link_modul: z
     .string()
     .trim()
+    .url("Link modul harus berupa URL yang valid.")
+    .regex(/^https?:\/\//i, "Link modul harus menggunakan protokol http:// atau https://.")
     .max(800)
     .or(z.literal(""))
     .nullable()
@@ -19,6 +21,8 @@ const moduleSchema = z.object({
   link_tugas: z
     .string()
     .trim()
+    .url("Link tugas harus berupa URL yang valid.")
+    .regex(/^https?:\/\//i, "Link tugas harus menggunakan protokol http:// atau https://.")
     .max(800)
     .or(z.literal(""))
     .nullable()
