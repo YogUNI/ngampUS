@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { 
   Wrench, 
@@ -11,8 +10,6 @@ import {
   Database, 
   Sparkles, 
   CheckCircle2, 
-  Lock,
-  ArrowUpRight,
   AlertCircle
 } from "lucide-react";
 
@@ -163,24 +160,15 @@ export default function MaintenancePage() {
           )}
 
           {/* ── Action Buttons ── */}
-          <div className="pt-1 flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3">
+          <div className="pt-1 flex justify-center">
             <button
               onClick={handleCheckStatus}
               disabled={checking}
-              className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-[#c8ef70] py-2.5 sm:py-3 px-4 text-xs font-black text-[#103626] hover:bg-[#d8faa1] transition active:scale-98 cursor-pointer shadow-md shadow-[#c8ef70]/10 disabled:opacity-75"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-[#c8ef70] py-3 px-6 text-xs sm:text-sm font-black text-[#103626] hover:bg-[#d8faa1] transition active:scale-98 cursor-pointer shadow-lg shadow-[#c8ef70]/15 disabled:opacity-75"
             >
-              <RefreshCw size={14} className={checking ? "animate-spin" : ""} />
-              <span>{checking ? "Memeriksa Status..." : "Cek Status Sistem"}</span>
+              <RefreshCw size={15} className={checking ? "animate-spin" : ""} />
+              <span>{checking ? "Memeriksa Status Sistem..." : "Cek Status Sistem Sekarang"}</span>
             </button>
-
-            <Link
-              href="/login"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 py-2.5 sm:py-3 px-4 text-xs font-bold text-white transition active:scale-98"
-            >
-              <Lock size={13} className="text-[#c8ef70]" />
-              <span>Akses Superadmin</span>
-              <ArrowUpRight size={12} className="text-white/40" />
-            </Link>
           </div>
 
         </div>
