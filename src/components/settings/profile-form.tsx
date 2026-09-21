@@ -35,6 +35,7 @@ import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
 import { ImageCropModal } from "@/components/settings/image-crop-modal";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UniversityCombobox } from "@/components/ui/university-combobox";
 
 type Profile = {
   full_name?: string | null;
@@ -546,14 +547,12 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 onCancel={handleCancelEdit}
                 onConfirm={handleConfirmEdit}
                 placeholder="Contoh: Universitas Mercu Buana"
-                renderInput={(ref) => (
-                  <input
-                    ref={ref as React.RefObject<HTMLInputElement>}
-                    type="text"
+                renderInput={() => (
+                  <UniversityCombobox
                     value={university}
-                    onChange={(e) => setUniversity(e.target.value)}
-                    placeholder="Contoh: Universitas Mercu Buana"
-                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                    onChange={(val) => setUniversity(val)}
+                    placeholder="Pilih atau cari universitas..."
+                    inputClassName="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
                   />
                 )}
               />

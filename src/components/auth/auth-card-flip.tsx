@@ -24,6 +24,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/client";
+import { UniversityCombobox } from "@/components/ui/university-combobox";
 
 // Form schemas
 const loginSchema = z.object({
@@ -335,9 +336,13 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                 <div className="flex items-center gap-1 text-[10.5px] font-black text-[#0f6849]">
                   <Building2 size={12} /><span>Info Kampus (Opsional)</span>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5">
-                  <input {...registerForm.register("university")} type="text" placeholder="Universitas / Institut"
-                    className="w-full rounded-lg border border-[#c7decb] bg-white py-1.5 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  <UniversityCombobox
+                    value={registerForm.watch("university") || ""}
+                    onChange={(val) => registerForm.setValue("university", val, { shouldValidate: true })}
+                    placeholder="Pilih / Cari Universitas"
+                    inputClassName="w-full rounded-lg border border-[#c7decb] bg-white py-1.5 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none"
+                  />
                   <input {...registerForm.register("major")} type="text" placeholder="Jurusan / Prodi"
                     className="w-full rounded-lg border border-[#c7decb] bg-white py-1.5 px-2.5 text-xs font-medium text-[#10261b] placeholder:text-[#99a89d] focus:border-[#0f6849] focus:outline-none" />
                 </div>
