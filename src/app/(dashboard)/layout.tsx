@@ -10,6 +10,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
     supabase.from("profiles").select("full_name,avatar_url,role").single(),
     supabase.from("semesters").select("nama_semester").eq("is_active", true).maybeSingle(),
   ]);
+
+  if (profile?.role === "superadmin") {
+    redirect("/admin");
+  }
   const userName = profile?.full_name || user.email?.split("@")[0] || "Mahasiswa";
   const avatarUrl = profile?.avatar_url || null;
   const userRole = profile?.role || "student";

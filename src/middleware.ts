@@ -73,23 +73,33 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 3. If superadmin accesses root or student dashboard without ?view=student, redirect them straight to /admin console
-  if (user && (pathname === "/dashboard" || pathname === "/")) {
-    const isExplicitStudentView = request.nextUrl.searchParams.get("view") === "student";
-    if (!isExplicitStudentView) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .maybeSingle();
+  // 3. Strict Isolation: Superadmin has ZERO access to student workspace routes (/dashboard, /jadwal, /kegiatan, etc.)
+  if (user && isProtected) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
 
-      if (profile?.role === "superadmin") {
-        return NextResponse.redirect(new URL("/admin", request.url));
-      }
+    if (profile?.role === "superadmin") {
+      return NextResponse.redirect(new URL("/admin", request.url));
     }
   }
 
-  // 4. Redirect authenticated users attempting to access auth routes (login, register)
+  // 4. Redirect root to /admin for superadmin
+  if (user && pathname === "/") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profile?.role === "superadmin") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+  }
+
+  // 5. Redirect authenticated users attempting to access auth routes (login, register)
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   if (isAuthRoute && user) {
     // Check if superadmin
@@ -106,7 +116,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 3. Attach security headers at the middleware response level
+  // 6. Attach security headers at the middleware response level
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");

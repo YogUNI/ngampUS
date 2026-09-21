@@ -6,11 +6,6 @@ import {
   LayoutDashboard, 
   Users, 
   Megaphone, 
-  ArrowLeft, 
-  ExternalLink,
-  ShieldCheck,
-  Server,
-  Shield,
   Cpu
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -53,32 +48,21 @@ export default async function AdminLayout({
         <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-3">
           {/* Brand & Mode Tag */}
           <div className="flex items-center gap-3">
-            <Link
-              href="/dashboard?view=student"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-bold text-[#b4d8c1] hover:bg-white/10 transition"
-              title="Buka tampilan Mahasiswa"
-            >
-              <ArrowLeft size={14} />
-              <span className="hidden sm:inline">Workspace Mahasiswa</span>
-            </Link>
-
-            <div className="h-5 w-px bg-white/15 hidden sm:block" />
-
-            <div className="flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black shadow-xs">
-                <ShieldAlert size={18} strokeWidth={2.5} />
+            <Link href="/admin" className="flex items-center gap-2.5">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black shadow-xs">
+                <ShieldAlert size={20} strokeWidth={2.5} />
               </span>
               <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-display text-sm sm:text-base font-black tracking-tight text-white">
-                    ngamp<span className="text-[#c8ef70]">US</span> Console
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-base sm:text-lg font-black tracking-tight text-white">
+                    ngamp<span className="text-[#c8ef70]">US</span> Admin
                   </span>
-                  <span className="rounded-md border border-[#c8ef70]/40 bg-[#c8ef70]/15 px-1.5 py-0.2 text-[9px] font-black uppercase tracking-widest text-[#d6f792]">
-                    SUPERADMIN
+                  <span className="rounded-md border border-[#c8ef70]/40 bg-[#c8ef70]/15 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#d6f792]">
+                    ROOT CONSOLE
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Navigation Links */}
