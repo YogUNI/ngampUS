@@ -1,0 +1,142 @@
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { 
+  ShieldAlert, 
+  LayoutDashboard, 
+  Users, 
+  Megaphone, 
+  ArrowLeft, 
+  ExternalLink,
+  ShieldCheck,
+  Server
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+
+export const metadata = {
+  title: "Superadmin Command Console | ngampUS",
+  description: "Pusat komando dan pemantauan platform ngampUS.",
+};
+
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, email, avatar_url, role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  // Strict Server Guard
+  if (profile?.role !== "superadmin") {
+    redirect("/dashboard");
+  }
+
+  return (
+    <div className="min-h-screen bg-[#071710] text-[#edf4ef] flex flex-col selection:bg-[#c8ef70] selection:text-[#103626]">
+      {/* ── Top Command Bar ── */}
+      <header className="sticky top-0 z-50 border-b border-[#183929] bg-[#0c2419]/90 backdrop-blur-md px-4 sm:px-6 py-3">
+        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-3">
+          {/* Brand & Mode Tag */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-bold text-[#b4d8c1] hover:bg-white/10 transition"
+              title="Kembali ke tampilan Mahasiswa"
+            >
+              <ArrowLeft size={14} />
+              <span className="hidden sm:inline">Workspace Mahasiswa</span>
+            </Link>
+
+            <div className="h-5 w-px bg-white/15 hidden sm:block" />
+
+            <div className="flex items-center gap-2">
+              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black shadow-xs">
+                <ShieldAlert size={18} strokeWidth={2.5} />
+              </span>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-display text-sm sm:text-base font-black tracking-tight text-white">
+                    ngamp<span className="text-[#c8ef70]">US</span> Console
+                  </span>
+                  <span className="rounded-md border border-[#c8ef70]/40 bg-[#c8ef70]/15 px-1.5 py-0.2 text-[9px] font-black uppercase tracking-widest text-[#d6f792]">
+                    SUPERADMIN
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="flex items-center gap-1 sm:gap-2">
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <LayoutDashboard size={15} className="text-[#c8ef70]" />
+              <span>Overview</span>
+            </Link>
+            <Link
+              href="/admin/users"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <Users size={15} className="text-[#c8ef70]" />
+              <span>Mahasiswa</span>
+            </Link>
+            <Link
+              href="/admin/announcements"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <Megaphone size={15} className="text-[#c8ef70]" />
+              <span>Broadcast</span>
+            </Link>
+          </nav>
+
+          {/* User Profile Badge */}
+          <div className="flex items-center gap-2 border-l border-white/15 pl-3">
+            <div className="text-right hidden md:block">
+              <p className="text-xs font-extrabold text-white leading-tight">
+                {profile?.full_name || "Super Administrator"}
+              </p>
+              <p className="text-[10px] text-[#9dc5aa] font-mono">
+                {user.email}
+              </p>
+            </div>
+            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#1b4332] text-xs font-black text-[#c8ef70] ring-1 ring-white/20">
+              {profile?.full_name ? profile.full_name[0].toUpperCase() : "A"}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Main Content Shell ── */}
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {children}
+      </main>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-[#183929] bg-[#091b13] px-4 py-4 text-center text-xs text-[#789a84]">
+        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-[#22c55e] animate-pulse" />
+            <span className="font-mono text-[11px]">System Status: All Engines Operational</span>
+          </div>
+          <p className="text-[11px]">
+            ngampUS Platform Control Center • Internal Use Only
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}

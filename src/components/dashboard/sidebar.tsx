@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import {
   ArrowUpRight, BarChart3, BookOpen, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
   CircleHelp, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Menu, Plus,
-  Settings, Sparkles, User, UsersRound, X,
+  Settings, ShieldAlert, Sparkles, User, UsersRound, X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -25,7 +25,17 @@ const nav = [
 // ─────────────────────────────────────────────────────────────────────────────
 // DESKTOP SIDEBAR (Well-proportioned, comfortably filled height, zero scrolling)
 // ─────────────────────────────────────────────────────────────────────────────
-export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; avatarUrl?: string | null; activeSemester?: string }) {
+export function Sidebar({ 
+  name, 
+  avatarUrl, 
+  activeSemester, 
+  role = "student" 
+}: { 
+  name: string; 
+  avatarUrl?: string | null; 
+  activeSemester?: string; 
+  role?: string; 
+}) {
   const router   = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -209,6 +219,27 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
             <Plus size={16} strokeWidth={3} />
           </Link>
         )}
+
+        {/* Superadmin Console Direct Access */}
+        {role === "superadmin" && (
+          !collapsed ? (
+            <Link
+              href="/admin"
+              className="mb-2 flex items-center justify-center gap-2 rounded-xl border border-[#c8ef70]/30 bg-[#0c2419] px-3 py-2 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#103626] hover:border-[#c8ef70]/60 transition shrink-0"
+            >
+              <ShieldAlert size={14} className="text-[#c8ef70]" />
+              <span>Admin Console</span>
+            </Link>
+          ) : (
+            <Link
+              href="/admin"
+              title="Superadmin Console"
+              className="mb-2 grid h-9 w-9 place-items-center rounded-xl border border-[#c8ef70]/40 bg-[#0c2419] text-[#c8ef70] hover:bg-[#103626] transition shrink-0"
+            >
+              <ShieldAlert size={16} />
+            </Link>
+          )
+        )}
       </div>
 
       {/* ── BOTTOM SECTION: User Card Footer (Always pinned at bottom, never clipped) ── */}
@@ -302,7 +333,17 @@ export function Sidebar({ name, avatarUrl, activeSemester }: { name: string; ava
 // ─────────────────────────────────────────────────────────────────────────────
 // MOBILE TOPBAR + DRAWER
 // ─────────────────────────────────────────────────────────────────────────────
-export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string; avatarUrl?: string | null; activeSemester?: string }) {
+export function MobileTopbar({ 
+  name, 
+  avatarUrl, 
+  activeSemester, 
+  role = "student" 
+}: { 
+  name: string; 
+  avatarUrl?: string | null; 
+  activeSemester?: string; 
+  role?: string; 
+}) {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const router   = useRouter();
@@ -387,6 +428,17 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
                   </div>
 
                   <div className="py-1 space-y-0.5">
+                    {role === "superadmin" && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[#103626] bg-[#c8ef70]/20 hover:bg-[#c8ef70]/30 transition active:scale-95 border border-[#c8ef70]/40"
+                      >
+                        <ShieldAlert size={15} className="text-[#103626]" />
+                        <span>Admin Console</span>
+                      </Link>
+                    )}
+
                     <Link
                       href="/settings"
                       onClick={() => setProfileOpen(false)}
@@ -474,6 +526,17 @@ export function MobileTopbar({ name, avatarUrl, activeSemester }: { name: string
                     </Link>
                   );
                 })}
+
+                {role === "superadmin" && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 rounded-xl border border-[#c8ef70]/40 bg-[#0c2419] px-3 py-2.5 text-sm font-bold text-[#c8ef70] shadow-xs mt-3 transition hover:bg-[#103626]"
+                  >
+                    <ShieldAlert size={18} className="text-[#c8ef70]" />
+                    <span>Admin Console</span>
+                  </Link>
+                )}
               </nav>
             </div>
 

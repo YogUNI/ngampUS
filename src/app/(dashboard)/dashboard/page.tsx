@@ -18,6 +18,10 @@ import {
   Clock3,
   Calendar,
   Layers,
+  Megaphone,
+  CheckCircle2,
+  Wrench,
+  Info,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
@@ -45,7 +49,7 @@ export default async function DashboardPage() {
   const threeDaysFromNow = format(addDays(new Date(), 3), "yyyy-MM-dd");
   const jakartaHour = new Date().getUTCHours() + 7; // WIB offset
 
-  // Fetch user, profile, active semester, and counts in parallel
+  // Fetch user, profile, active semester, counts, and active announcements in parallel
   const [
     { data: { user } },
     { data: profile },
@@ -53,6 +57,7 @@ export default async function DashboardPage() {
     { data: allSemesters },
     { data: organizations },
     { data: programs },
+    { data: broadcastAnnouncements },
   ] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from("profiles").select("full_name,avatar_url").single(),
@@ -60,6 +65,7 @@ export default async function DashboardPage() {
     supabase.from("semesters").select("id").order("created_at", { ascending: false }),
     supabase.from("organizations").select("id,nama_organisasi,tipe").order("created_at", { ascending: false }).limit(3),
     supabase.from("programs").select("organization_id,status").order("created_at", { ascending: false }),
+    supabase.from("broadcast_announcements").select("id,judul,pesan,tipe,tautan").eq("is_active", true).order("created_at", { ascending: false }).limit(2),
   ]);
 
   if (user) {
@@ -170,6 +176,60 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-8 lg:px-10">
+
+      {/* ── BROADCAST ANNOUNCEMENTS (SUPERADMIN SYSTEM BANNER) ── */}
+      {broadcastAnnouncements && broadcastAnnouncements.length > 0 && (
+        <div className="mb-6 space-y-2.5">
+          {broadcastAnnouncements.map((ann) => {
+            const isWarning = ann.tipe === "warning" || ann.tipe === "maintenance";
+            const isUpdate = ann.tipe === "update";
+
+            return (
+              <div
+                key={ann.id}
+                className={`relative overflow-hidden rounded-2xl border p-4 shadow-sm transition ${
+                  isWarning
+                    ? "border-amber-500/30 bg-amber-500/10 text-amber-200"
+                    : isUpdate
+                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200"
+                    : "border-sky-500/30 bg-sky-500/10 text-sky-200"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 shrink-0">
+                    {ann.tipe === "warning" && <AlertTriangle size={18} className="text-amber-400" />}
+                    {ann.tipe === "maintenance" && <Wrench size={18} className="text-rose-400" />}
+                    {ann.tipe === "update" && <Sparkles size={18} className="text-emerald-400" />}
+                    {ann.tipe === "info" && <Megaphone size={18} className="text-sky-400" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] font-black uppercase tracking-wider opacity-80">
+                        [PENGUMUMAN SISTEM]
+                      </span>
+                      <span className="text-xs font-black text-white">{ann.judul}</span>
+                    </div>
+                    <p className="mt-1 text-xs text-white/80 leading-relaxed">
+                      {ann.pesan}
+                    </p>
+                    {ann.tautan && (
+                      <a
+                        href={ann.tautan}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-[#c8ef70] hover:underline"
+                      >
+                        <span>Buka Tautan Terkait</span>
+                        <ArrowUpRight size={13} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* ── 00 // HERO BANNER: CAMPUS ATELIER & COMMAND DECK ── */}
       <section 

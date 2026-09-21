@@ -7,19 +7,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
   const [{ data: profile }, { data: activeSemester }] = await Promise.all([
-    supabase.from("profiles").select("full_name,avatar_url").single(),
+    supabase.from("profiles").select("full_name,avatar_url,role").single(),
     supabase.from("semesters").select("nama_semester").eq("is_active", true).maybeSingle(),
   ]);
   const userName = profile?.full_name || user.email?.split("@")[0] || "Mahasiswa";
   const avatarUrl = profile?.avatar_url || null;
+  const userRole = profile?.role || "student";
   const semesterName = activeSemester?.nama_semester;
 
   return (
     <main className="dashboard-shell min-h-screen w-full bg-[var(--background)]">
-      <MobileTopbar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName}/>
+      <MobileTopbar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName} role={userRole}/>
       <div className="flex min-h-screen w-full">
         <div className="hidden md:block">
-          <Sidebar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName}/>
+          <Sidebar name={userName} avatarUrl={avatarUrl} activeSemester={semesterName} role={userRole}/>
         </div>
         <section className="dashboard-content min-w-0 flex-1 overflow-x-hidden pb-24 md:pb-0">{children}</section>
       </div>

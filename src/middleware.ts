@@ -53,7 +53,27 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // 2. Redirect authenticated users attempting to access auth routes (login, register)
+  // 2. Protect /admin routes strictly for superadmins
+  if (pathname.startsWith("/admin")) {
+    if (!user) {
+      const redirectUrl = new URL("/login", request.url);
+      redirectUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Verify role in public.profiles
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profile?.role !== "superadmin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  // 3. Redirect authenticated users attempting to access auth routes (login, register)
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   if (isAuthRoute && user) {
     return NextResponse.redirect(new URL("/dashboard", request.url));

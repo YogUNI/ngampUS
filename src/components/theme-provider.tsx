@@ -52,7 +52,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const applyTheme = (t: Theme, currentPath?: string) => {
     const path = currentPath !== undefined ? currentPath : (typeof window !== "undefined" ? window.location.pathname : "");
-    const isDashboard = Boolean(path && (path.startsWith("/dashboard") || path.startsWith("/kegiatan") || path.startsWith("/jadwal") || path.startsWith("/modul") || path.startsWith("/organisasi") || path.startsWith("/rekap") || path.startsWith("/semester") || path.startsWith("/settings")));
+    const isDashboard = Boolean(path && (path.startsWith("/admin") || path.startsWith("/dashboard") || path.startsWith("/kegiatan") || path.startsWith("/jadwal") || path.startsWith("/modul") || path.startsWith("/organisasi") || path.startsWith("/rekap") || path.startsWith("/semester") || path.startsWith("/settings")));
     const root = document.documentElement;
     if (!isDashboard) {
       root.classList.remove("dark");
