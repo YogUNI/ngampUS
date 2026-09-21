@@ -45,6 +45,34 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  // 0. Maintenance Mode Check: redirect non-superadmins if maintenance_mode is enabled
+  // Exemptions: /admin, /login, /maintenance, and static assets
+  const isMaintenanceExempt = pathname.startsWith("/admin") || pathname.startsWith("/login") || pathname.startsWith("/maintenance");
+  if (!isMaintenanceExempt) {
+    const { data: settingData } = await supabase
+      .from("system_settings")
+      .select("value")
+      .eq("key", "maintenance_mode")
+      .maybeSingle();
+
+    if (settingData && settingData.value === true) {
+      // Check if user is superadmin (Zero-Lockout)
+      let isSuperadmin = false;
+      if (user) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (prof?.role === "superadmin") isSuperadmin = true;
+      }
+
+      if (!isSuperadmin) {
+        return NextResponse.redirect(new URL("/maintenance", request.url));
+      }
+    }
+  }
+
   // 1. Redirect unauthenticated users attempting to access protected routes
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
   if (isProtected && !user) {

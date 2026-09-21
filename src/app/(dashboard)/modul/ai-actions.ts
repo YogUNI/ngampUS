@@ -3,8 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { callGemini, callGeminiChat, GeminiMessage, GeminiPart } from "@/lib/gemini";
+import { getSystemFlags } from "@/lib/system-settings";
 
 async function getSignedInUser() {
+  const flags = await getSystemFlags();
+  if (!flags.ai_service_active) {
+    throw new Error("Layanan AI Engine sedang diistirahatkan sejenak oleh sistem untuk optimalisasi kuota dan server. Silakan coba kembali beberapa saat lagi.");
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

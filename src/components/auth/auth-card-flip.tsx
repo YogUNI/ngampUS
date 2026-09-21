@@ -120,6 +120,19 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const onRegisterSubmit = async (values: RegisterValues) => {
     setServerError("");
     const supabase = createClient();
+
+    // Check registration gatekeeper
+    const { data: regFlag } = await supabase
+      .from("system_settings")
+      .select("value")
+      .eq("key", "registration_active")
+      .maybeSingle();
+
+    if (regFlag && regFlag.value === false) {
+      setServerError("Pendaftaran akun mahasiswa baru sedang ditutup sementara oleh pengelola platform.");
+      return;
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,

@@ -12,19 +12,25 @@ import {
   ExternalLink,
   Power,
   Loader2,
-  X
+  X,
+  Building2,
+  Globe,
+  Calendar
 } from "lucide-react";
 import { 
   createBroadcastAnnouncement, 
   toggleAnnouncementStatus, 
   deleteBroadcastAnnouncement 
 } from "../actions";
+import { UniversityCombobox } from "@/components/ui/university-combobox";
 
 type Announcement = {
   id: string;
   judul: string;
   pesan: string;
   tipe: "info" | "update" | "warning" | "maintenance";
+  target_university?: string | null;
+  expires_at?: string | null;
   tautan: string | null;
   is_active: boolean;
   created_at: string;
@@ -37,6 +43,7 @@ export function AnnouncementClientManager({
 }) {
   const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
   const [showModal, setShowModal] = useState(false);
+  const [targetUniversity, setTargetUniversity] = useState("");
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -190,6 +197,23 @@ export function AnnouncementClientManager({
                           minute: "2-digit",
                         })}
                       </span>
+                      {a.target_university ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#c8ef70]/15 border border-[#c8ef70]/30 px-2 py-0.5 text-[10px] font-extrabold text-[#c8ef70]">
+                          <Building2 size={10} />
+                          <span>{a.target_university}</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 border border-white/15 px-2 py-0.5 text-[10px] font-bold text-white/80">
+                          <Globe size={10} />
+                          <span>Semua Kampus (Global)</span>
+                        </span>
+                      )}
+                      {a.expires_at && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+                          <Calendar size={10} />
+                          <span>Hingga {new Date(a.expires_at).toLocaleDateString("id-ID")}</span>
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="text-base font-bold text-white">{a.judul}</h3>
@@ -301,6 +325,38 @@ export function AnnouncementClientManager({
                   placeholder="Jelaskan pesan atau instruksi untuk mahasiswa..."
                   className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs text-white placeholder:text-[#557763] focus:border-[#c8ef70] focus:outline-none transition"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-white mb-1">
+                  Target Kampus Penerima
+                </label>
+                <div className="space-y-1">
+                  <UniversityCombobox
+                    value={targetUniversity}
+                    onChange={(val) => setTargetUniversity(val)}
+                    placeholder="Semua Kampus (Kosongkan jika siaran global)"
+                    inputClassName="w-full rounded-xl border border-white/15 bg-[#071710] py-2 px-3 text-xs font-bold text-white placeholder:text-[#557763] focus:border-[#c8ef70] focus:outline-none"
+                  />
+                  <input type="hidden" name="target_university" value={targetUniversity} />
+                  <p className="text-[10px] text-[#7da88c]">
+                    Pilih nama kampus jika pengumuman ini khusus mahasiswa kampus tertentu. Kosongkan untuk siaran ke semua mahasiswa.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-white mb-1">
+                  Tanggal Kedaluwarsa (Opsional)
+                </label>
+                <input
+                  type="datetime-local"
+                  name="expires_at"
+                  className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs font-bold text-white focus:border-[#c8ef70] focus:outline-none transition"
+                />
+                <p className="text-[10px] text-[#7da88c] mt-1">
+                  Pengumuman otomatis berhenti tayang setelah melewati waktu ini.
+                </p>
               </div>
 
               <div>

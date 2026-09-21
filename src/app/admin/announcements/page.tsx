@@ -8,7 +8,7 @@ export default async function AdminAnnouncementsPage() {
 
   const { data: announcements } = await supabase
     .from("broadcast_announcements")
-    .select("id, judul, pesan, tipe, tautan, is_active, created_at")
+    .select("*")
     .order("created_at", { ascending: false });
 
   return <AnnouncementClientManager initialAnnouncements={announcements || []} />;
