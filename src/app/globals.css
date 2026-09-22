@@ -968,41 +968,146 @@ html {
   color: #f87171 !important;
 }
 
-/* ── 11. FORM INPUTS ── */
-.dark .dashboard-shell input:not([type="checkbox"]):not([type="radio"]),
-.dark .dashboard-shell select,
-.dark .dashboard-shell textarea {
+/* ── 11. FORM INPUTS (Global under .dark, covering page & modals) ── */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not(.landing-page input),
+.dark select:not(.landing-page select),
+.dark textarea:not(.landing-page textarea) {
   background-color: #0d1e15 !important;
   border-color: #1f402e !important;
   color: #eef5f1 !important;
 }
-.dark .dashboard-shell input:focus,
-.dark .dashboard-shell select:focus,
-.dark .dashboard-shell textarea:focus {
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
   border-color: #22c55e !important;
   outline-color: rgba(34, 197, 94, 0.3) !important;
 }
-.dark .dashboard-shell label {
+.dark label {
   color: #a5c4ae !important;
 }
-.dark .dashboard-shell input::placeholder,
-.dark .dashboard-shell textarea::placeholder {
+.dark input::placeholder,
+.dark textarea::placeholder {
   color: #4a6b58 !important;
 }
+.dark option {
+  background-color: #0f2017 !important;
+  color: #eef5f1 !important;
+}
 
-/* ── 12. DIALOG / MODAL / OVERLAY ── */
-.dark .dashboard-shell [role="dialog"],
-.dark .dashboard-shell [data-radix-dialog-content] {
+/* ── 12. DIALOG / MODAL / PORTAL OVERLAY (Universal across all createPortal modals) ── */
+.dark [role="dialog"],
+.dark [data-radix-dialog-content],
+.dark .fixed.inset-0 > div[class*="rounded-3xl"][class*="bg-white"],
+.dark .fixed.inset-0 > div[class*="rounded-t-"][class*="bg-white"],
+.dark .fixed.inset-0 > div > div[class*="rounded-3xl"][class*="bg-white"],
+.dark .fixed.inset-0 > div > div[class*="rounded-t-"][class*="bg-white"],
+.dark .fixed.inset-0 div[class*="overflow-hidden"][class*="bg-white"],
+.dark .fixed.inset-0 div[class*="max-w-"][class*="bg-white"],
+.dark .fixed.inset-0 div[class*="bg-white"][class*="shadow-2xl"] {
   background-color: #0f2017 !important;
   border-color: #1a3526 !important;
   color: #edf4ef !important;
 }
 
+/* Modal Headers, Subheaders, Footers, and Separator Lines */
+.dark .fixed.inset-0 [class*="bg-[#fbfdfb]"],
+.dark .fixed.inset-0 [class*="bg-[#fbfcfa]"],
+.dark .fixed.inset-0 [class*="bg-[#fafbfa]"],
+.dark .fixed.inset-0 [class*="bg-[#f7f9f7]"],
+.dark .fixed.inset-0 [class*="bg-[#fcfdfc]"],
+.dark .fixed.inset-0 [class*="bg-[#fafcfb]"],
+.dark .fixed.inset-0 [class*="bg-[#f4f8f5]"],
+.dark .fixed.inset-0 [class*="bg-[#f0f4f1]"],
+.dark .fixed.inset-0 [class*="bg-white"][class*="border-t"],
+.dark .fixed.inset-0 [class*="bg-white"][class*="border-b"] {
+  background-color: #0c1c14 !important;
+  border-color: #183325 !important;
+}
+
+/* Modal Typography Contrast */
+.dark .fixed.inset-0 h1,
+.dark .fixed.inset-0 h2,
+.dark .fixed.inset-0 h3,
+.dark .fixed.inset-0 h4,
+.dark .fixed.inset-0 [class*="text-[#10261b]"],
+.dark .fixed.inset-0 [class*="text-[#103626]"],
+.dark .fixed.inset-0 [class*="text-[#111827]"],
+.dark .fixed.inset-0 [class*="text-[#0f172a]"] {
+  color: #f0f7f2 !important;
+}
+
+.dark .fixed.inset-0 [class*="text-[#55675b]"],
+.dark .fixed.inset-0 [class*="text-[#65746a]"],
+.dark .fixed.inset-0 [class*="text-[#697c6f]"],
+.dark .fixed.inset-0 [class*="text-[#7d9083]"],
+.dark .fixed.inset-0 [class*="text-[#425a4c]"],
+.dark .fixed.inset-0 [class*="text-[#33463a]"],
+.dark .fixed.inset-0 [class*="text-[#64748b]"],
+.dark .fixed.inset-0 [class*="text-[#475569]"] {
+  color: #9ab3a2 !important;
+}
+
+/* Modal Inner Boxes / Cards / Choices (Quiz, Chat, Summary) */
+.dark .fixed.inset-0 [class*="bg-[#fafbf9]"],
+.dark .fixed.inset-0 [class*="bg-[#f7faf8]"],
+.dark .fixed.inset-0 [class*="bg-[#f7f8f5]"],
+.dark .fixed.inset-0 [class*="bg-[#f8fafc]"] {
+  background-color: #132a1d !important;
+  border-color: #1d3c2b !important;
+}
+
+/* AI Chat Modal Bubble & Quick Prompts */
+.dark .fixed.inset-0 div[class*="bg-white"][class*="rounded-tl-xs"],
+.dark .fixed.inset-0 div[class*="bg-white"][class*="text-[#10261b]"] {
+  background-color: #12281c !important;
+  border-color: #1a3827 !important;
+  color: #edf4ef !important;
+}
+
+.dark .fixed.inset-0 button[class*="bg-[#f7f9f7]"],
+.dark .fixed.inset-0 button[class*="bg-[#f0f4f0]"] {
+  background-color: #152d20 !important;
+  border-color: #1e3d2c !important;
+  color: #c8ef70 !important;
+}
+
+.dark .fixed.inset-0 button[class*="bg-[#f7f9f7]"]:hover,
+.dark .fixed.inset-0 button[class*="bg-[#f0f4f0]"]:hover {
+  background-color: #1d4230 !important;
+  color: #ffffff !important;
+}
+
+/* Modal Close & Back Buttons */
+.dark .fixed.inset-0 button[class*="text-[#7d9284]"],
+.dark .fixed.inset-0 button[class*="text-[#697c6f]"],
+.dark .fixed.inset-0 button[class*="hover:bg-[#f0f4f0]"],
+.dark .fixed.inset-0 button[class*="hover:bg-[#f7f8f5]"] {
+  color: #9ab3a2 !important;
+}
+
+.dark .fixed.inset-0 button[class*="hover:bg-[#f0f4f0]"]:hover,
+.dark .fixed.inset-0 button[class*="hover:bg-[#f7f8f5]"]:hover {
+  background-color: #183626 !important;
+  color: #f0f7f2 !important;
+}
+
+/* Universal borders inside fixed overlays */
+.dark .fixed.inset-0 [class*="border-[#d8e3da]"],
+.dark .fixed.inset-0 [class*="border-[#d8e2da]"],
+.dark .fixed.inset-0 [class*="border-[#d6e2d8]"],
+.dark .fixed.inset-0 [class*="border-[#edf2ee]"],
+.dark .fixed.inset-0 [class*="border-[#f0f4f0]"],
+.dark .fixed.inset-0 [class*="border-[#e5ece6]"],
+.dark .fixed.inset-0 [class*="border-[#e2e8f0]"],
+.dark .fixed.inset-0 [class*="border-[#94a3b8]"] {
+  border-color: #1a3526 !important;
+}
+
 /* ── 13. ACTION BUTTONS (non-primary) ── */
-.dark .dashboard-shell button[class*="bg-[#f0f4f0]"],
-.dark .dashboard-shell button[class*="bg-[#eff3ee]"],
-.dark .dashboard-shell button[class*="bg-white"],
-.dark .dashboard-shell button[class*="border-[#d8e3da]"] {
+.dark button[class*="bg-[#f0f4f0]"],
+.dark button[class*="bg-[#eff3ee]"],
+.dark button[class*="bg-white"]:not([class*="bg-white/"]):not(.landing-page button),
+.dark button[class*="border-[#d8e3da]"] {
   background-color: #132a1d !important;
   border-color: #1a3526 !important;
   color: #9ab3a2 !important;
@@ -1062,6 +1167,103 @@ html {
   background-color: #132a1d !important;
   border-color: #1d3c2b !important;
 }
+
+/* ── 21. UNIVERSITY COMBOBOX & AUTOCOMPLETE DROPDOWNS IN DARK MODE ── */
+.dark div[class*="border-[#cbe0d3]"],
+.dark div[class*="bg-[#ffffff]"][class*="shadow-\[0_20px_48px"] {
+  background-color: #0d1e15 !important;
+  border-color: #1a3526 !important;
+}
+
+.dark div[class*="border-b"][class*="bg-[#f7faf8]"] {
+  background-color: #0a1710 !important;
+  border-color: #162f22 !important;
+}
+
+.dark div[class*="divide-y"][class*="bg-[#ffffff]"] {
+  background-color: #0d1e15 !important;
+  border-color: #162f22 !important;
+}
+
+.dark div[class*="divide-y"][class*="bg-[#ffffff]"] > button:not([class*="bg-[#0f6849]"]) {
+  color: #edf4ef !important;
+}
+
+.dark div[class*="divide-y"][class*="bg-[#ffffff]"] > button:not([class*="bg-[#0f6849]"]):hover {
+  background-color: #152d20 !important;
+}
+
+.dark div[class*="divide-y"][class*="bg-[#ffffff]"] span[class*="text-[#10261b]"] {
+  color: #edf4ef !important;
+}
+
+.dark div[class*="divide-y"][class*="bg-[#ffffff]"] span[class*="bg-[#eaf5ee]"] {
+  background-color: #152d20 !important;
+  color: #4ade80 !important;
+}
+
+.dark div[class*="divide-y"][class*="bg-[#ffffff]"] div[class*="text-[#587262]"] {
+  color: #8ca393 !important;
+}
+
+/* ── 22. COURSE CALENDAR MONTH GRID IN DARK MODE ── */
+.dark .dashboard-shell div[class*="divide-x"][class*="divide-y"] {
+  border-color: #1a3526 !important;
+}
+
+.dark .dashboard-shell button[class*="min-h-\[72px\]"],
+.dark .dashboard-shell button[class*="min-h-\[105px\]"] {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+}
+
+.dark .dashboard-shell button[class*="min-h-\[72px\]"]:hover,
+.dark .dashboard-shell button[class*="min-h-\[105px\]"]:hover {
+  background-color: #142b1e !important;
+}
+
+.dark .dashboard-shell button[class*="bg-[#fafaf9]"],
+.dark .dashboard-shell button[class*="bg-[#fbfbfb]"] {
+  background-color: #0b1811 !important;
+  opacity: 0.5 !important;
+}
+
+.dark .dashboard-shell button[class*="ring-2"][class*="bg-[#eef7f1]"] {
+  background-color: #123422 !important;
+  ring-color: #22c55e !important;
+}
+
+.dark .dashboard-shell div[class*="bg-[#f5faf6]"][class*="border-\[var\(--brand\)\]"] {
+  background-color: #0e2419 !important;
+  border-color: #1f4f34 !important;
+}
+
+.dark .dashboard-shell div[class*="border-[#d8ecd9]"] {
+  border-color: #1a3d29 !important;
+}
+
+.dark .dashboard-shell div[class*="border-b"][class*="bg-[#fafbf9]"] {
+  background-color: #0a1710 !important;
+  border-color: #162f22 !important;
+}
+
+/* ── 23. SPOTLIGHT TOUR IN DARK MODE ── */
+.dark div[class*="pointer-events-auto"][class*="rounded-2xl"][class*="bg-white"] {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+  color: #edf4ef !important;
+}
+
+.dark div[class*="pointer-events-auto"][class*="rounded-2xl"] h3 {
+  color: #f0f7f2 !important;
+}
+
+.dark div[class*="pointer-events-auto"][class*="rounded-2xl"] p {
+  color: #9ab3a2 !important;
+}
+
+
+
 
 
 
