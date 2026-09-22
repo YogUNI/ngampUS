@@ -552,7 +552,8 @@ html {
 
 /* Dashboard Typography contrast (strictly scoped) */
 .dark .dashboard-shell .text-\[\#10261b\],
-.dark .dashboard-shell .text-\[\#103626\] {
+.dark .dashboard-shell .text-\[\#103626\],
+.dark .dashboard-shell .text-\[\#173022\] {
   color: #f0f7f2 !important;
 }
 
@@ -560,7 +561,9 @@ html {
 .dark .dashboard-shell .text-\[\#65746a\],
 .dark .dashboard-shell .text-\[\#697c6f\],
 .dark .dashboard-shell .text-\[\#7d9083\],
-.dark .dashboard-shell .text-\[\#5e6b63\] {
+.dark .dashboard-shell .text-\[\#5e6b63\],
+.dark .dashboard-shell .text-\[\#718778\],
+.dark .dashboard-shell .text-\[\#455c4e\] {
   color: #9ab3a2 !important;
 }
 
@@ -837,7 +840,8 @@ html {
 
 /* ── 3. TEXT — All dark text in dashboard ── */
 .dark .dashboard-shell [class*="text-[#10261b]"],
-.dark .dashboard-shell [class*="text-[#103626]"] {
+.dark .dashboard-shell [class*="text-[#103626]"],
+.dark .dashboard-shell [class*="text-[#173022]"] {
   color: #f0f7f2 !important;
 }
 .dark .dashboard-shell [class*="text-[#55675b]"],
@@ -845,8 +849,10 @@ html {
 .dark .dashboard-shell [class*="text-[#697c6f]"],
 .dark .dashboard-shell [class*="text-[#7d9083]"],
 .dark .dashboard-shell [class*="text-[#5e6b63]"],
-.dark .dashboard-shell [class*="text-[#3b4b41]"] {
-  color: #8ca393 !important;
+.dark .dashboard-shell [class*="text-[#3b4b41]"],
+.dark .dashboard-shell [class*="text-[#718778]"],
+.dark .dashboard-shell [class*="text-[#455c4e]"] {
+  color: #9ab3a2 !important;
 }
 .dark .dashboard-shell [class*="text-[#8ba091]"],
 .dark .dashboard-shell [class*="text-[#b2c7ba]"] {
