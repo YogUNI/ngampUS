@@ -168,8 +168,8 @@ export function Sidebar({
                     : "gap-2.5 px-2.5 py-2"
                 } ${
                   active
-                    ? "bg-[#103626] text-white shadow-md shadow-[#103626]/15"
-                    : "text-[var(--muted)] hover:bg-white hover:text-[#103626]"
+                    ? "bg-[#103626] text-white shadow-md shadow-[#103626]/15 dark:bg-[#153e2c] dark:shadow-black/40"
+                    : "text-[var(--muted)] hover:bg-white hover:text-[#103626] dark:hover:bg-[#142b1f] dark:hover:text-[#f0f7f2]"
                 }`}
                 href={href}
               >
@@ -178,8 +178,8 @@ export function Sidebar({
                     collapsed ? "h-8 w-8" : "h-7.5 w-7.5"
                   } ${
                     active
-                      ? "bg-[#c8ef70] text-[#103626]"
-                      : "bg-[#e7eee7] text-[#50705e] group-hover:bg-[#dff3e5] group-hover:text-[#0f6849]"
+                      ? "bg-[#c8ef70] text-[#103626] dark:bg-[#c8ef70] dark:text-[#0a2318]"
+                      : "bg-[#e7eee7] text-[#50705e] group-hover:bg-[#dff3e5] group-hover:text-[#0f6849] dark:bg-[#12271c] dark:text-[#8ca393] dark:group-hover:bg-[#183a28] dark:group-hover:text-[#4ade80]"
                   }`}
                 >
                   <Icon size={16} />
@@ -188,7 +188,7 @@ export function Sidebar({
                   <>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[12.5px] font-extrabold leading-tight">{label}</span>
-                      <span className={`block truncate text-[10px] ${active ? "text-[#bdd0c2]" : "text-[#829187]"}`}>
+                      <span className={`block truncate text-[10px] ${active ? "text-[#bdd0c2] dark:text-[#9fc0a9]" : "text-[#829187] dark:text-[#6c8575]"}`}>
                         {note}
                       </span>
                     </span>
@@ -203,7 +203,7 @@ export function Sidebar({
         {/* CTA Catat Kegiatan */}
         {!collapsed ? (
           <Link
-            className="my-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839] shrink-0"
+            className="my-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839] dark:bg-[#1a5c39] dark:text-[#c8ef70] dark:shadow-[0_2px_0_#0f3a24] dark:hover:bg-[#206e44] dark:active:shadow-[0_1px_0_#0f3a24] shrink-0"
             href="/kegiatan?new=1"
             prefetch={true}
           >
@@ -214,7 +214,7 @@ export function Sidebar({
             href="/kegiatan?new=1"
             prefetch={true}
             title="Catat kegiatan"
-            className="my-2.5 grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 shrink-0"
+            className="my-2.5 grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 dark:bg-[#1a5c39] dark:text-[#c8ef70] dark:shadow-[0_2px_0_#0f3a24] dark:hover:bg-[#206e44] shrink-0"
           >
             <Plus size={16} strokeWidth={3} />
           </Link>

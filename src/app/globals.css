@@ -1047,13 +1047,73 @@ html {
   color: #9ab3a2 !important;
 }
 
-/* Modal Inner Boxes / Cards / Choices (Quiz, Chat, Summary) */
+/* Modal Inner Boxes / Cards / Containers (ActivityForm, CourseForm, Quiz, Chat, Summary) */
 .dark .fixed.inset-0 [class*="bg-[#fafbf9]"],
 .dark .fixed.inset-0 [class*="bg-[#f7faf8]"],
 .dark .fixed.inset-0 [class*="bg-[#f7f8f5]"],
-.dark .fixed.inset-0 [class*="bg-[#f8fafc]"] {
-  background-color: #132a1d !important;
-  border-color: #1d3c2b !important;
+.dark .fixed.inset-0 [class*="bg-[#f8fafc]"],
+.dark .fixed.inset-0 [class*="bg-[#f8faf7]"],
+.dark .fixed.inset-0 [class*="bg-[#f4faf6]"],
+.dark .fixed.inset-0 [class*="bg-[#fdf6f4]"],
+.dark .fixed.inset-0 [class*="bg-[#f5f7ff]"],
+.dark .fixed.inset-0 [class*="bg-[#f4fbe8]"],
+.dark .fixed.inset-0 [class*="bg-[#fff9e6]"],
+.dark .fixed.inset-0 [class*="bg-[#fef9f8]"] {
+  background-color: #0b1a12 !important;
+  border-color: #1a3a28 !important;
+  color: #edf4ef !important;
+}
+
+/* Modal Inner Input Fields (ruangan, date, time inputs inside subcards) */
+.dark .fixed.inset-0 input[class*="bg-white"],
+.dark .fixed.inset-0 select[class*="bg-white"] {
+  background-color: #07140e !important;
+  border-color: #1a3a28 !important;
+  color: #edf4ef !important;
+}
+
+/* Format Pertemuan Toggle Buttons inside Course Modal */
+.dark .fixed.inset-0 button[class*="bg-white"][class*="text-[var(--muted)]"] {
+  background-color: #0c1c14 !important;
+  border-color: #1a3827 !important;
+  color: #8ca393 !important;
+}
+
+/* Mode Switcher Tabs (Agenda / Rapat, Tugas Kuliah, Catatan Ide) in Activity Form */
+.dark .fixed.inset-0 div[class*="bg-[#f0f4f1]"] {
+  background-color: #08150f !important;
+  border: 1px solid #1a3827 !important;
+}
+
+.dark .fixed.inset-0 div[class*="bg-[#f0f4f1]"] button[class*="bg-white"] {
+  background-color: #153222 !important;
+  border: 1px solid #204c35 !important;
+}
+
+.dark .fixed.inset-0 div[class*="bg-[#f0f4f1]"] button[class*="text-[var(--brand)]"] {
+  color: #c8ef70 !important;
+}
+
+.dark .fixed.inset-0 div[class*="bg-[#f0f4f1]"] button[class*="text-[#b9442a]"] {
+  color: #fca5a5 !important;
+}
+
+.dark .fixed.inset-0 div[class*="bg-[#f0f4f1]"] button[class*="text-[#765800]"] {
+  color: #fcd34d !important;
+}
+
+/* Subcard Titles & Labels inside Modals */
+.dark .fixed.inset-0 [class*="text-[#456a1e]"],
+.dark .fixed.inset-0 [class*="text-[#3730a3]"],
+.dark .fixed.inset-0 [class*="text-[#b93c21]"],
+.dark .fixed.inset-0 [class*="text-[#765800]"] {
+  color: #c8ef70 !important;
+}
+
+.dark .fixed.inset-0 [class*="text-[#4f46e5]"],
+.dark .fixed.inset-0 [class*="text-[#4338ca]"],
+.dark .fixed.inset-0 [class*="text-[#1e1b4b]"] {
+  color: #93c5fd !important;
 }
 
 /* AI Chat Modal Bubble & Quick Prompts */
@@ -1077,7 +1137,7 @@ html {
   color: #ffffff !important;
 }
 
-/* Modal Close & Back Buttons */
+/* Modal Close, Batal, & Back Buttons */
 .dark .fixed.inset-0 button[class*="text-[#7d9284]"],
 .dark .fixed.inset-0 button[class*="text-[#697c6f]"],
 .dark .fixed.inset-0 button[class*="hover:bg-[#f0f4f0]"],
@@ -1095,6 +1155,12 @@ html {
 .dark .fixed.inset-0 [class*="border-[#d8e3da]"],
 .dark .fixed.inset-0 [class*="border-[#d8e2da]"],
 .dark .fixed.inset-0 [class*="border-[#d6e2d8]"],
+.dark .fixed.inset-0 [class*="border-[#d6e1d8]"],
+.dark .fixed.inset-0 [class*="border-[#b9ddc6]"],
+.dark .fixed.inset-0 [class*="border-[#c8ef70]"],
+.dark .fixed.inset-0 [class*="border-[#c7d2fe]"],
+.dark .fixed.inset-0 [class*="border-[#e8c0b8]"],
+.dark .fixed.inset-0 [class*="border-[#e0e7ff]"],
 .dark .fixed.inset-0 [class*="border-[#edf2ee]"],
 .dark .fixed.inset-0 [class*="border-[#f0f4f0]"],
 .dark .fixed.inset-0 [class*="border-[#e5ece6]"],
@@ -1159,6 +1225,39 @@ html {
   background-color: #0f2017 !important;
   border-color: #22c55e !important;
   box-shadow: 0 0 0 2px #22c55e !important;
+}
+
+/* ── 19b. MODUL PAGE SPECIFIC (Quick Jump Strip & Study AI Suite) ── */
+.dark .dashboard-shell div[class*="bg-[#fcfdfc]"],
+.dark .dashboard-shell div[class*="bg-[#fbfdfb]"] {
+  background-color: #0c1c14 !important;
+  border-color: #1a3827 !important;
+  color: #edf4ef !important;
+}
+
+.dark .dashboard-shell div[class*="bg-[#fcfdfc]"] a[class*="bg-white"],
+.dark .dashboard-shell div[class*="bg-[#fcfdfc]"] a[class*="bg-[#dff3e5]"] {
+  background-color: #12281c !important;
+  border-color: #1c3d2a !important;
+  color: #a5c4ae !important;
+}
+
+.dark .dashboard-shell div[class*="bg-[#fcfdfc]"] a[class*="bg-[#dff3e5]"] {
+  background-color: #163825 !important;
+  color: #4ade80 !important;
+  border-color: #225739 !important;
+}
+
+.dark .dashboard-shell button[class*="bg-white"][class*="tag-mono"] {
+  background-color: #11261a !important;
+  border-color: #1c3c2b !important;
+  color: #edf4ef !important;
+}
+
+.dark .dashboard-shell button[class*="bg-white"][class*="tag-mono"]:hover {
+  background-color: #183827 !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
 }
 
 /* ── 20. Card inner icon circle on white bg ── */
