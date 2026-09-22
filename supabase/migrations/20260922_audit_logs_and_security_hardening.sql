@@ -35,6 +35,10 @@ create policy "Superadmin can insert audit logs"
   on public.admin_audit_logs for insert
   with check (public.is_superadmin());
 
+-- Aktifkan Supabase Realtime Publication untuk tabel admin_audit_logs
+alter table public.admin_audit_logs replica identity full;
+alter publication supabase_realtime add table public.admin_audit_logs;
+
 -- 4. Database-Level Registration Gatekeeper Check Function
 -- Mencegah pendaftaran langsung jika registration_active = false
 create or replace function public.check_registration_gatekeeper()
