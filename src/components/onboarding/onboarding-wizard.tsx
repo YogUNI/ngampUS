@@ -10,27 +10,27 @@ import { SpotlightTour, TourStep } from "./spotlight-tour";
 
 const TOUR_STEPS: TourStep[] = [
   {
-    targetSelector: '[data-tour="action-card-jadwal"], [data-tour="mob-nav-jadwal"], [data-tour="nav-jadwal"]',
+    targetSelector: '[data-tour="action-card-jadwal"], [data-tour="nav-jadwal"], [data-tour="mob-nav-jadwal"]',
     title: "Jadwal Kuliah Mingguan 📅",
     description: "Atur jadwal kuliah, ruangan, dosen, link kelas, dan materi mingguan di sini. Mata kuliah yang kamu atur akan terhubung langsung ke tugasmu!",
   },
   {
-    targetSelector: '[data-tour="action-card-catat"], [data-tour="hero-add-kegiatan"], [data-tour="mob-nav-kegiatan"]',
+    targetSelector: '[data-tour="action-card-catat"], [data-tour="nav-catat"], [data-tour="mob-nav-fab"], [data-tour="mob-nav-kegiatan"]',
     title: "Pusat Catat Tugas & Agenda 📝",
     description: "Klik tombol cepat ini untuk mencatat tugas baru, deadline ujian, hingga agenda kampus penting agar tidak terlewat.",
   },
   {
-    targetSelector: '[data-tour="action-card-modul"], [data-tour="mob-nav-modul"], [data-tour="nav-modul"]',
+    targetSelector: '[data-tour="action-card-modul"], [data-tour="nav-modul"], [data-tour="mob-nav-modul"]',
     title: "Modul & Catatan AI 📂",
     description: "Unggah modul PDF materi kuliah, rangkum otomatis dalam hitungan detik, atau buat kuis interaktif dengan AI!",
   },
   {
-    targetSelector: '[data-tour="action-card-organisasi"], [data-tour="action-organisasi"], [data-tour="nav-organisasi"]',
+    targetSelector: '[data-tour="action-card-organisasi"], [data-tour="nav-organisasi"]',
     title: "Organisasi & Proker Kampus 🏢",
     description: "Kelola jabatan kepengurusan, pantau program kerja, dan koordinasi divisi organisasi kampusmu di satu wadah.",
   },
   {
-    targetSelector: '[data-tour="action-card-rekap"], [data-tour="action-card-portofolio"], [data-tour="mob-nav-rekap"]',
+    targetSelector: '[data-tour="action-card-rekap"], [data-tour="nav-rekap"], [data-tour="mob-nav-rekap"]',
     title: "Rekap AI & Portofolio Karier 🏆",
     description: "Pantau analitik produktivitas belajar serta ekspor seluruh keikutsertaan organisasi dan prestasimu jadi CV portofolio instan!",
   },

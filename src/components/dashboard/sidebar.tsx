@@ -148,6 +148,8 @@ export function Sidebar({
                 ? "nav-jadwal"
                 : href === "/kegiatan"
                 ? "nav-kegiatan"
+                : href === "/modul"
+                ? "nav-modul"
                 : href === "/organisasi"
                 ? "nav-organisasi"
                 : href === "/semester"
@@ -203,6 +205,7 @@ export function Sidebar({
         {/* CTA Catat Kegiatan */}
         {!collapsed ? (
           <Link
+            data-tour="nav-catat"
             className="my-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839] dark:bg-[#1a5c39] dark:text-[#c8ef70] dark:shadow-[0_2px_0_#0f3a24] dark:hover:bg-[#206e44] dark:active:shadow-[0_1px_0_#0f3a24] shrink-0"
             href="/kegiatan?new=1"
             prefetch={true}
@@ -211,6 +214,7 @@ export function Sidebar({
           </Link>
         ) : (
           <Link
+            data-tour="nav-catat"
             href="/kegiatan?new=1"
             prefetch={true}
             title="Catat kegiatan"
