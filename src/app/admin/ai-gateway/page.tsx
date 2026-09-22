@@ -430,18 +430,18 @@ export default async function AdminAiGatewayPage() {
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
                 <span className="rounded-full bg-[#c8ef70] px-2.5 py-0.5 text-[9px] font-black text-[#103626] uppercase shadow-sm flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#103626] animate-ping" />
-                  NODE 01 • PRIMARY
+                  NODE 01 • PRIMARY SPEED & DEPTH
                 </span>
               </div>
 
               <div>
                 <div className="flex items-center justify-between pt-1">
-                  <span className="font-mono text-[9px] text-[#c8ef70] font-bold">LATENCY: ~400ms</span>
+                  <span className="font-mono text-[9px] text-[#c8ef70] font-bold">LATENCY: ~350ms</span>
                   <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-ping" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-3.7-flash</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-2.5-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Engine mutakhir dengan penalaran reasoning paling tajam dan presisi untuk membedah materi kuliah.
+                  Model flagship generasi terbaru dengan penalaran adaptif super tajam dan respon berkecepatan kilat.
                 </p>
               </div>
 
@@ -477,9 +477,9 @@ export default async function AdminAiGatewayPage() {
                   <span className="font-mono text-[9px] text-[#789a84]">STANDBY ROUTE</span>
                   <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-3.5-flash</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-2.0-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Kabel penyangga otomatis pertama jika kuota RPM model 3.7 mengalami status 429 / resource exhausted.
+                  Kabel failover performa tinggi dengan TTFT (time-to-first-token) instan jika node utama sibuk.
                 </p>
               </div>
 
@@ -512,9 +512,9 @@ export default async function AdminAiGatewayPage() {
                   <span className="font-mono text-[9px] text-[#789a84]">STANDBY ROUTE</span>
                   <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-3.1-flash-lite</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-1.5-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Jalur kabel berlatensi ultra-rendah untuk pemrosesan teks cepat dan menghemat kuota token komputasi.
+                  Jalur kabel teruji dengan ketersediaan kuota global yang sangat stabil untuk segala jenis pertanyaan.
                 </p>
               </div>
 
@@ -538,25 +538,25 @@ export default async function AdminAiGatewayPage() {
             <div className="relative rounded-2xl border border-white/15 bg-[#071710] p-5 flex flex-col justify-between">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
                 <span className="rounded-full bg-[#183929] border border-white/20 px-2.5 py-0.5 text-[9px] font-bold text-[#b4d8c1] uppercase">
-                  NODE 04 • FAILOVER 3
+                  NODE 04 • FAILOVER 3 (DEEP LOGIC)
                 </span>
               </div>
 
               <div>
                 <div className="flex items-center justify-between pt-1">
-                  <span className="font-mono text-[9px] text-[#789a84]">SAFETY ROUTE</span>
+                  <span className="font-mono text-[9px] text-[#789a84]">DEEP SAFETY</span>
                   <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-3.6-flash</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-2.5-pro</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Kabel penahan beban lapis terakhir untuk memastikan mahasiswa tidak pernah gagal mendapatkan respon.
+                  Mesin penalaran tingkat dewa untuk pertanyaan analitikal rumit, pembuktian formula, dan analisis kritis mendalam.
                 </p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-[11px] font-mono">
                 <div className="flex justify-between text-[#789a84]">
                   <span>Max Context:</span>
-                  <span className="text-[#b4d8c1]">1,048,576 Token</span>
+                  <span className="text-[#b4d8c1]">2,097,152 Token</span>
                 </div>
                 <div className="flex justify-between text-[#789a84]">
                   <span>Generation:</span>
@@ -564,7 +564,7 @@ export default async function AdminAiGatewayPage() {
                 </div>
                 <div className="flex justify-between text-[#789a84]">
                   <span>Kabel Status:</span>
-                  <span className="text-[#b4d8c1]">Ready Backup</span>
+                  <span className="text-[#b4d8c1]">Deep Safety</span>
                 </div>
               </div>
             </div>

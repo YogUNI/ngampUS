@@ -352,8 +352,13 @@ export async function sendModuleChatMessage(moduleId: string, userMessage: strin
     content: userMessage,
   });
 
-  // Fetch document if attached
-  const docPart = await loadModuleDocumentPart(moduleData.file_url, moduleData.file_name);
+  // Fetch document if attached (attach on first turn or when relevant to keep payload ultra light and snappy)
+  const isFirstTurn = (chatHistory || []).length === 0;
+  // If summary exists and already has keypoints, we only need to fetch the full heavy PDF on the first turn or if user asks for citations
+  let docPart: GeminiPart | null = null;
+  if (moduleData.file_url && (isFirstTurn || !moduleData.ai_summary)) {
+    docPart = await loadModuleDocumentPart(moduleData.file_url, moduleData.file_name);
+  }
 
   // Build message history
   const formattedHistory: GeminiMessage[] = (chatHistory || []).map((c) => ({
@@ -361,13 +366,9 @@ export async function sendModuleChatMessage(moduleId: string, userMessage: strin
     parts: [{ text: c.content }],
   }));
 
-  // Build current turn parts: attach document first turn or current turn
+  // Build current turn parts: attach document on first turn or current turn
   const currentParts: GeminiPart[] = [];
-  if (docPart && formattedHistory.length === 0) {
-    // Attach document on first message
-    currentParts.push(docPart);
-  } else if (docPart && formattedHistory.length > 0) {
-    // If multi-turn, also provide doc part so Gemini keeps document memory active
+  if (docPart) {
     currentParts.push(docPart);
   }
   currentParts.push({ text: userMessage });

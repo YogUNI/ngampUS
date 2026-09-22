@@ -8,10 +8,10 @@ export type GeminiMessage = {
 };
 
 const GEMINI_MODELS = [
-  "gemini-3.7-flash",
-  "gemini-3.5-flash",
-  "gemini-3.1-flash-lite",
-  "gemini-3.6-flash",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-2.5-pro",
 ];
 
 export async function callGemini(
@@ -40,6 +40,15 @@ export async function callGemini(
       parts: [{ text: systemInstruction }],
     };
   }
+
+  // Generation config: sharp, fast, with thinking budget disabled for instant TTFT
+  body.generationConfig = {
+    temperature: 0.65,
+    topP: 0.95,
+    thinkingConfig: {
+      thinkingBudget: 0,
+    },
+  };
 
   let lastError = "";
 
@@ -114,6 +123,15 @@ export async function callGeminiChat(
       parts: [{ text: systemInstruction }],
     };
   }
+
+  // Generation config: sharp, fast, with thinking budget disabled for instant TTFT
+  body.generationConfig = {
+    temperature: 0.65,
+    topP: 0.95,
+    thinkingConfig: {
+      thinkingBudget: 0,
+    },
+  };
 
   let lastError = "";
 
