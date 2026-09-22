@@ -119,7 +119,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                     {isDelete ? "✦ Terhapus" : isSuccess ? "✦ Berhasil" : "✦ Peringatan"}
                   </p>
                   <p className="text-[15px] font-bold leading-snug text-white/95">
-                    {toast.message}
+                    {typeof toast.message === "string" ? toast.message : String(toast.message || "")}
                   </p>
                 </div>
 

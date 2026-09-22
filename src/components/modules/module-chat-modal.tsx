@@ -117,9 +117,9 @@ export function ModuleChatModal({
       const reply = await sendModuleChatMessage(moduleId, userText);
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal mengirim pesan.";
+      const msg = typeof err === "object" && err && "message" in err ? String((err as any).message) : "Gagal menghubungi AI Tutor.";
       
-      // If error is about killswitch or temporary pause, show graceful bubble message
+      // If error is about killswitch or temporary pause
       if (msg.includes("diistirahatkan sejenak") || msg.includes("optimalisasi kuota")) {
         setMessages((prev) => [
           ...prev, 
@@ -129,7 +129,13 @@ export function ModuleChatModal({
           }
         ]);
       } else {
-        showToast(msg, "error");
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: `⚠️ **Maaf, ada kendala saat memproses jawaban:**\n\n${msg}\n\n*Silakan coba kirim ulang pertanyaanmu ya.*`
+          }
+        ]);
       }
     } finally {
       setLoading(false);

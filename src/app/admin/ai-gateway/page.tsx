@@ -439,9 +439,9 @@ export default async function AdminAiGatewayPage() {
                   <span className="font-mono text-[9px] text-[#c8ef70] font-bold">LATENCY: ~350ms</span>
                   <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-ping" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-2.5-flash</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.6-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Model flagship generasi terbaru dengan penalaran adaptif super tajam dan respon berkecepatan kilat.
+                  Model flagship aktif tercepat dengan penalaran adaptif super tajam, tanpa jeda thinking delay.
                 </p>
               </div>
 
@@ -477,9 +477,9 @@ export default async function AdminAiGatewayPage() {
                   <span className="font-mono text-[9px] text-[#789a84]">STANDBY ROUTE</span>
                   <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-2.0-flash</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.7-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Kabel failover performa tinggi dengan TTFT (time-to-first-token) instan jika node utama sibuk.
+                  Kabel failover reasoning generasi 3.7 jika kuota RPM node utama mengalami batas permintaan.
                 </p>
               </div>
 
@@ -512,9 +512,9 @@ export default async function AdminAiGatewayPage() {
                   <span className="font-mono text-[9px] text-[#789a84]">STANDBY ROUTE</span>
                   <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-1.5-flash</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.8-flash</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Jalur kabel teruji dengan ketersediaan kuota global yang sangat stabil untuk segala jenis pertanyaan.
+                  Jalur kabel mutakhir versi 3.8 untuk redundansi tinggi saat jam sibuk kuliah.
                 </p>
               </div>
 
@@ -538,7 +538,7 @@ export default async function AdminAiGatewayPage() {
             <div className="relative rounded-2xl border border-white/15 bg-[#071710] p-5 flex flex-col justify-between">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center justify-center">
                 <span className="rounded-full bg-[#183929] border border-white/20 px-2.5 py-0.5 text-[9px] font-bold text-[#b4d8c1] uppercase">
-                  NODE 04 • FAILOVER 3 (DEEP LOGIC)
+                  NODE 04 • FAILOVER 3 (LITE & GLOBAL)
                 </span>
               </div>
 
@@ -547,9 +547,9 @@ export default async function AdminAiGatewayPage() {
                   <span className="font-mono text-[9px] text-[#789a84]">DEEP SAFETY</span>
                   <span className="h-2 w-2 rounded-full bg-emerald-500/50" />
                 </div>
-                <h3 className="text-base font-black text-white mt-2">gemini-2.5-pro</h3>
+                <h3 className="text-base font-black text-white mt-2">gemini-3.1-flash-lite</h3>
                 <p className="text-xs text-[#9dc5aa] mt-1.5 leading-relaxed">
-                  Mesin penalaran tingkat dewa untuk pertanyaan analitikal rumit, pembuktian formula, dan analisis kritis mendalam.
+                  Jalur kabel penahan beban berlatensi ultra-rendah untuk memastikan respon selalu berhasil 100%.
                 </p>
               </div>
 
