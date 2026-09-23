@@ -11,6 +11,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 
 const nav = [
   { href: "/dashboard",   label: "Dashboard",     note: "Peta fokus",       icon: LayoutDashboard },
@@ -248,6 +249,11 @@ export function Sidebar({
 
       {/* ── BOTTOM SECTION: User Card Footer (Always pinned at bottom, never clipped) ── */}
       <div className={`shrink-0 pt-2 border-t border-[#d8e2da]/70 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
+        {!collapsed && (
+          <div className="mb-2">
+            <PwaInstallButton variant="sidebar" />
+          </div>
+        )}
         {!collapsed ? (
           <div className="rounded-2xl border border-[#d8e2da] bg-white/95 p-2.5 shadow-xs">
             <div className="flex items-center gap-2">
@@ -391,6 +397,7 @@ export function MobileTopbar({
         </div>
 
         <div className="flex items-center gap-2">
+          <PwaInstallButton variant="mobile-icon" />
           <ThemeToggle variant="icon" />
           
           {/* Avatar with Quick Dropdown Menu */}
@@ -451,6 +458,10 @@ export function MobileTopbar({
                       <User size={15} className="text-[var(--brand)]" />
                       <span>Lihat Profil</span>
                     </Link>
+
+                    <div className="pt-1 pb-1">
+                      <PwaInstallButton variant="sidebar" />
+                    </div>
 
                     <button
                       type="button"

@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ArrowRight, LogIn } from "lucide-react";
+import { Menu, X, ArrowRight, LogIn, Smartphone } from "lucide-react";
+import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 
 interface NavLinkItem {
   name: string;
@@ -154,6 +155,14 @@ export function LandingNavbar() {
 
           {/* Desktop Buttons (tablet & desktop: >= sm) */}
           <div className="hidden sm:flex items-center gap-2 text-xs sm:text-sm font-bold">
+            <PwaInstallButton
+              variant="navbar"
+              className={
+                isScrolled
+                  ? "border border-[#0f6849]/20 bg-[#0f6849]/10 text-[#0f6849] hover:bg-[#0f6849]/20"
+                  : "border border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-md"
+              }
+            />
             <Link
               href="/login"
               className={`rounded-full px-3.5 py-2 transition active:scale-95 ${
@@ -178,27 +187,27 @@ export function LandingNavbar() {
 
           {/* Mobile View Header (< sm): Compact CTA + Drawer Menu Button */}
           <div className="flex sm:hidden items-center gap-1.5">
+            <PwaInstallButton
+              variant="navbar"
+              className={
+                isScrolled
+                  ? "border border-[#0f6849]/20 bg-[#0f6849]/10 text-[#0f6849] px-2 py-1 text-[11px]"
+                  : "border border-white/20 bg-white/10 text-white px-2 py-1 text-[11px]"
+              }
+            />
             <Link
               href="/login"
-              className={`rounded-full px-2.5 py-1 text-xs font-bold transition ${
+              className={`rounded-full px-2 py-1 text-xs font-bold transition ${
                 isScrolled ? "text-[#103626]" : "text-[#c9dbce] hover:text-white"
               }`}
             >
               Masuk
             </Link>
-            <Link
-              href="/register"
-              className={`rounded-full px-3 py-1.5 text-xs font-black shadow-xs active:scale-95 transition ${
-                isScrolled ? "bg-[#103626] text-[#c8ef70]" : "bg-[#c8ef70] text-[#103626]"
-              }`}
-            >
-              Mulai →
-            </Link>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Tutup menu" : "Buka menu navigasi"}
-              className={`ml-1 grid h-8 w-8 place-items-center rounded-full transition active:scale-95 ${
+              className={`ml-0.5 grid h-8 w-8 place-items-center rounded-full transition active:scale-95 ${
                 isScrolled
                   ? "bg-black/5 text-[#103626] hover:bg-black/10"
                   : "bg-white/10 text-white hover:bg-white/20"
@@ -264,6 +273,10 @@ export function LandingNavbar() {
 
             {/* Bottom Actions */}
             <div className="mt-5 flex flex-col gap-2 border-t border-white/10 pt-4">
+              <PwaInstallButton
+                variant="navbar"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 border border-white/20 py-2.5 text-sm font-bold text-white hover:bg-white/20 active:scale-98"
+              />
               <Link
                 href="/register"
                 onClick={() => setMobileMenuOpen(false)}

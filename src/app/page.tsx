@@ -21,6 +21,7 @@ import { InteractivePreview } from "@/components/landing/interactive-preview";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
+import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 
 
 export default function Home() {
@@ -98,12 +99,10 @@ export default function Home() {
               >
                 <span className="truncate">Mulai Petakan Semestermu</span> <ArrowRight size={18} className="shrink-0" />
               </Link>
-              <a 
-                href="#features" 
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-5 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#f6f8f1] hover:bg-white/10 transition active:scale-98"
-              >
-                Jelajahi Fitur ↓
-              </a>
+              <PwaInstallButton
+                variant="hero"
+                className="w-full sm:w-auto justify-center"
+              />
             </div>
 
             {/* Hero Quick Proof Points */}
