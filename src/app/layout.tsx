@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { PageTracker } from "@/components/analytics/page-tracker";
 import { PwaRegister } from "@/components/pwa/pwa-register";
+import { PwaSplashScreen } from "@/components/pwa/pwa-splash-screen";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-full flex flex-col overflow-x-hidden w-full">
+        <PwaSplashScreen />
         <Suspense fallback={null}>
           <NavigationProgress />
           <PageTracker />
