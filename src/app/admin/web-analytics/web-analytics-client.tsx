@@ -25,7 +25,10 @@ import {
   Flame,
   CheckCircle2,
   Lock,
-  Cpu
+  Cpu,
+  Copy,
+  Code,
+  AlertTriangle
 } from "lucide-react";
 import { type WebAnalyticsSummary, type TrafficEvent } from "@/lib/web-telemetry";
 import { fetchFreshWebAnalytics } from "../actions";
@@ -41,6 +44,23 @@ export function WebAnalyticsClient({ initialAnalytics }: WebAnalyticsClientProps
   const [autoRefreshSec, setAutoRefreshSec] = useState<number>(10);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date>(new Date());
   const [activeTab, setActiveTab] = useState<"pages" | "devices" | "sources">("pages");
+  const [showSqlModal, setShowSqlModal] = useState(false);
+  const [copiedSql, setCopiedSql] = useState(false);
+
+  const SQL_MIGRATION = `-- Berikan izin kepada pengunjung publik untuk mencatat traffic
+drop policy if exists "Allow anonymous traffic telemetry insert and update" on public.system_settings;
+create policy "Allow anonymous traffic telemetry insert and update"
+  on public.system_settings
+  for all
+  using (key like 'web_traffic%')
+  with check (key like 'web_traffic%');
+alter table public.system_settings replica identity full;`;
+
+  const copySqlToClipboard = () => {
+    navigator.clipboard.writeText(SQL_MIGRATION);
+    setCopiedSql(true);
+    setTimeout(() => setCopiedSql(false), 3000);
+  };
 
   // Load fresh data on demand or on period change
   const reloadData = (days: number = periodDays) => {
@@ -193,6 +213,68 @@ export function WebAnalyticsClient({ initialAnalytics }: WebAnalyticsClientProps
           </div>
         </div>
       </div>
+
+      {/* ── Supabase RLS One-Click SQL Setup Helper Banner ── */}
+      {data.periodTotals.totalViews === 0 && (
+        <div className="rounded-3xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-[#1b2b1d] to-[#071710] p-5 sm:p-6 shadow-md">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5">
+                <AlertTriangle size={20} />
+              </span>
+              <div>
+                <h3 className="text-sm font-black text-white flex items-center gap-2">
+                  <span>Aktivasi Izin Rekam Traffic di Database Supabase</span>
+                  <span className="rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 text-[9px] font-mono font-bold uppercase">
+                    PENTING
+                  </span>
+                </h3>
+                <p className="text-xs text-[#b8d6c2] mt-1 max-w-2xl leading-relaxed">
+                  Agar setiap orang yang membuka link <code className="text-[#c8ef70] font-bold">ngampus.site</code> dari WhatsApp/Instagram langsung tercatat tanpa error Row-Level Security (RLS), jalankan 1 perintah SQL singkat ini di Supabase SQL Editor.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
+              <button
+                onClick={copySqlToClipboard}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-2xl bg-[#c8ef70] px-4 py-2.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition shadow-xs active:scale-95 cursor-pointer"
+              >
+                {copiedSql ? <CheckCircle2 size={14} className="text-[#103626]" /> : <Copy size={14} />}
+                <span>{copiedSql ? "SQL Disalin! ✓" : "Salin SQL"}</span>
+              </button>
+              <button
+                onClick={() => setShowSqlModal(!showSqlModal)}
+                className="inline-flex items-center gap-1.5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2.5 text-xs font-bold text-white transition cursor-pointer"
+              >
+                <Code size={14} />
+                <span>{showSqlModal ? "Tutup" : "Lihat SQL"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Expandable SQL Code Box */}
+          {showSqlModal && (
+            <div className="mt-4 pt-4 border-t border-amber-500/20 animate-in fade-in duration-200">
+              <p className="text-[11px] font-mono text-[#9dc5aa] mb-2">
+                Buka <strong>Supabase Dashboard</strong> &gt; <strong>SQL Editor</strong> &gt; <strong>New Query</strong>, paste script di bawah ini lalu klik <strong>Run</strong>:
+              </p>
+              <div className="relative">
+                <pre className="rounded-2xl border border-white/10 bg-[#071710] p-4 text-[11px] font-mono text-[#c8ef70] overflow-x-auto leading-relaxed">
+                  {SQL_MIGRATION}
+                </pre>
+                <button
+                  onClick={copySqlToClipboard}
+                  className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-xl bg-white/10 hover:bg-white/20 px-2.5 py-1 text-[10px] font-bold text-white transition cursor-pointer"
+                >
+                  <Copy size={11} />
+                  <span>{copiedSql ? "Disalin!" : "Salin"}</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── 4 Key Hosting & Traffic Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
