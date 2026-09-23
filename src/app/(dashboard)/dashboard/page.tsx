@@ -624,10 +624,10 @@ export default async function DashboardPage() {
                   </span>
                 )}
               </div>
-              <span className="mt-2 block text-[11px] sm:text-xs font-black tracking-tight text-[#173022] group-hover:text-[#0f6849] dark:text-[#f0f7f2] dark:group-hover:text-[#4ade80] transition leading-tight">
+              <span className="mt-2 block text-[11px] sm:text-xs font-black tracking-tight text-[#10261b] group-hover:text-[#0f6849] dark:text-[#f0f7f2] dark:group-hover:text-[#4ade80] transition leading-tight">
                 {item.label}
               </span>
-              <span className="tag-mono block text-[9px] text-[#718778] dark:text-[#9ab3a2] truncate mt-0.5">
+              <span className="tag-mono block text-[9px] text-[#3d5045] dark:text-[#9ab3a2] truncate mt-0.5">
                 {item.sub}
               </span>
             </Link>
