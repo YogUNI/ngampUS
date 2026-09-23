@@ -1,9 +1,22 @@
 @import "tailwindcss";
 
-/* Global mobile viewport safety — must come AFTER @import */
+/* Global mobile viewport safety & PWA Native App feel */
 html, body {
   overflow-x: clip;
   max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  overscroll-behavior-y: none;
+}
+
+/* Standalone PWA Notch & Safe Area adjustments */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
 :root {
