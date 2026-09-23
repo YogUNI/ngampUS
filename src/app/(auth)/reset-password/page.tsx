@@ -1,13 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
   title: "Atur Ulang Password | ngampUS",
   description: "Buat kata sandi baru untuk akun ngampUS kamu.",
 };
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
+  // Check session server-side so the form skips the unreliable client-side
+  // cookie-hydration race that causes false "Sesi Pemulihan Kadaluarsa" errors.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const initialHasSession = !!user;
+
   return (
     <div className="auth-atlas-card w-full max-w-md">
       <Link className="flex items-center gap-2 font-display text-xl font-black tracking-[-.06em] lg:hidden" href="/">
@@ -35,7 +42,7 @@ export default function ResetPasswordPage() {
         Buat kata sandi baru yang kuat (minimal 8 karakter) untuk melindungi akun ngampUS kamu.
       </p>
 
-      <ResetPasswordForm />
+      <ResetPasswordForm initialHasSession={initialHasSession} />
     </div>
   );
 }

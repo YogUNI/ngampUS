@@ -21,14 +21,20 @@ const resetSchema = z
 
 type ResetFormValues = z.infer<typeof resetSchema>;
 
-export function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+  /** Pre-checked by the Server Component — true when /auth/callback already set a valid session cookie. */
+  initialHasSession?: boolean;
+}
+
+export function ResetPasswordForm({ initialHasSession = false }: ResetPasswordFormProps) {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
-  const [hasValidSession, setHasValidSession] = useState(false);
+  // If the server already confirmed a session, skip the client-side check entirely.
+  const [checkingSession, setCheckingSession] = useState(!initialHasSession);
+  const [hasValidSession, setHasValidSession] = useState(initialHasSession);
 
   const {
     register,
@@ -39,6 +45,9 @@ export function ResetPasswordForm() {
   });
 
   useEffect(() => {
+    // Server already confirmed a valid session — nothing to do on the client.
+    if (initialHasSession) return;
+
     async function initSession() {
       const supabase = createClient();
 
@@ -67,7 +76,6 @@ export function ResetPasswordForm() {
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
-        const type = hashParams.get("type");
 
         if (accessToken && refreshToken) {
           const { error } = await supabase.auth.setSession({
@@ -82,7 +90,7 @@ export function ResetPasswordForm() {
         }
       }
 
-      // 4. Listen for auth state change
+      // 4. Listen for auth state change (PASSWORD_RECOVERY event from Supabase)
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
         if (event === "PASSWORD_RECOVERY" || (currentSession && event === "SIGNED_IN")) {
           setHasValidSession(true);
@@ -101,7 +109,7 @@ export function ResetPasswordForm() {
     }
 
     initSession();
-  }, []);
+  }, [initialHasSession]);
 
   async function onSubmit(values: ResetFormValues) {
     setServerError("");
