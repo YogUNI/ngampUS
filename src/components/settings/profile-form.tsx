@@ -278,7 +278,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
 
       {/* ── Hidden File Input ── */}
       <input
@@ -309,7 +309,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
       </header>
 
       {/* ── 2-Column Responsive Layout: Mobile shows KTM on top (order-1), Desktop shows Form Left & KTM Right ── */}
-      <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.15fr_0.85fr] items-start">
+      <div className="grid min-w-0 gap-6 lg:gap-8 lg:grid-cols-[1.15fr_0.85fr] items-start">
 
         {/* ── RIGHT COLUMN: DIGITAL KTM (On Mobile: ORDER-1 Top; On Desktop: ORDER-2 Right) ── */}
         <aside className="order-1 lg:order-2 lg:sticky lg:top-6 space-y-5 min-w-0">
@@ -677,7 +677,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       placeholder="Contoh: Mahasiswa aktif yang menyeimbangkan kuliah, organisasi, dan inovasi."
-                      className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                      className="w-full max-w-full resize-none rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20 dark:bg-[#07150e] dark:border-[#224e35] dark:text-[#f0f7f2] dark:placeholder:text-[#557762]"
                     />
                     <p className="flex justify-between text-xs text-[var(--muted)]">
                       <span>Akan tampil di kartu KTM.</span>
@@ -1072,13 +1072,13 @@ function SingleEditableField({
       {!isEditing ? (
         <div
           onClick={handleEditClick}
-          className={`min-h-[42px] flex items-center justify-between rounded-xl border border-transparent px-3.5 py-2 transition-all ${
+          className={`min-h-[42px] flex items-center justify-between rounded-xl border border-transparent px-3.5 py-2 transition-all overflow-hidden ${
             isBlockedByOther || isSaving
               ? "cursor-not-allowed"
               : "cursor-pointer hover:border-[var(--brand)]/40 hover:bg-[#f2f7f3]/60 group"
           }`}
         >
-          <span className={`text-sm font-semibold truncate ${value ? "text-[var(--ink)]" : "text-[var(--muted)]/60 italic"}`}>
+          <span className={`text-sm font-semibold break-words min-w-0 ${value ? "text-[var(--ink)]" : "text-[var(--muted)]/60 italic"}`}>
             {value || placeholder || "Belum diisi"}
           </span>
           {!isBlockedByOther && !isSaving && (
