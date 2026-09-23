@@ -1352,20 +1352,40 @@ html {
   border-color: #162f22 !important;
 }
 
-/* ── 23. SPOTLIGHT TOUR IN DARK MODE ── */
-.dark div[class*="pointer-events-auto"][class*="rounded-2xl"][class*="bg-white"] {
+/* ── 23. SPOTLIGHT TOUR & ONBOARDING WIZARD IN DARK MODE ── */
+.dark div[class*="pointer-events-auto"][class*="rounded-3xl"],
+.dark div[class*="pointer-events-auto"][class*="rounded-2xl"] {
   background-color: #0f2017 !important;
-  border-color: #1a3526 !important;
+  border-color: #1a3827 !important;
   color: #edf4ef !important;
 }
 
-.dark div[class*="pointer-events-auto"][class*="rounded-2xl"] h3 {
+.dark div[class*="pointer-events-auto"] h2,
+.dark div[class*="pointer-events-auto"] h3 {
   color: #f0f7f2 !important;
 }
 
-.dark div[class*="pointer-events-auto"][class*="rounded-2xl"] p {
+.dark div[class*="pointer-events-auto"] p {
   color: #9ab3a2 !important;
 }
+
+/* Onboarding Wizard Portal overlay cards */
+.dark div.fixed.inset-0.z-\[99995\] > div[class*="rounded-3xl"] {
+  background-color: #0f2017 !important;
+  border-color: #1a3827 !important;
+  color: #edf4ef !important;
+}
+
+.dark div.fixed.inset-0.z-\[99995\] input {
+  background-color: #07150e !important;
+  border-color: #1f4f34 !important;
+  color: #f0f7f2 !important;
+}
+
+.dark div.fixed.inset-0.z-\[99995\] label {
+  color: #f0f7f2 !important;
+}
+
 
 /* ── 24. MISSING BADGE / CARD BACKGROUNDS ── */
 /* Purple light badges (rekap card, stamp badge, ormawa icon) */
