@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
         Lupa kata sandi?
       </h1>
       <p className="mt-3 max-w-sm text-sm text-[var(--muted)] leading-relaxed">
-        Masukkan alamat email yang terdaftar di akun ngampUS. Kami akan mengirimkan tautan aman untuk mengatur ulang kata sandi kamu.
+        Masukkan alamat email yang terdaftar di akun ngampUS. Kami akan mengirimkan <strong>kode OTP 6 digit</strong> ke email kamu untuk verifikasi identitas.
       </p>
 
       <ForgotPasswordForm />
