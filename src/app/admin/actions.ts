@@ -222,3 +222,10 @@ export async function updateUserRole(targetUserId: string, newRole: "student" | 
   revalidatePath("/admin/users");
   revalidatePath("/admin");
 }
+
+export async function fetchFreshWebAnalytics(days: number = 7) {
+  await requireSuperadmin();
+  const { getWebAnalyticsData } = await import("@/lib/web-telemetry");
+  return await getWebAnalyticsData(days);
+}
+

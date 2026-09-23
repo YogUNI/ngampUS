@@ -8,7 +8,8 @@ import {
   Megaphone, 
   Cpu,
   SlidersHorizontal,
-  Activity
+  Activity,
+  Globe
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AdminLogoutButton } from "./admin-logout-button";
@@ -75,6 +76,13 @@ export default async function AdminLayout({
             >
               <LayoutDashboard size={15} className="text-[#c8ef70]" />
               <span>Overview</span>
+            </Link>
+            <Link
+              href="/admin/web-analytics"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
+            >
+              <Globe size={15} className="text-[#c8ef70]" />
+              <span>Web Traffic</span>
             </Link>
             <Link
               href="/admin/users"

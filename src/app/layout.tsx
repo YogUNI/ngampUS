@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { ToastProvider } from "@/components/ui/toast-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NavigationProgress } from "@/components/navigation-progress";
+import { PageTracker } from "@/components/analytics/page-tracker";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col overflow-x-hidden w-full">
         <Suspense fallback={null}>
           <NavigationProgress />
+          <PageTracker />
         </Suspense>
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>

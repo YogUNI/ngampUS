@@ -19,9 +19,11 @@ import {
   Database,
   Bot,
   Zap,
-  Gauge
+  Gauge,
+  Globe
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getWebAnalyticsData } from "@/lib/web-telemetry";
 import { VisualAnalyticsCharts } from "./visual-analytics-charts";
 
 export const dynamic = "force-dynamic";
@@ -54,11 +56,13 @@ export default async function AdminOverviewPage() {
     { count: activitiesDone },
     { count: activitiesInProgress },
     { count: activitiesTodo },
+    webTrafficSummary,
   ] = await Promise.all([
     supabase.from("profiles").select("created_at, university"),
     supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "selesai"),
     supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "berlangsung"),
     supabase.from("activities").select("*", { count: "exact", head: true }).eq("status", "belum_mulai"),
+    getWebAnalyticsData(1),
   ]);
 
   // Campus Analytics (Group and count real universities)
@@ -189,6 +193,84 @@ export default async function AdminOverviewPage() {
           </div>
           <p className="mt-4 text-3xl font-black text-white">{totalActivities ?? 0}</p>
           <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Komitmen & {totalOrganizations ?? 0} Org</p>
+        </div>
+      </div>
+
+      {/* ── Live Web Traffic & Hosting Quick Radar Deck ── */}
+      <div className="rounded-3xl border border-[#1b4332] bg-gradient-to-r from-[#0c2419] via-[#0e2a1d] to-[#071710] p-5 sm:p-6 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/10 border border-[#c8ef70]/30 text-[#c8ef70]">
+              <Globe size={20} />
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-[#c8ef70]">
+                  [LIVE TRAFFIC // NGAMPUS.SITE RADAR]
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-ping" />
+              </div>
+              <h3 className="font-display text-base sm:text-lg font-black text-white mt-0.5">
+                Kunjungan Web & Kesehatan Hosting
+              </h3>
+              <p className="text-xs text-[#9dc5aa]">
+                Statistik real-time pengunjung domain ngampus.site hari ini dan rute teramai.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/admin/web-analytics"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#c8ef70] px-3.5 py-1.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition shadow-xs self-start sm:self-auto"
+          >
+            <span>Buka Web Analytics Lengkap</span>
+            <ArrowRight size={13} />
+          </Link>
+        </div>
+
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              PAGEVIEWS HARI INI
+            </span>
+            <p className="mt-1 text-2xl font-black text-white">
+              {webTrafficSummary.today.totalViews.toLocaleString("id-ID")}
+            </p>
+            <span className="text-[11px] text-[#9dc5aa]">Total Tayangan</span>
+          </div>
+
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              PENGUNJUNG UNIK (UV)
+            </span>
+            <p className="mt-1 text-2xl font-black text-[#c8ef70]">
+              {webTrafficSummary.today.uniqueVisitors.toLocaleString("id-ID")}
+            </p>
+            <span className="text-[11px] text-[#9dc5aa]">Visitor Berbeda</span>
+          </div>
+
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              ACTIVE USERS (5 MIN)
+            </span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <p className="text-2xl font-black text-white">
+                {webTrafficSummary.today.activeLast5Min}
+              </p>
+            </div>
+            <span className="text-[11px] text-[#9dc5aa]">Sedang Browsing</span>
+          </div>
+
+          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
+            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
+              DATABASE LATENCY
+            </span>
+            <p className="mt-1 text-2xl font-black text-[#c8ef70]">
+              {webTrafficSummary.serverHealth.dbPingMs} ms
+            </p>
+            <span className="text-[11px] text-[#9dc5aa]">PostgreSQL Latency</span>
+          </div>
         </div>
       </div>
 
