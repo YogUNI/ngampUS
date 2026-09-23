@@ -4,21 +4,39 @@ import { ToastProvider } from "@/components/ui/toast-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { PageTracker } from "@/components/analytics/page-tracker";
+import { PwaRegister } from "@/components/pwa/pwa-register";
 import "./globals.css";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#0f6849" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a1f16" },
+  ],
 };
 
 export const metadata: Metadata = {
   title: "ngampUS | Your campus command center",
   description: "Bantu mahasiswa menjaga ritme kuliah, tugas, organisasi, dan ambisi dalam satu sistem yang tenang.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ngampUS",
+  },
   icons: {
-    icon: "/logo_ngampUS.png",
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/logo_ngampUS.png" },
+    ],
     shortcut: "/logo_ngampUS.png",
-    apple: "/logo_ngampUS.png",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/icon-192.png" },
+    ],
   },
 };
 
@@ -47,12 +65,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
+        <meta name="application-name" content="ngampUS" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="ngampUS" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-full flex flex-col overflow-x-hidden w-full">
         <Suspense fallback={null}>
           <NavigationProgress />
           <PageTracker />
+          <PwaRegister />
         </Suspense>
         <ThemeProvider>
           <ToastProvider>{children}</ToastProvider>
