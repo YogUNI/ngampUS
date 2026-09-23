@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Platform Manajemen Kuliah, Jadwal, Tugas, dan Organisasi Mahasiswa",
     start_url: "/dashboard",
     display: "standalone",
-    background_color: "#ffffff",
+    background_color: "#0f6849",
     theme_color: "#0f6849",
     orientation: "portrait",
     categories: ["education", "productivity"],
@@ -26,16 +26,10 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "any",
       },
       {
-        src: "/icon-512.png",
+        src: "/maskable-icon-512.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
-      },
-      {
-        src: "/logo_ngampUS.png",
-        sizes: "any",
-        type: "image/png",
-        purpose: "any",
       },
     ],
   };
