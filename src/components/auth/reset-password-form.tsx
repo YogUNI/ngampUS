@@ -131,11 +131,15 @@ export function ResetPasswordForm({ initialHasSession = false }: ResetPasswordFo
       return;
     }
 
+    // Sign out the one-time recovery session so the user logs in fresh
+    await supabase.auth.signOut();
+
     setIsSuccess(true);
     setTimeout(() => {
-      router.replace("/dashboard");
-      router.refresh();
-    }, 2000);
+      // Redirect to login — recovery session is consumed after updateUser,
+      // going to /dashboard would bounce an unauthenticated user back to /
+      router.replace("/login?reset=success");
+    }, 2500);
   }
 
   if (checkingSession) {
@@ -187,15 +191,15 @@ export function ResetPasswordForm({ initialHasSession = false }: ResetPasswordFo
           </div>
           <h3 className="mt-3 text-lg font-black text-[#103626]">Password Berhasil Diperbarui!</h3>
           <p className="mt-1.5 text-xs text-[#2c533e] leading-relaxed">
-            Kata sandi baru kamu berhasil disimpan. Mengalihkan ke dashboard...
+            Kata sandi baru kamu berhasil disimpan. Silakan masuk kembali menggunakan password baru kamu.
           </p>
         </div>
 
         <Link
-          href="/dashboard"
+          href="/login"
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-bold text-white transition hover:bg-[var(--brand-dark)]"
         >
-          Masuk ke Dashboard Sekarang <ArrowRight size={16} />
+          Masuk Sekarang <ArrowRight size={16} />
         </Link>
       </div>
     );

@@ -49,6 +49,8 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const registeredNotice = searchParams.get("registered");
 
   const [mode, setMode] = useState<"login" | "register">(initialMode);
+  const resetSuccess = searchParams.get("reset") === "success";
+
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -206,6 +208,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               {registeredNotice && !serverError && (
                 <p className="mt-3 rounded-xl border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-2 text-xs font-semibold text-[#17613e]">
                   Akun berhasil dibuat! Silakan masuk.
+                </p>
+              )}
+              {resetSuccess && !serverError && (
+                <p className="mt-3 rounded-xl border border-[#b9ddc6] bg-[#eaf6ee] px-3 py-2.5 text-xs font-semibold text-[#17613e]">
+                  ✅ Password berhasil diperbarui! Masuk dengan password baru kamu.
                 </p>
               )}
               {serverError && (
