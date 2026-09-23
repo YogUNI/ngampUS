@@ -1367,6 +1367,362 @@ html {
   color: #9ab3a2 !important;
 }
 
+/* ── 24. MISSING BADGE / CARD BACKGROUNDS ── */
+/* Purple light badges (rekap card, stamp badge, ormawa icon) */
+.dark .dashboard-shell [class*="bg-[#f3e8ff]"] {
+  background-color: #1c1239 !important;
+  color: #a78bfa !important;
+}
+/* Amber/cream accent badges */
+.dark .dashboard-shell [class*="bg-[#fffbeb]"],
+.dark .dashboard-shell [class*="bg-[#fff7ed]"] {
+  background-color: #211900 !important;
+  color: #fbbf24 !important;
+}
+/* Blue light badges (rekap metric icon) */
+.dark .dashboard-shell [class*="bg-[#e4efff]"] {
+  background-color: #0e1e3a !important;
+  color: #60a5fa !important;
+}
+/* Red card bg (tenggat kritis card with overdue) */
+.dark .dashboard-shell [class*="bg-[#fffbfb]"] {
+  background-color: #1e0c0c !important;
+  border-color: #3d1a1a !important;
+}
+/* Semester page: non-active icon bg (cream/beige) */
+.dark .dashboard-shell [class*="bg-[#f4f0e7]"] {
+  background-color: #1e1a0a !important;
+  color: #b8a468 !important;
+}
+/* Green pastel extras (rekap badge, broadcast badge) */
+.dark .dashboard-shell [class*="bg-[#eff5ef]"],
+.dark .dashboard-shell [class*="bg-[#eaf5ee]"] {
+  background-color: #0e2018 !important;
+  color: #4ade80 !important;
+}
+/* Light red/coral extras (settings batal btn, logout btn) */
+.dark .dashboard-shell [class*="bg-[#fff5f2]"],
+.dark .dashboard-shell [class*="bg-[#fff5f5]"],
+.dark .dashboard-shell [class*="bg-[#ffebe5]"],
+.dark .dashboard-shell [class*="bg-[#ffebee]"] {
+  background-color: #1e0a08 !important;
+  border-color: #3d1a14 !important;
+  color: #fca5a5 !important;
+}
+
+/* ── 25. TIMETABLE ARTICLE CARD (fcfdfc) — extend to articles ── */
+.dark .dashboard-content article[class*="bg-[#fcfdfc]"] {
+  background-color: #0d1e15 !important;
+  border-color: #1a3526 !important;
+}
+
+/* ── 26. HOVER BG VARIANTS ── */
+.dark .dashboard-shell [class*="hover:bg-[#f4faf6]"]:hover,
+.dark .dashboard-shell [class*="hover:bg-[#f2f7f3]"]:hover {
+  background-color: #0e2e1c !important;
+}
+.dark .dashboard-shell [class*="hover:bg-[#dcefe4]"]:hover {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+.dark .dashboard-shell [class*="hover:bg-[#e2eae4]"]:hover {
+  background-color: #152d20 !important;
+}
+
+/* ── 27. ATELIER LEDGER CARD ── */
+.dark .dashboard-shell .atelier-ledger-card {
+  background-color: #0f2017 !important;
+  border-color: #1a3526 !important;
+}
+
+/* ── 28. BROADCAST / ANNOUNCEMENT BANNERS ── */
+.dark .dashboard-content [class*="bg-[#eff8ff]"],
+.dark .dashboard-content [class*="bg-[#e0f2fe]"] {
+  background-color: #071926 !important;
+  border-color: #0d2e44 !important;
+  color: #93c5fd !important;
+}
+.dark .dashboard-content [class*="bg-[#fef2f2]"],
+.dark .dashboard-content [class*="bg-[#fee2e2]"] {
+  background-color: #1e0a0a !important;
+  border-color: #3d1414 !important;
+  color: #fca5a5 !important;
+}
+
+/* ── 29. SETTINGS: DANGER ZONE / LOGOUT BUTTON ── */
+.dark .dashboard-shell button[class*="bg-[#fff5f2]"],
+.dark .dashboard-shell button[class*="bg-[#ffebe5]"] {
+  background-color: #2a0c0a !important;
+  border-color: #4d1a14 !important;
+  color: #f87171 !important;
+}
+.dark .dashboard-shell button[class*="bg-[#fff5f2]"]:hover,
+.dark .dashboard-shell button[class*="bg-[#ffebe5]"]:hover {
+  background-color: #3a100d !important;
+  border-color: #6a2018 !important;
+}
+
+/* ── 30. SETTINGS: CANCEL (BATAL) BUTTON ── */
+.dark .dashboard-shell button[class*="bg-[#fff5f5]"] {
+  background-color: #220c0c !important;
+  border-color: #4a1a14 !important;
+  color: #fca5a5 !important;
+}
+
+/* ── 31. MISSING TEXT COLORS ── */
+.dark .dashboard-shell [class*="text-[#b93c21]"],
+.dark .dashboard-shell [class*="text-[#c53e1c]"] {
+  color: #f87171 !important;
+}
+.dark .dashboard-shell [class*="text-[#6b21a8]"],
+.dark .dashboard-shell [class*="text-[#7e22ce]"],
+.dark .dashboard-shell [class*="text-[#5c3a9c]"] {
+  color: #c084fc !important;
+}
+.dark .dashboard-shell [class*="text-[#245a9a]"],
+.dark .dashboard-shell [class*="text-[#3b82c4]"] {
+  color: #60a5fa !important;
+}
+.dark .dashboard-shell [class*="text-[#8b7242]"],
+.dark .dashboard-shell [class*="text-[#78350f]"],
+.dark .dashboard-shell [class*="text-[#92400e]"] {
+  color: #fbbf24 !important;
+}
+.dark .dashboard-shell [class*="text-[#166534]"] {
+  color: #4ade80 !important;
+}
+.dark .dashboard-shell [class*="text-[#3730a3]"] {
+  color: #93c5fd !important;
+}
+.dark .dashboard-shell [class*="text-[#8a5d00]"] {
+  color: #fbbf24 !important;
+}
+.dark .dashboard-shell [class*="text-[#526a5b]"],
+.dark .dashboard-shell [class*="text-[#465c4e]"],
+.dark .dashboard-shell [class*="text-[#425a4c]"],
+.dark .dashboard-shell [class*="text-[#33463a]"] {
+  color: #9ab3a2 !important;
+}
+
+/* ── 32. MISSING BORDER COLORS ── */
+.dark .dashboard-shell [class*="border-[#f7c5ba]"],
+.dark .dashboard-shell [class*="border-[#f7c8be]"],
+.dark .dashboard-shell [class*="border-[#f8c6b9]"],
+.dark .dashboard-shell [class*="border-[#f5b8a9]"] {
+  border-color: #4d1a14 !important;
+}
+.dark .dashboard-shell [class*="border-[#fde68a]"],
+.dark .dashboard-shell [class*="border-[#fed7aa]"],
+.dark .dashboard-shell [class*="border-[#fde8b3]"],
+.dark .dashboard-shell [class*="border-[#ebdcb2]"] {
+  border-color: #3a2e00 !important;
+}
+.dark .dashboard-shell [class*="border-[#d8b4fe]"],
+.dark .dashboard-shell [class*="border-[#c7d2fe]"] {
+  border-color: #2e1a4f !important;
+}
+.dark .dashboard-shell [class*="border-[#c5d8cb]"] {
+  border-color: #1a3526 !important;
+}
+.dark .dashboard-shell [class*="border-[#bbf7d0]"] {
+  border-color: #1f5c38 !important;
+}
+
+/* ── 33. MODAL OVERRIDES FOR SETTINGS FIELDS ── */
+.dark .fixed.inset-0 [class*="bg-[#fff5f2]"],
+.dark .fixed.inset-0 [class*="bg-[#fff5f5]"],
+.dark .fixed.inset-0 [class*="bg-[#ffebe5]"] {
+  background-color: #2a0c0a !important;
+  border-color: #4d1a14 !important;
+}
+.dark .fixed.inset-0 [class*="border-[#f0c8c8]"],
+.dark .fixed.inset-0 [class*="border-[#f5b8a9]"] {
+  border-color: #4a1a14 !important;
+}
+.dark .fixed.inset-0 [class*="text-[#b93c21]"] {
+  color: #f87171 !important;
+}
+.dark .fixed.inset-0 [class*="bg-[#dcefe4]"],
+.dark .fixed.inset-0 [class*="bg-[#dff3e5]"] {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+
+/* ── 34. SIDEBAR: LOGO ICON & NAV ITEM FIXES ── */
+.dark .dashboard-sidebar [class*="bg-[#dff3e5]"],
+.dark .dashboard-sidebar [class*="bg-[#dcefe4]"] {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+.dark .dashboard-sidebar [class*="bg-[#f3e8ff]"],
+.dark .dashboard-sidebar [class*="bg-[#e8e1fa]"] {
+  background-color: #1c1239 !important;
+  color: #a78bfa !important;
+}
+.dark .dashboard-sidebar [class*="text-[#10261b]"],
+.dark .dashboard-sidebar [class*="text-[#103626]"],
+.dark .dashboard-sidebar [class*="text-[#173022]"] {
+  color: #f0f7f2 !important;
+}
+.dark .dashboard-sidebar [class*="text-[#65746a]"],
+.dark .dashboard-sidebar [class*="text-[#55675b]"],
+.dark .dashboard-sidebar [class*="text-[#697c6f]"],
+.dark .dashboard-sidebar [class*="text-[#50705e]"] {
+  color: #8ca393 !important;
+}
+.dark .dashboard-sidebar [class*="border-[#d8e3da]"],
+.dark .dashboard-sidebar [class*="border-[#e5ebe5]"],
+.dark .dashboard-sidebar [class*="border-[#edf2ee]"] {
+  border-color: #1a3526 !important;
+}
+
+/* ── 35. CATAT KEGIATAN BUTTON (sidebar) ── */
+.dark .dashboard-sidebar button[class*="bg-[#103626]"],
+.dark .dashboard-sidebar a[class*="bg-[#103626]"] {
+  background-color: #1d5034 !important;
+  color: #c8ef70 !important;
+  border-color: #234a30 !important;
+}
+.dark .dashboard-sidebar button[class*="bg-[#0f6849]"],
+.dark .dashboard-sidebar a[class*="bg-[#0f6849]"] {
+  background-color: #1a6040 !important;
+  color: #c8ef70 !important;
+}
+
+/* ── 36. SIDEBAR HOVER STATES (collapse button, nav links, user card buttons) ── */
+.dark .dashboard-sidebar [class*="hover:bg-[#eaf5eb]"]:hover,
+.dark .dashboard-sidebar [class*="hover:bg-[#eaf5ee]"]:hover,
+.dark .dashboard-sidebar [class*="hover:bg-[#f4faf6]"]:hover {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+.dark .dashboard-sidebar [class*="bg-[#eaf5eb]"],
+.dark .dashboard-sidebar [class*="bg-[#d6ebd9]"] {
+  background-color: #0e2e1c !important;
+  color: #4ade80 !important;
+}
+.dark .dashboard-sidebar [class*="hover:bg-[#fff0ec]"]:hover {
+  background-color: #2a0c0a !important;
+  color: #f87171 !important;
+}
+
+/* ── 37. ACTIVE SEMESTER CARD IN SIDEBAR (bg-white/90, bg-white/95 = already covered by rule at line 546) ── */
+/* Note: bg-white/90 and bg-white/95 are caught by the existing rule:
+   .dark .dashboard-sidebar [class*="bg-white/90"] / [class*="bg-white/95"] */
+
+/* ── 38. KEGIATAN PAGE — SPECIFIC DARK OVERRIDES ── */
+/* On-progress card background */
+.dark .dashboard-content article[class*="bg-[#f7fcf9]"] {
+  background-color: #0b1d14 !important;
+  border-color: #1a3526 !important;
+}
+/* Amber urgency badge (Besok) */
+.dark .dashboard-shell [class*="bg-[#fffbe6]"],
+.dark .dashboard-shell [class*="bg-[#fffbf0]"] {
+  background-color: #1e1500 !important;
+  color: #fbbf24 !important;
+}
+/* Light green (3 Hari Lagi, Portofolio badge) */
+.dark .dashboard-shell [class*="bg-[#f4fbe8]"] {
+  background-color: #0d2018 !important;
+  color: #86efac !important;
+}
+/* Indigo/blue matkul badge */
+.dark .dashboard-shell [class*="bg-[#eef2ff]"] {
+  background-color: #0e1631 !important;
+  color: #a5b4fc !important;
+}
+/* Completed activity title text color */
+.dark .dashboard-shell [class*="text-[#7d9284]"],
+.dark .dashboard-shell [class*="text-[#8b9e91]"] {
+  color: #4a6b58 !important;
+}
+/* Indigo text for matkul badge */
+.dark .dashboard-shell [class*="text-[#4338ca]"],
+.dark .dashboard-shell [class*="text-[#4f46e5]"] {
+  color: #a5b4fc !important;
+}
+/* Green text for portfolio label */
+.dark .dashboard-shell [class*="text-[#456a1e]"] {
+  color: #86efac !important;
+}
+
+/* ── 39. MISSING MUTED TEXT (GRAY-GREEN) ── */
+.dark .dashboard-shell [class*="text-[#55675b]"] {
+  color: #9ab3a2 !important;
+}
+
+/* ── 40. ACTIVITY FILTER BAR ── */
+.dark .dashboard-shell [class*="bg-[#f4f7f4]"] {
+  background-color: #132a1d !important;
+  color: #8ca393 !important;
+}
+/* == 41. MODUL COMPONENTS: TAB, INPUT, PROGRESS BAR == */
+.dark .dashboard-shell [class*="bg-[#eaf1ec]"] { background-color: #0e2a1a !important; color: #86efac !important; }
+.dark .dashboard-shell [class*="bg-[#e2eae4]"] { background-color: #132a1d !important; color: #8ca393 !important; }
+.dark .dashboard-shell [class*="bg-[#f7f9f7]"] { background-color: #0d1e15 !important; border-color: #1a3526 !important; color: #edf4ef !important; }
+.dark .dashboard-shell [class*="bg-[#fbfdfb]"] { background-color: #0d1e15 !important; border-color: #1a3526 !important; }
+.dark .dashboard-shell [class*="bg-[#e8efe9]"], .dark .dashboard-shell [class*="bg-[#e8eee9]"] { background-color: #1a2e22 !important; }
+.dark .dashboard-shell [class*="hover:bg-[#f0f4f0]"]:hover { background-color: #0e2018 !important; color: #edf4ef !important; }
+.dark .fixed.inset-0 [class*="border-[#d8e2dc]"] { border-color: #1d3c2b !important; }
+.dark .fixed.inset-0 [class*="bg-[#e8efe9]"] { background-color: #1a2e22 !important; }
+.dark .fixed.inset-0 [class*="hover:bg-[#f0f4f0]"]:hover { background-color: #0e2018 !important; color: #edf4ef !important; }
+
+/* == 42. REKAP ANALYTICS CHARTS == */
+.dark .dashboard-shell [class*="bg-[#eff2eb]"] { background-color: #132a1d !important; color: #8ca393 !important; }
+.dark .dashboard-shell [class*="bg-[#f0f4f1]"] { background-color: #0d1a13 !important; border-color: #1a3526 !important; }
+.dark .dashboard-shell [class*="bg-[#fdf5e2]"] { background-color: #1e1200 !important; color: #fbbf24 !important; }
+.dark .dashboard-shell [class*="border-[#fae5a8]"] { border-color: #3a2a00 !important; }
+.dark .dashboard-shell [class*="bg-[#fff0c9]"] { background-color: #1e1200 !important; color: #fbbf24 !important; }
+.dark .dashboard-shell [class*="bg-[#fff0ec]"] { background-color: #1e0a08 !important; color: #f87171 !important; }
+.dark .dashboard-shell [class*="border-[#c3daf9]"] { border-color: #1a3a6a !important; }
+
+/* == 43. PORTFOLIO PREVIEW: BADGE & CARD BG == */
+.dark .dashboard-shell [class*="bg-[#ede9fe]"] { background-color: #1a1039 !important; color: #c084fc !important; }
+.dark .dashboard-shell [class*="bg-[#dbeafe]"] { background-color: #0a1830 !important; color: #93c5fd !important; }
+.dark .dashboard-shell [class*="bg-[#dfeeff]"] { background-color: #0a1830 !important; color: #93c5fd !important; }
+.dark .dashboard-shell [class*="bg-[#eef1ee]"], .dark .dashboard-shell [class*="bg-[#f1f5f9]"] { background-color: #132a1d !important; color: #8ca393 !important; }
+.dark .dashboard-shell [class*="bg-[#fafbf9]"] { background-color: #0d1a13 !important; border-color: #1d3c2b !important; }
+.dark .dashboard-shell [class*="bg-[#eaf5eb]"] { background-color: #0e2018 !important; color: #4ade80 !important; }
+.dark .dashboard-shell [class*="text-[#1a5ea8]"], .dark .dashboard-shell [class*="text-[#1e40af]"] { color: #93c5fd !important; }
+.dark .dashboard-shell [class*="text-[#5b21b6]"] { color: #c084fc !important; }
+.dark .dashboard-shell [class*="text-[#475569]"] { color: #8ca393 !important; }
+.dark .dashboard-shell [class*="text-[#5e6b63]"] { color: #9ab3a2 !important; }
+
+/* == 44. MISC MISSING PATTERNS == */
+.dark .dashboard-shell [class*="bg-[#f9fbf9]"] { background-color: #0d1e15 !important; }
+.dark .dashboard-shell [class*="bg-[#f9faf8]"] { background-color: #0d1a13 !important; border-color: #1a3526 !important; color: #edf4ef !important; }
+.dark .dashboard-shell [class*="bg-[#dcfce7]"] { background-color: #0d2818 !important; color: #4ade80 !important; }
+.dark .dashboard-shell [class*="bg-[#fffaf0]"] { background-color: #1e1500 !important; border-color: #3a2a00 !important; }
+.dark .dashboard-shell [class*="border-[#fae29c]"] { border-color: #3a2a00 !important; }
+/* == 45. ORGANISASI COMPONENTS: CARD BG, STATUS BADGES, HOVER == */
+/* Org card / form section green tint bg */
+.dark .dashboard-shell [class*="bg-[#f3faf5]"] { background-color: #0d2018 !important; border-color: #1d3c2b !important; }
+/* Org badge/icon light green */
+.dark .dashboard-shell [class*="bg-[#eef7f2]"] { background-color: #0d2018 !important; color: #4ade80 !important; }
+/* Org card subtle off-white */
+.dark .dashboard-shell [class*="bg-[#fbfcfb]"] { background-color: #0d1a13 !important; border-color: #1d3c2b !important; }
+/* Org dashed logo section */
+.dark .dashboard-shell [class*="bg-[#fafcfb]"] { background-color: #0d1e15 !important; }
+/* Status badge: in progress (amber-ish) */
+.dark .dashboard-shell [class*="bg-[#fff2d6]"] { background-color: #1e1200 !important; color: #fbbf24 !important; }
+/* Amber icon bg */
+.dark .dashboard-shell [class*="bg-[#fff0cc]"] { background-color: #1e1200 !important; color: #fbbf24 !important; }
+/* Subtle gray-green border/bg */
+.dark .dashboard-shell [class*="border-[#eef2ee]"],
+.dark .dashboard-shell [class*="border-[#edf2ee]"] { border-color: #1a3526 !important; }
+/* Hover green btn */
+.dark .dashboard-shell [class*="hover:bg-[#c9e8d3]"]:hover { background-color: #0e2e1c !important; }
+.dark .dashboard-shell [class*="hover:bg-[#eef7f2]"]:hover { background-color: #0d2018 !important; color: #4ade80 !important; }
+/* Text amber/beige */
+.dark .dashboard-shell [class*="text-[#7d6738]"],
+.dark .dashboard-shell [class*="text-[#9a6900]"] { color: #fbbf24 !important; }
+/* Org proker gray bg */
+.dark .dashboard-shell [class*="bg-[#f0f4f0]"] { background-color: #0d1a13 !important; color: #9ab3a2 !important; }
+/* org-detail tab hover bg  */
+.dark .dashboard-shell [class*="hover:bg-[#dff3e5]"]:hover { background-color: #0e2e1c !important; color: #4ade80 !important; }
+.dark .dashboard-shell [class*="hover:bg-[#cbe9d4]"]:hover { background-color: #0e2a1c !important; }
+
 
 
 
