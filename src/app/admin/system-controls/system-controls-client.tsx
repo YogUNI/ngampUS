@@ -79,15 +79,26 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
     const nextValue = !currentValue;
     
     // Trigger custom modal for critical actions instead of ugly window.confirm
-    if (key === "maintenance_mode" && nextValue) {
-      setConfirmModal({
-        isOpen: true,
-        key,
-        nextValue,
-        label,
-        title: "Aktifkan Mode Pemeliharaan?",
-        description: "Semua mahasiswa yang sedang aktif akan langsung dialihkan ke halaman pemeliharaan (/maintenance). Akun Superadmin tetap memiliki akses penuh tanpa terkunci (Zero-Lockout).",
-      });
+    if (key === "maintenance_mode") {
+      if (nextValue) {
+        setConfirmModal({
+          isOpen: true,
+          key,
+          nextValue,
+          label,
+          title: "Aktifkan Mode Pemeliharaan?",
+          description: "Semua mahasiswa yang sedang aktif akan langsung dialihkan ke halaman pemeliharaan (/maintenance). Akun Superadmin tetap memiliki akses penuh tanpa terkunci (Zero-Lockout).",
+        });
+      } else {
+        setConfirmModal({
+          isOpen: true,
+          key,
+          nextValue,
+          label,
+          title: "Nyalakan Kembali Website (Selesai MT)?",
+          description: "Mode pemeliharaan akan dinonaktifkan. Mahasiswa dapat kembali masuk, mengakses jadwal, modul, dan seluruh dashboard secara normal.",
+        });
+      }
       return;
     }
 
@@ -353,74 +364,114 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
       </div>
 
       {/* ── Custom Animated Confirmation Modal ── */}
-      {confirmModal && confirmModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-          <div 
-            className="relative w-full max-w-md rounded-3xl border border-rose-500/40 bg-[#091e14] p-6 sm:p-7 shadow-[0_25px_70px_rgba(244,63,94,0.2)] animate-in zoom-in-95 duration-200 space-y-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Top Accent Warning Bar */}
-            <div className="absolute top-0 inset-x-8 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent rounded-full" />
+      {confirmModal && confirmModal.isOpen && (() => {
+        const isTurningOn = confirmModal.key === "maintenance_mode" && !confirmModal.nextValue;
 
-            <div className="flex items-start gap-4">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-rose-500/15 text-rose-400 border border-rose-500/30">
-                <Flame size={24} className="animate-pulse" />
-              </div>
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+            <div 
+              className={`relative w-full max-w-md rounded-3xl border bg-[#091e14] p-6 sm:p-7 animate-in zoom-in-95 duration-200 space-y-5 ${
+                isTurningOn
+                  ? "border-[#c8ef70]/40 shadow-[0_25px_70px_rgba(200,239,112,0.15)]"
+                  : "border-rose-500/40 shadow-[0_25px_70px_rgba(244,63,94,0.2)]"
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Top Accent Warning / Success Bar */}
+              <div 
+                className={`absolute top-0 inset-x-8 h-1 rounded-full ${
+                  isTurningOn
+                    ? "bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent"
+                    : "bg-gradient-to-r from-transparent via-rose-500 to-transparent"
+                }`} 
+              />
 
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-[10px] font-black uppercase tracking-wider text-rose-400">
-                    KONFIRMASI AKSI KRITIS
-                  </span>
+              <div className="flex items-start gap-4">
+                <div 
+                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border ${
+                    isTurningOn
+                      ? "bg-[#c8ef70]/15 text-[#c8ef70] border-[#c8ef70]/30"
+                      : "bg-rose-500/15 text-rose-400 border-rose-500/30"
+                  }`}
+                >
+                  {isTurningOn ? (
+                    <Power size={24} className="animate-pulse" />
+                  ) : (
+                    <Flame size={24} className="animate-pulse" />
+                  )}
                 </div>
-                <h3 className="font-display text-lg sm:text-xl font-black text-white">
-                  {confirmModal.title}
-                </h3>
+
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span 
+                      className={`font-mono text-[10px] font-black uppercase tracking-wider ${
+                        isTurningOn ? "text-[#c8ef70]" : "text-rose-400"
+                      }`}
+                    >
+                      {isTurningOn ? "KONFIRMASI AKTIVASI SISTEM" : "KONFIRMASI AKSI KRITIS"}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-lg sm:text-xl font-black text-white">
+                    {confirmModal.title}
+                  </h3>
+                </div>
               </div>
-            </div>
 
-            <p className="text-xs sm:text-sm text-[#9dc5aa] leading-relaxed pl-1">
-              {confirmModal.description}
-            </p>
+              <p className="text-xs sm:text-sm text-[#9dc5aa] leading-relaxed pl-1">
+                {confirmModal.description}
+              </p>
 
-            <div className="rounded-2xl border border-white/5 bg-black/40 p-3.5 flex items-center gap-2.5 text-xs text-[#8ca393]">
-              <Lock size={15} className="text-[#c8ef70] shrink-0" />
-              <span>Proteksi <strong>Zero-Lockout</strong> aktif: Akses Superadmin tidak akan pernah terputus.</span>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setConfirmModal(null)}
-                disabled={isPending}
-                className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50"
-              >
-                Batalkan
-              </button>
-
-              <button
-                type="button"
-                onClick={() => executeToggle(confirmModal.key, confirmModal.nextValue, confirmModal.label)}
-                disabled={isPending}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 px-5 py-2.5 text-xs font-black text-white shadow-lg shadow-rose-500/25 hover:from-rose-500 hover:to-rose-400 active:scale-95 transition cursor-pointer disabled:opacity-50"
-              >
-                {isPending ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" />
-                    <span>Mengeksekusi...</span>
-                  </>
+              <div className="rounded-2xl border border-white/5 bg-black/40 p-3.5 flex items-center gap-2.5 text-xs text-[#8ca393]">
+                {isTurningOn ? (
+                  <CheckCircle2 size={15} className="text-[#c8ef70] shrink-0" />
                 ) : (
-                  <>
-                    <Flame size={14} />
-                    <span>Lanjutkan & Eksekusi</span>
-                  </>
+                  <Lock size={15} className="text-[#c8ef70] shrink-0" />
                 )}
-              </button>
+                <span>
+                  {isTurningOn 
+                    ? "Sistem siap live: Seluruh endpoint API dan halaman dashboard langsung dapat diakses kembali."
+                    : <>Proteksi <strong>Zero-Lockout</strong> aktif: Akses Superadmin tidak akan pernah terputus.</>}
+                </span>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setConfirmModal(null)}
+                  disabled={isPending}
+                  className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50"
+                >
+                  Batalkan
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => executeToggle(confirmModal.key, confirmModal.nextValue, confirmModal.label)}
+                  disabled={isPending}
+                  className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-lg active:scale-95 transition cursor-pointer disabled:opacity-50 ${
+                    isTurningOn
+                      ? "bg-[#103626] text-[#c8ef70] border border-[#c8ef70]/40 hover:bg-[#1a4a34] shadow-[#c8ef70]/20"
+                      : "bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 shadow-rose-500/25"
+                  }`}
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      <span>Mengeksekusi...</span>
+                    </>
+                  ) : (
+                    <>
+                      {isTurningOn ? <Power size={14} /> : <Flame size={14} />}
+                      <span>{isTurningOn ? "Ya, Nyalakan Website" : "Lanjutkan & Eksekusi"}</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
