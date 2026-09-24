@@ -62,19 +62,20 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
   const isFlipped = mode === "register";
 
-  // Sync card height
+  // Sync card height with safe breathing room padding
   useEffect(() => {
     const updateHeight = () => {
       if (frontRef.current && backRef.current) {
         const frontH = frontRef.current.scrollHeight;
         const backH = backRef.current.scrollHeight;
         const h = Math.max(frontH, backH);
-        if (h > 420 && h < 1000) {
-          setFlipperHeight(h);
+        if (h > 420 && h < 1100) {
+          // Extra 24px buffer so bottom text never touches the lower border
+          setFlipperHeight(h + 24);
         }
       }
     };
-    const t = setTimeout(updateHeight, 60);
+    const t = setTimeout(updateHeight, 80);
     return () => clearTimeout(t);
   }, [mode, serverError]);
 
@@ -147,7 +148,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   };
 
   return (
-    <div className="w-full max-w-[450px]">
+    <div className="w-full max-w-[460px]">
       
       {/* ── Top Header: Brand & Segmented Tab Switcher ── */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1">
@@ -163,24 +164,24 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               width={30}
               height={30}
               priority
-              className="h-7 w-7 object-contain drop-shadow-sm"
+              className="h-7 w-7 object-contain drop-shadow-[0_2px_8px_rgba(200,239,112,0.3)]"
             />
             <span>ngamp<span className="text-[#c8ef70]">US</span></span>
           </Link>
-          <span className="rounded-full border border-white/10 bg-white/10 px-2.5 py-0.5 text-[10px] font-black text-[#c8ef70]">
+          <span className="rounded-full border border-[#c8ef70]/30 bg-[#c8ef70]/10 px-2.5 py-0.5 text-[10px] font-black text-[#c8ef70]">
             APPS
           </span>
         </div>
 
         {/* Segmented iOS-Style Tab Switcher */}
-        <div className="w-full sm:w-auto ml-auto grid grid-cols-2 rounded-2xl bg-black/40 p-1 border border-white/15 backdrop-blur-xl shadow-inner">
+        <div className="w-full sm:w-auto ml-auto grid grid-cols-2 rounded-2xl bg-[#071911]/90 p-1 border border-[#1b4330] backdrop-blur-xl shadow-inner">
           <button
             type="button"
             onClick={() => toggleMode("login")}
             className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-black transition-all cursor-pointer ${
               !isFlipped
-                ? "bg-[#c8ef70] text-[#103626] shadow-sm"
-                : "text-[#a2c2b0] hover:text-white"
+                ? "bg-[#c8ef70] text-[#091a12] shadow-md shadow-[#c8ef70]/20"
+                : "text-[#8cb89f] hover:text-white"
             }`}
           >
             <KeyRound size={13} />
@@ -191,8 +192,8 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             onClick={() => toggleMode("register")}
             className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-black transition-all cursor-pointer ${
               isFlipped
-                ? "bg-[#c8ef70] text-[#103626] shadow-sm"
-                : "text-[#a2c2b0] hover:text-white"
+                ? "bg-[#c8ef70] text-[#091a12] shadow-md shadow-[#c8ef70]/20"
+                : "text-[#8cb89f] hover:text-white"
             }`}
           >
             <Sparkles size={13} />
@@ -205,47 +206,47 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       <div className="perspective-container w-full">
         <div
           className={`card-flipper ${isFlipped ? "flipped" : ""}`}
-          style={{ minHeight: flipperHeight || 540, height: flipperHeight }}
+          style={{ minHeight: flipperHeight || 560, height: flipperHeight }}
         >
 
           {/* ══════════════════════════════════════════════════
-              ══ FRONT: LOGIN ══
+              ══ FRONT: LOGIN (DARK THEME) ══
              ══════════════════════════════════════════════════ */}
           <div
             ref={frontRef}
-            className={`card-face card-face-front flex flex-col justify-between rounded-[2rem] border border-[#d8e3da] bg-white p-6 sm:p-8 shadow-[0_24px_50px_rgba(0,0,0,0.22)] ${
+            className={`card-face card-face-front flex flex-col justify-between rounded-[2rem] border border-[#1b4532] bg-[#0c2419]/95 px-6 pt-7 pb-8 sm:px-8 sm:pt-8 sm:pb-9 shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl ${
               isFlipped ? "pointer-events-none" : ""
             }`}
           >
             <div>
               {/* Natural Header & Subtitle */}
               <div>
-                <span className="inline-block text-[11px] font-black uppercase tracking-wider text-[#0f6849]">
+                <span className="inline-block text-[11px] font-black uppercase tracking-wider text-[#c8ef70]">
                   Selamat Datang Kembali
                 </span>
-                <h2 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b]">
-                  Lanjutkan <span className="text-[#0f6849]">ritmemu.</span>
+                <h2 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-white">
+                  Lanjutkan <span className="text-[#c8ef70]">ritmemu.</span>
                 </h2>
-                <p className="mt-1.5 text-xs text-[#5a6d61] leading-relaxed">
+                <p className="mt-1.5 text-xs text-[#8caea0] leading-relaxed">
                   Masuk untuk melihat jadwal kuliah, deadline tugas, dan aktivitas organisasimu.
                 </p>
               </div>
 
               {/* Status Notices */}
               {registeredNotice && !serverError && (
-                <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#b9ddc6] bg-[#eaf6ee] p-3 text-xs font-bold text-[#17613e]">
-                  <CheckCircle2 size={16} className="shrink-0 text-[#0f6849]" />
+                <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#1e5c3c] bg-[#113a27] p-3 text-xs font-bold text-[#c8ef70]">
+                  <CheckCircle2 size={16} className="shrink-0 text-[#c8ef70]" />
                   <span>Akun berhasil dibuat! Silakan masuk dengan akun barumu.</span>
                 </div>
               )}
               {resetSuccess && !serverError && (
-                <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#b9ddc6] bg-[#eaf6ee] p-3 text-xs font-bold text-[#17613e]">
-                  <CheckCircle2 size={16} className="shrink-0 text-[#0f6849]" />
+                <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#1e5c3c] bg-[#113a27] p-3 text-xs font-bold text-[#c8ef70]">
+                  <CheckCircle2 size={16} className="shrink-0 text-[#c8ef70]" />
                   <span>Password berhasil diperbarui! Silakan masuk kembali.</span>
                 </div>
               )}
               {serverError && (
-                <div className="mt-4 rounded-2xl border border-[#f5b8a9] bg-[#fff0ec] p-3 text-xs font-semibold text-[#b93c21]">
+                <div className="mt-4 rounded-2xl border border-[#7f231c] bg-[#3a1311] p-3 text-xs font-semibold text-[#fca5a5]">
                   {serverError}
                 </div>
               )}
@@ -253,11 +254,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               {/* Form Input Fields */}
               <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="mt-5 space-y-4" noValidate>
                 <div>
-                  <label className="block text-xs font-extrabold text-[#10261b] mb-1.5">
+                  <label className="block text-xs font-extrabold text-[#d2e7dc] mb-1.5">
                     Email Mahasiswa / Personal
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#648c79]">
                       <Mail size={16} />
                     </span>
                     <input
@@ -265,11 +266,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       type="email"
                       autoComplete="email"
                       placeholder="nama@email.com"
-                      className="w-full rounded-2xl border border-[#d8e3da] bg-[#fafbfa] py-3 pl-11 pr-4 text-sm font-semibold text-[#10261b] placeholder:text-[#9aa99e] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#dff3e5] transition"
+                      className="w-full rounded-2xl border border-[#1b4330] bg-[#071911] py-3 pl-11 pr-4 text-sm font-semibold text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:bg-[#092016] focus:outline-none focus:ring-4 focus:ring-[#c8ef70]/15 transition"
                     />
                   </div>
                   {loginForm.formState.errors.email && (
-                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">
+                    <span className="mt-1 block text-[11px] font-bold text-[#fca5a5]">
                       {loginForm.formState.errors.email.message}
                     </span>
                   )}
@@ -277,16 +278,16 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-xs font-extrabold text-[#10261b]">Kata Sandi</label>
+                    <label className="block text-xs font-extrabold text-[#d2e7dc]">Kata Sandi</label>
                     <Link
                       href="/forgot-password"
-                      className="text-xs font-black text-[#0f6849] hover:underline"
+                      className="text-xs font-black text-[#c8ef70] hover:underline"
                     >
                       Lupa password?
                     </Link>
                   </div>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#648c79]">
                       <Lock size={16} />
                     </span>
                     <input
@@ -294,19 +295,19 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       type={showLoginPassword ? "text" : "password"}
                       autoComplete="current-password"
                       placeholder="Minimal 8 karakter"
-                      className="w-full rounded-2xl border border-[#d8e3da] bg-[#fafbfa] py-3 pl-11 pr-11 text-sm font-semibold text-[#10261b] placeholder:text-[#9aa99e] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#dff3e5] transition"
+                      className="w-full rounded-2xl border border-[#1b4330] bg-[#071911] py-3 pl-11 pr-11 text-sm font-semibold text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:bg-[#092016] focus:outline-none focus:ring-4 focus:ring-[#c8ef70]/15 transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91] hover:text-[#10261b] p-1 transition cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#648c79] hover:text-white p-1 transition cursor-pointer"
                       aria-label={showLoginPassword ? "Sembunyikan password" : "Lihat password"}
                     >
                       {showLoginPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                   {loginForm.formState.errors.password && (
-                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">
+                    <span className="mt-1 block text-[11px] font-bold text-[#fca5a5]">
                       {loginForm.formState.errors.password.message}
                     </span>
                   )}
@@ -316,11 +317,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                 <button
                   type="submit"
                   disabled={loginForm.formState.isSubmitting}
-                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#103626] py-3.5 text-sm font-black text-[#c8ef70] shadow-md shadow-[#103626]/25 transition hover:bg-[#164733] hover:shadow-lg active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#c8ef70] py-3.5 text-sm font-black text-[#091a12] shadow-lg shadow-[#c8ef70]/20 transition hover:bg-[#d5fa80] hover:shadow-xl active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loginForm.formState.isSubmitting ? (
                     <>
-                      <LoaderCircle size={17} className="animate-spin text-[#c8ef70]" />
+                      <LoaderCircle size={17} className="animate-spin text-[#091a12]" />
                       <span>Menghubungkan ke Workspace...</span>
                     </>
                   ) : (
@@ -334,30 +335,30 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
             </div>
 
             {/* Bottom Footer Switcher & Feature Badges */}
-            <div className="mt-6 border-t border-[#f0f4f1] pt-4">
-              <p className="text-center text-xs text-[#5a6d61]">
+            <div className="mt-6 border-t border-white/10 pt-4">
+              <p className="text-center text-xs text-[#8caea0]">
                 Belum punya akun?{" "}
                 <button
                   type="button"
                   onClick={() => toggleMode("register")}
-                  className="font-black text-[#0f6849] hover:underline cursor-pointer"
+                  className="font-black text-[#c8ef70] hover:underline cursor-pointer"
                 >
                   Daftar Sekarang — Gratis →
                 </button>
               </p>
 
               <div className="mt-3.5 grid grid-cols-3 gap-2">
-                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-[#f4faf6] border border-[#e2efe6] py-2 px-1 text-center">
-                  <Calendar size={13} className="text-[#0f6849] shrink-0" />
-                  <span className="text-[10.5px] font-bold text-[#2d5040] truncate">Jadwal Kuliah</span>
+                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-white/[0.04] border border-white/10 py-2 px-1 text-center">
+                  <Calendar size={13} className="text-[#c8ef70] shrink-0" />
+                  <span className="text-[10.5px] font-bold text-[#c6ded3] truncate">Jadwal Kuliah</span>
                 </div>
-                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-[#f4faf6] border border-[#e2efe6] py-2 px-1 text-center">
-                  <GraduationCap size={13} className="text-[#0f6849] shrink-0" />
-                  <span className="text-[10.5px] font-bold text-[#2d5040] truncate">Tugas & Deadline</span>
+                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-white/[0.04] border border-white/10 py-2 px-1 text-center">
+                  <GraduationCap size={13} className="text-[#c8ef70] shrink-0" />
+                  <span className="text-[10.5px] font-bold text-[#c6ded3] truncate">Tugas & Deadline</span>
                 </div>
-                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-[#f4faf6] border border-[#e2efe6] py-2 px-1 text-center">
-                  <Users size={13} className="text-[#0f6849] shrink-0" />
-                  <span className="text-[10.5px] font-bold text-[#2d5040] truncate">Organisasi</span>
+                <div className="flex items-center justify-center gap-1.5 rounded-xl bg-white/[0.04] border border-white/10 py-2 px-1 text-center">
+                  <Users size={13} className="text-[#c8ef70] shrink-0" />
+                  <span className="text-[10.5px] font-bold text-[#c6ded3] truncate">Organisasi</span>
                 </div>
               </div>
             </div>
@@ -365,30 +366,30 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
 
           {/* ══════════════════════════════════════════════════
-              ══ BACK: REGISTER ══
+              ══ BACK: REGISTER (DARK THEME) ══
              ══════════════════════════════════════════════════ */}
           <div
             ref={backRef}
-            className={`card-face card-face-back flex flex-col justify-between rounded-[2rem] border border-[#d8e3da] bg-white p-6 sm:p-8 shadow-[0_24px_50px_rgba(0,0,0,0.22)] ${
+            className={`card-face card-face-back flex flex-col justify-between rounded-[2rem] border border-[#1b4532] bg-[#0c2419]/95 px-6 pt-7 pb-8 sm:px-8 sm:pt-8 sm:pb-9 shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl ${
               !isFlipped ? "pointer-events-none" : ""
             }`}
           >
             <div>
               {/* Header */}
               <div>
-                <span className="inline-block text-[11px] font-black uppercase tracking-wider text-[#0f6849]">
+                <span className="inline-block text-[11px] font-black uppercase tracking-wider text-[#c8ef70]">
                   Akun Mahasiswa Baru
                 </span>
-                <h2 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b]">
-                  Mulai lebih <span className="text-[#0f6849]">terarah.</span>
+                <h2 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-white">
+                  Mulai lebih <span className="text-[#c8ef70]">terarah.</span>
                 </h2>
-                <p className="mt-1.5 text-xs text-[#5a6d61] leading-relaxed">
+                <p className="mt-1.5 text-xs text-[#8caea0] leading-relaxed">
                   Workspace cerdas untuk jadwal kelas, tugas kuliah, dan portofolio CV-mu.
                 </p>
               </div>
 
               {serverError && (
-                <div className="mt-4 rounded-2xl border border-[#f5b8a9] bg-[#fff0ec] p-3 text-xs font-semibold text-[#b93c21]">
+                <div className="mt-4 rounded-2xl border border-[#7f231c] bg-[#3a1311] p-3 text-xs font-semibold text-[#fca5a5]">
                   {serverError}
                 </div>
               )}
@@ -396,9 +397,9 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               {/* Form Input Fields */}
               <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="mt-4 space-y-3" noValidate>
                 <div>
-                  <label className="block text-xs font-extrabold text-[#10261b] mb-1">Nama Lengkap</label>
+                  <label className="block text-xs font-extrabold text-[#d2e7dc] mb-1">Nama Lengkap</label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#648c79]">
                       <User size={15} />
                     </span>
                     <input
@@ -406,19 +407,19 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       type="text"
                       autoComplete="name"
                       placeholder="Contoh: Raditya Pratama"
-                      className="w-full rounded-2xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-3.5 text-sm font-semibold text-[#10261b] placeholder:text-[#9aa99e] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#dff3e5] transition"
+                      className="w-full rounded-2xl border border-[#1b4330] bg-[#071911] py-2.5 pl-10 pr-3.5 text-sm font-semibold text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:bg-[#092016] focus:outline-none focus:ring-4 focus:ring-[#c8ef70]/15 transition"
                     />
                   </div>
                   {registerForm.formState.errors.fullName && (
-                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">
+                    <span className="mt-1 block text-[11px] font-bold text-[#fca5a5]">
                       {registerForm.formState.errors.fullName.message}
                     </span>
                   )}
                 </div>
 
                 {/* Campus Information (Optional) */}
-                <div className="rounded-2xl border border-[#b9ddc6] bg-[#f2faf5] p-3 space-y-2">
-                  <div className="flex items-center gap-1.5 text-[11px] font-black text-[#0f6849]">
+                <div className="rounded-2xl border border-[#1b4330] bg-[#071911]/90 p-3 space-y-2">
+                  <div className="flex items-center gap-1.5 text-[11px] font-black text-[#c8ef70]">
                     <Building2 size={13} />
                     <span>Info Kampus & Jurusan (Opsional)</span>
                   </div>
@@ -432,15 +433,15 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       {...registerForm.register("major")}
                       type="text"
                       placeholder="Program Studi / Jurusan (Contoh: Sistem Informasi)"
-                      className="w-full rounded-xl border border-[#d8e3da] bg-white py-2 px-3 text-xs font-semibold text-[#10261b] placeholder:text-[#9aa99e] focus:border-[#0f6849] focus:outline-none focus:ring-2 focus:ring-[#dff3e5] transition"
+                      className="w-full rounded-xl border border-[#1b4330] bg-[#0b2419] py-2 px-3 text-xs font-semibold text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:outline-none focus:ring-2 focus:ring-[#c8ef70]/20 transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-[#10261b] mb-1">Email Aktif</label>
+                  <label className="block text-xs font-extrabold text-[#d2e7dc] mb-1">Email Aktif</label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#648c79]">
                       <Mail size={15} />
                     </span>
                     <input
@@ -448,20 +449,20 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       type="email"
                       autoComplete="email"
                       placeholder="nama@email.com"
-                      className="w-full rounded-2xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-3.5 text-sm font-semibold text-[#10261b] placeholder:text-[#9aa99e] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#dff3e5] transition"
+                      className="w-full rounded-2xl border border-[#1b4330] bg-[#071911] py-2.5 pl-10 pr-3.5 text-sm font-semibold text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:bg-[#092016] focus:outline-none focus:ring-4 focus:ring-[#c8ef70]/15 transition"
                     />
                   </div>
                   {registerForm.formState.errors.email && (
-                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">
+                    <span className="mt-1 block text-[11px] font-bold text-[#fca5a5]">
                       {registerForm.formState.errors.email.message}
                     </span>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-extrabold text-[#10261b] mb-1">Kata Sandi</label>
+                  <label className="block text-xs font-extrabold text-[#d2e7dc] mb-1">Kata Sandi</label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91]">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#648c79]">
                       <Lock size={15} />
                     </span>
                     <input
@@ -469,19 +470,19 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       type={showRegisterPassword ? "text" : "password"}
                       autoComplete="new-password"
                       placeholder="Minimal 8 karakter"
-                      className="w-full rounded-2xl border border-[#d8e3da] bg-[#fafbfa] py-2.5 pl-10 pr-10 text-sm font-semibold text-[#10261b] placeholder:text-[#9aa99e] focus:border-[#0f6849] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#dff3e5] transition"
+                      className="w-full rounded-2xl border border-[#1b4330] bg-[#071911] py-2.5 pl-10 pr-10 text-sm font-semibold text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:bg-[#092016] focus:outline-none focus:ring-4 focus:ring-[#c8ef70]/15 transition"
                     />
                     <button
                       type="button"
                       onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8b9d91] hover:text-[#10261b] p-1 transition cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#648c79] hover:text-white p-1 transition cursor-pointer"
                       aria-label={showRegisterPassword ? "Sembunyikan password" : "Lihat password"}
                     >
                       {showRegisterPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
                   </div>
                   {registerForm.formState.errors.password && (
-                    <span className="mt-1 block text-[11px] font-bold text-[#b93c21]">
+                    <span className="mt-1 block text-[11px] font-bold text-[#fca5a5]">
                       {registerForm.formState.errors.password.message}
                     </span>
                   )}
@@ -491,11 +492,11 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                 <button
                   type="submit"
                   disabled={registerForm.formState.isSubmitting}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0f6849] py-3.5 text-sm font-black text-white shadow-md shadow-[#0f6849]/25 transition hover:bg-[#0c533a] hover:shadow-lg active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#c8ef70] py-3.5 text-sm font-black text-[#091a12] shadow-lg shadow-[#c8ef70]/20 transition hover:bg-[#d5fa80] hover:shadow-xl active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {registerForm.formState.isSubmitting ? (
                     <>
-                      <LoaderCircle size={17} className="animate-spin text-white" />
+                      <LoaderCircle size={17} className="animate-spin text-[#091a12]" />
                       <span>Mendaftarkan akun...</span>
                     </>
                   ) : (
@@ -508,14 +509,14 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </form>
             </div>
 
-            {/* Bottom Footer Switcher */}
-            <div className="mt-5 border-t border-[#f0f4f1] pt-3 text-center">
-              <p className="text-xs text-[#5a6d61]">
+            {/* Bottom Footer Switcher with Proper Breathing Room */}
+            <div className="mt-6 border-t border-white/10 pt-4 pb-2 text-center">
+              <p className="text-xs text-[#8caea0]">
                 Sudah memiliki akun?{" "}
                 <button
                   type="button"
                   onClick={() => toggleMode("login")}
-                  className="font-black text-[#0f6849] hover:underline cursor-pointer"
+                  className="font-black text-[#c8ef70] hover:underline cursor-pointer"
                 >
                   Masuk di sini →
                 </button>
@@ -527,7 +528,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       </div>
 
       {/* ── Micro Trust Footer ── */}
-      <div className="mt-4 flex items-center justify-center gap-3 text-center text-[11px] font-semibold text-[#8fa899]">
+      <div className="mt-5 mb-2 flex items-center justify-center gap-3 text-center text-[11px] font-semibold text-[#6e9381]">
         <span className="flex items-center gap-1">
           <ShieldCheck size={13} className="text-[#c8ef70]" /> Database Terenkripsi RLS
         </span>
