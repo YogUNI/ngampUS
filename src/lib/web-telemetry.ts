@@ -100,7 +100,7 @@ export async function recordPageView(event: Omit<TrafficEvent, "timestamp">) {
       .eq("key", key)
       .maybeSingle();
 
-    let current: DailyTrafficData = record?.value || {
+    const current: DailyTrafficData = record?.value || {
       date: today,
       totalViews: 0,
       uniqueVisitors: 0,
@@ -195,7 +195,6 @@ export async function getWebAnalyticsData(
   periodDays: number = 7
 ): Promise<WebAnalyticsSummary> {
   const supabase = await createClient();
-  const startTime = Date.now();
   
   // Calculate DB Ping
   let dbPingMs = 24;
@@ -225,13 +224,13 @@ export async function getWebAnalyticsData(
     .select("key, value")
     .in("key", keysToQuery);
 
-  const recordMap: Record<string, any> = {};
+  const recordMap: Record<string, unknown> = {};
   (records || []).forEach((r) => {
     recordMap[r.key] = r.value;
   });
 
   const rawRecentVisits: TrafficEvent[] = Array.isArray(recordMap["web_traffic_recent_feed"])
-    ? recordMap["web_traffic_recent_feed"]
+    ? (recordMap["web_traffic_recent_feed"] as TrafficEvent[])
     : [];
 
   // Filter recent visits based on selected periodDays cut-off
@@ -266,7 +265,7 @@ export async function getWebAnalyticsData(
   const trendData = datesToFetch.map((dateStr) => {
     const d = new Date(dateStr);
     const dayLabel = d.toLocaleDateString("id-ID", { weekday: "short", day: "numeric" });
-    const dayData: DailyTrafficData = recordMap[`web_traffic_${dateStr}`] || {
+    const dayData: DailyTrafficData = (recordMap[`web_traffic_${dateStr}`] as DailyTrafficData | undefined) || {
       date: dateStr,
       totalViews: 0,
       uniqueVisitors: 0,
@@ -309,7 +308,7 @@ export async function getWebAnalyticsData(
     };
   });
 
-  const todayData: DailyTrafficData = recordMap[`web_traffic_${todayIso}`] || {
+  const todayData: DailyTrafficData = (recordMap[`web_traffic_${todayIso}`] as DailyTrafficData | undefined) || {
     date: todayIso,
     totalViews: 0,
     uniqueVisitors: 0,

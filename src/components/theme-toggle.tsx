@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./theme-provider";
+
+const emptySubscribe = () => () => {};
 
 export function ThemeToggle({
   variant = "pill",
@@ -12,11 +14,12 @@ export function ThemeToggle({
   className?: string;
 }) {
   const { theme, toggleTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Safe client-side mount detection without cascading renders
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   if (!mounted) {
     return (
@@ -89,4 +92,3 @@ export function ThemeToggle({
     </button>
   );
 }
-

@@ -33,7 +33,7 @@ export async function recordAiUsage(
       .eq("key", `ai_telemetry_${today}`)
       .maybeSingle();
 
-    let current: AiDailyTelemetry = existing?.value || {
+    const current: AiDailyTelemetry = existing?.value || {
       date: today,
       total_requests: 0,
       total_prompt_tokens: 0,

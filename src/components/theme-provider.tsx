@@ -1,9 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 
-type Theme = "light" | "dark";
+export type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -13,33 +13,72 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const THEME_STORAGE_KEY = "ngampus-theme";
+export const THEME_STORAGE_KEY = "ngampus-theme";
+
+function applyThemeToDom(t: Theme, path?: string) {
+  if (typeof window === "undefined") return;
+  const currentPath = path !== undefined ? path : window.location.pathname;
+  const isDashboard = Boolean(
+    currentPath &&
+      (currentPath.startsWith("/admin") ||
+        currentPath.startsWith("/dashboard") ||
+        currentPath.startsWith("/kegiatan") ||
+        currentPath.startsWith("/jadwal") ||
+        currentPath.startsWith("/modul") ||
+        currentPath.startsWith("/organisasi") ||
+        currentPath.startsWith("/rekap") ||
+        currentPath.startsWith("/semester") ||
+        currentPath.startsWith("/settings"))
+  );
+
+  const root = document.documentElement;
+  if (!isDashboard) {
+    root.classList.remove("dark");
+    root.setAttribute("data-theme", "light");
+    return;
+  }
+
+  if (t === "dark") {
+    root.classList.add("dark");
+    root.setAttribute("data-theme", "dark");
+  } else {
+    root.classList.remove("dark");
+    root.setAttribute("data-theme", "light");
+  }
+}
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
   const pathname = usePathname();
 
   useEffect(() => {
-    // Read from localStorage or system preference
-    const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    if (stored === "light" || stored === "dark") {
-      setThemeState(stored);
-      applyTheme(stored);
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initial: Theme = prefersDark ? "dark" : "light";
-      setThemeState(initial);
-      applyTheme(initial);
+    // Read from localStorage or system preference on mount
+    let initial: Theme = "light";
+    try {
+      const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+      if (stored === "light" || stored === "dark") {
+        initial = stored;
+      } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        initial = prefersDark ? "dark" : "light";
+      }
+    } catch {
+      initial = "light";
     }
+
+    setThemeState(initial);
+    applyThemeToDom(initial, window.location.pathname);
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e: MediaQueryListEvent) => {
-      const currentStored = localStorage.getItem(THEME_STORAGE_KEY);
-      if (!currentStored) {
-        const newTheme: Theme = e.matches ? "dark" : "light";
-        setThemeState(newTheme);
-        applyTheme(newTheme);
-      }
+      try {
+        const currentStored = localStorage.getItem(THEME_STORAGE_KEY);
+        if (!currentStored) {
+          const newTheme: Theme = e.matches ? "dark" : "light";
+          setThemeState(newTheme);
+          applyThemeToDom(newTheme, window.location.pathname);
+        }
+      } catch {}
     };
 
     mediaQuery.addEventListener("change", handleChange);
@@ -47,39 +86,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    applyTheme(theme, pathname);
+    applyThemeToDom(theme, pathname);
   }, [pathname, theme]);
 
-  const applyTheme = (t: Theme, currentPath?: string) => {
-    const path = currentPath !== undefined ? currentPath : (typeof window !== "undefined" ? window.location.pathname : "");
-    const isDashboard = Boolean(path && (path.startsWith("/admin") || path.startsWith("/dashboard") || path.startsWith("/kegiatan") || path.startsWith("/jadwal") || path.startsWith("/modul") || path.startsWith("/organisasi") || path.startsWith("/rekap") || path.startsWith("/semester") || path.startsWith("/settings")));
-    const root = document.documentElement;
-    if (!isDashboard) {
-      root.classList.remove("dark");
-      root.setAttribute("data-theme", "light");
-      return;
-    }
-    if (t === "dark") {
-      root.classList.add("dark");
-      root.setAttribute("data-theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      root.setAttribute("data-theme", "light");
-    }
-  };
-
-  const setTheme = (t: Theme) => {
+  const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
     try {
       localStorage.setItem(THEME_STORAGE_KEY, t);
     } catch {}
-    applyTheme(t);
-  };
+    applyThemeToDom(t);
+  }, []);
 
-  const toggleTheme = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-  };
+  const toggleTheme = useCallback(() => {
+    setThemeState((prev) => {
+      const next: Theme = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch {}
+      applyThemeToDom(next);
+      return next;
+    });
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
@@ -95,4 +122,3 @@ export function useTheme() {
   }
   return context;
 }
-

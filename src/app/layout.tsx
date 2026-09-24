@@ -6,6 +6,7 @@ import { NavigationProgress } from "@/components/navigation-progress";
 import { PageTracker } from "@/components/analytics/page-tracker";
 import { PwaRegister } from "@/components/pwa/pwa-register";
 import { PwaSplashScreen } from "@/components/pwa/pwa-splash-screen";
+import { OfflineIndicator } from "@/components/pwa/offline-indicator";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -19,13 +20,50 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "ngampUS | Your campus command center",
+  metadataBase: new URL("https://ngampus.site"),
+  title: {
+    default: "ngampUS | Your campus command center",
+    template: "%s | ngampUS",
+  },
   description: "Bantu mahasiswa menjaga ritme kuliah, tugas, organisasi, dan ambisi dalam satu sistem yang tenang.",
+  applicationName: "ngampUS",
+  authors: [{ name: "ngampUS Team", url: "https://ngampus.site" }],
+  keywords: [
+    "ngampus",
+    "manajemen kuliah",
+    "jadwal kuliah",
+    "catatan mahasiswa",
+    "organisasi kampus",
+    "mahasiswa indonesia",
+    "rekap ipk",
+  ],
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "ngampUS",
+  },
+  openGraph: {
+    title: "ngampUS | Your campus command center",
+    description: "Satu tempat untuk semua urusan kuliah, tugas, jadwal, dan organisasi mahasiswa Indonesia.",
+    url: "https://ngampus.site",
+    siteName: "ngampUS",
+    locale: "id_ID",
+    type: "website",
+    images: [
+      {
+        url: "/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "ngampUS Command Center",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "ngampUS | Your campus command center",
+    description: "Satu tempat untuk semua urusan kuliah, tugas, jadwal, dan organisasi mahasiswa Indonesia.",
+    images: ["/icon-512.png"],
   },
   icons: {
     icon: [
@@ -57,7 +95,7 @@ const themeInitScript = `
 })();
 `;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="id"
@@ -75,6 +113,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-full flex flex-col overflow-x-hidden w-full">
+        <OfflineIndicator />
         <PwaSplashScreen />
         <Suspense fallback={null}>
           <NavigationProgress />
@@ -88,4 +127,3 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
-
