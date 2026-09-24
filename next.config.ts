@@ -1,14 +1,13 @@
 import type { NextConfig } from "next";
 
 // ─── Content Security Policy ──────────────────────────────────────────────────
-// Removed 'unsafe-eval' — Next.js 16 + Turbopack no longer needs it in prod.
-// 'unsafe-inline' is kept only for styles (Tailwind requires it); scripts are
-// locked to 'self' only. Tighten further by adding a nonce when you add a
-// custom _document that injects it.
+// 'unsafe-eval' is required by Next.js Turbopack and React hydration.
+// 'unsafe-inline' is required by Tailwind CSS (inline styles).
+// frame-ancestors + object-src 'none' prevents clickjacking and plugin injection.
 const cspHeader = `
   default-src 'self';
-  script-src 'self';
-  script-src-elem 'self';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  script-src-elem 'self' 'unsafe-inline';
   style-src 'self' 'unsafe-inline';
   style-src-elem 'self' 'unsafe-inline';
   img-src 'self' blob: data: https:;
@@ -22,7 +21,6 @@ const cspHeader = `
   manifest-src 'self';
   connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com;
   upgrade-insecure-requests;
-  block-all-mixed-content;
 `
   .replace(/\s{2,}/g, " ")
   .trim();
@@ -59,13 +57,8 @@ const securityHeaders = [
   },
 
   // Prevent cross-origin window.opener access (tab-napping defence)
-  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-
-  // Require CORP headers for subresource loads (part of cross-origin isolation)
-  { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
-
-  // Block other origins from loading this site's resources directly
-  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  // safe-origin-allow-popups lets links open in new tabs without opener access
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
 
   // Block Flash / PDF cross-domain policy files
   { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
@@ -96,19 +89,19 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
-        // Relax COEP for the PWA manifest and service worker
-        // (they need to be loaded cross-origin in some PWA scenarios)
-        source: "/manifest.json",
+        // Service worker needs broader scope
+        source: "/sw.js",
         headers: [
-          { key: "Cross-Origin-Embedder-Policy", value: "unsafe-none" },
-          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Service-Worker-Allowed", value: "/" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
         ],
       },
       {
-        source: "/sw.js",
+        // PWA manifest
+        source: "/manifest.json",
         headers: [
-          { key: "Cross-Origin-Embedder-Policy", value: "unsafe-none" },
-          { key: "Service-Worker-Allowed", value: "/" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Cache-Control", value: "public, max-age=86400" },
         ],
       },
     ];
