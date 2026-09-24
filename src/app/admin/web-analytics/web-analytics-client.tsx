@@ -278,37 +278,49 @@ alter table public.system_settings replica identity full;`;
 
       {/* ── 4 Key Hosting & Traffic Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Today Pageviews */}
+        {/* Card 1: Pageviews (Filter Dynamic) */}
         <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <Eye size={20} />
             </span>
-            <span className="font-mono text-[10px] text-[#789a84] font-bold uppercase">HARI INI (PAGEVIEWS)</span>
+            <span className="font-mono text-[10px] text-[#789a84] font-bold uppercase">
+              {periodDays === 1 ? "HARI INI (PAGEVIEWS)" : `PAGEVIEWS (${periodDays} HARI)`}
+            </span>
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <p className="text-3xl sm:text-4xl font-black text-white">{data.today.totalViews.toLocaleString("id-ID")}</p>
+            <p className="text-3xl sm:text-4xl font-black text-white">
+              {data.periodTotals.totalViews.toLocaleString("id-ID")}
+            </p>
             <span className="text-xs text-[#9dc5aa]">Hits</span>
           </div>
           <p className="text-xs text-[#789a84] font-medium mt-1">
-            Total pembukaan halaman website hari ini
+            {periodDays === 1 
+              ? "Total pembukaan halaman website hari ini" 
+              : `Total akumulasi pembukaan halaman dalam ${periodDays} hari terakhir`}
           </p>
         </div>
 
-        {/* Card 2: Today Unique Visitors */}
+        {/* Card 2: Unique Visitors (Filter Dynamic) */}
         <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 p-5 shadow-xs relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
               <Users size={20} />
             </span>
-            <span className="font-mono text-[10px] text-[#789a84] font-bold uppercase">PENGUNJUNG UNIK (UV)</span>
+            <span className="font-mono text-[10px] text-[#789a84] font-bold uppercase">
+              {periodDays === 1 ? "PENGUNJUNG UNIK (UV)" : `PENGUNJUNG UNIK (${periodDays} HARI)`}
+            </span>
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <p className="text-3xl sm:text-4xl font-black text-[#c8ef70]">{data.today.uniqueVisitors.toLocaleString("id-ID")}</p>
+            <p className="text-3xl sm:text-4xl font-black text-[#c8ef70]">
+              {data.periodTotals.uniqueVisitors.toLocaleString("id-ID")}
+            </p>
             <span className="text-xs text-[#9dc5aa]">Orang</span>
           </div>
           <p className="text-xs text-[#789a84] font-medium mt-1">
-            Browser / user unik berbeda yang masuk hari ini
+            {periodDays === 1
+              ? "Browser / user unik berbeda yang masuk hari ini"
+              : `Total mahasiswa unik berbeda dalam ${periodDays} hari terakhir`}
           </p>
         </div>
 
@@ -345,7 +357,7 @@ alter table public.system_settings replica identity full;`;
             <span className="text-xs text-[#9dc5aa]">Pages / Visitor</span>
           </div>
           <p className="text-xs text-[#789a84] font-medium mt-1">
-            Rata-rata kedalaman navigasi mahasiswa
+            Rata-rata kedalaman navigasi ({periodDays === 1 ? "hari ini" : `${periodDays} hari`})
           </p>
         </div>
       </div>
@@ -429,10 +441,12 @@ alter table public.system_settings replica identity full;`;
               <div className="flex items-center gap-2">
                 <Flame size={18} className="text-[#c8ef70]" />
                 <h3 className="font-display text-base font-black text-white">
-                  Halaman Paling Sering Dibuka (Top Pages)
+                  Top Pages {periodDays === 1 ? "(Hari Ini)" : `(${periodDays} Hari Terakhir)`}
                 </h3>
               </div>
-              <span className="font-mono text-[10px] text-[#789a84] uppercase font-bold">LEADERBOARD</span>
+              <span className="font-mono text-[10px] text-[#789a84] uppercase font-bold">
+                {periodDays === 1 ? "HARI INI" : `${periodDays}D LEADERBOARD`}
+              </span>
             </div>
 
             <div className="mt-4 space-y-3.5">
@@ -482,7 +496,7 @@ alter table public.system_settings replica identity full;`;
               <div className="flex items-center gap-2">
                 <Smartphone size={18} className="text-[#c8ef70]" />
                 <h3 className="font-display text-base font-black text-white">
-                  Sebaran Perangkat & Browser
+                  Perangkat & Browser {periodDays === 1 ? "(Hari Ini)" : `(${periodDays} Hari)`}
                 </h3>
               </div>
               <span className="font-mono text-[10px] text-[#789a84] uppercase font-bold">CLIENT TECH</span>
@@ -685,10 +699,10 @@ alter table public.system_settings replica identity full;`;
             </span>
             <div>
               <h3 className="font-display text-base font-black text-white">
-                Live Traffic Feed (25 Kunjungan Terakhir)
+                Live Traffic Feed {periodDays === 1 ? "(Hari Ini)" : `(${periodDays} Hari Terakhir)`} • {data.recentVisits.length} Aktivitas
               </h3>
               <p className="text-xs text-[#9dc5aa]">
-                Log interaksi halaman yang terjadi secara real-time dari pengunjung dan mahasiswa.
+                Log interaksi halaman yang terjadi {periodDays === 1 ? "hari ini" : `dalam rentang ${periodDays} hari terakhir`} dari pengunjung dan mahasiswa.
               </p>
             </div>
           </div>
@@ -724,9 +738,10 @@ alter table public.system_settings replica identity full;`;
                     </div>
                   </div>
 
-                  <div className="text-right shrink-0">
-                    <span className="font-mono text-[11px] text-[#c8ef70]">
-                      {timeFormatted}
+                  <div className="text-right shrink-0 flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#1b4332] bg-[#071710] px-2.5 py-1 font-mono text-[11px] text-[#c8ef70]">
+                      <Clock size={12} className="text-[#8cb197]" />
+                      <span>{timeFormatted}</span>
                     </span>
                   </div>
                 </div>

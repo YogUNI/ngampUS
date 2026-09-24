@@ -40,7 +40,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* Left Column: Branding Showcase & Value Props (Visible on Desktop/Tablet) */}
           <div className="hidden lg:flex flex-col justify-center space-y-8 pr-4">
             {/* Brand Logo Header */}
-            <div>
+            <div className="space-y-3">
               <Link href="/" className="inline-flex items-center gap-3 active:scale-95 transition">
                 <Image
                   src="/logo_ngampUS.png"
@@ -54,9 +54,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                   ngamp<span className="text-[#c8ef70]">US</span>
                 </span>
               </Link>
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#c8ef70]/25 bg-[#c8ef70]/10 px-3 py-1 text-xs font-black text-[#d8f89a]">
-                <Sparkles size={13} className="text-[#c8ef70]" />
-                <span>WORKSPACE TERPADU MAHASISWA INDONESIA</span>
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#c8ef70]/25 bg-[#c8ef70]/10 px-3 py-1 text-[11px] font-black tracking-wide text-[#d8f89a]">
+                  <Sparkles size={12} className="text-[#c8ef70]" />
+                  <span>WORKSPACE TERPADU MAHASISWA INDONESIA</span>
+                </div>
               </div>
             </div>
 

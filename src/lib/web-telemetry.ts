@@ -32,6 +32,7 @@ export interface WebAnalyticsSummary {
     uniqueVisitors: number;
     activeLast5Min: number;
   };
+  periodDays: number;
   periodTotals: {
     totalViews: number;
     uniqueVisitors: number;
@@ -169,8 +170,8 @@ export async function recordPageView(event: Omit<TrafficEvent, "timestamp">) {
       : [];
 
     recentList.unshift(fullEvent);
-    if (recentList.length > 25) {
-      recentList = recentList.slice(0, 25);
+    if (recentList.length > 50) {
+      recentList = recentList.slice(0, 50);
     }
 
     await supabase.from("system_settings").upsert(
@@ -229,13 +230,24 @@ export async function getWebAnalyticsData(
     recordMap[r.key] = r.value;
   });
 
-  const recentVisits: TrafficEvent[] = Array.isArray(recordMap["web_traffic_recent_feed"])
+  const rawRecentVisits: TrafficEvent[] = Array.isArray(recordMap["web_traffic_recent_feed"])
     ? recordMap["web_traffic_recent_feed"]
     : [];
 
+  // Filter recent visits based on selected periodDays cut-off
+  const periodCutoffMs = Date.now() - periodDays * 24 * 60 * 60 * 1000;
+  const recentVisits: TrafficEvent[] = rawRecentVisits.filter((v) => {
+    try {
+      const t = new Date(v.timestamp).getTime();
+      return isNaN(t) || t >= periodCutoffMs;
+    } catch {
+      return true;
+    }
+  });
+
   // Calculate active users in last 5 minutes
   const fiveMinAgo = Date.now() - 5 * 60 * 1000;
-  const activeLast5Min = recentVisits.filter((v) => {
+  const activeLast5Min = rawRecentVisits.filter((v) => {
     try {
       return new Date(v.timestamp).getTime() > fiveMinAgo;
     } catch {
@@ -358,6 +370,7 @@ export async function getWebAnalyticsData(
       uniqueVisitors: todayData.uniqueVisitors || 0,
       activeLast5Min,
     },
+    periodDays,
     periodTotals: {
       totalViews: totalViewsPeriod,
       uniqueVisitors: totalUniquesPeriod,
