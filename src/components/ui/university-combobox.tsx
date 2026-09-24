@@ -18,6 +18,7 @@ interface UniversityComboboxProps {
   disabled?: boolean;
   className?: string;
   inputClassName?: string;
+  dark?: boolean;
 }
 
 export function UniversityCombobox({
@@ -27,6 +28,7 @@ export function UniversityCombobox({
   disabled = false,
   className = "",
   inputClassName = "",
+  dark = false,
 }: UniversityComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -115,13 +117,24 @@ export function UniversityCombobox({
           }
         }}
         className={`flex items-center justify-between gap-2 cursor-pointer transition select-none ${
-          inputClassName ||
-          "w-full rounded-xl border border-[#d8e3da] bg-[#fafbfa] px-3 py-2 text-xs font-semibold text-[#10261b] hover:bg-white focus:border-[#0f6849]"
+          inputClassName
+            ? inputClassName
+            : dark
+            ? "w-full rounded-lg border border-[#1b4330] bg-[#0b2419] px-2.5 py-1.5 text-[11px] font-semibold text-white hover:bg-[#0e2f21] focus:border-[#c8ef70]"
+            : "w-full rounded-xl border border-[#d8e3da] bg-[#fafbfa] px-3 py-2 text-xs font-semibold text-[#10261b] hover:bg-white focus:border-[#0f6849]"
         } ${disabled ? "opacity-60 cursor-not-allowed pointer-events-none" : ""}`}
       >
         <span
           title={value || placeholder}
-          className={`truncate ${!value ? "text-[#99a89d] font-normal" : "text-[#10261b] font-semibold"}`}
+          className={`truncate ${
+            !value
+              ? dark
+                ? "text-[#4d705f] font-normal"
+                : "text-[#99a89d] font-normal"
+              : dark
+              ? "text-white font-semibold"
+              : "text-[#10261b] font-semibold"
+          }`}
         >
           {value || placeholder}
         </span>
@@ -130,30 +143,47 @@ export function UniversityCombobox({
             <span
               role="button"
               onClick={handleClear}
-              className="p-0.5 rounded-full hover:bg-black/5 text-[#8b9d91] hover:text-[#10261b] transition"
+              className={`p-0.5 rounded-full transition ${
+                dark
+                  ? "hover:bg-white/10 text-[#648c79] hover:text-white"
+                  : "hover:bg-black/5 text-[#8b9d91] hover:text-[#10261b]"
+              }`}
             >
               <X size={12} />
             </span>
           )}
           <ChevronDown
-            size={14}
-            className={`shrink-0 transition-transform text-[#8b9d91] ${isOpen ? "rotate-180 text-[#0f6849]" : ""}`}
+            size={13}
+            className={`shrink-0 transition-transform ${
+              dark ? "text-[#648c79]" : "text-[#8b9d91]"
+            } ${isOpen ? (dark ? "rotate-180 text-[#c8ef70]" : "rotate-180 text-[#0f6849]") : ""}`}
           />
         </div>
       </div>
 
-      {/* Popover Dropdown - Dedicated Clean High-Contrast Palette */}
+      {/* Popover Dropdown */}
       {isOpen && (
         <div
-          className="absolute left-0 top-full mt-1.5 z-50 w-[min(380px,92vw)] sm:w-[380px] max-w-[calc(100vw-2rem)] flex flex-col overflow-hidden rounded-2xl border border-[#cbe0d3] bg-[#ffffff] shadow-[0_20px_48px_rgba(16,38,27,0.24)]"
-          style={{ backgroundColor: "#ffffff" }}
+          className={`absolute left-0 top-full mt-1.5 z-50 w-[min(380px,92vw)] sm:w-[380px] max-w-[calc(100vw-2rem)] flex flex-col overflow-hidden rounded-2xl border ${
+            dark
+              ? "border-[#1b4532] bg-[#0c2419] shadow-[0_24px_50px_rgba(0,0,0,0.65)]"
+              : "border-[#cbe0d3] bg-[#ffffff] shadow-[0_20px_48px_rgba(16,38,27,0.24)]"
+          }`}
         >
           {/* Search Box Header */}
-          <div className="p-2.5 border-b border-[#e8f0ea] bg-[#f7faf8]">
+          <div
+            className={`p-2.5 border-b ${
+              dark
+                ? "border-[#1b4330] bg-[#071911]"
+                : "border-[#e8f0ea] bg-[#f7faf8]"
+            }`}
+          >
             <div className="relative flex items-center">
               <Search
                 size={14}
-                className="absolute left-3 text-[#0f6849] pointer-events-none"
+                className={`absolute left-3 pointer-events-none ${
+                  dark ? "text-[#c8ef70]" : "text-[#0f6849]"
+                }`}
               />
               <input
                 ref={inputRef}
@@ -173,18 +203,21 @@ export function UniversityCombobox({
                   }
                 }}
                 placeholder="Cari nama kampus atau singkatan (UI, UMB, UGM)..."
-                className="w-full rounded-xl border border-[#c4ded0] bg-white py-2 pl-9 pr-8 text-xs font-bold text-[#10261b] placeholder:text-[#8ba294] placeholder:font-medium outline-none focus:border-[#0f6849] focus:ring-2 focus:ring-[#0f6849]/20"
-                style={{
-                  color: "#10261b",
-                  backgroundColor: "#ffffff",
-                  caretColor: "#0f6849",
-                }}
+                className={`w-full rounded-xl border py-2 pl-9 pr-8 text-xs font-bold outline-none transition ${
+                  dark
+                    ? "border-[#1b4330] bg-[#0b2419] text-white placeholder:text-[#4d705f] focus:border-[#c8ef70] focus:ring-2 focus:ring-[#c8ef70]/20"
+                    : "border-[#c4ded0] bg-white text-[#10261b] placeholder:text-[#8ba294] focus:border-[#0f6849] focus:ring-2 focus:ring-[#0f6849]/20"
+                }`}
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-2.5 text-[#768e7f] hover:text-[#10261b] transition"
+                  className={`absolute right-2.5 transition ${
+                    dark
+                      ? "text-[#648c79] hover:text-white"
+                      : "text-[#768e7f] hover:text-[#10261b]"
+                  }`}
                 >
                   <X size={14} />
                 </button>
@@ -193,17 +226,31 @@ export function UniversityCombobox({
           </div>
 
           {/* List options */}
-          <div className="flex-1 overflow-y-auto p-1.5 space-y-1 max-h-64 divide-y divide-[#f0f5f2] bg-[#ffffff]">
+          <div
+            className={`flex-1 overflow-y-auto p-1.5 space-y-1 max-h-60 ${
+              dark
+                ? "divide-y divide-[#133525] bg-[#0c2419]"
+                : "divide-y divide-[#f0f5f2] bg-[#ffffff]"
+            }`}
+          >
             {filteredUniversities.length === 0 ? (
               <div className="p-4 text-center">
-                <p className="text-xs text-[#52665a] font-medium">
+                <p
+                  className={`text-xs font-medium ${
+                    dark ? "text-[#8caea0]" : "text-[#52665a]"
+                  }`}
+                >
                   Kampus &quot;{searchTerm}&quot; tidak ada dalam daftar standar.
                 </p>
                 {searchTerm.trim() && (
                   <button
                     type="button"
                     onClick={handleCustomSubmit}
-                    className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl bg-[#0f6849] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#103626] transition cursor-pointer shadow-xs"
+                    className={`mt-2.5 inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition cursor-pointer shadow-xs ${
+                      dark
+                        ? "bg-[#c8ef70] text-[#091a12] hover:bg-[#d5fa80]"
+                        : "bg-[#0f6849] text-white hover:bg-[#103626]"
+                    }`}
                   >
                     <Plus size={13} />
                     <span>Gunakan nama kustom: &quot;{searchTerm.trim()}&quot;</span>
@@ -222,7 +269,11 @@ export function UniversityCombobox({
                       onClick={() => handleSelect(univ.name)}
                       className={`flex w-full items-center justify-between gap-3 rounded-xl p-2.5 text-left transition cursor-pointer ${
                         isSelected
-                          ? "bg-[#0f6849] text-white font-bold shadow-xs"
+                          ? dark
+                            ? "bg-[#c8ef70] text-[#091a12] font-black shadow-xs"
+                            : "bg-[#0f6849] text-white font-bold shadow-xs"
+                          : dark
+                          ? "text-[#d2e7dc] hover:bg-[#113826]"
                           : "text-[#10261b] hover:bg-[#ebf6ee]"
                       }`}
                     >
@@ -230,7 +281,11 @@ export function UniversityCombobox({
                         <span
                           className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-lg ${
                             isSelected
-                              ? "bg-white/20 text-[#c8ef70]"
+                              ? dark
+                                ? "bg-[#091a12]/20 text-[#091a12]"
+                                : "bg-white/20 text-[#c8ef70]"
+                              : dark
+                              ? "bg-[#071911] text-[#c8ef70]"
                               : "bg-[#eaf5ee] text-[#0f6849]"
                           }`}
                         >
@@ -239,7 +294,13 @@ export function UniversityCombobox({
                         <div className="min-w-0 flex-1">
                           <span
                             className={`block text-xs font-bold leading-tight break-words ${
-                              isSelected ? "text-white" : "text-[#10261b]"
+                              isSelected
+                                ? dark
+                                  ? "text-[#091a12]"
+                                  : "text-white"
+                                : dark
+                                ? "text-white"
+                                : "text-[#10261b]"
                             }`}
                           >
                             {univ.name}
@@ -247,7 +308,13 @@ export function UniversityCombobox({
                           {(univ.acronym || univ.type || univ.city) && (
                             <div
                               className={`mt-0.5 flex flex-wrap items-center gap-1 text-[10.5px] ${
-                                isSelected ? "text-white/80" : "text-[#587262]"
+                                isSelected
+                                  ? dark
+                                    ? "text-[#091a12]/80"
+                                    : "text-white/80"
+                                  : dark
+                                  ? "text-[#7ea390]"
+                                  : "text-[#587262]"
                               }`}
                             >
                               {univ.acronym && (
@@ -272,7 +339,12 @@ export function UniversityCombobox({
                         </div>
                       </div>
                       {isSelected && (
-                        <Check size={16} className="shrink-0 text-[#c8ef70]" />
+                        <Check
+                          size={16}
+                          className={`shrink-0 ${
+                            dark ? "text-[#091a12]" : "text-[#c8ef70]"
+                          }`}
+                        />
                       )}
                     </button>
                   );
@@ -284,7 +356,11 @@ export function UniversityCombobox({
                     <button
                       type="button"
                       onClick={handleCustomSubmit}
-                      className="flex w-full items-center gap-2 rounded-xl p-2 text-xs text-[#0f6849] hover:bg-[#eaf5ee] transition cursor-pointer font-bold"
+                      className={`flex w-full items-center gap-2 rounded-xl p-2 text-xs transition cursor-pointer font-bold ${
+                        dark
+                          ? "text-[#c8ef70] hover:bg-[#113826]"
+                          : "text-[#0f6849] hover:bg-[#eaf5ee]"
+                      }`}
                     >
                       <Plus size={14} className="shrink-0" />
                       <span className="truncate">

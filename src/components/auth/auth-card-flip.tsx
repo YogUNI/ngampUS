@@ -404,6 +404,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                       value={registerForm.watch("university") || ""}
                       onChange={(val) => registerForm.setValue("university", val, { shouldValidate: true })}
                       placeholder="Pilih universitas / ketik nama kampus..."
+                      dark={true}
                     />
                     <input
                       {...registerForm.register("major")}
