@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { logAdminActivity } from "@/lib/audit-logger";
+import { sanitizeString, sanitizeUrl } from "@/lib/security";
 
 async function requireSuperadmin() {
   const supabase = await createClient();
@@ -51,15 +52,16 @@ export async function createBroadcastAnnouncement(formData: FormData) {
 
   const targetUnivRaw = formData.get("target_university");
   const expiresAtRaw = formData.get("expires_at");
+  const rawTautan = formData.get("tautan");
 
   const validated = announcementSchema.parse({
-    judul: formData.get("judul"),
-    pesan: formData.get("pesan"),
+    judul: sanitizeString(formData.get("judul"), 200),
+    pesan: sanitizeString(formData.get("pesan"), 2000),
     tipe: formData.get("tipe") || "info",
-    target_university: targetUnivRaw ? String(targetUnivRaw).trim() || null : null,
+    target_university: targetUnivRaw ? sanitizeString(String(targetUnivRaw), 150) || null : null,
     expires_at: expiresAtRaw ? new Date(String(expiresAtRaw)).toISOString() : null,
     is_emergency_sticky: formData.get("is_emergency_sticky") === "true" || formData.get("is_emergency_sticky") === "on",
-    tautan: formData.get("tautan") || null,
+    tautan: rawTautan ? sanitizeUrl(String(rawTautan)) ?? null : null,
     is_active: formData.get("is_active") === "true" || formData.get("is_active") === "on",
   });
 
@@ -107,6 +109,13 @@ export async function createBroadcastAnnouncement(formData: FormData) {
 }
 
 export async function updateSystemSetting(key: string, value: boolean): Promise<{ success: boolean; error?: string }> {
+  // Allowlist valid setting keys — never trust arbitrary strings from the client
+  const ALLOWED_KEYS = ["maintenance_mode", "ai_service_active", "registration_active"] as const;
+  type AllowedKey = (typeof ALLOWED_KEYS)[number];
+  if (!ALLOWED_KEYS.includes(key as AllowedKey)) {
+    return { success: false, error: `Kunci pengaturan "${key}" tidak dikenali.` };
+  }
+
   try {
     const { supabase, user } = await requireSuperadmin();
 
@@ -145,6 +154,9 @@ export async function updateSystemSetting(key: string, value: boolean): Promise<
 }
 
 export async function toggleAnnouncementStatus(id: string, currentStatus: boolean) {
+  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_REGEX.test(id)) throw new Error("ID pengumuman tidak valid.");
+
   const { supabase } = await requireSuperadmin();
 
   const { error } = await supabase
@@ -171,6 +183,9 @@ export async function toggleAnnouncementStatus(id: string, currentStatus: boolea
 }
 
 export async function deleteBroadcastAnnouncement(id: string) {
+  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_REGEX.test(id)) throw new Error("ID pengumuman tidak valid.");
+
   const { supabase } = await requireSuperadmin();
 
   const { error } = await supabase
@@ -194,6 +209,12 @@ export async function deleteBroadcastAnnouncement(id: string) {
 }
 
 export async function updateUserRole(targetUserId: string, newRole: "student" | "superadmin") {
+  // Validate UUID format — prevents ID injection attacks
+  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_REGEX.test(targetUserId)) {
+    throw new Error("ID pengguna tidak valid.");
+  }
+
   const { supabase, user } = await requireSuperadmin();
 
   if (targetUserId === user.id && newRole !== "superadmin") {

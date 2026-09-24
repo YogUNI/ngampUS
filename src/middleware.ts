@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { rateLimit, authLimiter, apiLimiter, otpLimiter } from "@/lib/rate-limiter";
+import { getClientIP, isMaliciousBot } from "@/lib/security";
 
 const PROTECTED_ROUTES = [
   "/dashboard",
@@ -14,12 +16,87 @@ const PROTECTED_ROUTES = [
 
 const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
 
+// Rate-limited paths with their limiter configs
+const RATE_LIMITED_AUTH = ["/login", "/register", "/forgot-password", "/reset-password"];
+const RATE_LIMITED_OTP = ["/forgot-password", "/reset-password"];
+
+/** Attach security response headers (belt-and-suspenders on top of next.config.ts) */
+function attachSecurityHeaders(res: NextResponse): NextResponse {
+  res.headers.set("X-Frame-Options", "DENY");
+  res.headers.set("X-Content-Type-Options", "nosniff");
+  res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), browsing-topics=()");
+  res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  res.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  res.headers.set("Cross-Origin-Embedder-Policy", "require-corp");
+  res.headers.set("Cross-Origin-Resource-Policy", "same-origin");
+  res.headers.set("X-Permitted-Cross-Domain-Policies", "none");
+  res.headers.set("X-DNS-Prefetch-Control", "off");
+  res.headers.set("X-Download-Options", "noopen");
+  return res;
+}
+
+/** Build a 429 Too Many Requests response */
+function tooManyRequests(retryAfter: number): NextResponse {
+  const res = NextResponse.json(
+    { error: "Terlalu banyak permintaan. Coba lagi nanti.", retryAfter },
+    { status: 429 }
+  );
+  res.headers.set("Retry-After", String(retryAfter));
+  return attachSecurityHeaders(res);
+}
+
+/** Build a 403 Forbidden response */
+function forbidden(reason = "Akses ditolak."): NextResponse {
+  return attachSecurityHeaders(
+    NextResponse.json({ error: reason }, { status: 403 })
+  );
+}
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const ip = getClientIP(request.headers);
+  const ua = request.headers.get("user-agent") || "";
+
+  // ── 0. Block known malicious bots / scanners ───────────────────────────────
+  if (isMaliciousBot(ua)) {
+    return forbidden("Bot tidak diizinkan.");
+  }
+
+  // ── 1. Rate-limit auth pages (HTML page loads AND POST submissions) ─────────
+  const isAuthPath = RATE_LIMITED_AUTH.some((p) => pathname.startsWith(p));
+  if (isAuthPath) {
+    const limiter = RATE_LIMITED_OTP.some((p) => pathname.startsWith(p))
+      ? otpLimiter
+      : authLimiter;
+    const result = rateLimit(ip, limiter);
+    if (!result.success) {
+      // For HTML page routes, redirect to login with an error param
+      if (!pathname.startsWith("/api")) {
+        const url = new URL("/login", request.url);
+        url.searchParams.set("error", "rate_limited");
+        const res = NextResponse.redirect(url);
+        res.headers.set("Retry-After", String(result.retryAfter));
+        return attachSecurityHeaders(res);
+      }
+      return tooManyRequests(result.retryAfter);
+    }
+  }
+
+  // ── 2. Rate-limit API routes ────────────────────────────────────────────────
+  if (pathname.startsWith("/api") && !pathname.startsWith("/api/health-check")) {
+    const result = rateLimit(`api:${ip}`, apiLimiter);
+    if (!result.success) {
+      return tooManyRequests(result.retryAfter);
+    }
+  }
+
+  // ── 3. Build Supabase client and refresh session ────────────────────────────
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  if (!url || !key) return response;
+  if (!url || !key) return attachSecurityHeaders(response);
 
   const supabase = createServerClient(url, key, {
     cookies: {
@@ -30,24 +107,28 @@ export async function middleware(request: NextRequest) {
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, {
             ...options,
+            httpOnly: true,
             sameSite: "lax",
             secure: process.env.NODE_ENV === "production",
+            path: "/",
           })
         );
       },
     },
   });
 
-  // Always use getUser() instead of getSession() to securely authenticate against Supabase Auth server
+  // Always use getUser() — never getSession() — for server-side auth
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
+  // ── 4. Maintenance Mode Check ───────────────────────────────────────────────
+  const isMaintenanceExempt =
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/maintenance") ||
+    pathname.startsWith("/api/health-check");
 
-  // 0. Maintenance Mode Check: redirect non-superadmins if maintenance_mode is enabled
-  // Exemptions: /admin, /login, /maintenance, /api/health-check, and static assets
-  const isMaintenanceExempt = pathname.startsWith("/admin") || pathname.startsWith("/login") || pathname.startsWith("/maintenance") || pathname.startsWith("/api/health-check");
   if (!isMaintenanceExempt) {
     const { data: settingData } = await supabase
       .from("system_settings")
@@ -55,8 +136,7 @@ export async function middleware(request: NextRequest) {
       .eq("key", "maintenance_mode")
       .maybeSingle();
 
-    if (settingData && settingData.value === true) {
-      // Check if user is superadmin (Zero-Lockout)
+    if (settingData?.value === true) {
       let isSuperadmin = false;
       if (user) {
         const { data: prof } = await supabase
@@ -68,28 +148,29 @@ export async function middleware(request: NextRequest) {
       }
 
       if (!isSuperadmin) {
-        return NextResponse.redirect(new URL("/maintenance", request.url));
+        return attachSecurityHeaders(
+          NextResponse.redirect(new URL("/maintenance", request.url))
+        );
       }
     }
   }
 
-  // 1. Redirect unauthenticated users attempting to access protected routes
+  // ── 5. Protected Routes: require authentication ─────────────────────────────
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
   if (isProtected && !user) {
     const redirectUrl = new URL("/login", request.url);
     redirectUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(redirectUrl);
+    return attachSecurityHeaders(NextResponse.redirect(redirectUrl));
   }
 
-  // 2. Protect /admin routes strictly for superadmins
+  // ── 6. Admin Routes: superadmin only ───────────────────────────────────────
   if (pathname.startsWith("/admin")) {
     if (!user) {
       const redirectUrl = new URL("/login", request.url);
       redirectUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(redirectUrl);
+      return attachSecurityHeaders(NextResponse.redirect(redirectUrl));
     }
 
-    // Verify role in public.profiles
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
@@ -97,11 +178,13 @@ export async function middleware(request: NextRequest) {
       .maybeSingle();
 
     if (profile?.role !== "superadmin") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return attachSecurityHeaders(
+        NextResponse.redirect(new URL("/dashboard", request.url))
+      );
     }
   }
 
-  // 3. Strict Isolation: Superadmin has ZERO access to student workspace routes (/dashboard, /jadwal, /kegiatan, etc.)
+  // ── 7. Strict Isolation: superadmin → redirect out of student workspace ─────
   if (user && isProtected) {
     const { data: profile } = await supabase
       .from("profiles")
@@ -110,11 +193,13 @@ export async function middleware(request: NextRequest) {
       .maybeSingle();
 
     if (profile?.role === "superadmin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
+      return attachSecurityHeaders(
+        NextResponse.redirect(new URL("/admin", request.url))
+      );
     }
   }
 
-  // 4. Redirect root to /admin for superadmin
+  // ── 8. Root redirect for superadmin ────────────────────────────────────────
   if (user && pathname === "/") {
     const { data: profile } = await supabase
       .from("profiles")
@@ -123,14 +208,15 @@ export async function middleware(request: NextRequest) {
       .maybeSingle();
 
     if (profile?.role === "superadmin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
+      return attachSecurityHeaders(
+        NextResponse.redirect(new URL("/admin", request.url))
+      );
     }
   }
 
-  // 5. Redirect authenticated users attempting to access auth routes (login, register)
+  // ── 9. Auth routes: redirect logged-in users away ──────────────────────────
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   if (isAuthRoute && user) {
-    // Check if superadmin
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
@@ -138,24 +224,20 @@ export async function middleware(request: NextRequest) {
       .maybeSingle();
 
     if (profile?.role === "superadmin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
+      return attachSecurityHeaders(
+        NextResponse.redirect(new URL("/admin", request.url))
+      );
     }
-
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return attachSecurityHeaders(
+      NextResponse.redirect(new URL("/dashboard", request.url))
+    );
   }
 
-  // 6. Attach security headers at the middleware response level
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), browsing-topics=()");
-  response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-
-  return response;
+  return attachSecurityHeaders(response);
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|eot)$).*)",
   ],
 };
