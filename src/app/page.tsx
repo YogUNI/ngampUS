@@ -147,14 +147,14 @@ export default function Home() {
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#0f6849]/20 bg-[#dff3e5] px-3.5 py-1 text-xs font-black tracking-wider text-[#0f6849]">
-              CORE ARCHITECTURE
+              FITUR UTAMA
             </div>
             <h2 className="font-display mt-4 text-3xl sm:text-5xl font-black tracking-tight text-[#103626] leading-tight">
               Bukan sekadar to-do list.<br />
-              Ini sistem navigasi hidup kampusmu.
+              Satu tempat untuk semua urusan kuliah & organisasi.
             </h2>
             <p className="mt-4 text-base sm:text-lg text-[#55675b]">
-              Dirancang dari rasa frustrasi nyata mahasiswa Indonesia: tugas tercecer di puluhan grup chat dan jadwal bentrok antara kuliah dan organisasi.
+              Dibuat karena masalah nyata anak kuliah: info tugas hilang di tumpukan chat WhatsApp, dan jadwal rapat himpunan bentrok dengan jam kelas.
             </p>
           </div>
         </Reveal>
@@ -471,7 +471,7 @@ export default function Home() {
                 </span>
               </Link>
               <p className="text-sm text-[#55675b] max-w-sm leading-relaxed">
-                Platform workspace personal nomor satu untuk mahasiswa Indonesia. Satukan jadwal kuliah, tugas, proker organisasi, dan portofolio dalam satu ekosistem.
+                Workspace terpadu untuk mahasiswa Indonesia. Rapikan jadwal kuliah, deadline tugas, kepanitiaan organisasi, dan rangkum portofolio dalam satu tempat yang praktis.
               </p>
               <div className="flex items-center gap-2 text-xs font-semibold text-[#526357] pt-2">
                 <span>Created with</span>

@@ -119,8 +119,8 @@ export function LandingNavbar() {
             </span>
           </Link>
 
-          {/* Desktop Navigation Links (Clean text, adaptive contrast, no dark box) */}
-          <div className="hidden md:flex items-center gap-6 text-xs font-bold">
+          {/* Desktop Navigation Links (True absolute center inside pill navbar) */}
+          <div className="hidden md:flex items-center gap-7 text-xs font-bold absolute left-1/2 -translate-x-1/2 pointer-events-auto">
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.sectionId;
               return (
