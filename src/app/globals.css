@@ -1896,4 +1896,77 @@ html.dark:has(.landing-page) body {
   animation: flowRight 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* ─── Immersive 3D Splash & Auth Loading FX ─── */
+@keyframes splash-float-3d {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px);
+  }
+  25% {
+    transform: perspective(1000px) rotateX(6deg) rotateY(-8deg) translateY(-8px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(-5deg) rotateY(7deg) translateY(-14px);
+  }
+  75% {
+    transform: perspective(1000px) rotateX(4deg) rotateY(6deg) translateY(-6px);
+  }
+}
+
+@keyframes splash-halo-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.15);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.4;
+  }
+}
+
+@keyframes splash-pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes auth-btn-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(200, 239, 112, 0.4), inset 0 0 10px rgba(200, 239, 112, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(200, 239, 112, 0.8), inset 0 0 18px rgba(200, 239, 112, 0.5);
+  }
+}
+
+.splash-3d-card {
+  transform-style: preserve-3d;
+  animation: splash-float-3d 6s ease-in-out infinite;
+}
+
+.splash-halo {
+  animation: splash-halo-spin 8s linear infinite;
+}
+
+.splash-pulse-ring {
+  animation: splash-pulse-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.auth-loading-glow {
+  animation: auth-btn-glow 1.5s ease-in-out infinite;
+}
+
+
 

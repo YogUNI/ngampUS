@@ -294,18 +294,27 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                 <button
                   type="submit"
                   disabled={loginForm.formState.isSubmitting}
-                  className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-[#c8ef70] py-3 text-xs sm:text-sm font-black text-[#091a12] shadow-md shadow-[#c8ef70]/20 transition hover:bg-[#d5fa80] active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className={`mt-1 relative overflow-hidden flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs sm:text-sm font-black transition-all duration-300 active:scale-98 disabled:cursor-not-allowed cursor-pointer ${
+                    loginForm.formState.isSubmitting
+                      ? "bg-[#d8fa82] text-[#091a12] auth-loading-glow shadow-[0_0_25px_rgba(200,239,112,0.6)]"
+                      : "bg-[#c8ef70] text-[#091a12] shadow-md shadow-[#c8ef70]/20 hover:bg-[#d5fa80] hover:shadow-lg hover:shadow-[#c8ef70]/30"
+                  }`}
                 >
+                  {/* Subtle shimmer beam while loading */}
+                  {loginForm.formState.isSubmitting && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_1.2s_infinite_linear] [background-size:200%_100%]" />
+                  )}
+
                   {loginForm.formState.isSubmitting ? (
-                    <>
-                      <LoaderCircle size={15} className="animate-spin text-[#091a12]" />
-                      <span>Menghubungkan ke Workspace...</span>
-                    </>
+                    <span className="relative z-10 flex items-center gap-2 animate-in fade-in duration-300">
+                      <LoaderCircle size={16} className="animate-spin text-[#091a12]" />
+                      <span className="tracking-wide">Menghubungkan ke Workspace...</span>
+                    </span>
                   ) : (
-                    <>
+                    <span className="relative z-10 flex items-center gap-2 transition-transform duration-200 group-hover:translate-x-0.5">
                       <span>Masuk ke Workspace</span>
                       <ArrowRight size={15} />
-                    </>
+                    </span>
                   )}
                 </button>
               </form>
@@ -471,18 +480,27 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
                 <button
                   type="submit"
                   disabled={registerForm.formState.isSubmitting}
-                  className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] py-2.5 text-xs sm:text-sm font-black text-[#091a12] shadow-md shadow-[#c8ef70]/20 transition hover:bg-[#d5fa80] active:scale-98 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className={`mt-1 relative overflow-hidden flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs sm:text-sm font-black transition-all duration-300 active:scale-98 disabled:cursor-not-allowed cursor-pointer ${
+                    registerForm.formState.isSubmitting
+                      ? "bg-[#d8fa82] text-[#091a12] auth-loading-glow shadow-[0_0_25px_rgba(200,239,112,0.6)]"
+                      : "bg-[#c8ef70] text-[#091a12] shadow-md shadow-[#c8ef70]/20 hover:bg-[#d5fa80]"
+                  }`}
                 >
+                  {/* Subtle shimmer beam while loading */}
+                  {registerForm.formState.isSubmitting && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_1.2s_infinite_linear] [background-size:200%_100%]" />
+                  )}
+
                   {registerForm.formState.isSubmitting ? (
-                    <>
+                    <span className="relative z-10 flex items-center gap-1.5 animate-in fade-in duration-300">
                       <LoaderCircle size={15} className="animate-spin text-[#091a12]" />
-                      <span>Mendaftarkan...</span>
-                    </>
+                      <span>Mendaftarkan Mahasiswa...</span>
+                    </span>
                   ) : (
-                    <>
+                    <span className="relative z-10 flex items-center gap-1.5">
                       <span>Buat Akun & Mulai Gratis</span>
                       <ArrowRight size={15} />
-                    </>
+                    </span>
                   )}
                 </button>
               </form>
