@@ -5,7 +5,7 @@ import { Sparkles, Calendar, BookOpen, UsersRound, Award, CheckCircle2 } from "l
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative min-h-screen flex flex-col justify-between overflow-x-hidden bg-[#091a12] text-[#eef7f1]">
+    <div className="relative h-screen max-h-screen flex flex-col justify-between overflow-hidden bg-[#091a12] text-[#eef7f1]">
       {/* ── Ambient Background Lighting & Grid Effects ── */}
       <div className="pointer-events-none fixed inset-0 z-0">
         {/* Luminous Top Glow */}
@@ -34,8 +34,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* ── Main Content Grid ── */}
-      <main className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid w-full items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+      <main className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-center justify-center px-3 py-2 sm:px-6 sm:py-4 overflow-hidden">
+        <div className="grid w-full items-center gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           
           {/* Left Column: Branding Showcase & Value Props (Visible on Desktop/Tablet) */}
           <div className="hidden lg:flex flex-col justify-center space-y-8 pr-4">
