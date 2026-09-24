@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "ngampUS - Campus Command Center",
     short_name: "ngampUS",
     description: "Platform Manajemen Kuliah, Jadwal, Tugas, dan Organisasi Mahasiswa",
-    start_url: "/dashboard",
+    start_url: "/login",
     display: "standalone",
     background_color: "#0f6849",
     theme_color: "#0f6849",

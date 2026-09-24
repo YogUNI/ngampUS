@@ -55,6 +55,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const [flipperHeight, setFlipperHeight] = useState<number | undefined>(undefined);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   const frontRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
@@ -97,6 +98,13 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const standalone =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      setIsStandalone(standalone);
+    }
+
     const handlePopState = () => {
       setMode(window.location.pathname.includes("register") ? "register" : "login");
     };
@@ -151,7 +159,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       {/* ── Brand Bar & Switcher ── */}
       <div className="mb-3 flex items-center justify-between px-0.5">
         <Link
-          href="/"
+          href={isStandalone ? "/login" : "/"}
           className="inline-flex items-center gap-2 font-display text-base font-black tracking-tight text-[#10261b] hover:opacity-80 transition"
         >
           <Image src="/logo_ngampUS.png" alt="ngampUS Logo" width={26} height={26} className="h-[26px] w-[26px] object-contain" />

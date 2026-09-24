@@ -43,7 +43,11 @@ export function Sidebar({
 
   async function signOut() {
     await createClient().auth.signOut();
-    router.push("/");
+    const isStandalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+       (window.navigator as unknown as { standalone?: boolean }).standalone === true);
+    router.push(isStandalone ? "/login" : "/");
     router.refresh();
   }
 
@@ -366,7 +370,11 @@ export function MobileTopbar({
 
   async function signOut() {
     await createClient().auth.signOut();
-    router.push("/");
+    const isStandalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+       (window.navigator as unknown as { standalone?: boolean }).standalone === true);
+    router.push(isStandalone ? "/login" : "/");
     router.refresh();
   }
 

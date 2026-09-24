@@ -22,6 +22,7 @@ import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
 import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
+import { StandaloneRedirectGuard } from "@/components/pwa/standalone-redirect-guard";
 
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
 
   return (
     <main className="atlas-page landing-page min-h-screen bg-[#f7f8f5] text-[#10261b]">
+      <StandaloneRedirectGuard />
 
       {/* ── STICKY FLOATING NAVBAR (Page-Wide) ── */}
       <div className="fixed top-3 sm:top-4 inset-x-0 z-50 pointer-events-none">
