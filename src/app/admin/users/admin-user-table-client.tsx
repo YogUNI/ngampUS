@@ -33,7 +33,6 @@ export type UserProfile = {
   phone: string | null;
   created_at: string;
   role: "student" | "superadmin" | "suspended" | string;
-  is_suspended?: boolean | null;
 };
 
 export type PaginationMeta = {
@@ -106,7 +105,6 @@ export function AdminUserTableClient({
             u.id === user.id
               ? {
                   ...u,
-                  is_suspended: suspend,
                   role: suspend ? "suspended" : (u.role === "suspended" ? "student" : u.role),
                 }
               : u
@@ -148,7 +146,7 @@ export function AdminUserTableClient({
       `"${(u.angkatan || "").replace(/"/g, '""')}"`,
       `"${(u.phone || "").replace(/"/g, '""')}"`,
       `"${u.role}"`,
-      `"${u.is_suspended || u.role === "suspended" ? "Suspended" : "Active"}"`,
+      `"${u.role === "suspended" ? "Suspended" : "Active"}"`,
       `"${new Date(u.created_at).toISOString()}"`,
     ]);
 
@@ -241,7 +239,7 @@ export function AdminUserTableClient({
             <tbody className="divide-y divide-white/5 font-sans">
               {users.map((u) => {
                 const isSuper = u.role === "superadmin";
-                const isSuspended = u.is_suspended === true || u.role === "suspended";
+                const isSuspended = u.role === "suspended";
                 const isProcessing = isPending && activeUserId === u.id;
                 const regDate = new Date(u.created_at).toLocaleDateString("id-ID", {
                   day: "numeric",

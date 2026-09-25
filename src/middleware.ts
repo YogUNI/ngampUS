@@ -120,19 +120,19 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Fetch user profile once (reduces DB roundtrips from 3-4x down to 1x per request)
-  let userProfile: { role?: string; is_suspended?: boolean } | null = null;
+  // Fetch user profile role safely (reduces DB roundtrips from 3-4x down to 1x per request)
+  let userProfile: { role?: string } | null = null;
   if (user) {
     const { data: prof } = await supabase
       .from("profiles")
-      .select("role, is_suspended")
+      .select("role")
       .eq("id", user.id)
       .maybeSingle();
     userProfile = prof;
 
     // ── 3b. Account Suspension Check ──────────────────────────────────────────
     // If account has been suspended by superadmin, reject access & redirect to login
-    const isSuspended = userProfile?.is_suspended === true || userProfile?.role === "suspended";
+    const isSuspended = userProfile?.role === "suspended";
     if (isSuspended && !pathname.startsWith("/login")) {
       const suspUrl = new URL("/login", request.url);
       suspUrl.searchParams.set("error", "suspended");

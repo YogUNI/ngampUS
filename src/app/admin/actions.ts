@@ -256,29 +256,17 @@ export async function toggleUserSuspension(targetUserId: string, suspend: boolea
     throw new Error("Kamu tidak dapat menonaktifkan akun kamu sendiri.");
   }
 
-  // Try updating is_suspended column
+  // Safely update role to suspended or student
   const { error } = await supabase
     .from("profiles")
     .update({
-      is_suspended: suspend,
+      role: suspend ? "suspended" : "student",
       updated_at: new Date().toISOString(),
     })
     .eq("id", targetUserId);
 
   if (error) {
-    // If column is_suspended does not exist in schema, retry with status / role fallback
-    if (error.message?.includes("is_suspended") || error.code === "PGRST204") {
-      const { error: fallbackErr } = await supabase
-        .from("profiles")
-        .update({
-          role: suspend ? "suspended" : "student",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", targetUserId);
-      if (fallbackErr) throw new Error(fallbackErr.message || "Gagal mengubah status penangguhan akun.");
-    } else {
-      throw new Error(error.message || "Gagal mengubah status penangguhan akun.");
-    }
+    throw new Error(error.message || "Gagal mengubah status penangguhan akun.");
   }
 
   // Record Audit Trail

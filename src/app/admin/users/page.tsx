@@ -35,7 +35,7 @@ export default async function AdminUsersPage({
 
   let query = supabase
     .from("profiles")
-    .select("id, full_name, email, university, major, student_id, angkatan, phone, created_at, role, is_suspended", { count: "exact" })
+    .select("id, full_name, email, university, major, student_id, angkatan, phone, created_at, role", { count: "exact" })
     .order("created_at", { ascending: false });
 
   if (q) {
