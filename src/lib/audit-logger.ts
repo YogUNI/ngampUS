@@ -5,6 +5,7 @@ import { getClientIP } from "@/lib/security";
 export type AuditActionType =
   | "TOGGLE_SYSTEM_SETTING"
   | "UPDATE_USER_ROLE"
+  | "TOGGLE_USER_SUSPENSION"
   | "CREATE_ANNOUNCEMENT"
   | "TOGGLE_ANNOUNCEMENT"
   | "DELETE_ANNOUNCEMENT"

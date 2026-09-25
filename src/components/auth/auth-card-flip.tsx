@@ -49,11 +49,18 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
   const searchParams = useSearchParams();
   const registeredNotice = searchParams.get("registered");
   const resetSuccess = searchParams.get("reset") === "success";
+  const errorParam = searchParams.get("error");
 
   const [mode, setMode] = useState<"login" | "register">(initialMode);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState(
+    errorParam === "suspended"
+      ? "Akun Anda telah ditangguhkan (suspended) oleh administrator. Hubungi bantuan jika ini merupakan kekeliruan."
+      : errorParam === "rate_limited"
+      ? "Terlalu banyak percobaan masuk. Mohon tunggu sejenak demi keamanan akun."
+      : ""
+  );
   const [isStandalone, setIsStandalone] = useState(false);
 
   const isFlipped = mode === "register";

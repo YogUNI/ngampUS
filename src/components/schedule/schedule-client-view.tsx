@@ -29,6 +29,8 @@ import { generateIcsCalendar } from "@/lib/calendar-utils";
 import { deleteCourse } from "@/app/(dashboard)/jadwal/actions";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
 import { CourseModuleData } from "@/components/modules/module-form-modal";
+import { ScheduleWallpaperModal } from "./schedule-wallpaper-modal";
+import { Smartphone } from "lucide-react";
 
 const DAYS = [
   { value: 1, name: "Senin", short: "Sen" },
@@ -59,6 +61,7 @@ export function ScheduleClientView({
   const [showEmptyDays, setShowEmptyDays] = useState(false);
   const [editingCourse, setEditingCourse] = useState<CourseData | null>(null);
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({});
+  const [showWallpaperModal, setShowWallpaperModal] = useState(false);
 
   // Compute Today in WIB (UTC+7)
   const todayDayNumber = useMemo(() => {
@@ -150,30 +153,52 @@ export function ScheduleClientView({
             </div>
           </div>
 
-          {/* Quick .ICS download on mobile */}
+          {/* Quick actions on mobile */}
           {courses.length > 0 && (
-            <button
-              onClick={handleExportIcs}
-              className="inline-flex sm:hidden items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-2.5 py-1.5 text-[11px] font-black text-[var(--ink)] hover:bg-[var(--card-bg)] transition active:scale-95"
-              title="Export .ics"
-            >
-              <Download size={13} className="text-[#0f6849]" />
-              <span>.ICS</span>
-            </button>
+            <div className="flex sm:hidden items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setShowWallpaperModal(true)}
+                className="inline-flex items-center gap-1 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] font-black text-emerald-700 dark:text-[#c8ef70] hover:bg-emerald-500/20 transition active:scale-95 cursor-pointer"
+                title="Bikin Wallpaper Lockscreen HP"
+              >
+                <Smartphone size={13} className="text-[#0f6849] dark:text-[#c8ef70]" />
+                <span>Wallpaper HP</span>
+              </button>
+              <button
+                onClick={handleExportIcs}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-2.5 py-1.5 text-[11px] font-black text-[var(--ink)] hover:bg-[var(--card-bg)] transition active:scale-95 cursor-pointer"
+                title="Export .ics"
+              >
+                <Download size={13} className="text-[#0f6849]" />
+                <span>.ICS</span>
+              </button>
+            </div>
           )}
         </div>
 
         <div className="flex items-center justify-between sm:justify-end gap-2 flex-wrap border-t border-[var(--line)]/50 pt-2.5 sm:border-0 sm:pt-0">
-          {/* Export to Calendar (Desktop) */}
+          {/* Export Actions (Desktop) */}
           {courses.length > 0 && (
-            <button
-              onClick={handleExportIcs}
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--card-bg)] hover:border-[#a9cdb2] transition active:scale-95"
-              title="Download file .ics untuk Google Calendar / Apple Calendar"
-            >
-              <Download size={14} className="text-[#0f6849]" />
-              <span>Export ke Kalender</span>
-            </button>
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowWallpaperModal(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-[#c8ef70] hover:bg-emerald-500/20 transition active:scale-95 cursor-pointer"
+                title="Bikin Wallpaper Lockscreen HP otomatis dari jadwal"
+              >
+                <Smartphone size={14} className="text-[#0f6849] dark:text-[#c8ef70]" />
+                <span>Wallpaper HP</span>
+              </button>
+              <button
+                onClick={handleExportIcs}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--card-subtle)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--card-bg)] hover:border-[#a9cdb2] transition active:scale-95 cursor-pointer"
+                title="Download file .ics untuk Google Calendar / Apple Calendar"
+              >
+                <Download size={14} className="text-[#0f6849]" />
+                <span>Export ke Kalender</span>
+              </button>
+            </div>
           )}
 
           {/* View Mode Toggle */}
@@ -703,6 +728,14 @@ export function ScheduleClientView({
           tanggalSelesai={semesterDates?.tanggal_selesai}
         />
       )}
+
+      {/* ── 9:16 Mobile Lockscreen Wallpaper Generator Modal ── */}
+      <ScheduleWallpaperModal
+        courses={courses}
+        semesterName={semesterName}
+        isOpen={showWallpaperModal}
+        onClose={() => setShowWallpaperModal(false)}
+      />
     </div>
   );
 }

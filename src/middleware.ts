@@ -120,6 +120,28 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Fetch user profile once (reduces DB roundtrips from 3-4x down to 1x per request)
+  let userProfile: { role?: string; is_suspended?: boolean } | null = null;
+  if (user) {
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("role, is_suspended")
+      .eq("id", user.id)
+      .maybeSingle();
+    userProfile = prof;
+
+    // ── 3b. Account Suspension Check ──────────────────────────────────────────
+    // If account has been suspended by superadmin, reject access & redirect to login
+    const isSuspended = userProfile?.is_suspended === true || userProfile?.role === "suspended";
+    if (isSuspended && !pathname.startsWith("/login")) {
+      const suspUrl = new URL("/login", request.url);
+      suspUrl.searchParams.set("error", "suspended");
+      return attachSecurityHeaders(NextResponse.redirect(suspUrl));
+    }
+  }
+
+  const isSuperadmin = userProfile?.role === "superadmin";
+
   // ── 4. Maintenance Mode Check ───────────────────────────────────────────────
   const isMaintenanceExempt =
     pathname.startsWith("/admin") ||
@@ -134,22 +156,10 @@ export async function middleware(request: NextRequest) {
       .eq("key", "maintenance_mode")
       .maybeSingle();
 
-    if (settingData?.value === true) {
-      let isSuperadmin = false;
-      if (user) {
-        const { data: prof } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
-          .maybeSingle();
-        if (prof?.role === "superadmin") isSuperadmin = true;
-      }
-
-      if (!isSuperadmin) {
-        return attachSecurityHeaders(
-          NextResponse.redirect(new URL("/maintenance", request.url))
-        );
-      }
+    if (settingData?.value === true && !isSuperadmin) {
+      return attachSecurityHeaders(
+        NextResponse.redirect(new URL("/maintenance", request.url))
+      );
     }
   }
 
@@ -169,13 +179,7 @@ export async function middleware(request: NextRequest) {
       return attachSecurityHeaders(NextResponse.redirect(redirectUrl));
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile?.role !== "superadmin") {
+    if (!isSuperadmin) {
       return attachSecurityHeaders(
         NextResponse.redirect(new URL("/dashboard", request.url))
       );
@@ -183,45 +187,23 @@ export async function middleware(request: NextRequest) {
   }
 
   // ── 7. Strict Isolation: superadmin → redirect out of student workspace ─────
-  if (user && isProtected) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile?.role === "superadmin") {
-      return attachSecurityHeaders(
-        NextResponse.redirect(new URL("/admin", request.url))
-      );
-    }
+  if (user && isProtected && isSuperadmin) {
+    return attachSecurityHeaders(
+      NextResponse.redirect(new URL("/admin", request.url))
+    );
   }
 
   // ── 8. Root redirect for superadmin ────────────────────────────────────────
-  if (user && pathname === "/") {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile?.role === "superadmin") {
-      return attachSecurityHeaders(
-        NextResponse.redirect(new URL("/admin", request.url))
-      );
-    }
+  if (user && pathname === "/" && isSuperadmin) {
+    return attachSecurityHeaders(
+      NextResponse.redirect(new URL("/admin", request.url))
+    );
   }
 
   // ── 9. Auth routes: redirect logged-in users away ──────────────────────────
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   if (isAuthRoute && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile?.role === "superadmin") {
+    if (isSuperadmin) {
       return attachSecurityHeaders(
         NextResponse.redirect(new URL("/admin", request.url))
       );

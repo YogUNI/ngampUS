@@ -28,6 +28,7 @@ import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
 import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
 import { ScrollEntrance } from "@/components/dashboard/scroll-entrance";
 import { DismissableAnnouncements, BroadcastItem } from "@/components/dashboard/dismissable-announcements";
+import { QuickCompleteButton } from "@/components/dashboard/quick-complete-button";
 
 function deadlineLabel(deadline: string) {
   const days = differenceInCalendarDays(parseISO(deadline), new Date());
@@ -853,19 +854,22 @@ export default async function DashboardPage() {
                             {item.jam_deadline ? ` @ ${item.jam_deadline}` : ""}
                           </p>
                         </div>
-                        <span
-                          className={`stamp-badge ${
-                            isOverdue
-                              ? "border-[#f8c6b9] bg-[#feece7] text-[#b93c21]"
-                              : days === 0
-                              ? "border-[#f8c6b9] bg-[#feece7] text-[#b93c21]"
-                              : days === 1
-                              ? "border-[#fed7aa] bg-[#fff7ed] text-[#c2410c]"
-                              : "border-[#d8e3da] bg-white text-[#10261b]"
-                          }`}
-                        >
-                          {deadlineLabel(item.deadline!)}
-                        </span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span
+                            className={`stamp-badge ${
+                              isOverdue
+                                ? "border-[#f8c6b9] bg-[#feece7] text-[#b93c21]"
+                                : days === 0
+                                ? "border-[#f8c6b9] bg-[#feece7] text-[#b93c21]"
+                                : days === 1
+                                ? "border-[#fed7aa] bg-[#fff7ed] text-[#c2410c]"
+                                : "border-[#d8e3da] bg-white text-[#10261b]"
+                            }`}
+                          >
+                            {deadlineLabel(item.deadline!)}
+                          </span>
+                          <QuickCompleteButton activityId={item.id} activityTitle={item.judul} />
+                        </div>
                       </article>
                     );
                   })

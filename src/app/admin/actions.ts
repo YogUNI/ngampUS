@@ -244,6 +244,54 @@ export async function updateUserRole(targetUserId: string, newRole: "student" | 
   revalidatePath("/admin");
 }
 
+export async function toggleUserSuspension(targetUserId: string, suspend: boolean) {
+  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_REGEX.test(targetUserId)) {
+    throw new Error("ID pengguna tidak valid.");
+  }
+
+  const { supabase, user } = await requireSuperadmin();
+
+  if (targetUserId === user.id) {
+    throw new Error("Kamu tidak dapat menonaktifkan akun kamu sendiri.");
+  }
+
+  // Try updating is_suspended column
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      is_suspended: suspend,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", targetUserId);
+
+  if (error) {
+    // If column is_suspended does not exist in schema, retry with status / role fallback
+    if (error.message?.includes("is_suspended") || error.code === "PGRST204") {
+      const { error: fallbackErr } = await supabase
+        .from("profiles")
+        .update({
+          role: suspend ? "suspended" : "student",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", targetUserId);
+      if (fallbackErr) throw new Error(fallbackErr.message || "Gagal mengubah status penangguhan akun.");
+    } else {
+      throw new Error(error.message || "Gagal mengubah status penangguhan akun.");
+    }
+  }
+
+  // Record Audit Trail
+  await logAdminActivity({
+    actionType: "TOGGLE_USER_SUSPENSION",
+    description: `${suspend ? "MENONAKTIFKAN (SUSPEND)" : "MENGAKTIFKAN KEMBALI"} akun mahasiswa ID ${targetUserId}`,
+    details: { target_user_id: targetUserId, is_suspended: suspend },
+  });
+
+  revalidatePath("/admin/users");
+  revalidatePath("/admin");
+}
+
 export async function fetchFreshWebAnalytics(days: number = 7) {
   await requireSuperadmin();
   const { getWebAnalyticsData } = await import("@/lib/web-telemetry");

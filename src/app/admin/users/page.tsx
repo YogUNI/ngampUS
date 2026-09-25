@@ -16,19 +16,26 @@ export const dynamic = "force-dynamic";
 type SearchParams = {
   q?: string;
   campus?: string;
+  page?: string;
 };
+
+const PAGE_SIZE = 20;
 
 export default async function AdminUsersPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const { q, campus } = await searchParams;
+  const { q, campus, page } = await searchParams;
+  const pageNumber = Math.max(1, parseInt(page || "1", 10) || 1);
+  const from = (pageNumber - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const supabase = await createClient();
 
   let query = supabase
     .from("profiles")
-    .select("id, full_name, email, university, major, student_id, angkatan, phone, created_at, role")
+    .select("id, full_name, email, university, major, student_id, angkatan, phone, created_at, role, is_suspended", { count: "exact" })
     .order("created_at", { ascending: false });
 
   if (q) {
@@ -39,10 +46,20 @@ export default async function AdminUsersPage({
     query = query.eq("university", campus);
   }
 
-  const [{ data: users }, { data: campusesList }] = await Promise.all([
+  // Server-side pagination range
+  query = query.range(from, to);
+
+  const [{ data: users, count }, { data: campusesList }] = await Promise.all([
     query,
-    supabase.from("profiles").select("university"),
+    supabase
+      .from("profiles")
+      .select("university")
+      .not("university", "is", null)
+      .limit(300),
   ]);
+
+  const totalCount = count || 0;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   // Distinct university filter options
   const uniqueCampuses = Array.from(
@@ -59,7 +76,7 @@ export default async function AdminUsersPage({
               [DIRECTORY // STUDENT ACCOUNTS]
             </span>
             <span className="rounded-full bg-[#1b4332] px-2 py-0.5 text-[10px] font-bold text-[#c8ef70]">
-              {users?.length || 0} Akun Terfilter
+              {totalCount} Total Terdaftar
             </span>
           </div>
           <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -123,8 +140,18 @@ export default async function AdminUsersPage({
         )}
       </form>
 
-      {/* ── Users Table with Role Switcher ── */}
-      <AdminUserTableClient initialUsers={users || []} />
+      {/* ── Users Table with Role Switcher & Server Pagination ── */}
+      <AdminUserTableClient 
+        initialUsers={users || []} 
+        pagination={{
+          currentPage: pageNumber,
+          totalPages,
+          totalCount,
+          pageSize: PAGE_SIZE,
+          q,
+          campus,
+        }}
+      />
     </div>
   );
 }

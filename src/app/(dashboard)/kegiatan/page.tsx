@@ -313,16 +313,26 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                   );
                 })
               ) : (
-                <div className="py-16 text-center">
-                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#f0f4f0] text-[#0f6849]">
+                <div className="py-14 px-4 text-center rounded-2xl bg-[#fafbfa] border border-dashed border-[#c5d8cb] my-2">
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
                     <ListTodo size={28} />
                   </div>
-                  <p className="mt-3 font-display font-black text-[#10261b]">
-                    Tidak ada kegiatan ditemukan
+                  <h3 className="mt-3.5 font-display text-base sm:text-lg font-black text-[#10261b]">
+                    Belum Ada Kegiatan atau Tugas
+                  </h3>
+                  <p className="mt-1 text-xs text-[#697c6f] max-w-sm mx-auto leading-relaxed">
+                    Catat tugas kuliah, jadwal kuis, agenda rapat organisasi, atau pengingat lainnya agar progres semestermu terpantau rapi.
                   </p>
-                  <p className="mt-1 text-xs text-[#697c6f]">
-                    Coba sesuaikan kata kunci pencarian atau ganti filter status kegiatan kamu.
-                  </p>
+                  <div className="mt-5 flex justify-center">
+                    <ActivityForm
+                      semesters={(semesters ?? []).map((semester) => ({ id: semester.id, name: semester.nama_semester, active: semester.is_active }))}
+                      organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))}
+                      programs={mappedPrograms}
+                      courses={mappedCourses}
+                      triggerClass="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-4 py-2 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
+                      triggerText="Catat Kegiatan / Tugas Pertama"
+                    />
+                  </div>
                 </div>
               )}
             </div>

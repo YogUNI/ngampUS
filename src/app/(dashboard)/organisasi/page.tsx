@@ -90,11 +90,22 @@ export default async function OrganizationsPage() {
             </Link>
           </div>
         </article>;
-      }) : <div className="col-span-full rounded-2xl border border-dashed border-[var(--line)] bg-white px-6 py-16 text-center">
-        <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-[#f4f0e7] text-[#8b7242]"><Building2/></div>
-        <h2 className="font-display mt-4 text-xl font-extrabold">Ruang kontribusimu masih kosong</h2>
-        <p className="mt-2 text-sm text-[var(--muted)]">Tambahkan organisasi, UKM, atau kepanitiaan pertamamu.</p>
-      </div>}
+      }) : (
+        <div className="col-span-full rounded-3xl border border-dashed border-[var(--line)] bg-[var(--card-bg)] px-6 py-16 text-center shadow-xs">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
+            <Building2 size={28} />
+          </div>
+          <h2 className="font-display mt-4 text-xl sm:text-2xl font-black text-[var(--ink)]">
+            Ruang Kontribusimu Masih Kosong
+          </h2>
+          <p className="mt-1.5 text-xs sm:text-sm text-[var(--muted)] max-w-md mx-auto leading-relaxed">
+            Kelola kepengurusan BEM, himpunan mahasiswa, UKM, atau kepanitiaan event kampusmu agar portofolio kepemimpinan tercatat rapi.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <OrganizationForm />
+          </div>
+        </div>
+      )}
     </section>
   </div>;
 }
