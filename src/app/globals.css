@@ -1968,5 +1968,72 @@ html.dark:has(.landing-page) body {
   animation: auth-btn-glow 1.5s ease-in-out infinite;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLOBAL PRINT & PDF DOCUMENT STYLES
+   Ensures clean A4 output without navigation, toolbars, or mobile shells
+   ───────────────────────────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  /* Reset body and html for print */
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #111827 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide app frame, topbars, bottom bars, and floating controls */
+  .no-print,
+  .dashboard-sidebar,
+  .dashboard-mobile-topbar,
+  .dashboard-mobile-nav,
+  header:not(.print-header),
+  nav,
+  aside,
+  button:not(.print-allow) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Expand dashboard content to full printable paper */
+  .dashboard-shell,
+  .dashboard-content,
+  .portfolio-page-wrapper {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* Prevent awkward page breaks in the middle of sections */
+  .cv-section,
+  .cv-item,
+  article {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Force links to look like clean text */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+}
+
 
 

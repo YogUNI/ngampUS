@@ -18,28 +18,34 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
   ]);
 
   const [{ data: profile }] = await Promise.all([
-    supabase.from("profiles").select("full_name,university,major,student_id,email").single(),
+    supabase.from("profiles").select("full_name,university,major,student_id,email,phone,bio,angkatan,linkedin,github").single(),
   ]);
 
   const targetSemesterId = filters.semester_id ?? semesters?.find((s) => s.is_active)?.id ?? semesters?.[0]?.id ?? null;
   const selectedSemester = semesters?.find((s) => s.id === targetSemesterId);
 
-  // Ambil kegiatan portfolio semester ini
+  // Ambil kegiatan portfolio
   let activityQuery = supabase
     .from("activities")
     .select("id,judul,deskripsi,kategori,jenis_item,status,prioritas,deadline,peran_portfolio,is_portfolio,tanggal_mulai,organization_id,program_id")
     .eq("is_portfolio", true)
     .eq("status", "selesai")
-    .order("deadline", { ascending: true });
+    .order("deadline", { ascending: false });
 
   if (targetSemesterId) {
     activityQuery = activityQuery.eq("semester_id", targetSemesterId);
   }
 
-  const [{ data: portfolioActivities }, { data: organizations }, { data: programs }] = await Promise.all([
+  const [
+    { data: portfolioActivities },
+    { data: organizations },
+    { data: positions },
+    { data: programs },
+  ] = await Promise.all([
     activityQuery,
     supabase.from("organizations").select("id,nama_organisasi,tipe"),
-    supabase.from("programs").select("id,nama_proker,organization_id"),
+    supabase.from("organization_positions").select("organization_id,jabatan,role_type,divisi"),
+    supabase.from("programs").select("id,nama_proker,organization_id,peran,status"),
   ]);
 
   const items = portfolioActivities ?? [];
@@ -47,8 +53,8 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
   const programMap = new Map((programs ?? []).map((p) => [p.id, p.nama_proker]));
 
   return (
-    <div className="mx-auto max-w-5xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
-      <header className="flex flex-wrap items-start justify-between gap-4">
+    <div className="portfolio-page-wrapper mx-auto max-w-5xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
+      <header className="no-print flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link
             href="/rekap"
@@ -61,25 +67,25 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
               <Sparkles size={18} />
             </span>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--brand)]">PORTOFOLIO</p>
-              <h1 className="font-display text-2xl font-extrabold tracking-tight">Rekap Prestasi Semester</h1>
+              <p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--brand)]">DOKUMEN RESMI</p>
+              <h1 className="font-display text-2xl font-extrabold tracking-tight">Curriculum Vitae & Rekap Portofolio</h1>
             </div>
           </div>
           <p className="mt-1.5 text-xs text-[var(--muted)]">
-            Ringkasan pencapaian yang layak masuk CV & portofolio profesionalmu.
+            Format resume formal standar perusahaan besar dan ATS-friendly dari seluruh jejak pencapaianmu.
           </p>
         </div>
 
         {/* Semester Selector */}
         <form className="flex items-end gap-2">
           <label className="block text-xs font-bold text-[var(--ink)]">
-            Pilih Semester
+            Lingkup Semester
             <select
               name="semester_id"
               defaultValue={targetSemesterId ?? ""}
-              className="mt-1 block min-w-[200px] rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm font-normal"
+              className="mt-1 block min-w-[200px] rounded-xl border border-[var(--line)] bg-[var(--card-bg)] text-[var(--ink)] px-3 py-2 text-sm font-normal"
             >
-              <option value="">Semua Semester</option>
+              <option value="">Semua Semester (Kumulatif)</option>
               {semesters?.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.nama_semester} {s.is_active ? "(Aktif)" : ""}
@@ -87,26 +93,26 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
               ))}
             </select>
           </label>
-          <button className="rounded-xl bg-[var(--brand)] px-4 py-2 text-xs font-bold text-white hover:bg-[var(--brand-dark)] transition">
+          <button className="rounded-xl bg-[var(--brand)] px-4 py-2 text-xs font-bold text-white hover:bg-[var(--brand-dark)] transition cursor-pointer">
             Tampilkan
           </button>
         </form>
       </header>
 
       {items.length === 0 ? (
-        <div className="mt-12 rounded-3xl border border-[var(--line)] bg-white p-10 text-center">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#f7f8f5] text-[var(--muted)]">
+        <div className="no-print mt-12 rounded-3xl border border-dashed border-[var(--line)] bg-[var(--card-bg)] p-10 text-center">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#dff3e5] text-[var(--brand)]">
             <Sparkles size={28} />
           </div>
-          <h2 className="mt-4 font-display text-xl font-extrabold">Belum Ada Portofolio</h2>
+          <h2 className="mt-4 font-display text-xl font-extrabold text-[var(--ink)]">Belum Ada Kegiatan Portofolio</h2>
           <p className="mt-2 text-sm text-[var(--muted)] max-w-sm mx-auto">
-            Kegiatan yang sudah selesai dan ditandai ⭐ portofolio akan otomatis muncul di sini.
+            Kegiatan atau tugas yang sudah selesai dan ditandai bintang ⭐ portofolio akan otomatis terkompilasi ke dalam resume profesional ini.
           </p>
           <Link
             href="/kegiatan"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-5 py-2.5 text-xs font-bold text-white"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[var(--brand)] px-5 py-2.5 text-xs font-bold text-white hover:bg-[var(--brand-dark)] transition"
           >
-            Catat & Tandai Kegiatan
+            Catat & Tandai Kegiatan Portofolio
           </Link>
         </div>
       ) : (
@@ -114,12 +120,19 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
           activities={items}
           orgMap={Object.fromEntries(orgMap)}
           programMap={Object.fromEntries(programMap)}
+          positions={positions ?? []}
+          programs={programs ?? []}
           profile={{
             full_name: profile?.full_name ?? user?.email?.split("@")[0] ?? "Mahasiswa",
-            university: profile?.university ?? "Universitas Mercu Buana",
-            major: profile?.major ?? "Teknik Informatika",
+            university: profile?.university ?? "Universitas",
+            major: profile?.major ?? "Program Studi",
             student_id: profile?.student_id ?? null,
             email: profile?.email ?? user?.email ?? "",
+            phone: profile?.phone ?? null,
+            bio: profile?.bio ?? null,
+            angkatan: profile?.angkatan ?? null,
+            linkedin: profile?.linkedin ?? null,
+            github: profile?.github ?? null,
           }}
           semester={selectedSemester ? {
             nama: selectedSemester.nama_semester,
