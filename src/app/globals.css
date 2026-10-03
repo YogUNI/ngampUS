@@ -1897,49 +1897,58 @@ html.dark:has(.landing-page) body {
 }
 
 /* ─── Immersive 3D Splash & Auth Loading FX ─── */
-@keyframes splash-float-3d {
-  0%, 100% {
-    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px);
-  }
-  25% {
-    transform: perspective(1000px) rotateX(6deg) rotateY(-8deg) translateY(-8px);
-  }
-  50% {
-    transform: perspective(1000px) rotateX(-5deg) rotateY(7deg) translateY(-14px);
-  }
-  75% {
-    transform: perspective(1000px) rotateX(4deg) rotateY(6deg) translateY(-6px);
-  }
-}
-
-@keyframes splash-halo-spin {
+/* ── Native Mobile PWA Splash Screen Animations ── */
+@keyframes splash-mark-in {
   0% {
-    transform: rotate(0deg) scale(1);
-    opacity: 0.4;
-  }
-  50% {
-    transform: rotate(180deg) scale(1.15);
-    opacity: 0.8;
-  }
-  100% {
-    transform: rotate(360deg) scale(1);
-    opacity: 0.4;
-  }
-}
-
-@keyframes splash-pulse-ring {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.2;
-  }
-  100% {
-    transform: scale(1.4);
     opacity: 0;
+    transform: scale(0.88) translateY(10px);
+    filter: blur(4px);
   }
+  60% {
+    opacity: 1;
+    transform: scale(1.02) translateY(-2px);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes splash-glow-breathe {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes splash-pulse-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(30%);
+  }
+  100% {
+    transform: translateX(110%);
+  }
+}
+
+.splash-logo-mark {
+  animation: splash-mark-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.splash-ambient-breathe {
+  animation: splash-glow-breathe 2.8s ease-in-out infinite;
+}
+
+.splash-bar-indeterminate {
+  animation: splash-pulse-bar 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes auth-btn-glow {
@@ -1949,19 +1958,6 @@ html.dark:has(.landing-page) body {
   50% {
     box-shadow: 0 0 30px rgba(200, 239, 112, 0.8), inset 0 0 18px rgba(200, 239, 112, 0.5);
   }
-}
-
-.splash-3d-card {
-  transform-style: preserve-3d;
-  animation: splash-float-3d 6s ease-in-out infinite;
-}
-
-.splash-halo {
-  animation: splash-halo-spin 8s linear infinite;
-}
-
-.splash-pulse-ring {
-  animation: splash-pulse-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 .auth-loading-glow {
