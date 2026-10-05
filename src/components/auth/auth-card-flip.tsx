@@ -59,6 +59,8 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       ? "Akun Anda telah ditangguhkan (suspended) oleh administrator. Hubungi bantuan jika ini merupakan kekeliruan."
       : errorParam === "rate_limited"
       ? "Terlalu banyak percobaan masuk. Mohon tunggu sejenak demi keamanan akun."
+      : errorParam === "session_expired"
+      ? "Sesi kamu telah berakhir otomatis karena tidak ada aktivitas (inactivity timeout). Silakan masuk kembali."
       : ""
   );
   const [isStandalone, setIsStandalone] = useState(false);

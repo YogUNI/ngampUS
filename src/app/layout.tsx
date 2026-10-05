@@ -7,6 +7,7 @@ import { PageTracker } from "@/components/analytics/page-tracker";
 import { PwaRegister } from "@/components/pwa/pwa-register";
 import { PwaSplashScreen } from "@/components/pwa/pwa-splash-screen";
 import { OfflineIndicator } from "@/components/pwa/offline-indicator";
+import { AutoLogoutProvider } from "@/components/auth/auto-logout-provider";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -121,7 +122,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PwaRegister />
         </Suspense>
         <ThemeProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <AutoLogoutProvider>{children}</AutoLogoutProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useTransition } from "react";
+import { useState, useRef, useTransition, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -28,6 +28,7 @@ import {
   Eye,
   EyeOff,
   LogOut,
+  Clock,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -83,6 +84,29 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
 
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Inactivity timeout settings (in minutes)
+  const [idleTimeout, setIdleTimeout] = useState<number>(30);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("ngampus_idle_timeout_mins");
+      if (stored) {
+        const val = parseInt(stored, 10);
+        if (!isNaN(val) && val >= 5 && val <= 240) {
+          setIdleTimeout(val);
+        }
+      }
+    } catch {}
+  }, []);
+
+  const handleIdleTimeoutChange = (minutes: number) => {
+    setIdleTimeout(minutes);
+    try {
+      localStorage.setItem("ngampus_idle_timeout_mins", String(minutes));
+      showToast(`Batas waktu otomatis logout diatur ke ${minutes} menit.`, "success");
+    } catch {}
+  };
 
   async function handleSignOut() {
     setIsLoggingOut(true);
@@ -918,6 +942,79 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 </div>
               </form>
             )}
+          </div>
+
+          {/* Section: Otomatis Logout Saat Tidak Aktif (Inactivity Timeout) */}
+          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-500/10 text-amber-600 shrink-0">
+                  <Clock size={18} />
+                </span>
+                <div>
+                  <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">
+                    Kunci Otomatis Sesi (Idle Timeout)
+                  </h2>
+                  <p className="text-xs text-[var(--muted)]">
+                    Keluar otomatis saat perangkat ditinggal tanpa interaksi demi melindungi privasi nilai & jadwalmu.
+                  </p>
+                </div>
+              </div>
+
+              {/* Status pill */}
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 self-start sm:self-auto">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Proteksi Aktif
+              </span>
+            </div>
+
+            <div className="mt-5">
+              <label className="block text-xs font-bold text-[var(--ink)] mb-2">
+                Pilih Durasi Idle Sebelum Otomatis Keluar
+              </label>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {[
+                  { value: 15, label: "15 Menit", note: "Sangat Ketat" },
+                  { value: 30, label: "30 Menit", note: "Standar (Rekomendasi)" },
+                  { value: 60, label: "1 Jam", note: "Fleksibel" },
+                  { value: 120, label: "2 Jam", note: "Santai" },
+                ].map((item) => {
+                  const isSelected = idleTimeout === item.value;
+                  return (
+                    <button
+                      key={item.value}
+                      type="button"
+                      onClick={() => handleIdleTimeoutChange(item.value)}
+                      className={`flex flex-col items-start p-3 rounded-2xl border text-left transition cursor-pointer ${
+                        isSelected
+                          ? "border-[var(--brand)] bg-[var(--brand)]/10 ring-1 ring-[var(--brand)]"
+                          : "border-[var(--line)] bg-[#fafbf9] hover:bg-[#f3f5f1]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className={`text-xs font-black ${isSelected ? "text-[var(--brand)]" : "text-[var(--ink)]"}`}>
+                          {item.label}
+                        </span>
+                        {isSelected && (
+                          <span className="h-2 w-2 rounded-full bg-[var(--brand)]" />
+                        )}
+                      </div>
+                      <span className="text-[10px] text-[var(--muted)] mt-1 font-medium">
+                        {item.note}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <p className="mt-3.5 text-[11px] text-[var(--muted)] flex items-center gap-1.5">
+                <Shield size={12} className="text-[var(--brand)] shrink-0" />
+                <span>
+                  Sistem akan menampilkan dialog peringatan 60 detik sebelum sesi kedaluwarsa sehingga kamu punya kesempatan memperpanjang sesi jika masih menggunakan aplikasi.
+                </span>
+              </p>
+            </div>
           </div>
 
           {/* Sesi Akun & Keluar (Danger Zone) */}
