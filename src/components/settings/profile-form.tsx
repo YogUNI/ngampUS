@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { performSignOut } from "@/lib/auth-logout";
 import { updateProfile } from "@/app/(dashboard)/settings/actions";
 import { useToast } from "@/components/ui/toast-provider";
 import { ImageCropModal } from "@/components/settings/image-crop-modal";
@@ -111,9 +112,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
   async function handleSignOut() {
     setIsLoggingOut(true);
     try {
-      await createClient().auth.signOut();
-      router.push("/");
-      router.refresh();
+      await performSignOut("/login");
     } catch {
       setIsLoggingOut(false);
       showToast("Gagal keluar dari akun. Silakan coba lagi.", "error");

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { performSignOut } from "@/lib/auth-logout";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 
@@ -42,13 +43,11 @@ export function Sidebar({
   const [collapsed, setCollapsed] = useState(false);
 
   async function signOut() {
-    await createClient().auth.signOut();
     const isStandalone =
       typeof window !== "undefined" &&
       (window.matchMedia("(display-mode: standalone)").matches ||
        (window.navigator as unknown as { standalone?: boolean }).standalone === true);
-    router.push(isStandalone ? "/login" : "/");
-    router.refresh();
+    await performSignOut(isStandalone ? "/login" : "/login");
   }
 
   return (
@@ -369,13 +368,11 @@ export function MobileTopbar({
   }, [pathname]);
 
   async function signOut() {
-    await createClient().auth.signOut();
     const isStandalone =
       typeof window !== "undefined" &&
       (window.matchMedia("(display-mode: standalone)").matches ||
        (window.navigator as unknown as { standalone?: boolean }).standalone === true);
-    router.push(isStandalone ? "/login" : "/");
-    router.refresh();
+    await performSignOut(isStandalone ? "/login" : "/login");
   }
 
   return (

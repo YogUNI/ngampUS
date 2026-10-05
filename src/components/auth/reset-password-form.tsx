@@ -131,8 +131,9 @@ export function ResetPasswordForm({ initialHasSession = false }: ResetPasswordFo
       return;
     }
 
-    // Sign out the one-time recovery session so the user logs in fresh
+    // Sign out the one-time recovery session completely so the user logs in fresh
     await supabase.auth.signOut();
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
 
     setIsSuccess(true);
     setTimeout(() => {

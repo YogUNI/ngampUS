@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Clock, ShieldAlert, LogOut, Activity } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { performSignOut } from "@/lib/auth-logout";
 
 // Storage keys
 const ACTIVITY_KEY = "ngampus_last_active_ts";
@@ -50,27 +51,8 @@ export function AutoLogoutProvider({ children }: { children: React.ReactNode }) 
     isLoggingOutRef.current = true;
     setWarningOpen(false);
 
-    try {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-    } catch {
-      // Ignore network failure during signOut
-    }
-
-    // Clean activity keys
-    try {
-      localStorage.removeItem(ACTIVITY_KEY);
-    } catch {}
-
-    const isStandalone =
-      typeof window !== "undefined" &&
-      (window.matchMedia("(display-mode: standalone)").matches ||
-        (window.navigator as unknown as { standalone?: boolean }).standalone === true);
-
-    const redirectPath = isStandalone ? "/login?error=session_expired" : "/login?error=session_expired";
-    router.push(redirectPath);
-    router.refresh();
-  }, [router]);
+    await performSignOut("/login?error=session_expired");
+  }, []);
 
   const recordActivity = useCallback(() => {
     if (!isProtectedRoute) return;
