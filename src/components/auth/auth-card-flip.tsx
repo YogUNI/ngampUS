@@ -104,8 +104,35 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
       setServerError(error?.message || "Sesi login tidak berhasil dibuat. Periksa email & kata sandi.");
       return;
     }
-    router.replace("/dashboard");
-    router.refresh();
+
+    // Check if user is superadmin or regular student to route directly
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .maybeSingle();
+
+      const redirectParam = searchParams.get("redirect");
+      let targetPath = "/dashboard";
+
+      if (profile?.role === "superadmin") {
+        targetPath = "/admin";
+      } else if (
+        redirectParam &&
+        redirectParam.startsWith("/") &&
+        !redirectParam.startsWith("//") &&
+        !redirectParam.startsWith("/login") &&
+        !redirectParam.startsWith("/register") &&
+        !redirectParam.startsWith("/admin")
+      ) {
+        targetPath = redirectParam;
+      }
+
+      window.location.replace(targetPath);
+    } catch {
+      window.location.replace("/dashboard");
+    }
   };
 
   const onRegisterSubmit = async (values: RegisterValues) => {
@@ -131,8 +158,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
     });
     if (error) { setServerError(error.message); return; }
     if (!data.session) { setServerError("Akun berhasil dibuat! Silakan konfirmasi email sebelum masuk."); return; }
-    router.replace("/dashboard");
-    router.refresh();
+    window.location.replace("/dashboard");
   };
 
   return (
