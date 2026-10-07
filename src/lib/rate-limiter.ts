@@ -80,7 +80,21 @@ export function rateLimit(key: string, opts: RateLimitOptions): RateLimitResult 
 
 // ─── Pre-configured limiters ─────────────────────────────────────────────────
 
-/** Auth endpoints: 10 attempts per 15 minutes */
+/** Strict Login by IP: 5 attempts per 5 minutes */
+export const loginIpLimiter: RateLimitOptions = {
+  id: "login_ip",
+  limit: 5,
+  windowMs: 5 * 60 * 1000,
+};
+
+/** Strict Login by Account Email: 5 attempts per 5 minutes (stops distributed credential stuffing) */
+export const loginAccountLimiter: RateLimitOptions = {
+  id: "login_account",
+  limit: 5,
+  windowMs: 5 * 60 * 1000,
+};
+
+/** Auth endpoints general: 10 attempts per 15 minutes */
 export const authLimiter: RateLimitOptions = {
   id: "auth",
   limit: 10,

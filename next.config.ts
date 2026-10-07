@@ -60,6 +60,10 @@ const securityHeaders = [
   // safe-origin-allow-popups lets links open in new tabs without opener access
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
 
+  // Prevent cross-origin resource leaks (XS-Leaks defence)
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
+
   // Block Flash / PDF cross-domain policy files
   { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
 

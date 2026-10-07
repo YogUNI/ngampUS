@@ -95,30 +95,40 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
   const onLoginSubmit = async (values: LoginValues) => {
     setServerError("");
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
-    if (error || !data.session) {
-      setServerError(error?.message || "Sesi login tidak berhasil dibuat. Periksa email & kata sandi.");
-      return;
-    }
 
-    // Check if user is superadmin or regular student to route directly
     try {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", data.user.id)
-        .maybeSingle();
+      // 1. Submit through hardened server endpoint with Dual Rate Limiting
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
 
+      const json = await res.json().catch(() => null);
+
+      if (!res.ok || !json?.success) {
+        setServerError(
+          json?.error || "Gagal masuk. Periksa kembali email dan kata sandi Anda."
+        );
+        return;
+      }
+
+      // Also ensure client-side session sync for Supabase browser SDK
+      const supabase = createClient();
+      await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      }).catch(() => {});
+
+      // Determine destination
       const redirectParam = searchParams.get("redirect");
-      let targetPath = "/dashboard";
+      let targetPath = json?.targetPath || "/dashboard";
 
-      if (profile?.role === "superadmin") {
-        targetPath = "/admin";
-      } else if (
+      if (
+        json?.user?.role !== "superadmin" &&
         redirectParam &&
         redirectParam.startsWith("/") &&
         !redirectParam.startsWith("//") &&
@@ -131,7 +141,7 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
 
       window.location.replace(targetPath);
     } catch {
-      window.location.replace("/dashboard");
+      setServerError("Terjadi kendala jaringan saat menghubungi server. Silakan coba sesaat lagi.");
     }
   };
 
@@ -154,10 +164,31 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
-      options: { data: { full_name: values.fullName, university: values.university, major: values.major } },
+      options: {
+        data: {
+          full_name: values.fullName,
+          university: values.university,
+          major: values.major,
+        },
+        emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/dashboard` : undefined,
+      },
     });
-    if (error) { setServerError(error.message); return; }
-    if (!data.session) { setServerError("Akun berhasil dibuat! Silakan konfirmasi email sebelum masuk."); return; }
+
+    if (error) {
+      setServerError(error.message);
+      return;
+    }
+
+    // Check if email confirmation is required (session is null when mailer_autoconfirm is false)
+    if (!data.session) {
+      setMode("login");
+      setServerError("");
+      if (typeof window !== "undefined") {
+        window.history.pushState(null, "", "/login?registered=verify_email");
+      }
+      return;
+    }
+
     window.location.replace("/dashboard");
   };
 
@@ -245,7 +276,18 @@ export function AuthCardFlip({ initialMode = "login" }: { initialMode?: "login" 
               </div>
 
               {/* Status Notices */}
-              {registeredNotice && !serverError && (
+              {registeredNotice === "verify_email" && !serverError && (
+                <div className="mt-2.5 rounded-xl border border-[#c8ef70]/40 bg-[#113a27] p-2.5 text-[11px] font-semibold text-[#d8f89a] shadow-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-[#c8ef70]">
+                    <CheckCircle2 size={15} className="shrink-0" />
+                    <span>Pendaftaran Berhasil!</span>
+                  </div>
+                  <p className="mt-1 text-[10.5px] text-[#b6d9c2] leading-snug">
+                    Tautan konfirmasi telah dikirim ke email Anda. Silakan buka kotak masuk atau spam email Anda untuk mengaktifkan akun sebelum masuk.
+                  </p>
+                </div>
+              )}
+              {registeredNotice && registeredNotice !== "verify_email" && !serverError && (
                 <div className="mt-2.5 flex items-center gap-1.5 rounded-xl border border-[#1e5c3c] bg-[#113a27] p-2 text-[11px] font-bold text-[#c8ef70]">
                   <CheckCircle2 size={14} className="shrink-0 text-[#c8ef70]" />
                   <span>Akun dibuat! Silakan masuk dengan akun barumu.</span>

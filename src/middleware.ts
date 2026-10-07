@@ -28,6 +28,8 @@ function attachSecurityHeaders(res: NextResponse): NextResponse {
   res.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), browsing-topics=()");
   res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
   res.headers.set("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  res.headers.set("Cross-Origin-Resource-Policy", "same-origin");
+  res.headers.set("Cross-Origin-Embedder-Policy", "credentialless");
   res.headers.set("X-Permitted-Cross-Domain-Policies", "none");
   res.headers.set("X-DNS-Prefetch-Control", "off");
   res.headers.set("X-Download-Options", "noopen");
@@ -137,6 +139,16 @@ export async function middleware(request: NextRequest) {
       const suspUrl = new URL("/login", request.url);
       suspUrl.searchParams.set("error", "suspended");
       return attachSecurityHeaders(NextResponse.redirect(suspUrl));
+    }
+
+    // ── 3c. Absolute Session Age Check (Server-Side Inactivity/Absolute Hard-Cap) ──
+    // Ensures sessions cannot be kept alive indefinitely via client localStorage tampering
+    const sessionCreatedAt = user.last_sign_in_at ? new Date(user.last_sign_in_at).getTime() : 0;
+    const MAX_SESSION_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours absolute limit
+    if (sessionCreatedAt && Date.now() - sessionCreatedAt > MAX_SESSION_AGE_MS && !pathname.startsWith("/login")) {
+      const expUrl = new URL("/login", request.url);
+      expUrl.searchParams.set("error", "session_expired");
+      return attachSecurityHeaders(NextResponse.redirect(expUrl));
     }
   }
 
