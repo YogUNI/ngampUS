@@ -63,22 +63,15 @@ export async function middleware(request: NextRequest) {
     return forbidden("Bot tidak diizinkan.");
   }
 
-  // ── 1. Rate-limit auth pages (HTML page loads AND POST submissions) ─────────
-  const isAuthPath = RATE_LIMITED_AUTH.some((p) => pathname.startsWith(p));
-  if (isAuthPath) {
+  // ── 1. Rate-limit auth MUTATIONS (API routes) ──────────────────────────────
+  // Note: HTML page GET requests (like /login) must NOT redirect to /login on rate limit
+  // to prevent infinite redirect loops (ERR_TOO_MANY_REDIRECTS).
+  if (pathname.startsWith("/api/auth")) {
     const limiter = RATE_LIMITED_OTP.some((p) => pathname.startsWith(p))
       ? otpLimiter
       : authLimiter;
     const result = rateLimit(ip, limiter);
     if (!result.success) {
-      // For HTML page routes, redirect to login with an error param
-      if (!pathname.startsWith("/api")) {
-        const url = new URL("/login", request.url);
-        url.searchParams.set("error", "rate_limited");
-        const res = NextResponse.redirect(url);
-        res.headers.set("Retry-After", String(result.retryAfter));
-        return attachSecurityHeaders(res);
-      }
       return tooManyRequests(result.retryAfter);
     }
   }
