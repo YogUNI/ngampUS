@@ -63,7 +63,7 @@ export function HeroRemotionPlayer() {
 
   if (prefersReducedMotion) {
     return (
-      <div className="relative w-full max-w-[370px] sm:max-w-[390px] lg:max-w-[400px] xl:max-w-[420px] mx-auto lg:ml-auto lg:mr-0">
+      <div className="relative w-full max-w-[400px] sm:max-w-[440px] lg:max-w-[470px] xl:max-w-[500px] mx-auto lg:ml-auto lg:mr-0">
         <PosterFallback />
         <div className="mt-2 text-center font-mono text-xs text-white/40">
           Animasi dinonaktifkan (Mode Reduced Motion)
@@ -75,7 +75,7 @@ export function HeroRemotionPlayer() {
   return (
     <div
       ref={containerRef}
-      className="group relative w-full max-w-[370px] sm:max-w-[390px] lg:max-w-[400px] xl:max-w-[420px] mx-auto lg:ml-auto lg:mr-0 overflow-hidden rounded-2xl lg:rounded-b-none bg-transparent transition-all duration-300"
+      className="group relative w-full max-w-[400px] sm:max-w-[440px] lg:max-w-[470px] xl:max-w-[500px] mx-auto lg:ml-auto lg:mr-0 overflow-hidden rounded-2xl lg:rounded-b-none bg-transparent transition-all duration-300"
     >
       <div className="relative w-full aspect-[4/5] overflow-hidden pointer-events-none">
         <RemotionPlayer
