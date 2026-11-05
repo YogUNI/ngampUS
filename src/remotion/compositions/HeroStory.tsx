@@ -530,7 +530,7 @@ const SceneC = () => {
   const frame = useCurrentFrame();
   const enter = useSpr(4, { damping: 17, stiffness: 100, mass: 1 });
   const exitT = interpolate(frame, [190, 210], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-  const phoneY = 210 + (1 - enter) * 520 + exitT * 1200;
+  const phoneY = 240 + (1 - enter) * 520 + exitT * 1200;
   const push = interpolate(frame, [0, 140, 210], [1, 1.045, 1.045], { ...clamp, easing: ease });
   const wipeOut = interpolate(frame, [0, 16], [1, 0], { ...clamp, easing: ease });
   const capS = useSpr(6, SPRING_SOFT);
@@ -538,10 +538,10 @@ const SceneC = () => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: "50% 70%" }}>
-        <div style={{ position: "absolute", left: 70, top: 40, overflow: "hidden", height: 165, opacity: 1 - exitT }}>
+        <div style={{ position: "absolute", left: 70, top: 25, overflow: "hidden", height: 210, opacity: 1 - exitT }}>
           <div style={{ transform: `translateY(${(1 - capS) * 110}%)` }}>
             <div style={{ fontFamily: F.mono, fontSize: 24, color: C.lime, letterSpacing: 4 }}>NGAMPUS · 07.43</div>
-            <div style={{ fontFamily: F.display, fontSize: 68, color: "#fff", letterSpacing: -2, lineHeight: 1.02, marginTop: 8 }}>
+            <div style={{ fontFamily: F.display, fontSize: 64, color: "#fff", letterSpacing: -2, lineHeight: 1.08, marginTop: 8 }}>
               Semua masuk ke<br />satu tempat.
             </div>
           </div>
@@ -579,7 +579,7 @@ const typed = (text: string, frame: number, start: number, dur: number) => {
 const SceneD = () => {
   const frame = useCurrentFrame();
   const up = useSpr(0, { damping: 16, stiffness: 90, mass: 1 });
-  const sheetY = 40 + (1 - up) * 1300;
+  const sheetY = 175 + (1 - up) * 1300;
   const stamp = useSpr(45, SPRING_SLAM);
   const logo = useSpr(65, SPRING_SOFT);
   const cta = useSpr(85, SPRING_SOFT);
@@ -593,7 +593,7 @@ const SceneD = () => {
       <div
         style={{
           position: "absolute",
-          top: "28%",
+          top: "42%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 700,
@@ -713,7 +713,7 @@ const SceneD = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 690,
+          top: 830,
           textAlign: "center",
           opacity: Math.min(1, logo * 2),
           transform: `translateY(${(1 - logo) * 40}px)`,
@@ -753,7 +753,7 @@ const SceneD = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 890,
+          top: 1040,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
