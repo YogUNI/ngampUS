@@ -531,7 +531,7 @@ const SceneC = () => {
   const frame = useCurrentFrame();
   const enter = useSpr(4, { damping: 17, stiffness: 100, mass: 1 });
   const exitT = interpolate(frame, [190, 210], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-  const phoneY = 320 + (1 - enter) * 520 + exitT * 1200;
+  const phoneY = 280 + (1 - enter) * 520 + exitT * 1200;
   const push = interpolate(frame, [0, 140, 210], [1, 1.045, 1.045], { ...clamp, easing: ease });
   const wipeOut = interpolate(frame, [0, 16], [1, 0], { ...clamp, easing: ease });
   const capS = useSpr(6, SPRING_SOFT);
@@ -539,10 +539,10 @@ const SceneC = () => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: "50% 70%" }}>
-        <div style={{ position: "absolute", left: 70, top: 78, overflow: "hidden", height: 190, opacity: 1 - exitT }}>
+        <div style={{ position: "absolute", left: 70, top: 60, overflow: "hidden", height: 185, opacity: 1 - exitT }}>
           <div style={{ transform: `translateY(${(1 - capS) * 110}%)` }}>
             <div style={{ fontFamily: F.mono, fontSize: 24, color: C.lime, letterSpacing: 4 }}>NGAMPUS · 07.43</div>
-            <div style={{ fontFamily: F.display, fontSize: 70, color: "#fff", letterSpacing: -2, lineHeight: 1.02, marginTop: 10 }}>
+            <div style={{ fontFamily: F.display, fontSize: 68, color: "#fff", letterSpacing: -2, lineHeight: 1.02, marginTop: 8 }}>
               Semua masuk ke<br />satu tempat.
             </div>
           </div>

@@ -20,7 +20,6 @@ export function HeroRemotionPlayer() {
   const playerRef = useRef<PlayerRef>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
 
   useEffect(() => {
     setMounted(true);
@@ -36,7 +35,7 @@ export function HeroRemotionPlayer() {
     return () => mql.removeEventListener("change", handleChange);
   }, []);
 
-  // Pause when offscreen, resume when in viewport
+  // Pause when offscreen, resume loop when in viewport to conserve GPU & battery
   useEffect(() => {
     if (!mounted || prefersReducedMotion || !containerRef.current) return;
 
@@ -47,29 +46,16 @@ export function HeroRemotionPlayer() {
 
         if (entry.isIntersecting) {
           playerRef.current.play();
-          setIsPlaying(true);
         } else {
           playerRef.current.pause();
-          setIsPlaying(false);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 }
     );
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, [mounted, prefersReducedMotion]);
-
-  const togglePlayback = () => {
-    if (!playerRef.current) return;
-    if (isPlaying) {
-      playerRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      playerRef.current.play();
-      setIsPlaying(true);
-    }
-  };
 
   if (!mounted) {
     return <PosterFallback />;
@@ -77,7 +63,7 @@ export function HeroRemotionPlayer() {
 
   if (prefersReducedMotion) {
     return (
-      <div className="relative w-full">
+      <div className="relative w-full max-w-[470px] xl:max-w-[500px] mx-auto lg:ml-auto lg:mr-0">
         <PosterFallback />
         <div className="mt-2 text-center font-mono text-xs text-white/40">
           Animasi dinonaktifkan (Mode Reduced Motion)
@@ -89,7 +75,7 @@ export function HeroRemotionPlayer() {
   return (
     <div
       ref={containerRef}
-      className="group relative w-full overflow-hidden rounded-3xl border border-white/10 bg-[#0a1f16] shadow-2xl transition-all duration-300 hover:border-[#C6F432]/30"
+      className="group relative w-full max-w-[440px] sm:max-w-[470px] lg:max-w-[460px] xl:max-w-[490px] mx-auto lg:ml-auto lg:mr-0 overflow-hidden rounded-3xl border border-white/10 bg-[#0a1f16] shadow-2xl transition-all duration-300 hover:border-[#C6F432]/30"
     >
       <div className="relative w-full aspect-[4/5] overflow-hidden pointer-events-none">
         <RemotionPlayer
@@ -110,34 +96,6 @@ export function HeroRemotionPlayer() {
           showPosterWhenBuffering
         />
       </div>
-
-      {/* Floating Status & Controls Pill */}
-      <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-center justify-between z-20">
-        <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/10 bg-[#0a1f16]/90 backdrop-blur-md px-3.5 py-1.5 font-mono text-[11px] text-white/80 shadow-lg">
-          <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
-          <span>Alur Mahasiswa • 18 Detik</span>
-        </div>
-
-        <button
-          onClick={togglePlayback}
-          type="button"
-          aria-label={isPlaying ? "Jeda animasi" : "Putar animasi"}
-          className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-white/15 bg-[#12332a]/95 backdrop-blur-md px-3 py-1.5 font-mono text-[11px] text-white hover:border-[#C6F432] hover:text-[#C6F432] shadow-lg transition-colors cursor-pointer"
-        >
-          {isPlaying ? (
-            <>
-              <span className="text-[10px]">❚❚</span>
-              <span>Jeda</span>
-            </>
-          ) : (
-            <>
-              <span className="text-[10px]">▶</span>
-              <span>Putar</span>
-            </>
-          )}
-        </button>
-      </div>
     </div>
   );
 }
-

@@ -40,7 +40,7 @@ export default function Home() {
       </div>
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
+      <section className="relative pt-20 sm:pt-24 lg:pt-28 pb-10 sm:pb-12 lg:pb-14 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
         {/* Subtle Dark Emerald Radial Ambience */}
         <div
           aria-hidden="true"
@@ -48,7 +48,7 @@ export default function Home() {
         />
 
         <div className="relative mx-auto w-full max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center w-full min-w-0">
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center w-full min-w-0">
             
             {/* Left Column: Sharp Editorial Copy */}
             <div className="max-w-2xl w-full min-w-0">
@@ -61,29 +61,29 @@ export default function Home() {
               {/* Display Headline */}
               {/* A/B Test Alternative 1: "Kuliah teratur. Ambisi organisasi tetap melesat." */}
               {/* A/B Test Alternative 2: "Berhenti panik tiap malam Minggu karena deadline numpuk." */}
-              <h1 className="font-display mt-6 text-3xl sm:text-5xl lg:text-[4.2rem] font-black leading-[1.08] tracking-tight text-[#F4F1EA] text-balance">
+              <h1 className="font-display mt-5 text-3xl sm:text-5xl lg:text-[3.6rem] xl:text-[4rem] font-black leading-[1.08] tracking-tight text-[#F4F1EA] text-balance">
                 Tugas numpuk.<br />
                 Jadwal bentrok.<br />
                 <span className="text-[#C6F432]">Grup WA 999+.</span>
               </h1>
 
               {/* Subcopy */}
-              <p className="mt-5 text-sm sm:text-lg leading-relaxed text-[#F4F1EA]/75 text-pretty max-w-xl font-normal">
+              <p className="mt-4 text-sm sm:text-base lg:text-lg leading-relaxed text-[#F4F1EA]/75 text-pretty max-w-xl font-normal">
                 ngampUS merapikan semuanya di satu tempat: jadwal kuliah, deadline, organisasi, sampai CV magang.
               </p>
 
               {/* CTAs */}
-              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#C6F432] px-6 py-3.5 sm:px-7 sm:py-4 text-sm sm:text-base font-bold text-[#0a1f16] shadow-md shadow-[#C6F432]/20 transition-all hover:brightness-110 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#C6F432] px-6 py-3.5 sm:px-7 sm:py-3.5 text-sm sm:text-base font-bold text-[#0a1f16] shadow-md shadow-[#C6F432]/20 transition-all hover:brightness-110 active:scale-[0.98]"
                 >
                   <span>Mulai Gratis</span>
                   <ArrowRight size={18} />
                 </Link>
                 <a
                   href="#features"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#12332a] px-6 py-4 text-sm font-bold text-[#F4F1EA] transition-all hover:bg-white/10 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#12332a] px-6 py-3.5 text-sm font-bold text-[#F4F1EA] transition-all hover:bg-white/10 active:scale-[0.98]"
                 >
                   <span>Lihat cara kerjanya</span>
                   <ArrowDown size={16} className="text-[#C6F432]" />
@@ -91,7 +91,7 @@ export default function Home() {
               </div>
 
               {/* Trust & Proof Signals */}
-              <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 font-mono text-xs text-[#F4F1EA]/60">
+              <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-4 font-mono text-xs text-[#F4F1EA]/60">
                 <span>Gratis selamanya</span>
                 <span className="text-white/20">·</span>
                 <span>Setup 2 menit</span>
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
 
             {/* Right Column: Remotion Showcase Motion Player */}
-            <div className="w-full min-w-0">
+            <div className="w-full min-w-0 flex justify-center lg:justify-end">
               <HeroRemotionPlayer />
             </div>
 
