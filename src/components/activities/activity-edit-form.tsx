@@ -31,6 +31,15 @@ type CourseOption = { id: string; name: string; semester_id?: string | null; sks
 
 const PORTFOLIO_CATEGORIES = ["lomba", "event", "organisasi"];
 
+function formatTimeInput(timeStr?: string | null): string {
+  if (!timeStr) return "";
+  const parts = timeStr.trim().split(":");
+  if (parts.length >= 2) {
+    return `${parts[0].padStart(2, "0")}:${parts[1].padStart(2, "0")}`;
+  }
+  return timeStr.slice(0, 5);
+}
+
 export function ActivityEditForm({
   activity,
   semesters,
@@ -57,7 +66,7 @@ export function ActivityEditForm({
   const [tanggalMulai, setTanggalMulai] = useState(activity.tanggal_mulai || "");
   const [deadlineStatus, setDeadlineStatus] = useState(activity.deadline_status as "terjadwal" | "belum_ditentukan");
   const [deadline, setDeadline] = useState(activity.deadline || "");
-  const [jamDeadline, setJamDeadline] = useState(activity.jam_deadline || "");
+  const [jamDeadline, setJamDeadline] = useState(formatTimeInput(activity.jam_deadline));
   const [selectedSemesterId, setSelectedSemesterId] = useState<string>(activity.semester_id || "");
   const [selectedOrgId, setSelectedOrgId] = useState<string>(activity.organization_id || "");
   const [selectedProgramId, setSelectedProgramId] = useState<string>(activity.program_id || "");
@@ -82,7 +91,7 @@ export function ActivityEditForm({
       setTanggalMulai(activity.tanggal_mulai || "");
       setDeadlineStatus(activity.deadline_status as "terjadwal" | "belum_ditentukan");
       setDeadline(activity.deadline || "");
-      setJamDeadline(activity.jam_deadline || "");
+      setJamDeadline(formatTimeInput(activity.jam_deadline));
       setSelectedSemesterId(activity.semester_id || "");
       setSelectedOrgId(activity.organization_id || "");
       setSelectedProgramId(activity.program_id || "");
@@ -104,6 +113,10 @@ export function ActivityEditForm({
     e.preventDefault();
     setLoading(true);
     try {
+      const orgIdToSubmit = kategori === "organisasi" ? selectedOrgId : "";
+      const progIdToSubmit = (kategori === "organisasi" && selectedOrgId) ? selectedProgramId : "";
+      const courseIdToSubmit = kategori === "kuliah" ? selectedCourseId : "";
+
       const formData = new FormData();
       formData.set("id", activity.id);
       formData.set("judul", judul);
@@ -116,9 +129,9 @@ export function ActivityEditForm({
       formData.set("deadline", deadlineStatus === "terjadwal" ? deadline : "");
       formData.set("jam_deadline", deadlineStatus === "terjadwal" ? jamDeadline : "");
       formData.set("semester_id", selectedSemesterId);
-      formData.set("organization_id", selectedOrgId);
-      formData.set("program_id", selectedProgramId);
-      formData.set("course_id", kategori === "kuliah" ? selectedCourseId : "");
+      formData.set("organization_id", orgIdToSubmit);
+      formData.set("program_id", progIdToSubmit);
+      formData.set("course_id", courseIdToSubmit);
       formData.set("is_portfolio", isPortfolio ? "true" : "false");
       formData.set("peran_portfolio", isPortfolio ? peranPortfolio : "");
       await updateActivity(formData);
@@ -178,6 +191,10 @@ export function ActivityEditForm({
                 const newKat = e.target.value;
                 setKategori(newKat);
                 if (newKat !== "kuliah") setSelectedCourseId("");
+                if (newKat !== "organisasi") {
+                  setSelectedOrgId("");
+                  setSelectedProgramId("");
+                }
               }}
             >
               <option value="kuliah">Kuliah</option>
@@ -243,7 +260,14 @@ export function ActivityEditForm({
               <select
                 name="deadline_status"
                 value={deadlineStatus}
-                onChange={(e) => setDeadlineStatus(e.target.value as typeof deadlineStatus)}
+                onChange={(e) => {
+                  const newStatus = e.target.value as "terjadwal" | "belum_ditentukan";
+                  setDeadlineStatus(newStatus);
+                  if (newStatus === "belum_ditentukan") {
+                    setDeadline("");
+                    setJamDeadline("");
+                  }
+                }}
                 className="mt-1"
               >
                 <option value="terjadwal">Terjadwal</option>
@@ -283,7 +307,15 @@ export function ActivityEditForm({
               <option value="">Tanpa semester</option>
               {semesters.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>
-            <select name="organization_id" value={selectedOrgId} onChange={(e) => setSelectedOrgId(e.target.value)}>
+            <select
+              name="organization_id"
+              value={selectedOrgId}
+              onChange={(e) => {
+                const newOrg = e.target.value;
+                setSelectedOrgId(newOrg);
+                setSelectedProgramId("");
+              }}
+            >
               <option value="">Tanpa organisasi</option>
               {organizations.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>

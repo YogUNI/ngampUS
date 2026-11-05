@@ -117,10 +117,10 @@ export default async function DashboardPage() {
   // Today's schedule
   let todayQuery = supabase
     .from("activities")
-    .select("id,judul,kategori,jenis_item,jam_pelaksanaan,deadline,prioritas")
+    .select("id,judul,kategori,jenis_item,jam_deadline,deadline,prioritas")
     .neq("status", "selesai")
     .or(`deadline.eq.${today},tanggal_mulai.eq.${today}`)
-    .order("jam_pelaksanaan", { ascending: true })
+    .order("jam_deadline", { ascending: true })
     .limit(4);
 
   if (semesterId) todayQuery = todayQuery.eq("semester_id", semesterId);
@@ -784,7 +784,7 @@ export default async function DashboardPage() {
                       <div className="min-w-0 flex-1">
                         <h3 className="font-display truncate text-xs sm:text-sm font-black text-[#10261b]">{item.judul}</h3>
                         <p className="tag-mono text-[11px] text-[#697c6f] truncate mt-0.5">
-                          {item.jam_pelaksanaan ? `🕐 ${item.jam_pelaksanaan} WIB` : "Sepanjang hari"} · <span className="uppercase">{item.kategori}</span>
+                          {item.jam_deadline ? `🕐 ${item.jam_deadline.slice(0, 5)} WIB` : "Sepanjang hari"} · <span className="uppercase">{item.kategori}</span>
                         </p>
                       </div>
                       <span className="stamp-badge border-[#d8e3da] bg-white text-[#425a4c]">

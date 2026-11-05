@@ -85,9 +85,17 @@ export function ActivityForm({
       if (mode === "catatan") {
         formData.set("deadline_status", "belum_ditentukan");
         formData.set("jenis_item", "catatan");
+      } else if (mode === "agenda") {
+        formData.set("deadline_status", "terjadwal");
+        formData.set("jenis_item", "reminder");
+        // Automatically populate tanggal_mulai for agenda events so it's not left empty in DB
+        const eventDate = formData.get("deadline");
+        if (eventDate) {
+          formData.set("tanggal_mulai", eventDate);
+        }
       } else {
         formData.set("deadline_status", "terjadwal");
-        formData.set("jenis_item", mode === "agenda" ? "reminder" : "tugas");
+        formData.set("jenis_item", "tugas");
       }
 
       await createActivity(formData);

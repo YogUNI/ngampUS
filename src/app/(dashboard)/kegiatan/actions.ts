@@ -15,7 +15,13 @@ const schema = z.object({
   tanggal_mulai: z.string().date().or(z.literal("")).nullable().optional(),
   deadline_status: z.enum(["terjadwal", "belum_ditentukan"]),
   deadline: z.string().date().or(z.literal("")).nullable().optional(),
-  jam_deadline: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Jam deadline tidak valid.").or(z.literal("")).nullable().optional(),
+  jam_deadline: z
+    .string()
+    .trim()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/, "Jam deadline tidak valid.")
+    .or(z.literal(""))
+    .nullable()
+    .optional(),
   semester_id: z.string().uuid().or(z.literal("")).nullable().optional(),
   organization_id: z.string().uuid().or(z.literal("")).nullable().optional(),
   program_id: z.string().uuid().or(z.literal("")).nullable().optional(),
@@ -23,14 +29,43 @@ const schema = z.object({
   is_portfolio: z.boolean().optional().default(false),
   peran_portfolio: z.string().trim().max(120).or(z.literal("")).nullable().optional(),
 }).superRefine((value, context) => {
-  if (value.deadline_status === "terjadwal" && !value.deadline) context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline"], message: "Tanggal deadline wajib diisi." });
-  if (value.deadline_status === "belum_ditentukan" && (value.deadline || value.jam_deadline)) context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline_status"], message: "Item tanpa deadline tidak boleh memiliki tanggal atau jam deadline." });
-  if (value.tanggal_mulai && value.deadline && value.tanggal_mulai > value.deadline) context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline"], message: "Deadline harus setelah tanggal mulai." });
+  if (value.deadline_status === "terjadwal" && !value.deadline) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline"], message: "Tanggal deadline wajib diisi." });
+  }
+  if (value.deadline_status === "belum_ditentukan" && (value.deadline || value.jam_deadline)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline_status"], message: "Item tanpa deadline tidak boleh memiliki tanggal atau jam deadline." });
+  }
+  if (value.tanggal_mulai && value.deadline && value.tanggal_mulai > value.deadline) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["deadline"], message: "Tanggal deadline tidak boleh lebih awal dari tanggal mulai." });
+  }
 });
 const statusSchema = z.enum(["belum_mulai", "on_progress", "selesai"]);
 
 function parseActivity(formData: FormData) {
-  const kategori = formData.get("kategori") as string;
+  const kategori = formData.get("kategori") as "kuliah" | "organisasi" | "lomba" | "event" | "lainnya";
+  const deadlineStatus = (formData.get("deadline_status") as string) || "terjadwal";
+  const isTerjadwal = deadlineStatus === "terjadwal";
+
+  // Normalize time: trim seconds if present ("14:00:00" -> "14:00")
+  let rawJam = (formData.get("jam_deadline") as string) || "";
+  rawJam = rawJam.trim();
+  if (rawJam.length > 5 && rawJam.includes(":")) {
+    const parts = rawJam.split(":");
+    rawJam = `${parts[0].padStart(2, "0")}:${parts[1].padStart(2, "0")}`;
+  }
+
+  // Cross-domain data sanitation:
+  // 1. If not "organisasi", strip organization_id and program_id
+  const orgId = kategori === "organisasi" ? ((formData.get("organization_id") as string) || "") : "";
+  const programId = (kategori === "organisasi" && orgId) ? ((formData.get("program_id") as string) || "") : "";
+
+  // 2. If not "kuliah", strip course_id
+  const courseId = kategori === "kuliah" ? ((formData.get("course_id") as string) || "") : "";
+
+  // 3. If deadline is "belum_ditentukan", deadline and jam must be empty
+  const deadlineVal = isTerjadwal ? ((formData.get("deadline") as string) || "") : "";
+  const jamDeadlineVal = isTerjadwal ? rawJam : "";
+
   // Smart default: portfolio on for lomba/event/organisasi, off for others
   const isPortfolioRaw = formData.get("is_portfolio");
   let isPortfolio: boolean;
@@ -47,13 +82,13 @@ function parseActivity(formData: FormData) {
     jenis_item: formData.get("jenis_item"),
     prioritas: formData.get("prioritas"),
     tanggal_mulai: formData.get("tanggal_mulai") || "",
-    deadline_status: formData.get("deadline_status"),
-    deadline: formData.get("deadline") || "",
-    jam_deadline: formData.get("jam_deadline") || "",
+    deadline_status: deadlineStatus,
+    deadline: deadlineVal,
+    jam_deadline: jamDeadlineVal,
     semester_id: formData.get("semester_id") || "",
-    organization_id: formData.get("organization_id") || "",
-    program_id: formData.get("program_id") || "",
-    course_id: formData.get("course_id") || "",
+    organization_id: orgId,
+    program_id: programId,
+    course_id: courseId,
     is_portfolio: isPortfolio,
     peran_portfolio: formData.get("peran_portfolio") || "",
   });
@@ -61,22 +96,37 @@ function parseActivity(formData: FormData) {
 
 async function resolveOrganizationId(item: z.infer<typeof schema>, supabase: Awaited<ReturnType<typeof createClient>>) {
   let organizationId = item.organization_id || null;
+  // If user selected "Tanpa organisasi", force program_id to null so it doesn't cause foreign-key or cross-org errors
+  if (!organizationId) {
+    item.program_id = null;
+    return null;
+  }
+
   if (item.program_id) {
     const { data: program, error: programError } = await supabase.from("programs").select("organization_id").eq("id", item.program_id).single();
-    if (programError || !program) throw new Error("Program kerja tidak ditemukan atau tidak dapat diakses.");
-    if (organizationId && organizationId !== program.organization_id) throw new Error("Program kerja harus berasal dari organisasi yang sama.");
-    organizationId = program.organization_id;
+    if (programError || !program) {
+      // Program was deleted or not found, safely detach it
+      item.program_id = null;
+    } else if (organizationId && organizationId !== program.organization_id) {
+      // If mismatch, detach program rather than crashing user session
+      item.program_id = null;
+    }
   }
   return organizationId;
 }
 
 function activityPayload(item: z.infer<typeof schema>, organizationId: string | null) {
+  let normalizedJam = item.jam_deadline || null;
+  if (normalizedJam && normalizedJam.length > 5) {
+    normalizedJam = normalizedJam.slice(0, 5);
+  }
+
   return {
     ...item,
     deskripsi: item.deskripsi || null,
     tanggal_mulai: item.tanggal_mulai || null,
     deadline: item.deadline || null,
-    jam_deadline: item.jam_deadline || null,
+    jam_deadline: normalizedJam,
     semester_id: item.semester_id || null,
     organization_id: organizationId,
     program_id: item.program_id || null,
