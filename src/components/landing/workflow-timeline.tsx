@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { 
@@ -7,13 +7,7 @@ import {
   Clock3, 
   Check, 
   Sparkles, 
-  ArrowRight, 
-  Calendar, 
-  Users, 
-  CheckCircle2, 
-  Award,
-  BookOpen,
-  ArrowUpRight
+  ArrowRight
 } from "lucide-react";
 import Link from "next/link";
 
@@ -75,7 +69,7 @@ const STEPS: WorkflowStep[] = [
       lightBg: "bg-[#e2efff]",
     },
     mockup: {
-      pill: "BEM FASILKOM • KADIV KOMINFO",
+      pill: "BEM FAKULTAS • KADIV KOMINFO",
       heading: "Webinar Nasional Cyber Security 2026",
       detail1: "Ketua Pelaksana • 24 Anggota Panitia",
       detail2: "Fase Eksekusi • Target 500 Peserta",
@@ -90,17 +84,17 @@ const STEPS: WorkflowStep[] = [
     description: "Buka dashboard setiap pagi untuk melihat agenda terdekat dan deadline yang mendesak. Visual badge peringatan otomatis mengarahkan fokus ke tugas H-1 & H-2.",
     icon: Clock3,
     theme: {
-      bg: "bg-[#e57255]",
-      text: "text-[#e57255]",
-      border: "border-[#e57255]",
-      lightBg: "bg-[#feeae5]",
+      bg: "bg-rose-600",
+      text: "text-rose-700",
+      border: "border-rose-600",
+      lightBg: "bg-rose-50",
     },
     mockup: {
       pill: "DEADLINE RADAR • H-1 URGENT",
       heading: "Laporan Praktikum Modul 4",
       detail1: "Tenggat: Besok 23:59 WIB • Algoritma",
       detail2: "Progress Saat Ini: 85% Siap Submit",
-      tag: "Auto-Alert Sistem",
+      tag: "Peringatan Otomatis",
     },
   },
   {
@@ -119,7 +113,7 @@ const STEPS: WorkflowStep[] = [
     mockup: {
       pill: "AUTO-CURATED RESUME PORTFOLIO",
       heading: "Lead Organizer — Tech Seminar & Expo",
-      detail1: "Memimpin 4 divisi lintas jurusan, 1200 audiens",
+      detail1: "Memimpin 4 divisi lintas jurusan, 1.200 audiens",
       detail2: "IPK Semester: 3.88 • 2 Proyek Terpilih",
       tag: "1-Click PDF Resume",
     },
@@ -132,12 +126,12 @@ export function WorkflowTimeline() {
   const Icon = current.icon;
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-5xl">
       {/* Step Indicator Progress Bar */}
       <div className="relative mb-10 hidden sm:block">
-        <div className="absolute top-6 left-0 right-0 h-1 bg-[#d8e3da] -z-0" />
+        <div className="absolute top-6 left-0 right-0 h-1 bg-[#dce5dd] -z-0" />
         <div 
-          className="absolute top-6 left-0 h-1 bg-[#103626] transition-all duration-500 ease-out -z-0"
+          className="absolute top-6 left-0 h-1 bg-[#0f6849] transition-all duration-300 ease-out -z-0"
           style={{ width: `${(activeStep / (STEPS.length - 1)) * 100}%` }}
         />
         
@@ -151,25 +145,25 @@ export function WorkflowTimeline() {
               <button
                 key={s.step}
                 onClick={() => setActiveStep(idx)}
-                className="group flex flex-col items-center focus:outline-hidden"
+                className="group flex flex-col items-center focus:outline-hidden cursor-pointer"
               >
                 <div 
-                  className={`grid h-12 w-12 place-items-center rounded-2xl font-display font-black text-sm transition-all duration-300 ${
+                  className={`grid h-12 w-12 place-items-center rounded-2xl font-display font-black text-sm transition-all duration-200 ${
                     isSelected
-                      ? "bg-[#103626] text-[#c8ef70] scale-110 shadow-lg shadow-[#103626]/20 ring-4 ring-white"
+                      ? "bg-[#0f6849] text-white scale-110 shadow-md shadow-[#0f6849]/20 ring-4 ring-white"
                       : isPast
-                      ? "bg-[#0f6849] text-white"
-                      : "bg-white text-[#65746a] border border-[#d8e3da] group-hover:border-[#0f6849] group-hover:text-[#103626]"
+                      ? "bg-[#dff3e5] text-[#0f6849]"
+                      : "bg-white text-[#708075] border border-[#dce5dd] group-hover:border-[#0f6849] group-hover:text-[#10261b]"
                   }`}
                 >
                   {isPast ? <Check size={18} strokeWidth={2.5} /> : <StepIcon size={18} />}
                 </div>
-                <span className={`mt-2.5 text-xs font-black tracking-wider transition ${
-                  isSelected ? "text-[#103626]" : "text-[#708275] group-hover:text-[#103626]"
+                <span className={`mt-2.5 text-xs font-bold tracking-wider transition ${
+                  isSelected ? "text-[#0f6849]" : "text-[#708075] group-hover:text-[#10261b]"
                 }`}>
-                  STEP {s.step}
+                  LANGKAH {s.step}
                 </span>
-                <span className="text-[11px] font-semibold text-[#55675b] hidden md:inline">
+                <span className="text-[11px] font-medium text-[#55675b] hidden md:inline">
                   {s.title.split(" ")[0]} {s.title.split(" ")[1]}
                 </span>
               </button>
@@ -179,42 +173,29 @@ export function WorkflowTimeline() {
       </div>
 
       {/* Main Interactive Showcase Card */}
-      <div className="relative overflow-hidden rounded-[2.5rem] border border-[#d8e3da] bg-white p-6 sm:p-10 shadow-xl shadow-[#103626]/5 transition-all duration-300">
-        
-        {/* Subtle decorative background gradient */}
-        <div 
-          className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full opacity-30 blur-3xl transition-all duration-700"
-          style={{
-            background: 
-              activeStep === 0 ? "rgba(15,104,73,.3)" :
-              activeStep === 1 ? "rgba(43,114,189,.3)" :
-              activeStep === 2 ? "rgba(229,114,85,.3)" :
-              "rgba(100,79,226,.3)"
-          }}
-        />
-
+      <div className="relative overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-9 shadow-xs transition-all duration-200">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
           
           {/* Left Column: Context & Narrative */}
           <div>
             <div className="flex items-center gap-2.5">
-              <span className={`rounded-lg px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${current.theme.lightBg} ${current.theme.text}`}>
+              <span className={`rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${current.theme.lightBg} ${current.theme.text}`}>
                 {current.badge}
               </span>
-              <span className="text-xs font-mono font-bold text-[#86988c]">
+              <span className="text-xs font-mono font-medium text-[#708075]">
                 Tahap {current.step} dari 04
               </span>
             </div>
 
-            <h3 className="font-display mt-4 text-2xl sm:text-4xl font-black tracking-tight text-[#103626] leading-tight">
+            <h3 className="font-display mt-4 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b] leading-tight">
               {current.title}
             </h3>
 
-            <p className="mt-2 text-sm sm:text-base font-semibold text-[#0f6849]">
+            <p className="mt-2 text-sm font-semibold text-[#0f6849]">
               ✦ {current.subtitle}
             </p>
 
-            <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#55675b]">
+            <p className="mt-3.5 text-sm sm:text-base leading-relaxed text-[#55675b]">
               {current.description}
             </p>
 
@@ -224,10 +205,10 @@ export function WorkflowTimeline() {
                 <button
                   key={s.step}
                   onClick={() => setActiveStep(idx)}
-                  className={`rounded-xl py-2 text-[11px] font-bold text-center transition truncate ${
+                  className={`rounded-xl py-2 text-[11px] font-bold text-center transition truncate cursor-pointer ${
                     activeStep === idx 
-                      ? "bg-[#103626] text-[#c8ef70]" 
-                      : "bg-[#eff3ee] text-[#55675b]"
+                      ? "bg-[#0f6849] text-white" 
+                      : "bg-[#f4f7f4] text-[#55675b]"
                   }`}
                 >
                   Step {s.step}
@@ -240,31 +221,31 @@ export function WorkflowTimeline() {
               {activeStep < STEPS.length - 1 ? (
                 <button
                   onClick={() => setActiveStep((prev) => prev + 1)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#103626] px-5 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#1b4b35] transition active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0f6849] px-5 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#0b4d36] transition cursor-pointer active:scale-95"
                 >
                   Lanjut ke Langkah {STEPS[activeStep + 1].step} <ArrowRight size={15} />
                 </button>
               ) : (
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#c8ef70] px-5 py-2.5 text-xs sm:text-sm font-black text-[#103626] shadow-sm hover:bg-[#d6f888] transition active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0f6849] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#0b4d36] transition active:scale-95"
                 >
                   Mulai Workspace-mu Sekarang <Sparkles size={15} />
                 </Link>
               )}
-              <span className="text-xs text-[#7d9083]">
-                {activeStep === 3 ? "Semua tahap selesai!" : "Klik lingkaran di atas untuk melompat"}
+              <span className="text-xs text-[#708075]">
+                {activeStep === 3 ? "Semua tahap selesai!" : "Klik lingkaran di atas untuk beralih"}
               </span>
             </div>
           </div>
 
-          {/* Right Column: Live Mockup Card with Glass Accent */}
+          {/* Right Column: Live Mockup Card with Clean Editorial Frame */}
           <div className="relative">
-            <div className="rounded-3xl border border-[#d8e3da] bg-[#f9faf8] p-5 sm:p-6 shadow-inner ring-1 ring-black/5">
+            <div className="rounded-2xl border border-[#edf2ee] bg-[#fafbfa] p-5 shadow-xs">
               
-              <div className="flex items-center justify-between border-b border-[#e5ebe5] pb-3">
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#697c6f]">
-                  SISTEM MOCKUP / HASIL NYATA
+              <div className="flex items-center justify-between border-b border-[#edf2ee] pb-3">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#708075]">
+                  PREVIEW WORKSPACE
                 </span>
                 <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${current.theme.lightBg} ${current.theme.text}`}>
                   <Sparkles size={11} /> {current.mockup.tag}
@@ -272,40 +253,40 @@ export function WorkflowTimeline() {
               </div>
 
               {/* Mockup Card Interior */}
-              <div className="mt-4 rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <div className="mt-4 rounded-xl border border-[#dce5dd] bg-white p-4 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black text-[#697c6f] uppercase tracking-wide">
+                  <span className="text-[10px] font-bold text-[#708075] uppercase tracking-wide">
                     {current.mockup.pill}
                   </span>
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="h-2 w-2 rounded-full bg-[#0f6849] animate-pulse" />
                 </div>
 
-                <h4 className="font-display mt-2 text-base sm:text-lg font-black text-[#103626]">
+                <h4 className="font-display mt-2 text-base font-bold text-[#10261b]">
                   {current.mockup.heading}
                 </h4>
 
-                <div className="mt-4 space-y-2 border-t border-[#f0f4f0] pt-3 text-xs text-[#55675b]">
+                <div className="mt-3.5 space-y-1.5 border-t border-[#edf2ee] pt-3 text-xs text-[#55675b]">
                   <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#103626]" />
-                    <span className="font-medium">{current.mockup.detail1}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849]" />
+                    <span>{current.mockup.detail1}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#103626]" />
-                    <span className="font-medium">{current.mockup.detail2}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849]" />
+                    <span>{current.mockup.detail2}</span>
                   </div>
                 </div>
 
                 {/* Micro Action Mockup */}
-                <div className="mt-5 flex items-center justify-between rounded-xl bg-[#f4f7f3] px-3.5 py-2 text-xs">
-                  <span className="font-bold text-[#103626]">Status Sistem:</span>
-                  <span className="font-black text-[#0f6849]">✓ Terverifikasi & Sinkron</span>
+                <div className="mt-4 flex items-center justify-between rounded-lg bg-[#f4f7f4] px-3 py-2 text-xs">
+                  <span className="font-medium text-[#10261b]">Status Sinkron:</span>
+                  <span className="font-bold text-[#0f6849]">✓ Terverifikasi</span>
                 </div>
               </div>
 
-              {/* Floating Helper Tag */}
-              <div className="mt-3 flex items-center justify-between text-[11px] text-[#7d9083] px-1">
-                <span>⚡ Diperbarui secara real-time</span>
-                <span className="font-mono text-[10px]">nGampUS Engine</span>
+              {/* Helper Tag */}
+              <div className="mt-3 flex items-center justify-between text-[11px] text-[#708075] px-1">
+                <span>Diperbarui secara real-time</span>
+                <span className="font-mono text-[10px]">nGampUS Core</span>
               </div>
 
             </div>

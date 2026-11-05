@@ -179,55 +179,55 @@ flowchart TD
 
 ---
 
-### Fase 1: Sanitasi Codebase, Eliminasi Dead Code & Fix Crash Kritis Backend
+### Fase 1: Sanitasi Codebase, Eliminasi Dead Code & Fix Crash Kritis Backend (SELESAI ✓)
 > **Tujuan**: Membersihkan semua sampah teknis, menyelesaikan 243 warning/error linter, dan menutup celah error database pada alur pengguna baru.
 
-- [ ] **Substep 1.1**: Hapus file yatim yang tidak diimpor:
+- [x] **Substep 1.1**: Hapus file yatim yang tidak diimpor:
   - Hapus `src/components/auth/auth-form.tsx` (219 baris kode lama).
   - Hapus file default Next.js yang tidak dipakai di `public/` (`file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, `window.svg`).
   - Hapus helper yang tidak pernah diimpor: `src/lib/utils.ts` (atau jika tetap dipakai, jadikan utilitas bersama).
-- [ ] **Substep 1.2**: Bersihkan dead code di file logic:
+- [x] **Substep 1.2**: Bersihkan dead code di file logic:
   - Hapus rate limiter mati `adminLimiter` di `src/lib/rate-limiter.ts`.
   - Hapus konstanta mati `RATE_LIMITED_AUTH` di `src/middleware.ts` dan `PER_MINUTE_TOKEN_LIMIT` di `src/lib/ai-telemetry.ts`.
   - Hapus query mati `countBase` di `src/app/(dashboard)/kegiatan/page.tsx`.
-- [ ] **Substep 1.3**: Pangkas dead CSS di `src/app/globals.css`:
+- [x] **Substep 1.3**: Pangkas dead CSS di `src/app/globals.css`:
   - Hapus 6 keyframes mati: `toast-shimmer`, `badge-pulse`, `bar-grow`, `orbit-slow`, `shimmer-drift`, `subtle-pulse`.
   - Hapus 27 class usang: `.auth-form-card`, `.hero-orb`, `.noise-overlay`, `.grid-paper`, `.landing-canvas`, `.sticker`, `.feature-card`, `.atlas-sun`, dll.
   - Hapus blok usang `main.grid.min-h-screen`.
-- [ ] **Substep 1.4**: Bersihkan 155+ unused imports (terutama icon `lucide-react`) di seluruh 40 file komponen.
-- [ ] **Substep 1.5**: **FIX CRITICAL BACKEND BUG DI JADWAL**:
+- [x] **Substep 1.4**: Bersihkan 155+ unused imports (terutama icon `lucide-react`) di seluruh komponen.
+- [x] **Substep 1.5**: **FIX CRITICAL BACKEND BUG DI JADWAL**:
   - Edit `src/components/schedule/course-form-modal.tsx`: Berikan pengecekan jika `semesters.length === 0`.
   - Cegah pengiriman form kosong dan tampilkan banner bantuan langsung ke `/semester`.
-- [ ] **Substep 1.6**: **OPTIMASI QUERY PORTFOLIO**:
+- [x] **Substep 1.6**: **OPTIMASI QUERY PORTFOLIO**:
   - Satukan 3 pemanggilan `Promise.all` di `src/app/(dashboard)/rekap/portfolio/page.tsx` menjadi 1 eksekusi paralel tunggal.
-- [ ] **Substep 1.7**: Verifikasi build: Jalankan `npx tsc --noEmit` dan `npm run lint` hingga mencapai 0 error.
+- [x] **Substep 1.7**: Verifikasi build: Jalankan `npx tsc --noEmit` dan `npm run lint` hingga mencapai 0 error.
 
 ---
 
-### Fase 2: Redesign Total Landing Page (Human, Editorial & High-Conversion)
+### Fase 2: Redesign Total Landing Page (Human, Editorial & High-Conversion) (SELESAI ✓)
 > **Tujuan**: Menghapus seluruh kesan "AI template murahan" dan menyajikan landing page kelas dunia yang elegan, hangat, dan relevan bagi mahasiswa Indonesia.
 
-- [ ] **Substep 2.1**: Redesign Hero Section di `src/app/page.tsx`:
+- [x] **Substep 2.1**: Redesign Hero Section di `src/app/page.tsx`:
   - Hapus bola neon hijau berpendar, grain berlebihan, dan badge fiktif `"v2.4 LIVE"`.
   - Gunakan palet hangat (*warm off-white* `#faf9f6` dan teks *deep forest pine* `#122b1e`).
   - Tulis headline editorial tajam:
     > *"Kuliah teratur. Ambisi organisasi tetap melesat."*
   - Subtitle yang jujur dan menyentuh realitas mahasiswa Indonesia (jadwal kelas tidak lagi hilang di grup WA, deadline tugas terpantau rapi).
-- [ ] **Substep 2.2**: Redesign Sticky Navbar (`src/components/landing/landing-navbar.tsx`):
+- [x] **Substep 2.2**: Redesign Sticky Navbar (`src/components/landing/landing-navbar.tsx`):
   - Tampilan floating pill dengan efek kaca halus (*frosted glass*), logo ngampUS tajam, link navigasi natural, dan CTA *"Masuk"* & *"Daftar Gratis"*.
-- [ ] **Substep 2.3**: Upgrade `src/components/landing/interactive-preview.tsx`:
-  - Hapus mockup browser bernuansa sci-fi gelap.
+- [x] **Substep 2.3**: Upgrade `src/components/landing/interactive-preview.tsx`:
+  - Hapus mockup browser bernuansa sci-fi gelap dan traffic lights macOS.
   - Buat visualisasi workspace nyata: kartu jadwal hari ini yang interaktif, radar tugas dengan deadline jelas, dan pratinjau resume CV ATS.
-- [ ] **Substep 2.4**: Redesign Bento Grid Fitur:
+- [x] **Substep 2.4**: Redesign Bento Grid Fitur:
   - Bento Card 1: *Jadwal Cerdas & Sinkronisasi Kalender (.ICS)*.
   - Bento Card 2: *Radar Deadline & Pengingat Tugas*.
   - Bento Card 3: *Arsip Modul & AI Study Companion (Tanya Materi & Kuis)*.
   - Bento Card 4: *Manajemen Struktur Organisasi & Proker*.
   - Bento Card 5: *Portofolio Otomatis Siap Ekspor Jadi Resume Magang*.
-- [ ] **Substep 2.5**: Redesign Workflow & FAQ:
+- [x] **Substep 2.5**: Redesign Workflow & FAQ:
   - Alur 4 langkah mahasiswa menyongsong semester baru dengan tenang.
   - FAQ accordion yang bersih dan transparan (gratis, keamanan data mahasiswa, isolasi RLS).
-- [ ] **Substep 2.6**: Sempurnakan Footer: Brand bersih, navigasi rapi, dan credit humanis.
+- [x] **Substep 2.6**: Sempurnakan Footer: Brand bersih, navigasi rapi, dan credit humanis.
 
 ---
 

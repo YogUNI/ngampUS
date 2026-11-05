@@ -12,7 +12,9 @@ import {
   Layers, 
   GraduationCap, 
   FileText,
-  Briefcase
+  Briefcase,
+  Check,
+  Circle
 } from "lucide-react";
 
 type TabKey = "jadwal" | "tugas" | "organisasi" | "portofolio";
@@ -26,42 +28,39 @@ interface TabItem {
 
 const TABS: TabItem[] = [
   { id: "jadwal", label: "Jadwal Kuliah", badge: "Smart Matkul", icon: Calendar },
-  { id: "tugas", label: "Tugas & Deadline", badge: "Radar Aktif", icon: CheckCircle2 },
-  { id: "organisasi", label: "Organisasi & Proker", badge: "Struktur & Tim", icon: Users },
-  { id: "portofolio", label: "Rekap & CV", badge: "Auto-Curated", icon: Award },
+  { id: "tugas", label: "Radar Tugas", badge: "Deadline", icon: CheckCircle2 },
+  { id: "organisasi", label: "Organisasi", badge: "Proker", icon: Users },
+  { id: "portofolio", label: "CV Portofolio", badge: "Auto-Curated", icon: Award },
 ];
 
 export function InteractivePreview() {
   const [activeTab, setActiveTab] = useState<TabKey>("jadwal");
+  const [taskCompleted, setTaskCompleted] = useState<boolean>(false);
 
   return (
-    <div className="relative w-full min-w-0 overflow-hidden">
-
-      {/* Main Preview Container */}
-      <div className="relative rounded-[2rem] border border-white/20 bg-[#0c281c]/90 backdrop-blur-xl p-3 sm:p-4 text-[#f6f8f1] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] ring-1 ring-white/10">
+    <div className="relative w-full min-w-0">
+      {/* Main Preview Container — Refined Editorial Frame */}
+      <div className="relative rounded-3xl border border-[#dce5dd] bg-white p-3.5 sm:p-5 text-[#10261b] shadow-xl shadow-[#10261b]/[0.05] ring-1 ring-black/[0.02]">
         
-        {/* Window Top Bar / Header */}
-        <div className="flex items-center justify-between border-b border-white/10 px-3 pb-3 pt-1">
+        {/* Frame Top Bar */}
+        <div className="flex items-center justify-between border-b border-[#edf2ee] px-2 pb-3">
           <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#e57255]/80 inline-block ring-1 ring-white/20" />
-            <span className="h-3 w-3 rounded-full bg-[#d1ae2c]/80 inline-block ring-1 ring-white/20" />
-            <span className="h-3 w-3 rounded-full bg-[#c8ef70]/80 inline-block ring-1 ring-white/20" />
-            <span className="ml-2 text-[11px] font-mono font-medium text-white/50 hidden sm:inline">
-              ngampus.app/workspace
+            <span className="h-2.5 w-2.5 rounded-full bg-[#10261b]/20 inline-block" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#10261b]/15 inline-block" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#10261b]/10 inline-block" />
+            <span className="ml-2 text-[11px] font-mono font-medium text-[#708075] hidden sm:inline">
+              ngampus.site/workspace
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-[#c8ef70]">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c8ef70] opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#c8ef70]" />
-            </span>
-            <span>Live Workspace Preview</span>
+          <div className="flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-3 py-1 text-[10.5px] font-bold text-[#0f6849]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
+            <span>Interactive Demo</span>
           </div>
         </div>
 
         {/* Tab Navigation Pill Bar */}
-        <div className="mt-3 grid grid-cols-4 gap-1 p-1 bg-black/30 rounded-xl border border-white/5">
+        <div className="mt-3 grid grid-cols-4 gap-1.5 p-1 bg-[#f4f7f4] rounded-2xl border border-[#e2eae3]">
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -69,67 +68,67 @@ export function InteractivePreview() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`group flex items-center justify-center gap-1 rounded-lg px-1 py-2 text-[11px] font-bold transition-all duration-200 overflow-hidden ${
+                className={`group flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-bold transition-all duration-150 overflow-hidden cursor-pointer ${
                   isActive 
-                    ? "bg-[#c8ef70] text-[#103626] shadow-md shadow-black/20" 
-                    : "text-[#c8d8ce] hover:bg-white/10 hover:text-white"
+                    ? "bg-[#0f6849] text-white shadow-xs" 
+                    : "text-[#55675b] hover:bg-white/70 hover:text-[#10261b]"
                 }`}
               >
-                <Icon size={13} className={`shrink-0 ${isActive ? "text-[#103626]" : "text-[#c8ef70]"}`} />
-                <span className="truncate text-[10px]">{tab.label}</span>
+                <Icon size={13} className={`shrink-0 ${isActive ? "text-white" : "text-[#708075]"}`} />
+                <span className="truncate text-[10.5px]">{tab.label}</span>
               </button>
             );
           })}
         </div>
 
         {/* Tab Content Display */}
-        <div className="mt-3 rounded-2xl bg-[#f6f8f1] p-4 text-[#10261b] shadow-inner min-h-[340px] flex flex-col justify-between transition-all duration-300">
+        <div className="mt-3.5 rounded-2xl bg-[#fafbfa] border border-[#edf2ee] p-4 text-[#10261b] min-h-[340px] flex flex-col justify-between transition-all duration-200">
           
           {/* TAB 1: JADWAL KULIAH */}
           {activeTab === "jadwal" && (
-            <div className="animate-in fade-in zoom-in-95 duration-200 flex flex-col justify-between h-full space-y-3">
+            <div className="animate-in fade-in duration-200 flex flex-col justify-between h-full space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-lg bg-[#0f6849]/10 p-1.5 text-[#0f6849]">
+                    <span className="rounded-xl bg-[#dff3e5] p-1.5 text-[#0f6849]">
                       <Calendar size={16} />
                     </span>
                     <div>
-                      <h4 className="font-display text-sm font-black tracking-tight text-[#10261b]">
-                        Jadwal Kuliah Hari Ini
+                      <h4 className="font-display text-sm font-bold tracking-tight text-[#10261b]">
+                        Jadwal Hari Senin
                       </h4>
-                      <p className="text-[11px] text-[#65746a] font-medium">Senin • 2 SKS Tersisa Hari Ini</p>
+                      <p className="text-[11px] text-[#708075]">2 Mata Kuliah • 5 SKS Aktif</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-[#0f6849] px-2.5 py-0.5 text-[10px] font-extrabold text-white">
-                    Semester 4
+                  <span className="rounded-full bg-[#10261b] px-2.5 py-0.5 text-[10px] font-bold text-white">
+                    Semester 4 (Genap)
                   </span>
                 </div>
 
                 {/* Schedule Items */}
-                <div className="mt-3 space-y-2.5">
-                  {/* Item 1 - Active now */}
-                  <div className="rounded-xl border border-[#c8ef70] bg-[#eef7d5]/50 p-3 shadow-sm transition hover:border-[#a0c840]">
-                    <div className="flex items-start justify-between">
+                <div className="mt-3.5 space-y-2.5">
+                  {/* Item 1 - Ongoing */}
+                  <div className="rounded-2xl border border-[#c3ddcb] bg-white p-3.5 shadow-xs transition hover:border-[#0f6849]">
+                    <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800">
+                          <span className="h-2 w-2 rounded-full bg-[#0f6849] animate-pulse" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#0f6849]">
                             Sedang Berlangsung (08:00 - 09:40)
                           </span>
                         </div>
-                        <h5 className="font-display font-black text-sm text-[#10261b] mt-0.5">
+                        <h5 className="font-display font-bold text-sm text-[#10261b] mt-1">
                           Algoritma & Struktur Data
                         </h5>
-                        <p className="text-[11px] text-[#526357]">R. Lab Komputer 3 • Dr. Ir. Hendra Gunawan</p>
+                        <p className="text-[11px] text-[#708075]">Lab Komputer 3 • Dr. Ir. Hendra Gunawan</p>
                       </div>
-                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5">
-                        <span className="inline-flex items-center gap-1 rounded-lg bg-[#103626] px-2.5 py-1 text-[11px] font-bold text-[#c8ef70] shadow-sm">
+                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
+                        <span className="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] px-2.5 py-1 text-[11px] font-bold text-white shadow-xs">
                           <Video size={12} />
                           <span>Meet</span>
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-lg bg-[#dff3e5] px-2 py-1 text-[10.5px] font-bold text-[#0f6849]">
-                          <Sparkles size={11} />
+                        <span className="inline-flex items-center gap-1 rounded-xl bg-[#f4f7f4] border border-[#dce5dd] px-2 py-1 text-[10.5px] font-semibold text-[#33463a]">
+                          <Sparkles size={11} className="text-[#0f6849]" />
                           <span>Tanya AI</span>
                         </span>
                       </div>
@@ -137,18 +136,18 @@ export function InteractivePreview() {
                   </div>
 
                   {/* Item 2 - Up next */}
-                  <div className="rounded-xl border border-[#dce6dd] bg-white p-3 shadow-xs">
+                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
                     <div className="flex items-start justify-between">
                       <div>
-                        <span className="text-[10px] font-bold text-[#65746a]">
+                        <span className="text-[10px] font-semibold text-[#708075]">
                           10:00 - 11:40 • 3 SKS
                         </span>
                         <h5 className="font-display font-bold text-sm text-[#10261b] mt-0.5">
                           Sistem Basis Data
                         </h5>
-                        <p className="text-[11px] text-[#65746a]">Gedung B Lt. 4 • Ruang 402</p>
+                        <p className="text-[11px] text-[#708075]">Gedung B Lt. 4 • Ruang 402</p>
                       </div>
-                      <span className="rounded-md bg-[#eff3ee] px-2 py-1 text-[10px] font-bold text-[#45544a]">
+                      <span className="rounded-lg bg-[#f4f7f4] border border-[#dce5dd] px-2 py-1 text-[10px] font-bold text-[#55675b]">
                         Tatap Muka
                       </span>
                     </div>
@@ -157,86 +156,95 @@ export function InteractivePreview() {
               </div>
 
               {/* Bottom Quick Context */}
-              <div className="rounded-xl border border-dashed border-[#b8cbbd] bg-[#eff4ef]/60 p-2.5 flex items-center justify-between text-xs">
-                <span className="text-[#3b4b41] font-medium flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-[#0f6849]" /> Terhubung Modul P1-P16 & Tanya AI Assistant
+              <div className="rounded-xl border border-dashed border-[#c3ddcb] bg-[#dff3e5]/40 p-2.5 flex items-center justify-between text-xs">
+                <span className="text-[#10261b] font-medium flex items-center gap-1.5 text-[11px]">
+                  <Sparkles size={13} className="text-[#0f6849]" /> Terhubung Modul P1–P16 & Ringkasan AI
                 </span>
-                <span className="font-bold text-[#0f6849]">Export .ICS</span>
+                <span className="font-bold text-[#0f6849] text-[11px]">Sync .ICS</span>
               </div>
             </div>
           )}
 
           {/* TAB 2: TUGAS & DEADLINE */}
           {activeTab === "tugas" && (
-            <div className="animate-in fade-in zoom-in-95 duration-200 flex flex-col justify-between h-full space-y-3">
+            <div className="animate-in fade-in duration-200 flex flex-col justify-between h-full space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-lg bg-[#e57255]/15 p-1.5 text-[#e57255]">
+                    <span className="rounded-xl bg-amber-100 p-1.5 text-amber-800">
                       <CheckCircle2 size={16} />
                     </span>
                     <div>
-                      <h4 className="font-display text-sm font-black tracking-tight text-[#10261b]">
-                        Radar Deadline & Tugas
+                      <h4 className="font-display text-sm font-bold tracking-tight text-[#10261b]">
+                        Radar Deadline Tugas
                       </h4>
-                      <p className="text-[11px] text-[#65746a] font-medium">3 Tugas Perlu Perhatian Mendesak</p>
+                      <p className="text-[11px] text-[#708075]">Urutan otomatis dari yang paling mendesak</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-[#fdebe7] border border-[#f5b8a9] px-2.5 py-0.5 text-[10px] font-extrabold text-[#c73b18]">
+                  <span className="rounded-full bg-rose-50 border border-rose-200 px-2.5 py-0.5 text-[10px] font-bold text-rose-700">
                     H-1 Pengumpulan
                   </span>
                 </div>
 
                 {/* Task Items */}
-                <div className="mt-3 space-y-2.5">
-                  {/* Task 1 - Urgent */}
-                  <div className="rounded-xl border border-[#f5b8a9] bg-white p-3 shadow-xs">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
+                <div className="mt-3.5 space-y-2.5">
+                  {/* Task 1 - Interactive clickable demo */}
+                  <div 
+                    onClick={() => setTaskCompleted(!taskCompleted)}
+                    className={`rounded-2xl border p-3.5 transition-all cursor-pointer select-none ${
+                      taskCompleted 
+                        ? "border-[#c3ddcb] bg-[#dff3e5]/30 opacity-75"
+                        : "border-rose-200 bg-white hover:border-rose-300 shadow-xs"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <button 
+                        type="button"
+                        aria-label="Toggle task"
+                        className="mt-0.5 text-[#0f6849] shrink-0"
+                      >
+                        {taskCompleted ? (
+                          <CheckCircle2 size={18} className="fill-[#0f6849] text-white" />
+                        ) : (
+                          <Circle size={18} className="text-[#708075]" />
+                        )}
+                      </button>
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="rounded bg-[#c73b18] px-1.5 py-0.5 text-[9px] font-black text-white">
-                            URGENT
+                          <span className="rounded bg-rose-100 px-1.5 py-0.2 text-[9px] font-bold text-rose-800">
+                            DEADLINE BESOK
                           </span>
-                          <span className="text-[11px] font-bold text-[#c73b18] flex items-center gap-1">
-                            <Clock size={11} /> Besok 23:59 WIB
+                          <span className="text-[10.5px] text-[#708075] flex items-center gap-1">
+                            <Clock size={11} /> 23:59 WIB
                           </span>
                         </div>
-                        <h5 className="font-display font-black text-sm text-[#10261b] mt-1">
+                        <h5 className={`font-display font-bold text-sm mt-0.5 ${taskCompleted ? "line-through text-[#708075]" : "text-[#10261b]"}`}>
                           Laporan Praktikum Modul 4
                         </h5>
-                        <p className="text-[11px] text-[#65746a]">Matkul: Algoritma & Pemrograman</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[11px] font-black text-[#10261b]">85%</span>
-                        <div className="w-14 h-1.5 bg-[#e5e9e5] rounded-full mt-1 overflow-hidden">
-                          <div className="bg-[#e57255] h-full rounded-full" style={{ width: "85%" }} />
-                        </div>
+                        <p className="text-[11px] text-[#708075]">Algoritma & Struktur Data • Klik untuk selesaikan</p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Task 2 - In progress */}
-                  <div className="rounded-xl border border-[#dce6dd] bg-white p-3 shadow-xs">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
+                  {/* Task 2 */}
+                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
+                    <div className="flex items-start gap-3">
+                      <span className="mt-0.5 text-[#708075] shrink-0">
+                        <Circle size={18} />
+                      </span>
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="rounded bg-[#0f6849]/15 px-1.5 py-0.5 text-[9px] font-black text-[#0f6849]">
+                          <span className="rounded bg-[#dff3e5] px-1.5 py-0.2 text-[9px] font-bold text-[#0f6849]">
                             KULIAH
                           </span>
-                          <span className="text-[11px] font-semibold text-[#65746a]">
+                          <span className="text-[10.5px] text-[#708075]">
                             Jumat, 18 Okt • 4 hari lagi
                           </span>
                         </div>
-                        <h5 className="font-display font-bold text-sm text-[#10261b] mt-1">
+                        <h5 className="font-display font-bold text-sm text-[#10261b] mt-0.5">
                           Makalah Kelompok Etika Profesi
                         </h5>
-                        <p className="text-[11px] text-[#65746a]">Bab 1-3 Selesai Review</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[11px] font-black text-[#10261b]">50%</span>
-                        <div className="w-14 h-1.5 bg-[#e5e9e5] rounded-full mt-1 overflow-hidden">
-                          <div className="bg-[#0f6849] h-full rounded-full" style={{ width: "50%" }} />
-                        </div>
+                        <p className="text-[11px] text-[#708075]">Bab 1–3 selesai review kelompok</p>
                       </div>
                     </div>
                   </div>
@@ -244,67 +252,69 @@ export function InteractivePreview() {
               </div>
 
               {/* Bottom Quick Metric */}
-              <div className="rounded-xl bg-[#103626] p-2.5 text-white flex items-center justify-between text-xs">
-                <span className="text-[#c8d8ce] text-[11px]">
-                  Tingkat Penyelesaian Semester Ini:
+              <div className="rounded-xl bg-[#10261b] p-2.5 text-white flex items-center justify-between text-xs">
+                <span className="text-[#cad7ce] text-[11px]">
+                  Status Penyelesaian Tugas Semester:
                 </span>
-                <span className="font-black text-[#c8ef70]">92% On-Time</span>
+                <span className="font-bold text-[#c8ef70]">
+                  {taskCompleted ? "94% Selesai" : "88% On-Time"}
+                </span>
               </div>
             </div>
           )}
 
           {/* TAB 3: ORGANISASI & PROKER */}
           {activeTab === "organisasi" && (
-            <div className="animate-in fade-in zoom-in-95 duration-200 flex flex-col justify-between h-full space-y-3">
+            <div className="animate-in fade-in duration-200 flex flex-col justify-between h-full space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-lg bg-[#3d84c6]/15 p-1.5 text-[#3d84c6]">
+                    <span className="rounded-xl bg-[#e5f1fa] p-1.5 text-[#2978ba]">
                       <Users size={16} />
                     </span>
                     <div>
-                      <h4 className="font-display text-sm font-black tracking-tight text-[#10261b]">
+                      <h4 className="font-display text-sm font-bold tracking-tight text-[#10261b]">
                         BEM Fakultas Ilmu Komputer
                       </h4>
-                      <p className="text-[11px] text-[#65746a] font-medium">Kepala Divisi Kominfo • Periode 2025/2026</p>
+                      <p className="text-[11px] text-[#708075]">Kepala Divisi Kominfo • 2024/2025</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-[#e8f1fa] border border-[#bcd6f0] px-2.5 py-0.5 text-[10px] font-extrabold text-[#236098]">
+                  <span className="rounded-full bg-[#f4f7f4] border border-[#dce5dd] px-2.5 py-0.5 text-[10px] font-bold text-[#33463a]">
                     1 Organisasi Aktif
                   </span>
                 </div>
 
                 {/* Proker List */}
-                <div className="mt-3 space-y-2.5">
-                  <div className="rounded-xl border border-[#dce6dd] bg-white p-3 shadow-xs">
+                <div className="mt-3.5 space-y-2.5">
+                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="rounded bg-[#eff5fb] px-1.5 py-0.5 text-[9px] font-bold text-[#236098]">
+                        <span className="rounded bg-[#e5f1fa] px-1.5 py-0.2 text-[9px] font-bold text-[#236098]">
                           PROKER UTAMA
                         </span>
-                        <h5 className="font-display font-black text-sm text-[#10261b] mt-1">
+                        <h5 className="font-display font-bold text-sm text-[#10261b] mt-1">
                           Webinar Nasional Cyber Security
                         </h5>
-                        <p className="text-[11px] text-[#65746a]">Ketua Pelaksana • Target 500 Peserta</p>
+                        <p className="text-[11px] text-[#708075]">Ketua Pelaksana • Target 500 Peserta</p>
                       </div>
-                      <span className="rounded-lg bg-[#dff3e5] px-2.5 py-1 text-[10px] font-black text-[#0f6849]">
-                        Fase Eksekusi
+                      <span className="rounded-lg bg-[#dff3e5] px-2.5 py-1 text-[10px] font-bold text-[#0f6849]">
+                        Eksekusi
                       </span>
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-[#dce6dd] bg-white p-3 shadow-xs">
+                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="rounded bg-[#f4f7f3] px-1.5 py-0.5 text-[9px] font-bold text-[#55675b]">
+                        <span className="rounded bg-[#f4f7f4] px-1.5 py-0.2 text-[9px] font-bold text-[#55675b]">
                           PROGRAM RUTIN
                         </span>
                         <h5 className="font-display font-bold text-sm text-[#10261b] mt-1">
                           Podcast Bulanan Mahasiswa
                         </h5>
-                        <p className="text-[11px] text-[#65746a]">Episode #04 Recording selesai</p>
+                        <p className="text-[11px] text-[#708075]">Episode #04 Recording selesai</p>
                       </div>
-                      <span className="rounded-lg bg-[#fff0c9] px-2.5 py-1 text-[10px] font-black text-[#855e00]">
+                      <span className="rounded-lg bg-amber-50 border border-amber-200 px-2.5 py-1 text-[10px] font-bold text-amber-800">
                         Editing
                       </span>
                     </div>
@@ -313,75 +323,75 @@ export function InteractivePreview() {
               </div>
 
               {/* Proker Footer */}
-              <div className="rounded-xl border border-dashed border-[#b8cbbd] bg-[#eff4ef]/60 p-2.5 flex items-center justify-between text-xs">
-                <span className="text-[#3b4b41] font-medium flex items-center gap-1.5">
-                  <Layers size={14} className="text-[#3d84c6]" /> Terhubung langsung dengan timeline kuliah
+              <div className="rounded-xl border border-dashed border-[#c3ddcb] bg-[#dff3e5]/40 p-2.5 flex items-center justify-between text-xs">
+                <span className="text-[#10261b] font-medium flex items-center gap-1.5 text-[11px]">
+                  <Layers size={13} className="text-[#0f6849]" /> Sinkron langsung dengan jadwal kelas
                 </span>
-                <span className="font-bold text-[#236098]">0 Konflik Jadwal</span>
+                <span className="font-bold text-[#0f6849] text-[11px]">0 Bentrok</span>
               </div>
             </div>
           )}
 
           {/* TAB 4: REKAP & PORTOFOLIO */}
           {activeTab === "portofolio" && (
-            <div className="animate-in fade-in zoom-in-95 duration-200 flex flex-col justify-between h-full space-y-3">
+            <div className="animate-in fade-in duration-200 flex flex-col justify-between h-full space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-lg bg-[#7b6cee]/15 p-1.5 text-[#7b6cee]">
+                    <span className="rounded-xl bg-[#f1effd] p-1.5 text-[#644fe2]">
                       <Award size={16} />
                     </span>
                     <div>
-                      <h4 className="font-display text-sm font-black tracking-tight text-[#10261b]">
-                        Rekap Portofolio & CV Otomatis
+                      <h4 className="font-display text-sm font-bold tracking-tight text-[#10261b]">
+                        Rekap Portofolio & CV ATS
                       </h4>
-                      <p className="text-[11px] text-[#65746a] font-medium">Berdasarkan data proker & proyek nyata</p>
+                      <p className="text-[11px] text-[#708075]">Otomatis terkurasi dari pencapaian nyata</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-[#f1effd] border border-[#cec7f8] px-2.5 py-0.5 text-[10px] font-extrabold text-[#5946c7]">
-                    Ready to Export
+                  <span className="rounded-full bg-[#f1effd] border border-[#d6d0fa] px-2.5 py-0.5 text-[10px] font-bold text-[#5946c7]">
+                    Siap Ekspor
                   </span>
                 </div>
 
                 {/* Portfolio Snippet */}
-                <div className="mt-3 space-y-2.5">
-                  <div className="rounded-xl border border-[#dce6dd] bg-white p-3 shadow-xs">
+                <div className="mt-3.5 space-y-2.5">
+                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
                     <div className="flex items-start gap-2.5">
-                      <div className="rounded-lg bg-[#103626] p-2 text-[#c8ef70] shrink-0">
-                        <Briefcase size={16} />
+                      <div className="rounded-xl bg-[#10261b] p-2 text-white shrink-0">
+                        <Briefcase size={15} />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h5 className="font-display font-black text-sm text-[#10261b]">
+                          <h5 className="font-display font-bold text-sm text-[#10261b]">
                             Lead Organizer — Fasilkom Fest 2025
                           </h5>
-                          <span className="rounded bg-[#e8eee7] px-1.5 py-0.2 text-[9px] font-bold text-[#55675b]">
-                            Kepemimpinan
+                          <span className="rounded bg-[#f4f7f4] px-1.5 py-0.2 text-[9px] font-bold text-[#55675b]">
+                            Organisasi
                           </span>
                         </div>
-                        <p className="text-[11px] text-[#55675b] mt-0.5 leading-snug">
-                          Memimpin tim lintas 4 divisi dengan anggaran Rp 45jt dan sukses mendatangkan 1.200 peserta.
+                        <p className="text-[11px] text-[#708075] mt-0.5 leading-snug">
+                          Memimpin tim lintas 4 divisi dan sukses mendatangkan 1.200 peserta seminar.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-[#dce6dd] bg-white p-3 shadow-xs">
+                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
                     <div className="flex items-start gap-2.5">
-                      <div className="rounded-lg bg-[#0f6849] p-2 text-white shrink-0">
-                        <GraduationCap size={16} />
+                      <div className="rounded-xl bg-[#0f6849] p-2 text-white shrink-0">
+                        <GraduationCap size={15} />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h5 className="font-display font-black text-sm text-[#10261b]">
-                            Sistem Pengelolaan Sampah Kampus IoT
+                          <h5 className="font-display font-bold text-sm text-[#10261b]">
+                            Web App Rekap Kuliah Berbasis AI
                           </h5>
-                          <span className="rounded bg-[#e8eee7] px-1.5 py-0.2 text-[9px] font-bold text-[#55675b]">
-                            Akademik
+                          <span className="rounded bg-[#f4f7f4] px-1.5 py-0.2 text-[9px] font-bold text-[#55675b]">
+                            Proyek Akademik
                           </span>
                         </div>
-                        <p className="text-[11px] text-[#55675b] mt-0.5 leading-snug">
-                          Proyek Akhir Semester 4 • Nilai A • Terpilih di Pameran Karya Mahasiswa Univ.
+                        <p className="text-[11px] text-[#708075] mt-0.5 leading-snug">
+                          Tugas Akhir Semester 4 • Nilai A (4.00) • Terpilih di Pameran Karya Mahasiswa.
                         </p>
                       </div>
                     </div>
@@ -390,11 +400,11 @@ export function InteractivePreview() {
               </div>
 
               {/* Bottom Quick Action */}
-              <div className="rounded-xl bg-[#7b6cee]/10 border border-[#7b6cee]/30 p-2.5 flex items-center justify-between text-xs">
-                <span className="text-[#3c327e] font-semibold flex items-center gap-1.5">
-                  <FileText size={14} className="text-[#7b6cee]" /> Siap diekspor ke format ATS Resume & LinkedIn
+              <div className="rounded-xl bg-[#f1effd] border border-[#d6d0fa] p-2.5 flex items-center justify-between text-xs">
+                <span className="text-[#3c327e] font-medium flex items-center gap-1.5 text-[11px]">
+                  <FileText size={13} className="text-[#644fe2]" /> Format standar ATS-friendly untuk magang
                 </span>
-                <span className="font-black text-[#5946c7]">1-Click PDF</span>
+                <span className="font-bold text-[#5946c7] text-[11px]">1-Click PDF</span>
               </div>
             </div>
           )}
@@ -402,12 +412,12 @@ export function InteractivePreview() {
         </div>
 
         {/* Small Bottom Status */}
-        <div className="mt-3 flex items-center justify-between px-2 text-[11px] text-[#869b8d]">
+        <div className="mt-3 flex items-center justify-between px-2 text-[11px] text-[#708075]">
           <span className="flex items-center gap-1.5">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#c8ef70]" />
-            Klik tab di atas untuk mencoba preview
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#0f6849]" />
+            Klik tab untuk menguji fitur langsung
           </span>
-          <span className="font-mono text-[10px] text-white/40">Encrypted • Zero Tracking</span>
+          <span className="font-mono text-[10px] text-[#8ca393]">Privasi RLS • Tanpa Iklan</span>
         </div>
 
       </div>

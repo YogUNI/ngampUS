@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { ChevronDown, Sparkles } from "lucide-react";
@@ -45,25 +45,25 @@ export function FaqAccordion() {
         return (
           <div
             key={index}
-            className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
+            className={`overflow-hidden rounded-2xl border transition-all duration-200 ${
               isOpen
-                ? "border-[#103626]/30 bg-white shadow-md shadow-[#103626]/5"
-                : "border-[#d8e3da] bg-white/70 hover:border-[#b8cfbe] hover:bg-white"
+                ? "border-[#c3ddcb] bg-white shadow-xs"
+                : "border-[#dce5dd] bg-white/80 hover:border-[#b4d2bd] hover:bg-white"
             }`}
           >
             <button
               onClick={() => toggleFaq(index)}
-              className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors"
+              className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors cursor-pointer"
               aria-expanded={isOpen}
             >
-              <span className="font-display text-base sm:text-lg font-black tracking-tight text-[#103626]">
+              <span className="font-display text-base sm:text-lg font-bold tracking-tight text-[#10261b]">
                 {item.question}
               </span>
               <span
-                className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-transform duration-300 ${
+                className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-transform duration-200 ${
                   isOpen
-                    ? "bg-[#103626] text-[#c8ef70] rotate-180"
-                    : "bg-[#eff4ef] text-[#65746a]"
+                    ? "bg-[#0f6849] text-white rotate-180 shadow-xs"
+                    : "bg-[#f4f7f4] text-[#708075]"
                 }`}
               >
                 <ChevronDown size={18} />
@@ -71,12 +71,12 @@ export function FaqAccordion() {
             </button>
 
             <div
-              className={`grid transition-all duration-300 ease-in-out ${
+              className={`grid transition-all duration-200 ease-in-out ${
                 isOpen ? "grid-rows-[1fr] opacity-100 pb-5 px-5" : "grid-rows-[0fr] opacity-0 px-5"
               }`}
             >
               <div className="overflow-hidden">
-                <p className="text-sm leading-relaxed text-[#516155] border-t border-[#edf2ee] pt-3.5">
+                <p className="text-sm leading-relaxed text-[#55675b] border-t border-[#edf2ee] pt-3.5">
                   {item.answer}
                 </p>
               </div>
@@ -86,18 +86,18 @@ export function FaqAccordion() {
       })}
 
       {/* Still have questions banner */}
-      <div className="mt-8 rounded-2xl border border-dashed border-[#b8cbbd] bg-[#f0f6f1]/80 p-4 text-center">
-        <p className="text-xs font-semibold text-[#526357] flex items-center justify-center gap-1.5">
+      <div className="mt-8 rounded-2xl border border-dashed border-[#c3ddcb] bg-[#dff3e5]/30 p-4 text-center">
+        <p className="text-xs font-semibold text-[#10261b] flex items-center justify-center gap-1.5">
           <Sparkles size={14} className="text-[#0f6849]" />
           Punya pertanyaan lain seputar sistem nGampUS?
         </p>
-        <p className="mt-1 text-xs text-[#6a7c70]">
+        <p className="mt-1 text-xs text-[#708075]">
           DM langsung kreator di Instagram{" "}
           <a
             href="https://www.instagram.com/gusrchmd_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold text-[#103626] underline hover:text-[#0f6849]"
+            className="font-bold text-[#0f6849] underline hover:text-[#0b4d36]"
           >
             @gusrchmd_
           </a>
