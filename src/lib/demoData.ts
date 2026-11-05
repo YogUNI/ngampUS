@@ -50,10 +50,12 @@ export const DEMO_DATA = {
   student: {
     name: "Yoga Gusti Rachmadi",
     campus: "Universitas Mercu Buana",
+    university: "Universitas Mercu Buana",
     major: "Teknik Informatika",
     semester: 4,
     statusText: "Semester 4 Aktif",
     ipk: "3.88",
+    gpa: "3.88",
   },
   
   // Total konsisten: 2 Mata Kuliah • 6 SKS
@@ -110,6 +112,7 @@ export const DEMO_DATA = {
   proker: {
     id: "proker-1",
     title: "Webinar Nasional Cyber Security 2026",
+    name: "Webinar Nasional Cyber Security 2026",
     org: "BEM Fakultas Ilmu Komputer",
     role: "Project Officer",
     stage: "Fase Eksekusi",
@@ -117,6 +120,23 @@ export const DEMO_DATA = {
     attendees: "450+ Peserta",
     status: "0 Bentrok Kuliah",
   },
+
+  atsScore: 96,
+
+  cvBullets: [
+    {
+      title: "Tech Seminar & Expo 2025",
+      role: "Project Officer",
+      period: "2024 - 2025",
+      bullet: "Memimpin 20 panitia lintas divisi, mengelola anggaran Rp15 juta, dan berhasil memfasilitasi 450+ peserta seminar nasional.",
+    },
+    {
+      title: "Aplikasi Rekap Kuliah Berbasis AI",
+      role: "Lead Full-Stack Developer",
+      period: "Semester 4",
+      bullet: "Membangun web app terpadu dengan Next.js & Supabase, meraih nilai A (4.00), dan terpilih dalam pameran karya mahasiswa.",
+    },
+  ],
 
   resume: [
     {
