@@ -34,7 +34,7 @@ export default function Home() {
       </div>
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-[#e5ece5]">
+      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-[#e5ece5] bg-radial-[at_50%_0%] from-[#0f6849]/[0.035] via-transparent to-transparent">
         <div className="mx-auto w-full max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             
@@ -47,14 +47,14 @@ export default function Home() {
               </div>
 
               {/* Display Headline */}
-              <h1 className="font-display mt-6 text-4xl sm:text-5xl lg:text-[4.2rem] font-black leading-[1.05] tracking-tight text-[#10261b]">
+              <h1 className="font-display mt-6 text-4xl sm:text-5xl lg:text-[4.2rem] font-black leading-[1.05] tracking-tight text-[#10261b] text-balance">
                 Kuliah teratur.<br />
                 <span className="text-[#0f6849]">Ambisi organisasi</span><br />
                 tetap melesat.
               </h1>
 
               {/* Subtitle */}
-              <p className="mt-5 text-base sm:text-lg leading-relaxed text-[#55675b]">
+              <p className="mt-5 text-base sm:text-lg leading-relaxed text-[#55675b] text-pretty max-w-xl">
                 Lupakan catatan kuliah yang tercecer di riwayat WhatsApp dan kepanikan tugas yang tiba-tiba menumpuk. nGampUS menyatukan jadwal kelas, radar deadline tugas, materi kuliah, dan kepanitiaan organisasi ke dalam satu workspace hening tanpa distraksi.
               </p>
 

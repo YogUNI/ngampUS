@@ -204,30 +204,31 @@ flowchart TD
 
 ---
 
-### Fase 2: Redesign Total Landing Page (Human, Editorial & High-Conversion) (SELESAI ✓)
-> **Tujuan**: Menghapus seluruh kesan "AI template murahan" dan menyajikan landing page kelas dunia yang elegan, hangat, dan relevan bagi mahasiswa Indonesia.
+### Fase 2: Redesign Total Landing Page (Human, Editorial & High-Conversion) (SEDANG BERJALAN)
+> **Tujuan**: Menghapus seluruh kesan "AI template murahan" dan menyajikan landing page kelas dunia yang elegan, hangat, dan relevan bagi mahasiswa Indonesia. Dikerjakan bertahap per substep secara presisi.
 
-- [x] **Substep 2.1**: Redesign Hero Section di `src/app/page.tsx`:
+- [x] **Substep 2.1**: Redesign Hero Section di `src/app/page.tsx` (SELESAI ✓):
   - Hapus bola neon hijau berpendar, grain berlebihan, dan badge fiktif `"v2.4 LIVE"`.
   - Gunakan palet hangat (*warm off-white* `#faf9f6` dan teks *deep forest pine* `#122b1e`).
   - Tulis headline editorial tajam:
     > *"Kuliah teratur. Ambisi organisasi tetap melesat."*
   - Subtitle yang jujur dan menyentuh realitas mahasiswa Indonesia (jadwal kelas tidak lagi hilang di grup WA, deadline tugas terpantau rapi).
-- [x] **Substep 2.2**: Redesign Sticky Navbar (`src/components/landing/landing-navbar.tsx`):
+  - Micro-detail: CTA button ergonomic, trust badges yang elegan, typography scale responsive dengan `text-balance` & `text-pretty`.
+- [ ] **Substep 2.2**: Redesign Sticky Navbar (`src/components/landing/landing-navbar.tsx`):
   - Tampilan floating pill dengan efek kaca halus (*frosted glass*), logo ngampUS tajam, link navigasi natural, dan CTA *"Masuk"* & *"Daftar Gratis"*.
-- [x] **Substep 2.3**: Upgrade `src/components/landing/interactive-preview.tsx`:
+- [ ] **Substep 2.3**: Upgrade `src/components/landing/interactive-preview.tsx`:
   - Hapus mockup browser bernuansa sci-fi gelap dan traffic lights macOS.
   - Buat visualisasi workspace nyata: kartu jadwal hari ini yang interaktif, radar tugas dengan deadline jelas, dan pratinjau resume CV ATS.
-- [x] **Substep 2.4**: Redesign Bento Grid Fitur:
+- [ ] **Substep 2.4**: Redesign Bento Grid Fitur:
   - Bento Card 1: *Jadwal Cerdas & Sinkronisasi Kalender (.ICS)*.
   - Bento Card 2: *Radar Deadline & Pengingat Tugas*.
   - Bento Card 3: *Arsip Modul & AI Study Companion (Tanya Materi & Kuis)*.
   - Bento Card 4: *Manajemen Struktur Organisasi & Proker*.
   - Bento Card 5: *Portofolio Otomatis Siap Ekspor Jadi Resume Magang*.
-- [x] **Substep 2.5**: Redesign Workflow & FAQ:
+- [ ] **Substep 2.5**: Redesign Workflow & FAQ:
   - Alur 4 langkah mahasiswa menyongsong semester baru dengan tenang.
   - FAQ accordion yang bersih dan transparan (gratis, keamanan data mahasiswa, isolasi RLS).
-- [x] **Substep 2.6**: Sempurnakan Footer: Brand bersih, navigasi rapi, dan credit humanis.
+- [ ] **Substep 2.6**: Sempurnakan Footer: Brand bersih, navigasi rapi, dan credit humanis.
 
 ---
 
