@@ -13,6 +13,7 @@
     "@fullcalendar/interaction": "^6.1.21",
     "@fullcalendar/react": "^6.1.21",
     "@hookform/resolvers": "^5.9.1",
+    "@remotion/player": "^4.0.540",
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.112.4",
     "clsx": "^2.1.1",
@@ -22,6 +23,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.86.0",
+    "remotion": "^4.0.540",
     "tailwind-merge": "^3.6.0",
     "zod": "^3.25.76"
   },

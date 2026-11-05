@@ -14,7 +14,7 @@ import {
   ArrowUpRight
 } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-import { InteractivePreview } from "@/components/landing/interactive-preview";
+import { HeroShowcase } from "@/components/landing/hero-showcase";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
@@ -87,9 +87,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column: Live Interactive Demo */}
+            {/* Right Column: Live Interactive Demo (Remotion Motion / Manual Mode) */}
             <div className="w-full">
-              <InteractivePreview />
+              <HeroShowcase />
             </div>
 
           </div>
