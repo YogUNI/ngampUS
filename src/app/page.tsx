@@ -11,10 +11,12 @@ import {
   Shield,
   Heart,
   BookOpen,
-  ArrowUpRight
+  ArrowUpRight,
+  ArrowDown
 } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { HeroShowcase } from "@/components/landing/hero-showcase";
+import { HeroRemotionPlayer } from "@/components/landing/hero-remotion-player";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
@@ -23,73 +25,80 @@ import { StandaloneRedirectGuard } from "@/components/pwa/standalone-redirect-gu
 
 export default function Home() {
   return (
-    <main className="landing-page min-h-screen bg-[#fafaf7] text-[#10261b] selection:bg-[#dff3e5] selection:text-[#0f6849]">
+    <main className="landing-page min-h-screen overflow-x-hidden bg-[#fafaf7] text-[#10261b] selection:bg-[#C6F432]/30 selection:text-[#0a1f16]">
       <StandaloneRedirectGuard />
 
       {/* ── STICKY FLOATING NAVBAR ── */}
-      <div className="fixed top-3 sm:top-4 inset-x-0 z-50 pointer-events-none">
-        <div className="pointer-events-auto">
+      <div className="fixed top-3 sm:top-4 inset-x-3 sm:inset-x-6 lg:inset-x-8 z-50 pointer-events-none flex justify-center">
+        <div className="w-full max-w-7xl pointer-events-auto">
           <LandingNavbar />
         </div>
       </div>
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-[#e5ece5] bg-radial-[at_50%_0%] from-[#0f6849]/[0.035] via-transparent to-transparent">
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
+        {/* Subtle Dark Emerald Radial Ambience */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full bg-radial from-[#12332a]/70 via-[#0a1f16]/40 to-transparent blur-3xl opacity-70"
+        />
+
+        <div className="relative mx-auto w-full max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center w-full min-w-0">
             
             {/* Left Column: Sharp Editorial Copy */}
-            <div className="max-w-2xl">
-              {/* Semester Edition Pill */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#d6e3d8] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#0f6849] shadow-xs">
-                <span className="h-2 w-2 rounded-full bg-[#0f6849]" />
-                <span>Ruang Belajar & Organisasi Mahasiswa Indonesia</span>
+            <div className="max-w-2xl w-full min-w-0">
+              {/* Eyebrow Pill */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C6F432]/30 bg-[#12332a] px-3.5 py-1.5 text-xs font-mono font-bold text-[#C6F432] shadow-xs">
+                <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
+                <span>Ruang Belajar & Ambisi Mahasiswa Indonesia</span>
               </div>
 
               {/* Display Headline */}
-              <h1 className="font-display mt-6 text-4xl sm:text-5xl lg:text-[4.2rem] font-black leading-[1.05] tracking-tight text-[#10261b] text-balance">
-                Kuliah teratur.<br />
-                <span className="text-[#0f6849]">Ambisi organisasi</span><br />
-                tetap melesat.
+              {/* A/B Test Alternative 1: "Kuliah teratur. Ambisi organisasi tetap melesat." */}
+              {/* A/B Test Alternative 2: "Berhenti panik tiap malam Minggu karena deadline numpuk." */}
+              <h1 className="font-display mt-6 text-3xl sm:text-5xl lg:text-[4.2rem] font-black leading-[1.08] tracking-tight text-[#F4F1EA] text-balance">
+                Tugas numpuk.<br />
+                Jadwal bentrok.<br />
+                <span className="text-[#C6F432]">Grup WA 999+.</span>
               </h1>
 
-              {/* Subtitle */}
-              <p className="mt-5 text-base sm:text-lg leading-relaxed text-[#55675b] text-pretty max-w-xl">
-                Lupakan catatan kuliah yang tercecer di riwayat WhatsApp dan kepanikan tugas yang tiba-tiba menumpuk. nGampUS menyatukan jadwal kelas, radar deadline tugas, materi kuliah, dan kepanitiaan organisasi ke dalam satu workspace hening tanpa distraksi.
+              {/* Subcopy */}
+              <p className="mt-5 text-sm sm:text-lg leading-relaxed text-[#F4F1EA]/75 text-pretty max-w-xl font-normal">
+                ngampUS merapikan semuanya di satu tempat: jadwal kuliah, deadline, organisasi, sampai CV magang.
               </p>
 
               {/* CTAs */}
-              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#0f6849] px-7 py-4 text-base font-bold text-white shadow-md shadow-[#0f6849]/20 transition-all hover:-translate-y-0.5 hover:bg-[#0b4d36] active:scale-98"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-[#C6F432] px-6 py-3.5 sm:px-7 sm:py-4 text-sm sm:text-base font-bold text-[#0a1f16] shadow-md shadow-[#C6F432]/20 transition-all hover:brightness-110 active:scale-[0.98]"
                 >
-                  <span>Mulai Sekarang — Gratis</span>
+                  <span>Mulai Gratis</span>
                   <ArrowRight size={18} />
                 </Link>
-                <PwaInstallButton
-                  variant="hero"
-                  className="justify-center rounded-2xl border border-[#dbe5dc] bg-white py-4 px-5 text-sm font-bold text-[#10261b] hover:bg-[#f4f7f4] shadow-xs"
-                />
+                <a
+                  href="#features"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#12332a] px-6 py-4 text-sm font-bold text-[#F4F1EA] transition-all hover:bg-white/10 active:scale-[0.98]"
+                >
+                  <span>Lihat cara kerjanya</span>
+                  <ArrowDown size={16} className="text-[#C6F432]" />
+                </a>
               </div>
 
               {/* Trust & Proof Signals */}
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#edf2ee] pt-5 text-xs font-medium text-[#708075]">
-                <span className="flex items-center gap-1.5">
-                  <Check size={15} className="text-[#0f6849]" /> 100% Gratis Tanpa Langganan
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Shield size={15} className="text-[#0f6849]" /> Privasi Terisolasi Row-Level Security
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Sparkles size={15} className="text-[#0f6849]" /> Setup Cepat 2 Menit
-                </span>
+              <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 font-mono text-xs text-[#F4F1EA]/60">
+                <span>Gratis selamanya</span>
+                <span className="text-white/20">·</span>
+                <span>Setup 2 menit</span>
+                <span className="text-white/20">·</span>
+                <span>Tanpa iklan</span>
               </div>
             </div>
 
-            {/* Right Column: Live Interactive Demo (Remotion Motion / Manual Mode) */}
-            <div className="w-full">
-              <HeroShowcase />
+            {/* Right Column: Remotion Showcase Motion Player */}
+            <div className="w-full min-w-0">
+              <HeroRemotionPlayer />
             </div>
 
           </div>

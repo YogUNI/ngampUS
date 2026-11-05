@@ -2,7 +2,7 @@
 
 /* Global mobile viewport safety & PWA Native App feel */
 html, body {
-  overflow-x: clip;
+  overflow-x: hidden;
   max-width: 100%;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -20,44 +20,65 @@ html, body {
 }
 
 :root {
-  --background: #f5f7f2;
-  --foreground: #10261b;
-  --ink: #10261b;
-  --muted: #65746a;
-  --line: #dbe5dc;
+  --background: #fafaf7;
+  --foreground: #0b140f;
+  --ink: #0b140f;
+  --muted: #55675b;
+  --line: #dce5dd;
   --card-bg: #ffffff;
-  --card-subtle: #fafbfa;
+  --card-subtle: #f4f1ea;
   --brand: #0f6849;
-  --brand-dark: #0a432f;
+  --brand-dark: #0a1f16;
   --brand-soft: #dff3e5;
-  --cream: #f4f0e7;
-  --coral: #e57255;
-  --yellow: #d9ee72;
-  --font-body: "Aptos", "Segoe UI", Arial, sans-serif;
-  --font-display: "Aptos Display", "Segoe UI", Arial, sans-serif;
+  --bg-dark: #0a1f16;
+  --surface-dark: #12332a;
+  --paper: #F4F1EA;
+  --accent-lime: #C6F432;
+  --danger: #FF4D3D;
+  --cream: #f4f1ea;
+  --coral: #FF4D3D;
+  --yellow: #C6F432;
+  --font-body: var(--font-body), "Plus Jakarta Sans", sans-serif;
+  --font-display: var(--font-display), "Bricolage Grotesque", sans-serif;
+  --font-mono: var(--font-mono), "Geist Mono", monospace;
 }
 
 .dark, [data-theme="dark"] {
-  --background: #09140e;
-  --foreground: #edf4ef;
-  --ink: #f0f7f2;
+  --background: #0a1f16;
+  --foreground: #F4F1EA;
+  --ink: #F4F1EA;
   --muted: #8ca393;
   --line: #183124;
-  --card-bg: #0f2017;
-  --card-subtle: #13271d;
-  --brand: #22c55e;
-  --brand-dark: #16a34a;
-  --brand-soft: #123422;
-  --cream: #14281e;
-  --coral: #f87171;
-  --yellow: #c8ef70;
+  --card-bg: #12332a;
+  --card-subtle: #0d281f;
+  --brand: #C6F432;
+  --brand-dark: #0a1f16;
+  --brand-soft: #12332a;
+  --bg-dark: #0a1f16;
+  --surface-dark: #12332a;
+  --paper: #F4F1EA;
+  --accent-lime: #C6F432;
+  --danger: #FF4D3D;
+  --cream: #12332a;
+  --coral: #FF4D3D;
+  --yellow: #C6F432;
+  --font-body: var(--font-body), "Plus Jakarta Sans", sans-serif;
+  --font-display: var(--font-display), "Bricolage Grotesque", sans-serif;
+  --font-mono: var(--font-mono), "Geist Mono", monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-bg-dark: var(--bg-dark);
+  --color-surface-dark: var(--surface-dark);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-accent-lime: var(--accent-lime);
+  --color-danger: var(--danger);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 body {

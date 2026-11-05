@@ -28,6 +28,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.541",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

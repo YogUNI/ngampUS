@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { Bricolage_Grotesque, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NavigationProgress } from "@/components/navigation-progress";
@@ -10,23 +11,41 @@ import { OfflineIndicator } from "@/components/pwa/offline-indicator";
 import { AutoLogoutProvider } from "@/components/auth/auto-logout-provider";
 import "./globals.css";
 
+const bricolageGrotesque = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "600", "700", "800"],
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0f6849" },
+    { media: "(prefers-color-scheme: light)", color: "#0a1f16" },
     { media: "(prefers-color-scheme: dark)", color: "#0a1f16" },
   ],
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ngampus.site"),
-  title: {
-    default: "ngampUS | Your campus command center",
-    template: "%s | ngampUS",
-  },
-  description: "Bantu mahasiswa menjaga ritme kuliah, tugas, organisasi, dan ambisi dalam satu sistem yang tenang.",
+  title: "ngampUS — Jadwal, tugas & organisasi kuliah dalam satu tempat",
+  description: "ngampUS merapikan semuanya di satu tempat: jadwal kuliah, deadline, organisasi, sampai CV magang. Gratis selamanya untuk mahasiswa Indonesia.",
   applicationName: "ngampUS",
   authors: [{ name: "ngampUS Team", url: "https://ngampus.site" }],
   keywords: [
@@ -37,6 +56,7 @@ export const metadata: Metadata = {
     "organisasi kampus",
     "mahasiswa indonesia",
     "rekap ipk",
+    "cv ats mahasiswa",
   ],
   manifest: "/manifest.json",
   appleWebApp: {
@@ -45,8 +65,8 @@ export const metadata: Metadata = {
     title: "ngampUS",
   },
   openGraph: {
-    title: "ngampUS | Your campus command center",
-    description: "Satu tempat untuk semua urusan kuliah, tugas, jadwal, dan organisasi mahasiswa Indonesia.",
+    title: "ngampUS — Jadwal, tugas & organisasi kuliah dalam satu tempat",
+    description: "ngampUS merapikan semuanya di satu tempat: jadwal kuliah, deadline, organisasi, sampai CV magang.",
     url: "https://ngampus.site",
     siteName: "ngampUS",
     locale: "id_ID",
@@ -56,14 +76,14 @@ export const metadata: Metadata = {
         url: "/icon-512.png",
         width: 512,
         height: 512,
-        alt: "ngampUS Command Center",
+        alt: "ngampUS Workspace Mahasiswa",
       },
     ],
   },
   twitter: {
-    card: "summary",
-    title: "ngampUS | Your campus command center",
-    description: "Satu tempat untuk semua urusan kuliah, tugas, jadwal, dan organisasi mahasiswa Indonesia.",
+    card: "summary_large_image",
+    title: "ngampUS — Jadwal, tugas & organisasi kuliah dalam satu tempat",
+    description: "ngampUS merapikan semuanya di satu tempat: jadwal kuliah, deadline, organisasi, sampai CV magang.",
     images: ["/icon-512.png"],
   },
   icons: {
@@ -77,6 +97,21 @@ export const metadata: Metadata = {
       { url: "/icon-192.png" },
     ],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "ngampUS",
+  operatingSystem: "Web, iOS, Android",
+  applicationCategory: "EducationalApplication",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "IDR",
+  },
+  description: "Platform manajemen perkuliahan, jadwal kelas, radar deadline tugas, dan organisasi bagi mahasiswa Indonesia.",
+  url: "https://ngampus.site",
 };
 
 const themeInitScript = `
@@ -100,7 +135,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="id"
-      className="h-full antialiased overflow-x-hidden"
+      className={`h-full antialiased overflow-x-hidden ${bricolageGrotesque.variable} ${plusJakartaSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -112,8 +147,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
-      <body className="min-h-full flex flex-col overflow-x-hidden w-full">
+      <body className="min-h-full flex flex-col overflow-x-hidden w-full font-sans">
         <OfflineIndicator />
         <PwaSplashScreen />
         <Suspense fallback={null}>
