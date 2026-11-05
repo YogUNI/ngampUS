@@ -14,7 +14,9 @@ import {
   FileText,
   Briefcase,
   Check,
-  Circle
+  Circle,
+  ExternalLink,
+  ChevronRight
 } from "lucide-react";
 
 type TabKey = "jadwal" | "tugas" | "organisasi" | "portofolio";
@@ -36,24 +38,32 @@ const TABS: TabItem[] = [
 export function InteractivePreview() {
   const [activeTab, setActiveTab] = useState<TabKey>("jadwal");
   const [taskCompleted, setTaskCompleted] = useState<boolean>(false);
+  const [interactiveToast, setInteractiveToast] = useState<string | null>(null);
+
+  const triggerToast = (msg: string) => {
+    setInteractiveToast(msg);
+    setTimeout(() => {
+      setInteractiveToast((curr) => (curr === msg ? null : curr));
+    }, 2400);
+  };
 
   return (
     <div className="relative w-full min-w-0">
       {/* Main Preview Container — Refined Editorial Frame */}
       <div className="relative rounded-3xl border border-[#dce5dd] bg-white p-3.5 sm:p-5 text-[#10261b] shadow-xl shadow-[#10261b]/[0.05] ring-1 ring-black/[0.02]">
         
-        {/* Frame Top Bar */}
+        {/* Frame Top Bar — Real Campus Editorial Context (No Fake macOS Traffic Lights) */}
         <div className="flex items-center justify-between border-b border-[#edf2ee] px-2 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#10261b]/20 inline-block" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#10261b]/15 inline-block" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#10261b]/10 inline-block" />
-            <span className="ml-2 text-[11px] font-mono font-medium text-[#708075] hidden sm:inline">
-              ngampus.site/workspace
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#55675b]">
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#dff3e5] text-[#0f6849]">
+              <GraduationCap size={14} />
             </span>
+            <span className="font-bold text-[#10261b]">Workspace Mahasiswa</span>
+            <span className="text-[#a4b5a8]">•</span>
+            <span className="font-medium text-[#708075] hidden sm:inline">Semester 4 (Genap)</span>
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-3 py-1 text-[10.5px] font-bold text-[#0f6849]">
+          <div className="flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[10.5px] font-bold text-[#0f6849]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#0f6849] animate-pulse" />
             <span>Interactive Demo</span>
           </div>
@@ -67,6 +77,7 @@ export function InteractivePreview() {
             return (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActiveTab(tab.id)}
                 className={`group flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-bold transition-all duration-150 overflow-hidden cursor-pointer ${
                   isActive 
@@ -82,8 +93,16 @@ export function InteractivePreview() {
         </div>
 
         {/* Tab Content Display */}
-        <div className="mt-3.5 rounded-2xl bg-[#fafbfa] border border-[#edf2ee] p-4 text-[#10261b] min-h-[340px] flex flex-col justify-between transition-all duration-200">
+        <div className="mt-3.5 rounded-2xl bg-[#fafbfa] border border-[#edf2ee] p-4 text-[#10261b] min-h-[350px] flex flex-col justify-between transition-all duration-200 relative overflow-hidden">
           
+          {/* Toast Feedback for Interactive Demo */}
+          {interactiveToast && (
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 rounded-full bg-[#10261b] text-white px-3.5 py-1.5 text-xs font-semibold shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
+              <Sparkles size={13} className="text-[#c8ef70]" />
+              <span>{interactiveToast}</span>
+            </div>
+          )}
+
           {/* TAB 1: JADWAL KULIAH */}
           {activeTab === "jadwal" && (
             <div className="animate-in fade-in duration-200 flex flex-col justify-between h-full space-y-3">
@@ -101,7 +120,7 @@ export function InteractivePreview() {
                     </div>
                   </div>
                   <span className="rounded-full bg-[#10261b] px-2.5 py-0.5 text-[10px] font-bold text-white">
-                    Semester 4 (Genap)
+                    Hari Ini (Aktif)
                   </span>
                 </div>
 
@@ -114,23 +133,31 @@ export function InteractivePreview() {
                         <div className="flex items-center gap-1.5">
                           <span className="h-2 w-2 rounded-full bg-[#0f6849] animate-pulse" />
                           <span className="text-[10px] font-bold uppercase tracking-wider text-[#0f6849]">
-                            Sedang Berlangsung (08:00 - 09:40)
+                            Sedang Berlangsung (08:00 - 09:40 WIB)
                           </span>
                         </div>
                         <h5 className="font-display font-bold text-sm text-[#10261b] mt-1">
-                          Algoritma & Struktur Data
+                          Algoritma & Struktur Data (3 SKS)
                         </h5>
                         <p className="text-[11px] text-[#708075]">Lab Komputer 3 • Dr. Ir. Hendra Gunawan</p>
                       </div>
                       <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
-                        <span className="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] px-2.5 py-1 text-[11px] font-bold text-white shadow-xs">
+                        <button
+                          type="button"
+                          onClick={() => triggerToast("Simulasi Google Meet: Terbuka di tab baru")}
+                          className="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] hover:bg-[#0b4d36] px-2.5 py-1 text-[11px] font-bold text-white shadow-xs cursor-pointer active:scale-95 transition"
+                        >
                           <Video size={12} />
-                          <span>Meet</span>
-                        </span>
-                        <span className="inline-flex items-center gap-1 rounded-xl bg-[#f4f7f4] border border-[#dce5dd] px-2 py-1 text-[10.5px] font-semibold text-[#33463a]">
+                          <span>Buka Meet</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => triggerToast("Materi Pertemuan 4: Binary Trees & Heaps")}
+                          className="inline-flex items-center gap-1 rounded-xl bg-[#f4f7f4] hover:bg-[#eaf0eb] border border-[#dce5dd] px-2 py-1 text-[10.5px] font-semibold text-[#33463a] cursor-pointer active:scale-95 transition"
+                        >
                           <Sparkles size={11} className="text-[#0f6849]" />
-                          <span>Tanya AI</span>
-                        </span>
+                          <span>Modul P4</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -140,15 +167,15 @@ export function InteractivePreview() {
                     <div className="flex items-start justify-between">
                       <div>
                         <span className="text-[10px] font-semibold text-[#708075]">
-                          10:00 - 11:40 • 3 SKS
+                          10:00 - 11:40 WIB • 2 SKS
                         </span>
                         <h5 className="font-display font-bold text-sm text-[#10261b] mt-0.5">
                           Sistem Basis Data
                         </h5>
-                        <p className="text-[11px] text-[#708075]">Gedung B Lt. 4 • Ruang 402</p>
+                        <p className="text-[11px] text-[#708075]">Gedung B Lt. 4 • Ruang 402 • Tatap Muka</p>
                       </div>
                       <span className="rounded-lg bg-[#f4f7f4] border border-[#dce5dd] px-2 py-1 text-[10px] font-bold text-[#55675b]">
-                        Tatap Muka
+                        Kelas Berikutnya
                       </span>
                     </div>
                   </div>
@@ -160,7 +187,13 @@ export function InteractivePreview() {
                 <span className="text-[#10261b] font-medium flex items-center gap-1.5 text-[11px]">
                   <Sparkles size={13} className="text-[#0f6849]" /> Terhubung Modul P1–P16 & Ringkasan AI
                 </span>
-                <span className="font-bold text-[#0f6849] text-[11px]">Sync .ICS</span>
+                <button
+                  type="button"
+                  onClick={() => triggerToast("File .ICS jadwal kuliah berhasil disiapkan!")}
+                  className="font-bold text-[#0f6849] hover:underline text-[11px] cursor-pointer"
+                >
+                  Ekspor .ICS
+                </button>
               </div>
             </div>
           )}
@@ -190,10 +223,14 @@ export function InteractivePreview() {
                 <div className="mt-3.5 space-y-2.5">
                   {/* Task 1 - Interactive clickable demo */}
                   <div 
-                    onClick={() => setTaskCompleted(!taskCompleted)}
+                    onClick={() => {
+                      const next = !taskCompleted;
+                      setTaskCompleted(next);
+                      triggerToast(next ? "✓ Tugas selesai! +1 Poin portofolio terekam" : "Status tugas dikembalikan ke aktif");
+                    }}
                     className={`rounded-2xl border p-3.5 transition-all cursor-pointer select-none ${
                       taskCompleted 
-                        ? "border-[#c3ddcb] bg-[#dff3e5]/30 opacity-75"
+                        ? "border-[#c3ddcb] bg-[#dff3e5]/30 opacity-85"
                         : "border-rose-200 bg-white hover:border-rose-300 shadow-xs"
                     }`}
                   >
@@ -204,24 +241,26 @@ export function InteractivePreview() {
                         className="mt-0.5 text-[#0f6849] shrink-0"
                       >
                         {taskCompleted ? (
-                          <CheckCircle2 size={18} className="fill-[#0f6849] text-white" />
+                          <CheckCircle2 size={18} className="fill-[#0f6849] text-white animate-in zoom-in-75 duration-150" />
                         ) : (
                           <Circle size={18} className="text-[#708075]" />
                         )}
                       </button>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="rounded bg-rose-100 px-1.5 py-0.2 text-[9px] font-bold text-rose-800">
-                            DEADLINE BESOK
+                          <span className={`rounded px-1.5 py-0.2 text-[9px] font-bold ${taskCompleted ? "bg-[#dff3e5] text-[#0f6849]" : "bg-rose-100 text-rose-800"}`}>
+                            {taskCompleted ? "SELESAI" : "DEADLINE BESOK"}
                           </span>
                           <span className="text-[10.5px] text-[#708075] flex items-center gap-1">
                             <Clock size={11} /> 23:59 WIB
                           </span>
                         </div>
                         <h5 className={`font-display font-bold text-sm mt-0.5 ${taskCompleted ? "line-through text-[#708075]" : "text-[#10261b]"}`}>
-                          Laporan Praktikum Modul 4
+                          Laporan Praktikum Modul 4 (Struktur Data)
                         </h5>
-                        <p className="text-[11px] text-[#708075]">Algoritma & Struktur Data • Klik untuk selesaikan</p>
+                        <p className="text-[11px] text-[#708075]">
+                          {taskCompleted ? "✓ Berhasil diserahkan ke sistem" : "Klik kartu untuk simulasi ceklis selesai"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -256,7 +295,7 @@ export function InteractivePreview() {
                 <span className="text-[#cad7ce] text-[11px]">
                   Status Penyelesaian Tugas Semester:
                 </span>
-                <span className="font-bold text-[#c8ef70]">
+                <span className="font-bold text-[#c8ef70] font-mono">
                   {taskCompleted ? "94% Selesai" : "88% On-Time"}
                 </span>
               </div>
@@ -286,7 +325,10 @@ export function InteractivePreview() {
 
                 {/* Proker List */}
                 <div className="mt-3.5 space-y-2.5">
-                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
+                  <div 
+                    onClick={() => triggerToast("Proker Webinar Nasional: Progress 75% tercapai")}
+                    className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs cursor-pointer hover:border-[#b4d2bd] transition"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="rounded bg-[#e5f1fa] px-1.5 py-0.2 text-[9px] font-bold text-[#236098]">
@@ -303,7 +345,10 @@ export function InteractivePreview() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs">
+                  <div 
+                    onClick={() => triggerToast("Podcast Mahasiswa: Rekaman Episode 4 selesai")}
+                    className="rounded-2xl border border-[#edf2ee] bg-white p-3.5 shadow-xs cursor-pointer hover:border-[#b4d2bd] transition"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="rounded bg-[#f4f7f4] px-1.5 py-0.2 text-[9px] font-bold text-[#55675b]">
@@ -325,9 +370,9 @@ export function InteractivePreview() {
               {/* Proker Footer */}
               <div className="rounded-xl border border-dashed border-[#c3ddcb] bg-[#dff3e5]/40 p-2.5 flex items-center justify-between text-xs">
                 <span className="text-[#10261b] font-medium flex items-center gap-1.5 text-[11px]">
-                  <Layers size={13} className="text-[#0f6849]" /> Sinkron langsung dengan jadwal kelas
+                  <Layers size={13} className="text-[#0f6849]" /> Sinkron langsung dengan kalender kuliah
                 </span>
-                <span className="font-bold text-[#0f6849] text-[11px]">0 Bentrok</span>
+                <span className="font-bold text-[#0f6849] text-[11px]">0 Bentrok Jadwal</span>
               </div>
             </div>
           )}
@@ -404,7 +449,13 @@ export function InteractivePreview() {
                 <span className="text-[#3c327e] font-medium flex items-center gap-1.5 text-[11px]">
                   <FileText size={13} className="text-[#644fe2]" /> Format standar ATS-friendly untuk magang
                 </span>
-                <span className="font-bold text-[#5946c7] text-[11px]">1-Click PDF</span>
+                <button
+                  type="button"
+                  onClick={() => triggerToast("CV ATS 1 Halaman Siap Dicetak (Skor ATS: 96%)")}
+                  className="font-bold text-[#5946c7] hover:underline text-[11px] cursor-pointer"
+                >
+                  Cetak PDF
+                </button>
               </div>
             </div>
           )}
@@ -415,9 +466,9 @@ export function InteractivePreview() {
         <div className="mt-3 flex items-center justify-between px-2 text-[11px] text-[#708075]">
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#0f6849]" />
-            Klik tab untuk menguji fitur langsung
+            Klik tab & tombol untuk menguji fitur langsung
           </span>
-          <span className="font-mono text-[10px] text-[#8ca393]">Privasi RLS • Tanpa Iklan</span>
+          <span className="font-mono text-[10px] text-[#8ca393]">Data Terisolasi RLS • Tanpa Iklan</span>
         </div>
 
       </div>
