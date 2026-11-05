@@ -29,7 +29,7 @@ import { StandaloneRedirectGuard } from "@/components/pwa/standalone-redirect-gu
 
 export default function Home() {
   return (
-    <main className="landing-page min-h-screen overflow-x-hidden bg-[#fafaf7] text-[#10261b] selection:bg-[#C6F432]/30 selection:text-[#0a1f16]">
+    <main className="landing-page min-h-screen bg-[#fafaf7] text-[#10261b] selection:bg-[#C6F432]/30 selection:text-[#0a1f16]">
       <StandaloneRedirectGuard />
 
       {/* ── STICKY FLOATING NAVBAR ── */}

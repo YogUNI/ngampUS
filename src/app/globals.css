@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
-/* Global mobile viewport safety & PWA Native App feel */
-html, body {
-  overflow-x: hidden;
+/* Global mobile viewport safety & natural smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: clip;
   max-width: 100%;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  overscroll-behavior-y: none;
 }
 
 /* Standalone PWA Notch & Safe Area adjustments */

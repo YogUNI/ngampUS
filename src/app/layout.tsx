@@ -134,7 +134,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="id"
-      className={`h-full antialiased overflow-x-hidden ${bricolageGrotesque.variable} ${plusJakartaSans.variable} ${geistMono.variable}`}
+      className={`antialiased ${bricolageGrotesque.variable} ${plusJakartaSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -151,7 +151,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col overflow-x-hidden w-full font-sans">
+      <body className="min-h-screen flex flex-col w-full font-sans">
         <OfflineIndicator />
         <PwaSplashScreen />
         <Suspense fallback={null}>

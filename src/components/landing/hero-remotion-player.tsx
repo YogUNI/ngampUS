@@ -91,7 +91,7 @@ export function HeroRemotionPlayer() {
       ref={containerRef}
       className="group relative w-full overflow-hidden rounded-3xl border border-white/10 bg-[#0a1f16] shadow-2xl transition-all duration-300 hover:border-[#C6F432]/30"
     >
-      <div className="relative w-full aspect-[4/5] overflow-hidden">
+      <div className="relative w-full aspect-[4/5] overflow-hidden pointer-events-none">
         <RemotionPlayer
           ref={playerRef}
           component={HeroStory}
