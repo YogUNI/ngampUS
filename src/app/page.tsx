@@ -40,7 +40,7 @@ export default function Home() {
       </div>
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative pt-16 sm:pt-18 lg:pt-20 pb-8 sm:pb-10 lg:pb-12 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
+      <section className="relative pt-20 sm:pt-24 lg:pt-24 pb-8 sm:pb-10 lg:pb-0 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
         {/* Subtle Dark Emerald Radial Ambience */}
         <div
           aria-hidden="true"
@@ -48,10 +48,10 @@ export default function Home() {
         />
 
         <div className="relative mx-auto w-full max-w-7xl">
-          <div className="grid gap-8 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center w-full min-w-0">
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end w-full min-w-0">
             
             {/* Left Column: Sharp Editorial Copy */}
-            <div className="max-w-2xl w-full min-w-0">
+            <div className="max-w-2xl w-full min-w-0 pb-6 sm:pb-8 lg:pb-12">
               {/* Eyebrow Pill */}
               <div className="inline-flex items-center gap-2 rounded-full border border-[#C6F432]/30 bg-[#12332a] px-3.5 py-1.5 text-xs font-mono font-bold text-[#C6F432] shadow-xs">
                 <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
 
             {/* Right Column: Remotion Showcase Motion Player */}
-            <div className="w-full min-w-0 flex justify-center lg:justify-end -mt-2 lg:-mt-6">
+            <div className="w-full min-w-0 flex justify-center lg:justify-end lg:self-end">
               <HeroRemotionPlayer />
             </div>
 
