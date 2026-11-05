@@ -520,14 +520,25 @@ export default function Home() {
               <ul className="mt-4 space-y-2.5 text-sm text-[#55675b]">
                 <li><Link href="/login" className="hover:text-[#0f6849] transition">Masuk Akun</Link></li>
                 <li><Link href="/register" className="hover:text-[#0f6849] transition font-bold text-[#0f6849]">Daftar Gratis</Link></li>
+                <li className="pt-2">
+                  <PwaInstallButton
+                    variant="navbar"
+                    className="border border-[#0f6849]/20 bg-[#0f6849]/5 text-[#0f6849] hover:bg-[#0f6849]/15 text-xs py-1.5 px-3"
+                  />
+                </li>
               </ul>
             </div>
 
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-xs text-[#708075]">
-            <p>© {new Date().getFullYear()} nGampUS. Hak Cipta Dilindungi.</p>
-            <p className="font-mono text-[11px]">Security Hardened • PostgreSQL RLS</p>
+            <p>© {new Date().getFullYear()} nGampUS — Ruang Belajar & Ambisi Mahasiswa Indonesia.</p>
+            <div className="flex items-center gap-3 font-mono text-[11px]">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#0f6849]" />
+                Sistem Aktif & Terenkripsi RLS
+              </span>
+            </div>
           </div>
         </div>
       </footer>
