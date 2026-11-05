@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { CheckCircle2, Circle, ListTodo, SlidersHorizontal, Clock, PlayCircle } from "lucide-react";
+import { CheckCircle2, Circle, ListTodo, Star } from "lucide-react";
 import { format, parseISO, differenceInCalendarDays } from "date-fns";
 import { id } from "date-fns/locale";
 import { createClient } from "@/lib/supabase/server";
 import { ConfirmDeleteForm } from "@/components/ui/confirm-delete-form";
-import { completeActivity, deleteActivity, updateActivityStatus } from "./actions";
+import { completeActivity, deleteActivity, updateActivityStatus, togglePortfolio } from "./actions";
 import { CalendarView } from "@/components/activities/calendar-view";
 import { ActivityForm } from "@/components/activities/activity-form";
 import { ActivityEditForm } from "@/components/activities/activity-edit-form";
@@ -44,10 +44,6 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
   if (filters.semester_id) activitiesQuery = activitiesQuery.eq("semester_id", filters.semester_id);
   if (filters.organization_id) activitiesQuery = activitiesQuery.eq("organization_id", filters.organization_id);
   if (filters.prioritas) activitiesQuery = activitiesQuery.eq("prioritas", filters.prioritas);
-
-  // Queries for tab counts (respecting current semester filter)
-  let countBase = supabase.from("activities").select("status", { count: "exact" });
-  if (filters.semester_id) countBase = countBase.eq("semester_id", filters.semester_id);
 
   const [
     { data: { user } },
@@ -288,8 +284,39 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                         </div>
                       </div>
 
-                      {/* Right: Quick Action Controls (Edit & Delete without heavy dropdowns) */}
+                      {/* Right: Quick Action Controls (Portfolio Star, Edit & Delete) */}
                       <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                        <form action={togglePortfolio}>
+                          <input type="hidden" name="id" value={activity.id} />
+                          <input
+                            type="hidden"
+                            name="is_portfolio"
+                            value={activity.is_portfolio ? "false" : "true"}
+                          />
+                          <button
+                            type="submit"
+                            title={
+                              activity.is_portfolio
+                                ? "Keluarkan dari portofolio resmi"
+                                : "Tandai sebagai portofolio resmi"
+                            }
+                            aria-label={
+                              activity.is_portfolio
+                                ? "Keluarkan dari portofolio resmi"
+                                : "Tandai sebagai portofolio resmi"
+                            }
+                            className={`rounded-xl p-2 transition cursor-pointer ${
+                              activity.is_portfolio
+                                ? "text-amber-500 bg-amber-50 hover:bg-amber-100"
+                                : "text-[#8b9e91] hover:text-amber-500 hover:bg-[#f7f8f5]"
+                            }`}
+                          >
+                            <Star
+                              size={16}
+                              className={activity.is_portfolio ? "fill-amber-400" : ""}
+                            />
+                          </button>
+                        </form>
                         <ActivityEditForm
                           activity={activity}
                           semesters={(semesters ?? []).map((semester) => ({

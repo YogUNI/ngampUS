@@ -17,7 +17,6 @@ const PROTECTED_ROUTES = [
 const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
 
 // Rate-limited paths with their limiter configs
-const RATE_LIMITED_AUTH = ["/login", "/register", "/forgot-password", "/reset-password"];
 const RATE_LIMITED_OTP = ["/forgot-password", "/reset-password"];
 
 /** Attach security response headers (belt-and-suspenders on top of next.config.ts) */

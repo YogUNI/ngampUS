@@ -13,8 +13,6 @@ export interface AiDailyTelemetry {
 
 // 1.500 requests per day on Gemini Free Tier
 export const DAILY_REQUEST_LIMIT = 1500;
-// 1.000.000 tokens per minute
-export const PER_MINUTE_TOKEN_LIMIT = 1000000;
 
 export async function recordAiUsage(
   model: string,

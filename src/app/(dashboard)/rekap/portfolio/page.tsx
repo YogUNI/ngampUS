@@ -12,13 +12,17 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
   const [
     { data: { user } },
     { data: semesters },
+    { data: profile },
+    { data: organizations },
+    { data: positions },
+    { data: programs },
   ] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai,is_active").order("tanggal_mulai", { ascending: false }),
-  ]);
-
-  const [{ data: profile }] = await Promise.all([
     supabase.from("profiles").select("full_name,university,major,student_id,email,phone,bio,angkatan,linkedin,github").single(),
+    supabase.from("organizations").select("id,nama_organisasi,tipe"),
+    supabase.from("organization_positions").select("organization_id,jabatan,role_type,divisi"),
+    supabase.from("programs").select("id,nama_proker,organization_id,peran,status"),
   ]);
 
   const targetSemesterId = filters.semester_id ?? semesters?.find((s) => s.is_active)?.id ?? semesters?.[0]?.id ?? null;
@@ -36,17 +40,7 @@ export default async function PortfolioPage({ searchParams }: { searchParams: Pr
     activityQuery = activityQuery.eq("semester_id", targetSemesterId);
   }
 
-  const [
-    { data: portfolioActivities },
-    { data: organizations },
-    { data: positions },
-    { data: programs },
-  ] = await Promise.all([
-    activityQuery,
-    supabase.from("organizations").select("id,nama_organisasi,tipe"),
-    supabase.from("organization_positions").select("organization_id,jabatan,role_type,divisi"),
-    supabase.from("programs").select("id,nama_proker,organization_id,peran,status"),
-  ]);
+  const { data: portfolioActivities } = await activityQuery;
 
   const items = portfolioActivities ?? [];
   const orgMap = new Map((organizations ?? []).map((o) => [o.id, o.nama_organisasi]));

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { BookOpen, Calendar, Clock, MapPin, Link2, Plus, User, X } from "lucide-react";
+import Link from "next/link";
+import { AlertCircle, Plus, X } from "lucide-react";
 import { createCourse, updateCourse } from "@/app/(dashboard)/jadwal/actions";
 import { useToast } from "@/components/ui/toast-provider";
 
@@ -125,10 +126,39 @@ export function CourseFormModal({
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-6 space-y-4 [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:px-3 [&_input]:py-2.5 [&_input]:outline-none [&_input]:focus:border-[var(--brand)] [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2.5 [&_select]:outline-none [&_select]:focus:border-[var(--brand)] [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:px-3 [&_textarea]:py-2.5 [&_textarea]:outline-none [&_textarea]:focus:border-[var(--brand)]"
-        >
+        {semesters.length === 0 ? (
+          <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/70 p-6 text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-amber-100 text-amber-700">
+              <AlertCircle size={24} />
+            </div>
+            <h3 className="mt-3 font-display text-base font-bold text-amber-900">
+              Belum Ada Data Semester
+            </h3>
+            <p className="mt-1 text-xs text-amber-800 leading-relaxed max-w-md mx-auto">
+              Kamu perlu membuat setidaknya satu data semester aktif terlebih dahulu agar mata kuliah dapat dikelompokkan dengan benar.
+            </p>
+            <div className="mt-5 flex items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="rounded-xl px-4 py-2.5 text-xs font-bold text-[var(--muted)] hover:bg-white transition cursor-pointer"
+              >
+                Tutup
+              </button>
+              <Link
+                href="/semester"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[var(--brand-dark)] transition"
+              >
+                Buat Semester Sekarang →
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 space-y-4 [&_input]:w-full [&_input]:rounded-xl [&_input]:border [&_input]:border-[var(--line)] [&_input]:px-3 [&_input]:py-2.5 [&_input]:outline-none [&_input]:focus:border-[var(--brand)] [&_select]:w-full [&_select]:rounded-xl [&_select]:border [&_select]:border-[var(--line)] [&_select]:bg-white [&_select]:px-3 [&_select]:py-2.5 [&_select]:outline-none [&_select]:focus:border-[var(--brand)] [&_textarea]:w-full [&_textarea]:rounded-xl [&_textarea]:border [&_textarea]:border-[var(--line)] [&_textarea]:px-3 [&_textarea]:py-2.5 [&_textarea]:outline-none [&_textarea]:focus:border-[var(--brand)]"
+          >
           {isEdit && <input type="hidden" name="id" value={course?.id} />}
           <input type="hidden" name="warna_label" value={warna} />
 
@@ -369,6 +399,7 @@ export function CourseFormModal({
             </button>
           </div>
         </form>
+        )}
       </div>
     </div>
   ) : null;

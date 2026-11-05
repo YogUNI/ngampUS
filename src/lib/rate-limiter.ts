@@ -115,13 +115,6 @@ export const telemetryLimiter: RateLimitOptions = {
   windowMs: 60 * 1000,
 };
 
-/** Admin actions: 30 mutations per 5 minutes */
-export const adminLimiter: RateLimitOptions = {
-  id: "admin",
-  limit: 30,
-  windowMs: 5 * 60 * 1000,
-};
-
 /** Password reset / OTP: 5 attempts per hour */
 export const otpLimiter: RateLimitOptions = {
   id: "otp",
