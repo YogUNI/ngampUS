@@ -57,9 +57,8 @@ const cvData = {
   name: "Yoga Gusti Rachmadi",
   meta: "Teknik Informatika · Semester 4 · IPK 3.88",
   bullets: [
-    "Project Officer, Tech Seminar & Expo 2025 · 450+ peserta",
-    "Lead Developer, Web Rekap Kuliah Berbasis AI · Nilai A (4.00)",
-    "Asisten Lab Basis Data · Membimbing 40 mahasiswa aktif",
+    "Project Officer, Tech Seminar & Expo · 450+ peserta",
+    "Lead Developer, Web Rekap Kuliah Berbasis AI · Nilai A",
   ],
   skills: ["Next.js", "TypeScript", "Supabase", "React"],
 };
@@ -110,13 +109,13 @@ const Check = ({ size = 22, color = C.ink, progress = 1 }: { size?: number; colo
    SCENE A — KACAU & WHATSAPP OVERLOAD (0–4.0 dtk / 120 frames)
    ===================================================== */
 const chaosLayout = [
-  { x: 70, y: 150, r: -3, d: 0 },
-  { x: 250, y: 300, r: 4, d: 10 },
-  { x: 90, y: 470, r: -5, d: 22 },
-  { x: 230, y: 640, r: 3, d: 35 },
-  { x: 60, y: 800, r: -2, d: 48 },
-  { x: 210, y: 960, r: 5, d: 62 },
-  { x: 100, y: 1120, r: -4, d: 76 },
+  { x: 70, y: 110, r: -3, d: 0 },
+  { x: 250, y: 250, r: 4, d: 10 },
+  { x: 90, y: 410, r: -5, d: 22 },
+  { x: 230, y: 570, r: 3, d: 35 },
+  { x: 60, y: 730, r: -2, d: 48 },
+  { x: 210, y: 890, r: 5, d: 62 },
+  { x: 100, y: 1040, r: -4, d: 76 },
 ];
 
 const ChaosCard = ({ idx }: { idx: number }) => {
@@ -387,7 +386,7 @@ const AppScreen = () => {
   const toastFade = interpolate(frame, [180, 195], [1, 0], clamp);
 
   return (
-    <div style={{ padding: "96px 38px 0", boxSizing: "border-box", height: "100%", position: "relative" }}>
+    <div style={{ padding: "82px 36px 0", boxSizing: "border-box", height: "100%", position: "relative" }}>
       {/* Floating Dopamine Toast on Task Complete */}
       {frame >= 105 && (
         <div
@@ -443,7 +442,7 @@ const AppScreen = () => {
         <ClassCard idx={1} />
       </div>
 
-      <Rise delay={30} style={{ marginTop: 30 }}>
+      <Rise delay={30} style={{ marginTop: 26 }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontFamily: F.mono, fontSize: 21, color: C.muted, letterSpacing: 2, paddingBottom: 6 }}>
           <span>RADAR DEADLINE</span>
           <span style={{ color: C.danger, fontWeight: 700 }}>• 1 MENDESAK</span>
@@ -531,7 +530,7 @@ const SceneC = () => {
   const frame = useCurrentFrame();
   const enter = useSpr(4, { damping: 17, stiffness: 100, mass: 1 });
   const exitT = interpolate(frame, [190, 210], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-  const phoneY = 280 + (1 - enter) * 520 + exitT * 1200;
+  const phoneY = 210 + (1 - enter) * 520 + exitT * 1200;
   const push = interpolate(frame, [0, 140, 210], [1, 1.045, 1.045], { ...clamp, easing: ease });
   const wipeOut = interpolate(frame, [0, 16], [1, 0], { ...clamp, easing: ease });
   const capS = useSpr(6, SPRING_SOFT);
@@ -539,7 +538,7 @@ const SceneC = () => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: "50% 70%" }}>
-        <div style={{ position: "absolute", left: 70, top: 60, overflow: "hidden", height: 185, opacity: 1 - exitT }}>
+        <div style={{ position: "absolute", left: 70, top: 40, overflow: "hidden", height: 165, opacity: 1 - exitT }}>
           <div style={{ transform: `translateY(${(1 - capS) * 110}%)` }}>
             <div style={{ fontFamily: F.mono, fontSize: 24, color: C.lime, letterSpacing: 4 }}>NGAMPUS · 07.43</div>
             <div style={{ fontFamily: F.display, fontSize: 68, color: "#fff", letterSpacing: -2, lineHeight: 1.02, marginTop: 8 }}>
@@ -580,13 +579,13 @@ const typed = (text: string, frame: number, start: number, dur: number) => {
 const SceneD = () => {
   const frame = useCurrentFrame();
   const up = useSpr(0, { damping: 16, stiffness: 90, mass: 1 });
-  const sheetY = 75 + (1 - up) * 1300;
+  const sheetY = 40 + (1 - up) * 1300;
   const stamp = useSpr(45, SPRING_SLAM);
   const logo = useSpr(65, SPRING_SOFT);
   const cta = useSpr(85, SPRING_SOFT);
   const fadeOut = interpolate(frame, [136, 150], [0, 1], clamp);
   const cursor = Math.floor(frame / 7) % 2 === 0;
-  const starts = [18, 42, 66];
+  const starts = [18, 42];
 
   return (
     <AbsoluteFill>
@@ -594,7 +593,7 @@ const SceneD = () => {
       <div
         style={{
           position: "absolute",
-          top: "30%",
+          top: "28%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 700,
@@ -613,45 +612,45 @@ const SceneD = () => {
           left: 190,
           top: sheetY,
           width: 700,
-          height: 800,
+          height: 600,
           background: "#FBFAF6",
           borderRadius: 26,
-          padding: "48px 52px",
+          padding: "36px 44px",
           boxSizing: "border-box",
           transform: "rotate(-2.2deg)",
-          boxShadow: "0 50px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.06)",
+          boxShadow: "0 40px 90px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.06)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
-            <div style={{ fontFamily: F.display, fontSize: 56, color: C.ink, letterSpacing: -1.5 }}>
+            <div style={{ fontFamily: F.display, fontSize: 50, color: C.ink, letterSpacing: -1.5 }}>
               {cvData.name}
             </div>
-            <div style={{ fontFamily: F.mono, fontSize: 20, color: C.muted, marginTop: 6 }}>
+            <div style={{ fontFamily: F.mono, fontSize: 19, color: C.muted, marginTop: 4 }}>
               {cvData.meta}
             </div>
           </div>
           {/* Micro ngampUS Verified Stamp Mark */}
-          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#E9E4D8", padding: "6px 12px", borderRadius: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#E9E4D8", padding: "5px 12px", borderRadius: 12 }}>
             <Img src={staticFile("icon-192.png")} style={{ width: 18, height: 18, borderRadius: 4 }} />
             <span style={{ fontFamily: F.mono, fontSize: 13, fontWeight: 700, color: "#10261b" }}>VERIFIED</span>
           </div>
         </div>
 
-        <div style={{ height: 5, width: 90, background: C.lime, marginTop: 20, borderRadius: 3, boxShadow: "0 0 0 1px #9bc21a" }} />
+        <div style={{ height: 5, width: 80, background: C.lime, marginTop: 16, borderRadius: 3, boxShadow: "0 0 0 1px #9bc21a" }} />
         
-        <div style={{ fontFamily: F.mono, fontSize: 19, color: "#1f6f4a", letterSpacing: 3, marginTop: 32, fontWeight: 700 }}>
+        <div style={{ fontFamily: F.mono, fontSize: 18, color: "#1f6f4a", letterSpacing: 3, marginTop: 24, fontWeight: 700 }}>
           PENGALAMAN & PRESTASI TERVERIFIKASI
         </div>
         
-        <div style={{ marginTop: 14 }}>
+        <div style={{ marginTop: 12 }}>
           {cvData.bullets.map((b, i) => {
             const shown = typed(b, frame, starts[i], 18);
             const active = shown.length < b.length && shown.length > 0;
             return (
-              <div key={i} style={{ display: "flex", gap: 14, minHeight: 78, alignItems: "flex-start" }}>
-                <div style={{ width: 10, height: 10, borderRadius: 5, background: C.ink, marginTop: 14, flexShrink: 0, opacity: shown.length ? 1 : 0 }} />
-                <div style={{ fontFamily: F.body, fontWeight: 600, fontSize: 26, color: C.ink, lineHeight: 1.3 }}>
+              <div key={i} style={{ display: "flex", gap: 14, minHeight: 62, alignItems: "flex-start" }}>
+                <div style={{ width: 10, height: 10, borderRadius: 5, background: C.ink, marginTop: 12, flexShrink: 0, opacity: shown.length ? 1 : 0 }} />
+                <div style={{ fontFamily: F.body, fontWeight: 600, fontSize: 25, color: C.ink, lineHeight: 1.3 }}>
                   {shown}
                   {active && cursor ? <span style={{ color: "#1f6f4a", fontWeight: 700 }}>|</span> : null}
                 </div>
@@ -660,14 +659,14 @@ const SceneD = () => {
           })}
         </div>
 
-        <div style={{ fontFamily: F.mono, fontSize: 19, color: "#1f6f4a", letterSpacing: 3, marginTop: 14, fontWeight: 700 }}>
+        <div style={{ fontFamily: F.mono, fontSize: 18, color: "#1f6f4a", letterSpacing: 3, marginTop: 14, fontWeight: 700 }}>
           KOMPETENSI TEKNIS
         </div>
-        <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+        <div style={{ display: "flex", gap: 12, marginTop: 10 }}>
           {cvData.skills.map((s, i) => {
             const p = spring({ frame: frame - (78 + i * 4), fps: 30, config: SPRING_SNAP });
             return (
-              <div key={s} style={{ fontFamily: F.mono, fontSize: 21, background: C.bg, color: C.lime, padding: "8px 18px", borderRadius: 14, transform: `scale(${p})`, opacity: p, fontWeight: 700 }}>
+              <div key={s} style={{ fontFamily: F.mono, fontSize: 19, background: C.bg, color: C.lime, padding: "7px 16px", borderRadius: 14, transform: `scale(${p})`, opacity: p, fontWeight: 700 }}>
                 {s}
               </div>
             );
@@ -675,10 +674,10 @@ const SceneD = () => {
         </div>
 
         <Rise2 delay={92}>
-          <div style={{ fontFamily: F.mono, fontSize: 19, color: "#1f6f4a", letterSpacing: 3, marginTop: 30, fontWeight: 700 }}>
+          <div style={{ fontFamily: F.mono, fontSize: 18, color: "#1f6f4a", letterSpacing: 3, marginTop: 20, fontWeight: 700 }}>
             PENDIDIKAN
           </div>
-          <div style={{ fontFamily: F.body, fontWeight: 600, fontSize: 25, color: C.ink, marginTop: 8 }}>
+          <div style={{ fontFamily: F.body, fontWeight: 600, fontSize: 23, color: C.ink, marginTop: 6 }}>
             Universitas Mercu Buana · 2023–sekarang
           </div>
         </Rise2>
@@ -714,7 +713,7 @@ const SceneD = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 960,
+          top: 690,
           textAlign: "center",
           opacity: Math.min(1, logo * 2),
           transform: `translateY(${(1 - logo) * 40}px)`,
@@ -724,8 +723,8 @@ const SceneD = () => {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
           <div
             style={{
-              width: 80,
-              height: 80,
+              width: 74,
+              height: 74,
               borderRadius: 22,
               background: "linear-gradient(135deg, #12332a, #0a1f16)",
               border: "2px solid rgba(198, 244, 50, 0.4)",
@@ -736,14 +735,14 @@ const SceneD = () => {
               overflow: "hidden",
             }}
           >
-            <Img src={staticFile("icon-512.png")} style={{ width: 68, height: 68, objectFit: "contain" }} />
+            <Img src={staticFile("icon-512.png")} style={{ width: 62, height: 62, objectFit: "contain" }} />
           </div>
-          <div style={{ fontFamily: F.display, fontSize: 110, color: "#fff", letterSpacing: -4, lineHeight: 1 }}>
+          <div style={{ fontFamily: F.display, fontSize: 94, color: "#fff", letterSpacing: -4, lineHeight: 1 }}>
             ngamp<span style={{ color: C.lime }}>US</span>
           </div>
         </div>
 
-        <div style={{ fontFamily: F.body, fontWeight: 600, fontSize: 32, color: "rgba(255,255,255,0.85)", marginTop: 14 }}>
+        <div style={{ fontFamily: F.body, fontWeight: 600, fontSize: 29, color: "rgba(255,255,255,0.85)", marginTop: 12 }}>
           Kuliah beres. Organisasi jalan. CV siap.
         </div>
       </div>
@@ -754,7 +753,7 @@ const SceneD = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 1195,
+          top: 890,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -787,14 +786,6 @@ export const HeroStory: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ background: C.bg }}>
-      {/* Background Subtle Dot Grid Matrix */}
-      <AbsoluteFill
-        style={{
-          backgroundImage: "radial-gradient(rgba(198,244,50,0.08) 2px, transparent 2px)",
-          backgroundSize: "54px 54px",
-        }}
-      />
-
       <div style={{ position: "absolute", left: 0, top: offset, width: 1080, height: 1350, overflow: height > 1350 ? "visible" : "hidden" }}>
         {/* SCENE A: KACAU (0–4.0 dtk / 120 frames) */}
         <Sequence from={A_START} durationInFrames={A_LEN}>

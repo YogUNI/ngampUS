@@ -8,7 +8,7 @@ export const PosterFallback: React.FC<{ className?: string }> = ({ className = "
         backgroundColor: "#0a1f16",
         aspectRatio: "4 / 5",
       }}
-      className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl border border-white/10 p-4 sm:p-6 select-none ${className}`}
+      className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl p-4 sm:p-6 select-none ${className}`}
     >
       {/* Background Radial Glow */}
       <div

@@ -40,7 +40,7 @@ export default function Home() {
       </div>
 
       {/* ── HERO SECTION ─────────────────────────────────────────── */}
-      <section className="relative pt-20 sm:pt-24 lg:pt-28 pb-10 sm:pb-12 lg:pb-14 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
+      <section className="relative pt-16 sm:pt-18 lg:pt-20 pb-8 sm:pb-10 lg:pb-12 px-4 sm:px-8 lg:px-12 w-full overflow-hidden border-b border-white/10 bg-[#0a1f16] text-[#F4F1EA]">
         {/* Subtle Dark Emerald Radial Ambience */}
         <div
           aria-hidden="true"
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
 
             {/* Right Column: Remotion Showcase Motion Player */}
-            <div className="w-full min-w-0 flex justify-center lg:justify-end">
+            <div className="w-full min-w-0 flex justify-center lg:justify-end -mt-2 lg:-mt-6">
               <HeroRemotionPlayer />
             </div>
 
