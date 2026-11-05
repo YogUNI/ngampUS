@@ -53,8 +53,9 @@ export function FaqAccordion() {
           >
             <button
               onClick={() => toggleFaq(index)}
-              className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors cursor-pointer"
+              className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0f6849] focus-visible:outline-hidden"
               aria-expanded={isOpen}
+              aria-controls={`faq-answer-${index}`}
             >
               <span className="font-display text-base sm:text-lg font-bold tracking-tight text-[#10261b]">
                 {item.question}
@@ -71,6 +72,9 @@ export function FaqAccordion() {
             </button>
 
             <div
+              id={`faq-answer-${index}`}
+              role="region"
+              aria-labelledby={`faq-question-${index}`}
               className={`grid transition-all duration-200 ease-in-out ${
                 isOpen ? "grid-rows-[1fr] opacity-100 pb-5 px-5" : "grid-rows-[0fr] opacity-0 px-5"
               }`}

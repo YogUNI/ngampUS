@@ -144,8 +144,10 @@ export function WorkflowTimeline() {
             return (
               <button
                 key={s.step}
+                type="button"
                 onClick={() => setActiveStep(idx)}
-                className="group flex flex-col items-center focus:outline-hidden cursor-pointer"
+                aria-label={`Pilih tahap ${s.step}: ${s.title}`}
+                className="group flex flex-col items-center rounded-2xl focus-visible:ring-2 focus-visible:ring-[#0f6849] focus-visible:outline-hidden cursor-pointer"
               >
                 <div 
                   className={`grid h-12 w-12 place-items-center rounded-2xl font-display font-black text-sm transition-all duration-200 ${
