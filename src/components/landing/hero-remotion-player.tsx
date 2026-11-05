@@ -115,7 +115,7 @@ export function HeroRemotionPlayer() {
       <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-center justify-between z-20">
         <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/10 bg-[#0a1f16]/90 backdrop-blur-md px-3.5 py-1.5 font-mono text-[11px] text-white/80 shadow-lg">
           <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
-          <span>Alur Mahasiswa • 12 Detik</span>
+          <span>Alur Mahasiswa • 18 Detik</span>
         </div>
 
         <button

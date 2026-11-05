@@ -1,74 +1,71 @@
 /**
- * Konstanta Timing & Animasi Remotion
- * Seluruh durasi, frame boundary, dan spring config dikelola terpusat di sini.
+ * Konfigurasi Timing Remotion 18 Detik (Golden Ratio 540 Frames @ 30 FPS)
+ * Ditingkatkan dari source ngampus-hero-remotion-source agar alur animasi
+ * memiliki pacing yang elegan, terbaca jelas, dan berdampak maksimal.
  */
 
+export const FPS = 30;
+export const TOTAL_FRAMES = 540; // 18 detik total
+export const TOTAL = 540;
+
+// Dimensi Komposisi
+export const WIDTH_4_5 = 1080;
+export const HEIGHT_4_5 = 1350; // Web Hero 4:5
+
+export const WIDTH_9_16 = 1080;
+export const HEIGHT_9_16 = 1920; // Mobile / TikTok 9:16
+
+// Titik Awal & Durasi Tiap Adegan
+export const A_START = 0;
+export const A_LEN = 120; // 0s - 4.0s (120 frames) : Scene Chaos & WhatsApp overload
+
+export const B_START = 120;
+export const B_LEN = 60; // 4.0s - 6.0s (60 frames) : Scene Hard Cut "Cukup."
+
+export const C_START = 180;
+export const C_LEN = 210; // 6.0s - 13.0s (210 frames) : Scene Phone App UI & Interactive Checkbox
+
+export const D_START = 390;
+export const D_LEN = 150; // 13.0s - 18.0s (150 frames) : Scene Outcome CV ATS, Official Logo & CTA
+
+// Spring Physics Presets
+export const SPRING_SOFT = { damping: 18, stiffness: 100, mass: 0.9 };
+export const SPRING_SNAP = { damping: 14, stiffness: 160, mass: 0.7 };
+export const SPRING_DROP = { damping: 11, stiffness: 120, mass: 0.8 };
+export const SPRING_SLAM = { damping: 12, stiffness: 220, mass: 0.6 };
+
 export const TIMING = {
-  FPS: 30,
-  TOTAL_FRAMES: 360, // 12 Detik total
-  WIDTH_4_5: 1080,
-  HEIGHT_4_5: 1350,
-  WIDTH_9_16: 1080,
-  HEIGHT_9_16: 1920,
-
-  // Scene Boundaries
-  SCENE_CHAOS: {
-    start: 0,
-    duration: 90, // 0 - 3 dtk
+  FPS,
+  TOTAL_FRAMES,
+  TOTAL,
+  WIDTH_4_5,
+  HEIGHT_4_5,
+  WIDTH_9_16,
+  HEIGHT_9_16,
+  A_START,
+  A_LEN,
+  B_START,
+  B_LEN,
+  C_START,
+  C_LEN,
+  D_START,
+  D_LEN,
+  SPRINGS: {
+    soft: SPRING_SOFT,
+    snap: SPRING_SNAP,
+    drop: SPRING_DROP,
+    slam: SPRING_SLAM,
   },
-  SCENE_HARD_CUT: {
-    start: 90,
-    duration: 45, // 3 - 4.5 dtk
-  },
-  SCENE_ORGANIZED: {
-    start: 135,
-    duration: 135, // 4.5 - 9 dtk
-  },
-  SCENE_OUTCOME: {
-    start: 270,
-    duration: 90, // 9 - 12 dtk
-  },
-
-  // Color Tokens
   COLORS: {
     bgDark: "#0a1f16",
     surfaceDark: "#12332a",
+    surface2: "#1a4236",
     paper: "#F4F1EA",
     ink: "#0b140f",
     accentLime: "#C6F432",
     danger: "#FF4D3D",
-    muted: "#8ca393",
-    borderSubtle: "rgba(255, 255, 255, 0.12)",
-    chatBgUser: "#1b4437",
-    chatBgOther: "#143026",
-  },
-
-  // Physics Spring Configurations
-  SPRINGS: {
-    // Snappy entrance with slight overshoot
-    snap: {
-      damping: 14,
-      mass: 0.8,
-      stiffness: 120,
-    },
-    // Chaotic bouncy fall
-    chaosBounce: {
-      damping: 11,
-      mass: 0.9,
-      stiffness: 140,
-    },
-    // Smooth camera push
-    camera: {
-      damping: 20,
-      mass: 1.2,
-      stiffness: 90,
-    },
-    // Red pulse danger trigger
-    pulse: {
-      damping: 10,
-      mass: 0.5,
-      stiffness: 180,
-    },
+    muted: "#6b7a72",
+    line: "#E3DED3",
+    chat: "#1b2924",
   },
 };
-
