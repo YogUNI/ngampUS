@@ -129,13 +129,14 @@ export default function Home() {
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-3.5 py-1 text-xs font-bold text-[#0f6849]">
-              FITUR UTAMA
+              <Sparkles size={13} />
+              LIMA PILAR EKOSISTEM MAHASISWA
             </span>
             <h2 className="font-display mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#10261b] leading-tight">
-              Satu tempat untuk seluruh ritme kuliah dan organisasi.
+              Satu ruang kerja untuk seluruh ritme kuliah dan organisasi.
             </h2>
-            <p className="mt-4 text-base sm:text-lg text-[#55675b]">
-              Bukan aplikasi catatan serbaguna yang rumit. nGampUS dirancang presisi untuk alur hidup mahasiswa Indonesia di perguruan tinggi.
+            <p className="mt-4 text-base sm:text-lg text-[#55675b] leading-relaxed">
+              Bukan sekadar aplikasi catatan biasa. nGampUS dirancang khusus untuk realitas mahasiswa Indonesia: jadwal kelas praktikum, pembagian tugas kelompok, proker organisasi, hingga rekap portofolio magang.
             </p>
           </div>
         </Reveal>
@@ -145,23 +146,23 @@ export default function Home() {
 
           {/* Bento Card 1: Jadwal Kuliah & Link Kelas (Wide 2 Cols) */}
           <Reveal className="md:col-span-2">
-            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#b4d2bd]">
+            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#0f6849]/30">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
                     <Calendar size={22} />
                   </span>
                   <span className="font-mono text-xs font-bold text-[#708075] uppercase tracking-wider">
-                    01 / Smart Schedule
+                    01 / Jadwal Cerdas
                   </span>
                 </div>
 
-                <div className="mt-6 max-w-lg">
+                <div className="mt-6 max-w-xl">
                   <h3 className="font-display text-2xl font-black text-[#10261b] tracking-tight">
-                    Jadwal Kuliah Terhubung Link Kelas & Export .ICS
+                    Jadwal Kuliah Terhubung Ruang Kelas & Kalender Smartphone
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#55675b]">
-                    Tautkan link Google Meet, Zoom, dan folder Google Drive materi kuliah langsung ke mata kuliah terkait. Dilengkapi filter hari cerdas dan export kalender ke perangkat smartphone.
+                    Tautkan link Google Meet, Zoom, dan folder Google Drive materi kuliah langsung ke mata kuliah terkait. Dilengkapi filter hari cerdas dan export kalender (.ICS) ke perangkat ponselmu.
                   </p>
                 </div>
               </div>
@@ -170,10 +171,10 @@ export default function Home() {
               <div className="mt-8 rounded-2xl border border-[#edf2ee] bg-[#f9faf8] p-4">
                 <div className="flex items-center justify-between border-b border-[#e5ece5] pb-2.5 text-xs font-bold text-[#55675b]">
                   <div className="flex items-center gap-2">
-                    <span>HARI SENIN</span>
+                    <span className="text-[#10261b]">HARI SENIN</span>
                     <span className="rounded-full bg-[#0f6849] px-2 py-0.5 text-[9px] font-bold text-white">HARI INI</span>
                   </div>
-                  <span className="text-[#0f6849] font-bold">2 Kelas Terjadwal</span>
+                  <span className="text-[#0f6849] font-bold text-[11px]">2 Kelas Terjadwal • 5 SKS</span>
                 </div>
                 <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-white p-3.5 border border-[#dce5dd]">
                   <div>
@@ -186,7 +187,7 @@ export default function Home() {
                     <p className="text-xs text-[#708075]">Lab Komputer B • Dr. Ir. Gunawan</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] px-3 py-1.5 text-xs font-bold text-white">
+                    <span className="inline-flex items-center gap-1 rounded-xl bg-[#0f6849] px-3 py-1.5 text-xs font-bold text-white shadow-xs">
                       Buka Meet
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-xl bg-[#f4f7f4] border border-[#dce5dd] px-3 py-1.5 text-xs font-semibold text-[#33463a]">
@@ -200,14 +201,14 @@ export default function Home() {
 
           {/* Bento Card 2: Radar Deadline (1 Col) */}
           <Reveal delay={1}>
-            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#b4d2bd]">
+            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#0f6849]/30">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="grid h-11 w-11 place-items-center rounded-2xl bg-rose-100 text-rose-800">
                     <Clock3 size={22} />
                   </span>
                   <span className="font-mono text-xs font-bold text-[#708075] uppercase tracking-wider">
-                    02 / Radar
+                    02 / Radar Deadline
                   </span>
                 </div>
 
@@ -216,43 +217,46 @@ export default function Home() {
                     Radar Deadline Tugas
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#55675b]">
-                    Tugas diurutkan otomatis dari yang paling mendesak. Peringatan visual warna merah untuk H-1 dan H-2 mencegah telat kumpul di portal akademik.
+                    Tugas diurutkan otomatis dari yang paling mendesak. Peringatan visual warna merah untuk H-1 dan H-2 mencegah telat kumpul di portal akademik kampus.
                   </p>
                 </div>
               </div>
 
               <div className="mt-6 space-y-2.5 rounded-2xl border border-rose-200 bg-rose-50/50 p-3.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-rose-900">Laporan Akhir Modul 4</span>
+                  <span className="font-bold text-rose-900">Laporan Praktikum Modul 4</span>
                   <span className="rounded bg-rose-200 px-1.5 py-0.5 text-[9px] font-bold text-rose-900">BESOK</span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-rose-200 overflow-hidden">
                   <div className="h-full rounded-full bg-rose-600" style={{ width: "85%" }} />
                 </div>
-                <p className="text-[11px] text-rose-800">Tenggat Waktu: Besok 23:59 WIB</p>
+                <div className="flex items-center justify-between text-[11px] text-rose-800">
+                  <span>Tenggat: Besok 23:59 WIB</span>
+                  <span className="font-bold">Sisa 14 Jam</span>
+                </div>
               </div>
             </div>
           </Reveal>
 
           {/* Bento Card 3: Modul & AI Study Companion (Wide 2 Cols) */}
           <Reveal delay={2} className="md:col-span-2">
-            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#b4d2bd]">
+            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#0f6849]/30">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
                     <Sparkles size={22} />
                   </span>
                   <span className="font-mono text-xs font-bold text-[#708075] uppercase tracking-wider">
-                    03 / Modul & AI
+                    03 / Arsip Modul & AI
                   </span>
                 </div>
 
-                <div className="mt-6 max-w-lg">
+                <div className="mt-6 max-w-xl">
                   <h3 className="font-display text-2xl font-black text-[#10261b] tracking-tight">
-                    Arsip Modul P1–P16 & Tanya AI Instan
+                    Arsip Modul P1–P16 & AI Study Companion
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#55675b]">
-                    Kelompokkan slide kuliah, catatan penting, dan tautan materi per pertemuan (P1–P16). Bingung konsep rumus atau algoritma? Gunakan tombol <strong>Tanya AI</strong> untuk merangkum dan menguji pemahaman dengan kuis instan.
+                    Kelompokkan slide kuliah, catatan penting, dan tautan materi per pertemuan (P1–P16). Bingung konsep rumus atau algoritma rumit? Gunakan fitur <strong>Tanya AI</strong> untuk merangkum dan menguji pemahaman dengan kuis interaktif.
                   </p>
                 </div>
               </div>
@@ -271,8 +275,8 @@ export default function Home() {
                     <span className="grid h-4 w-4 place-items-center rounded-full bg-[#0f6849] text-white text-[8px]">AI</span>
                     <span>Asisten Belajar Mahasiswa:</span>
                   </div>
-                  <p className="text-[11px] text-[#55675b] leading-relaxed">
-                    "O(1) konstan, O(n) linier mengikuti jumlah data, dan O(n²) umumnya terjadi saat perulangan bertingkat (nested loop). Mau kita coba bahas contoh pseudocode-nya?"
+                  <p className="text-[11px] text-[#55675b] leading-relaxed font-mono">
+                    "O(1) konstan, O(n) linier mengikuti jumlah data, dan O(n²) umumnya terjadi saat perulangan bertingkat (nested loop). 3 kuis pemahaman siap dikerjakan."
                   </p>
                 </div>
               </div>
@@ -281,14 +285,14 @@ export default function Home() {
 
           {/* Bento Card 4: Organisasi & Proker (1 Col) */}
           <Reveal delay={2}>
-            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#b4d2bd]">
+            <div className="group relative h-full flex flex-col justify-between overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#0f6849]/30">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#e5f1fa] text-[#2978ba]">
                     <Users size={22} />
                   </span>
                   <span className="font-mono text-xs font-bold text-[#708075] uppercase tracking-wider">
-                    04 / Organisasi
+                    04 / Organisasi & Proker
                   </span>
                 </div>
 
@@ -297,7 +301,7 @@ export default function Home() {
                     Organisasi & Proker
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#55675b]">
-                    Pantau jabatan di BEM, Himpunan, atau UKM. Rinci program kerja menjadi timeline kegiatan terukur tanpa bentrok jadwal kuliah.
+                    Pantau jabatan di BEM, Himpunan, atau UKM. Rinci program kerja menjadi timeline kegiatan terukur tanpa takut jadwal bentrok dengan kuliah.
                   </p>
                 </div>
               </div>
@@ -307,8 +311,9 @@ export default function Home() {
                   <span className="font-bold text-[#1e5887]">BEM Fakultas • Divisi Riset</span>
                   <span className="text-[10px] font-bold text-[#2978ba]">Ketua</span>
                 </div>
-                <div className="rounded-lg bg-white p-2 border border-[#dce8f3] text-xs font-medium text-[#3b5569]">
-                  📌 Survei Aspirasi Mahasiswa (Progres: 75%)
+                <div className="rounded-lg bg-white p-2.5 border border-[#dce8f3] text-xs font-medium text-[#3b5569] flex items-center justify-between">
+                  <span>📌 Survei Aspirasi Mahasiswa</span>
+                  <span className="font-bold text-[#236098]">75% Siap</span>
                 </div>
               </div>
             </div>
@@ -316,36 +321,46 @@ export default function Home() {
 
           {/* Bento Card 5: Portofolio & CV ATS (Full 3 Cols) */}
           <Reveal delay={3} className="md:col-span-3">
-            <div className="group relative overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#b4d2bd]">
+            <div className="group relative overflow-hidden rounded-3xl border border-[#dce5dd] bg-white p-6 sm:p-8 shadow-xs transition-all hover:shadow-md hover:border-[#0f6849]/30">
               <div className="flex items-center justify-between">
                 <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#f1effd] text-[#644fe2]">
                   <Award size={22} />
                 </span>
                 <span className="font-mono text-xs font-bold text-[#708075] uppercase tracking-wider">
-                  05 / Portofolio CV
+                  05 / Portofolio & Resume CV
                 </span>
               </div>
 
               <div className="mt-6 max-w-xl">
                 <h3 className="font-display text-2xl font-black text-[#10261b] tracking-tight">
-                  Ubah Jejak Pencapaian Menjadi CV ATS-Ready
+                  Ubah Jejak Pencapaian Kuliah Menjadi CV ATS Standar Industri
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[#55675b]">
-                  Setiap kali menyelesaikan proker organisasi atau proyek mata kuliah, nGampUS merangkumnya menjadi poin pengalaman bernilai tinggi siap ekspor untuk resume beasiswa atau magang industri.
+                  Setiap kali menyelesaikan proker organisasi atau proyek mata kuliah, tandai dengan bintang (⭐) untuk otomatis merangkumnya menjadi poin resume berstandar Harvard/ATS siap ekspor 1-klik untuk magang atau beasiswa.
                 </p>
               </div>
 
               {/* Mockup Resume Row */}
               <div className="mt-8 grid sm:grid-cols-2 gap-3.5 rounded-2xl border border-[#edf2ee] bg-[#fafbfa] p-4">
                 <div className="rounded-xl bg-white p-3.5 border border-[#e3dff5]">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#644fe2]">PENGALAMAN ORGANISASI</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#644fe2]">PENGALAMAN ORGANISASI</span>
+                    <span className="text-[10px] font-semibold text-[#708075]">2024–2025</span>
+                  </div>
                   <h6 className="font-bold text-sm text-[#10261b] mt-1">Project Officer — Tech Seminar 2025</h6>
-                  <p className="text-xs text-[#708075] mt-1">Mengelola 20 panitia dan mendatangkan 450+ peserta seminar aktif.</p>
+                  <p className="text-xs text-[#708075] mt-1 leading-snug">
+                    Memimpin 20 panitia lintas divisi, mengelola anggaran Rp15 juta, dan berhasil memfasilitasi 450+ peserta seminar nasional.
+                  </p>
                 </div>
                 <div className="rounded-xl bg-white p-3.5 border border-[#c3ddcb]">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0f6849]">PROYEK AKADEMIK</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#0f6849]">PROYEK AKADEMIK</span>
+                    <span className="text-[10px] font-semibold text-[#708075]">Nilai A (4.00)</span>
+                  </div>
                   <h6 className="font-bold text-sm text-[#10261b] mt-1">Aplikasi Web E-Commerce Mahasiswa</h6>
-                  <p className="text-xs text-[#708075] mt-1">Next.js & Supabase • Nilai Akhir A (4.00) • Terpilih di Pameran Karya.</p>
+                  <p className="text-xs text-[#708075] mt-1 leading-snug">
+                    Merancang full-stack web app dengan Next.js & Supabase, menerapkan caching performa tinggi, dan terpilih dalam pameran karya.
+                  </p>
                 </div>
               </div>
             </div>
