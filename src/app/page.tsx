@@ -125,26 +125,26 @@ export default function Home() {
       <section 
         id="how-it-works" 
         aria-label="Alur 4 Langkah Kerja ngampUS"
-        className="relative border-b border-white/10 bg-[#0d261e] py-20 sm:py-28 px-4 sm:px-8 lg:px-12 text-[#F4F1EA] scroll-mt-20 overflow-hidden"
+        className="relative border-b border-white/10 bg-[#0d261e] py-16 sm:py-20 px-4 sm:px-8 lg:px-12 text-[#F4F1EA] scroll-mt-20 overflow-hidden"
       >
         {/* Subtle Ambient Radial Glow */}
         <div 
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[950px] rounded-full bg-radial from-[#12332a]/50 via-transparent to-transparent blur-3xl opacity-60"
+          className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[800px] rounded-full bg-radial from-[#12332a]/50 via-transparent to-transparent blur-3xl opacity-50"
         />
 
         <div className="relative mx-auto max-w-7xl">
           <Reveal>
-            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#12332a] px-3.5 py-1.5 text-xs font-mono font-bold text-[#C6F432]">
+            <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#12332a] px-3.5 py-1 text-xs font-mono font-bold text-[#C6F432]">
                 <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
-                <span>TRANSFORMASI RITME AKADEMIK</span>
+                <span>ALUR MAHASISWA</span>
               </div>
-              <h2 className="font-display mt-4 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-                Menjaga pikiran tetap jernih sepanjang semester.
+              <h2 className="font-display mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+                Empat langkah otomatis, dari kelas hingga CV magang.
               </h2>
-              <p className="mt-4 text-base sm:text-lg text-[#F4F1EA]/70 leading-relaxed font-normal">
-                Dari kekacauan awal semester menuju rutinitas harian yang teratur, terukur, dan bermuara pada portofolio resume magang terverifikasi.
+              <p className="mt-3 text-sm sm:text-base text-[#F4F1EA]/70 leading-relaxed font-normal max-w-2xl mx-auto">
+                Bebas dari kepanikan semalam suntuk. Seluruh aktivitas perkuliahanmu langsung terhubung ke portofolio yang terverifikasi.
               </p>
             </div>
           </Reveal>
