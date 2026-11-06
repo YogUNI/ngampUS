@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { PageTracker } from "@/components/analytics/page-tracker";
 import { PwaRegister } from "@/components/pwa/pwa-register";
-import { PwaSplashScreen } from "@/components/pwa/pwa-splash-screen";
+import { SplashScreen } from "@/components/splash/SplashScreen";
 import { OfflineIndicator } from "@/components/pwa/offline-indicator";
 import { AutoLogoutProvider } from "@/components/auth/auto-logout-provider";
 import "./globals.css";
@@ -152,8 +152,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen flex flex-col w-full font-sans">
+        <SplashScreen />
         <OfflineIndicator />
-        <PwaSplashScreen />
         <Suspense fallback={null}>
           <NavigationProgress />
           <PageTracker />

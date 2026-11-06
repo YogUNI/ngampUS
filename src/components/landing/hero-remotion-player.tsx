@@ -36,8 +36,20 @@ export function HeroRemotionPlayer() {
   }, []);
 
   // Pause when offscreen, resume loop when in viewport to conserve GPU & battery
+  // Synchronized with splash screen 'ngampus:reveal' event
   useEffect(() => {
     if (!mounted || prefersReducedMotion || !containerRef.current) return;
+
+    const handleReveal = () => {
+      if (playerRef.current) {
+        try {
+          playerRef.current.seekTo(0);
+          playerRef.current.play();
+        } catch (e) {}
+      }
+    };
+
+    window.addEventListener("ngampus:reveal", handleReveal);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -45,7 +57,10 @@ export function HeroRemotionPlayer() {
         if (!playerRef.current) return;
 
         if (entry.isIntersecting) {
-          playerRef.current.play();
+          // Play only if splash has revealed or already marked ready
+          if (document.body.classList.contains("ready")) {
+            playerRef.current.play();
+          }
         } else {
           playerRef.current.pause();
         }
@@ -54,7 +69,10 @@ export function HeroRemotionPlayer() {
     );
 
     observer.observe(containerRef.current);
-    return () => observer.disconnect();
+    return () => {
+      window.removeEventListener("ngampus:reveal", handleReveal);
+      observer.disconnect();
+    };
   }, [mounted, prefersReducedMotion]);
 
   if (!mounted) {
