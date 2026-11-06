@@ -122,18 +122,29 @@ export default function Home() {
       <InteractiveDemo />
 
       {/* ── WORKFLOW TIMELINE SECTION ───────────────────────────── */}
-      <section id="how-it-works" className="border-t border-[#e5ece5] bg-[#f5f7f2] px-4 py-16 sm:px-8 sm:py-24 lg:px-12 scroll-mt-20">
-        <div className="mx-auto max-w-7xl">
+      <section 
+        id="how-it-works" 
+        aria-label="Alur 4 Langkah Kerja ngampUS"
+        className="relative border-b border-white/10 bg-[#0d261e] py-20 sm:py-28 px-4 sm:px-8 lg:px-12 text-[#F4F1EA] scroll-mt-20 overflow-hidden"
+      >
+        {/* Subtle Ambient Radial Glow */}
+        <div 
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[950px] rounded-full bg-radial from-[#12332a]/50 via-transparent to-transparent blur-3xl opacity-60"
+        />
+
+        <div className="relative mx-auto max-w-7xl">
           <Reveal>
-            <div className="text-center max-w-3xl mx-auto mb-14">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-3.5 py-1 text-xs font-bold text-[#0f6849]">
-                ALUR 4 LANGKAH
-              </span>
-              <h2 className="font-display mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#10261b]">
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#12332a] px-3.5 py-1.5 text-xs font-mono font-bold text-[#C6F432]">
+                <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
+                <span>TRANSFORMASI RITME AKADEMIK</span>
+              </div>
+              <h2 className="font-display mt-4 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
                 Menjaga pikiran tetap jernih sepanjang semester.
               </h2>
-              <p className="mt-4 text-base text-[#55675b]">
-                Dari kekacauan awal semester menuju rutinitas harian yang teratur dan terukur. Klik tiap tahap untuk melihat rinciannya.
+              <p className="mt-4 text-base sm:text-lg text-[#F4F1EA]/70 leading-relaxed font-normal">
+                Dari kekacauan awal semester menuju rutinitas harian yang teratur, terukur, dan bermuara pada portofolio resume magang terverifikasi.
               </p>
             </div>
           </Reveal>
