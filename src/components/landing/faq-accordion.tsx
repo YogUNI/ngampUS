@@ -11,23 +11,23 @@ interface FaqItem {
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Apakah nGampUS benar-benar gratis?",
-    answer: "Ya, 100% gratis untuk seluruh mahasiswa Indonesia! Semua fitur esensial seperti manajemen semester, jadwal kuliah, radar deadline, struktur organisasi, hingga generator rekap portofolio CV dapat kamu gunakan tanpa biaya langganan atau ikatan kartu kredit.",
+    answer: "Ya, 100% gratis untuk seluruh mahasiswa Indonesia. Semua fitur esensial seperti jadwal kuliah, radar deadline, manajemen proker organisasi, hingga ekspor resume ATS dapat kamu gunakan tanpa biaya langganan apa pun.",
   },
   {
     question: "Bagaimana nGampUS menjaga keamanan dan privasi data saya?",
-    answer: "Keamanan adalah pondasi utama nGampUS. Kami menerapkan PostgreSQL Row Level Security (RLS) di mana hanya akunmu yang memiliki akses ke data pribadimu. Selain itu, web dilindungi Content Security Policy (CSP) ketat, anti-IDOR validation di setiap server action, dan kami tidak pernah menjual data atau memasang pelacak iklan.",
+    answer: "Keamanan adalah pondasi utama kami. Kami menerapkan PostgreSQL Row Level Security (RLS) di mana hanya akunmu yang memiliki akses ke data pribadimu. Data tidak pernah dijual atau diserahkan ke pihak ketiga.",
   },
   {
-    question: "Apa bedanya nGampUS dengan Notion, Google Calendar, atau Todoist?",
-    answer: "Notion butuh waktu berjam-jam untuk merancang template rumit, dan Google Calendar tidak memahami konteks proker organisasi atau SKS. nGampUS didesain khusus (opinionated workspace) untuk mahasiswa Indonesia: dari struktur semester, relasi dosen & ruang kelas, hingga pembagian divisi organisasi dan konversi rekap proker menjadi poin resume CV siap pakai.",
+    question: "Apa bedanya nGampUS dengan Notion atau Google Calendar?",
+    answer: "Notion memerlukan setup berjam-jam dengan template rumit, sedangkan Google Calendar tidak memahami konteks SKS atau organisasi kampus. nGampUS langsung siap pakai dalam 2 menit dan dirancang khusus untuk ritme perkuliahan mahasiswa Indonesia.",
   },
   {
     question: "Apakah data semester lalu akan hilang saat berganti semester baru?",
-    answer: "Tentu tidak! nGampUS memiliki sistem arsip semester historis. Ketika kamu mengaktifkan semester baru, data mata kuliah, nilai, dan rekap semester sebelumnya tersimpan rapi sebagai arsip dan dapat dibuka kapan saja sebagai jejak portofolio akademikmu.",
+    answer: "Tidak akan hilang. nGampUS menyediakan sistem arsip semester historis. Ketika mengaktifkan semester baru, data matkul, nilai, dan rekap semester sebelumnya tersimpan rapi dan dapat dibuka kembali kapan saja.",
   },
   {
-    question: "Apakah bisa digunakan bersama tim divisi di organisasi kampus?",
-    answer: "Bisa! Kamu dapat mencatat struktur bagan organisasi, anggota divisi, dan mendelegasikan progres proker kegiatan sehingga seluruh ritme kerja organisasi terpantau jelas dalam satu papan fokus.",
+    question: "Apakah bisa digunakan bersama teman di organisasi kampus?",
+    answer: "Bisa. Kamu bisa mencatat struktur kepengurusan organisasi, divisi, dan memantau timeline progres proker bersama agar tidak bentrok dengan jadwal ujian atau praktikum lab.",
   },
 ];
 
@@ -39,7 +39,7 @@ export function FaqAccordion() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-3.5">
+    <div className="mx-auto w-full max-w-3xl space-y-3">
       {FAQ_ITEMS.map((item, index) => {
         const isOpen = openIndex === index;
         return (
@@ -80,7 +80,7 @@ export function FaqAccordion() {
               }`}
             >
               <div className="overflow-hidden">
-                <p className="text-sm leading-relaxed text-[#55675b] border-t border-[#edf2ee] pt-3.5">
+                <p className="text-sm leading-relaxed text-[#55675b] border-t border-[#edf2ee] pt-3">
                   {item.answer}
                 </p>
               </div>
@@ -101,7 +101,7 @@ export function FaqAccordion() {
             href="https://www.instagram.com/gusrchmd_/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold text-[#0f6849] underline hover:text-[#0b4d36]"
+            className="font-bold text-[#0f6849] hover:underline"
           >
             @gusrchmd_
           </a>

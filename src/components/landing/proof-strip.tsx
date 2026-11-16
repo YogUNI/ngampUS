@@ -4,103 +4,90 @@ import React from "react";
 import { GraduationCap, Clock3, ShieldCheck, Award } from "lucide-react";
 
 export function ProofStrip() {
+  const metrics = [
+    {
+      icon: GraduationCap,
+      value: "14+",
+      label: "Kampus di Indonesia",
+      desc: "Mahasiswa UI, ITB, UGM, ITS, BINUS & lainnya",
+    },
+    {
+      icon: ShieldCheck,
+      value: "100%",
+      label: "Gratis Selamanya",
+      desc: "Nol biaya langganan, nol paywall, tanpa iklan",
+    },
+    {
+      icon: Clock3,
+      value: "2,400+",
+      label: "Jam Kuliah Teratur",
+      desc: "Jadwal kelas, lab & deadline tertata presisi",
+    },
+    {
+      icon: Award,
+      value: "96/100",
+      label: "Skor Resume ATS",
+      desc: "Format standar Harvard siap lamar magang",
+    },
+  ];
+
+  const campuses = [
+    "Universitas Indonesia",
+    "Institut Teknologi Bandung",
+    "Universitas Gadjah Mada",
+    "ITS Surabaya",
+    "BINUS University",
+    "Telkom University",
+    "Universitas Padjadjaran",
+    "Universitas Diponegoro",
+  ];
+
   return (
     <section 
       id="proof-strip"
       aria-label="Statistik dan Kepercayaan Kampus"
-      className="relative border-b border-white/10 bg-[#0d261e] py-10 sm:py-14 px-4 sm:px-8 lg:px-12 text-[#F4F1EA] overflow-hidden"
+      className="relative border-b border-white/10 bg-[#0a1f16] py-10 sm:py-12 px-4 sm:px-8 lg:px-12 text-[#F4F1EA]"
     >
-      {/* Background Subtle Radial Ambience */}
-      <div 
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-radial-[at_50%_50%] from-[#12332a]/40 via-transparent to-transparent opacity-50"
-      />
-
       <div className="relative mx-auto max-w-7xl">
-        {/* TODO: Ganti dengan data resmi kemitraan kampus saat peluncuran publik */}
-        
-        {/* 4 Monospace Metric Pillars */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 lg:gap-8 min-w-0">
-          
-          {/* Metric 1 */}
-          <div className="group rounded-2xl border-l-2 border-[#C6F432]/40 bg-white/[0.02] p-4 sm:p-5 transition-all duration-300 hover:border-[#C6F432] hover:bg-white/[0.04]">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase text-[#C6F432] tracking-wider">
-              <GraduationCap size={15} className="shrink-0" />
-              <span>Komunitas Kampus</span>
-            </div>
-            <div className="font-mono mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white transition-colors group-hover:text-[#C6F432]">
-              14<span className="text-[#C6F432]">+</span> Kampus
-            </div>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#F4F1EA]/65 leading-relaxed font-sans">
-              Mahasiswa dari UI, ITB, UGM, ITS, BINUS, hingga Telkom University.
-            </p>
-          </div>
-
-          {/* Metric 2 */}
-          <div className="group rounded-2xl border-l-2 border-[#C6F432]/40 bg-white/[0.02] p-4 sm:p-5 transition-all duration-300 hover:border-[#C6F432] hover:bg-white/[0.04]">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase text-[#C6F432] tracking-wider">
-              <Clock3 size={15} className="shrink-0" />
-              <span>Beban Akademik</span>
-            </div>
-            <div className="font-mono mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white transition-colors group-hover:text-[#C6F432]">
-              2,400<span className="text-[#C6F432]">+</span> Jam
-            </div>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#F4F1EA]/65 leading-relaxed font-sans">
-              Jadwal kuliah, praktikum lab, dan batas waktu tugas tertata rapi.
-            </p>
-          </div>
-
-          {/* Metric 3 */}
-          <div className="group rounded-2xl border-l-2 border-[#C6F432]/40 bg-white/[0.02] p-4 sm:p-5 transition-all duration-300 hover:border-[#C6F432] hover:bg-white/[0.04]">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase text-[#C6F432] tracking-wider">
-              <ShieldCheck size={15} className="shrink-0" />
-              <span>Akses Terbuka</span>
-            </div>
-            <div className="font-mono mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white transition-colors group-hover:text-[#C6F432]">
-              100<span className="text-[#C6F432]">%</span> Gratis
-            </div>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#F4F1EA]/65 leading-relaxed font-sans">
-              Bukan versi trial. Nol paywall, nol iklan yang mengganggu fokus.
-            </p>
-          </div>
-
-          {/* Metric 4 */}
-          <div className="group rounded-2xl border-l-2 border-[#C6F432]/40 bg-white/[0.02] p-4 sm:p-5 transition-all duration-300 hover:border-[#C6F432] hover:bg-white/[0.04]">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase text-[#C6F432] tracking-wider">
-              <Award size={15} className="shrink-0" />
-              <span>Kesiapan Magang</span>
-            </div>
-            <div className="font-mono mt-2 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white transition-colors group-hover:text-[#C6F432]">
-              96<span className="text-[#C6F432]">/100</span> <span className="text-sm sm:text-base font-bold text-[#C6F432]">ATS</span>
-            </div>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#F4F1EA]/65 leading-relaxed font-sans">
-              Rata-rata skor evaluasi format resume magang mahasiswa.
-            </p>
-          </div>
-
+        {/* 4 Minimalist Metric Pillars */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          {metrics.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div 
+                key={idx}
+                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 transition-all duration-300 hover:border-[#C6F432]/40 hover:bg-white/[0.05]"
+              >
+                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#C6F432]">
+                  <Icon size={14} className="shrink-0" />
+                  <span>{item.label}</span>
+                </div>
+                <div className="mt-3 font-display text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white group-hover:text-[#C6F432] transition-colors">
+                  {item.value}
+                </div>
+                <p className="mt-1 text-xs text-[#F4F1EA]/60 font-normal leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Ticker / Campus Names Micro Bar */}
-        <div className="mt-8 sm:mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 text-xs font-mono text-[#F4F1EA]/50 w-full min-w-0">
-          <div className="flex items-center gap-2 text-[#C6F432] uppercase tracking-wider text-[11px] shrink-0 font-bold">
+        {/* Quiet Campus Ticker Ribbon */}
+        <div className="mt-8 pt-5 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono text-[#F4F1EA]/50">
+          <div className="flex items-center gap-2 text-[#C6F432] text-[11px] font-bold tracking-wider uppercase shrink-0">
             <span className="h-1.5 w-1.5 rounded-full bg-[#C6F432] animate-pulse" />
             <span>Mahasiswa Aktif Tersebar Di:</span>
           </div>
-          <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-4 gap-y-1.5 text-[11px] sm:text-xs min-w-0">
-            <span className="hover:text-white transition-colors">Universitas Indonesia</span>
-            <span className="text-white/20">/</span>
-            <span className="hover:text-white transition-colors">Institut Teknologi Bandung</span>
-            <span className="text-white/20">/</span>
-            <span className="hover:text-white transition-colors">Universitas Gadjah Mada</span>
-            <span className="text-white/20">/</span>
-            <span className="hover:text-white transition-colors">ITS Surabaya</span>
-            <span className="text-white/20">/</span>
-            <span className="hover:text-white transition-colors">BINUS University</span>
-            <span className="text-white/20">/</span>
-            <span className="hover:text-white transition-colors">Telkom University</span>
+          <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-[11px]">
+            {campuses.map((c, i) => (
+              <React.Fragment key={c}>
+                <span className="hover:text-white transition-colors">{c}</span>
+                {i < campuses.length - 1 && <span className="text-white/20">·</span>}
+              </React.Fragment>
+            ))}
           </div>
         </div>
-
       </div>
     </section>
   );

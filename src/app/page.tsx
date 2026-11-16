@@ -2,25 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { 
   ArrowRight, 
-  Check, 
-  Clock3, 
-  Calendar, 
-  Users, 
-  Award, 
+  ArrowDown,
   Sparkles,
-  Shield,
-  Heart,
-  BookOpen,
-  ArrowUpRight,
-  ArrowDown
+  Heart
 } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-import { HeroShowcase } from "@/components/landing/hero-showcase";
 import { HeroRemotionPlayer } from "@/components/landing/hero-remotion-player";
 import { ProofStrip } from "@/components/landing/proof-strip";
 import { BeforeAfter } from "@/components/landing/before-after";
 import { BentoFeatures } from "@/components/landing/bento-features";
-import { InteractiveDemo } from "@/components/landing/interactive-demo";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
 import { WorkflowTimeline } from "@/components/landing/workflow-timeline";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
@@ -29,7 +19,7 @@ import { StandaloneRedirectGuard } from "@/components/pwa/standalone-redirect-gu
 
 export default function Home() {
   return (
-    <main className="landing-page min-h-screen bg-[#fafaf7] text-[#10261b] selection:bg-[#C6F432]/30 selection:text-[#0a1f16]">
+    <main className="landing-page min-h-screen bg-[#0a1f16] text-[#F4F1EA] selection:bg-[#C6F432]/30 selection:text-[#0a1f16]">
       <StandaloneRedirectGuard />
 
       {/* ── STICKY FLOATING NAVBAR ── */}
@@ -59,8 +49,6 @@ export default function Home() {
               </div>
 
               {/* Display Headline */}
-              {/* A/B Test Alternative 1: "Kuliah teratur. Ambisi organisasi tetap melesat." */}
-              {/* A/B Test Alternative 2: "Berhenti panik tiap malam Minggu karena deadline numpuk." */}
               <h1 className="font-display mt-5 text-3xl sm:text-5xl lg:text-[3.6rem] xl:text-[4rem] font-black leading-[1.08] tracking-tight text-[#F4F1EA] text-balance">
                 Tugas numpuk.<br />
                 Jadwal bentrok.<br />
@@ -118,16 +106,12 @@ export default function Home() {
       {/* ── BENTO GRID FITUR ────────────────────────────────────── */}
       <BentoFeatures />
 
-      {/* ── DEMO INTERAKTIF ─────────────────────────────────────── */}
-      <InteractiveDemo />
-
       {/* ── WORKFLOW TIMELINE SECTION ───────────────────────────── */}
       <section 
         id="how-it-works" 
-        aria-label="Alur 4 Langkah Kerja ngampUS"
-        className="relative border-b border-white/10 bg-[#0d261e] py-16 sm:py-20 px-4 sm:px-8 lg:px-12 text-[#F4F1EA] scroll-mt-20 overflow-hidden"
+        aria-label="Alur 3 Langkah Kerja ngampUS"
+        className="relative border-b border-white/10 bg-[#0d261e] py-16 sm:py-20 lg:py-24 px-4 sm:px-8 lg:px-12 text-[#F4F1EA] scroll-mt-20 overflow-hidden"
       >
-        {/* Subtle Ambient Radial Glow */}
         <div 
           aria-hidden="true"
           className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[800px] rounded-full bg-radial from-[#12332a]/50 via-transparent to-transparent blur-3xl opacity-50"
@@ -135,16 +119,16 @@ export default function Home() {
 
         <div className="relative mx-auto max-w-7xl">
           <Reveal>
-            <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#12332a] px-3.5 py-1 text-xs font-mono font-bold text-[#C6F432]">
                 <span className="h-2 w-2 rounded-full bg-[#C6F432] animate-pulse" />
                 <span>ALUR MAHASISWA</span>
               </div>
-              <h2 className="font-display mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-                Empat langkah otomatis, dari kelas hingga CV magang.
+              <h2 className="font-display mt-3 text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+                Tiga langkah sederhana, dari kuliah hingga CV magang.
               </h2>
-              <p className="mt-3 text-sm sm:text-base text-[#F4F1EA]/70 leading-relaxed font-normal max-w-2xl mx-auto">
-                Bebas dari kepanikan semalam suntuk. Seluruh aktivitas perkuliahanmu langsung terhubung ke portofolio yang terverifikasi.
+              <p className="mt-3 text-sm sm:text-base text-[#F4F1EA]/70 leading-relaxed font-normal">
+                Bebas dari kepanikan semalam suntuk. Seluruh aktivitas perkuliahanmu langsung terhubung ke portofolio yang siap pakai.
               </p>
             </div>
           </Reveal>
@@ -156,63 +140,71 @@ export default function Home() {
       </section>
 
       {/* ── FAQ SECTION ────────────────────────────────────────── */}
-      <section id="faq" className="mx-auto max-w-7xl px-4 py-16 sm:px-8 sm:py-24 lg:px-12 scroll-mt-20">
-        <Reveal>
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-3.5 py-1 text-xs font-bold text-[#0f6849]">
-              PERTANYAAN UMUM
-            </span>
-            <h2 className="font-display mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#10261b]">
-              Semua hal yang perlu kamu ketahui.
-            </h2>
-            <p className="mt-3 text-base text-[#55675b]">
-              Transparan, aman, dan tanpa biaya langganan apa pun.
-            </p>
-          </div>
-        </Reveal>
+      <section id="faq" className="bg-[#fafaf7] text-[#10261b] py-16 sm:py-24 px-4 sm:px-8 lg:px-12 scroll-mt-20">
+        <div className="mx-auto max-w-7xl">
+          <Reveal>
+            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dff3e5] px-3.5 py-1 text-xs font-bold text-[#0f6849]">
+                PERTANYAAN UMUM
+              </span>
+              <h2 className="font-display mt-3 text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#10261b]">
+                Semua hal yang perlu kamu ketahui.
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-[#55675b]">
+                Transparan, aman, dan tanpa biaya langganan apa pun.
+              </p>
+            </div>
+          </Reveal>
 
-        <Reveal delay={1}>
-          <FaqAccordion />
-        </Reveal>
+          <Reveal delay={1}>
+            <FaqAccordion />
+          </Reveal>
+        </div>
       </section>
 
       {/* ── FINAL CTA SECTION ──────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-8 sm:pb-24 lg:px-12">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-[#10261b] px-6 py-12 sm:px-14 sm:py-20 text-white shadow-xl">
-            <div className="relative z-10 grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-bold text-[#dff3e5] mb-5">
-                  <Sparkles size={13} className="text-[#c8ef70]" />
-                  MULAI HARI INI SECARA GRATIS
+      <section className="bg-[#fafaf7] px-4 pb-16 sm:px-8 sm:pb-24 lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <Reveal>
+            <div className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-[#0a1f16] border border-white/10 px-6 py-12 sm:px-14 sm:py-16 text-white shadow-2xl">
+              <div 
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-[#C6F432]/10 blur-3xl"
+              />
+              <div className="relative z-10 grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-[#C6F432]/30 bg-[#12332a] px-3.5 py-1 text-xs font-mono font-bold text-[#C6F432] mb-5">
+                    <Sparkles size={13} />
+                    <span>MULAI HARI INI SECARA GRATIS</span>
+                  </div>
+                  <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white">
+                    Jangan biarkan semester ini berlalu dalam kepanikan.
+                  </h2>
+                  <p className="mt-3 text-sm sm:text-base text-[#F4F1EA]/75 leading-relaxed max-w-xl font-normal">
+                    Bangun workspace nGampUS milikmu sekarang. Hanya butuh 2 menit untuk menata jadwal, tugas, dan target perkuliahanmu.
+                  </p>
                 </div>
-                <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight">
-                  Jangan biarkan semester ini berlalu dalam kepanikan.
-                </h2>
-                <p className="mt-4 text-base sm:text-lg text-[#cad7ce] leading-relaxed max-w-xl">
-                  Bangun workspace nGampUS milikmu sekarang. Hanya butuh 2 menit untuk menata jadwal, tugas, dan target perkuliahanmu.
-                </p>
-              </div>
 
-              <div className="lg:justify-self-end flex flex-col items-start lg:items-end gap-3.5">
-                <Link 
-                  href="/register" 
-                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-[#0f6849] px-7 py-4 text-base font-bold text-white shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:bg-[#0b4d36] active:scale-98"
-                >
-                  <span>Buat Ruang Kuliahmu</span>
-                  <ArrowRight size={18} />
-                </Link>
-                <span className="text-xs font-medium text-[#8ca393]">
-                  ✦ 100% Gratis • Tanpa Kartu Kredit • Setup 2 Menit
-                </span>
+                <div className="lg:justify-self-end flex flex-col items-start lg:items-end gap-3.5">
+                  <Link 
+                    href="/register" 
+                    className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-[#C6F432] px-7 py-4 text-sm sm:text-base font-bold text-[#0a1f16] shadow-lg shadow-[#C6F432]/20 transition-all hover:brightness-110 active:scale-98"
+                  >
+                    <span>Buat Ruang Kuliahmu</span>
+                    <ArrowRight size={18} />
+                  </Link>
+                  <span className="text-xs font-mono text-[#F4F1EA]/60">
+                    ✦ 100% Gratis • Tanpa Kartu Kredit • Setup 2 Menit
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* ── FOOTER ─────────────────────────────────────────────── */}
-      <footer className="border-t border-[#e5ece5] bg-white">
+      <footer className="border-t border-[#e5ece5] bg-white text-[#10261b]">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-16 lg:px-12">
           <div className="grid gap-10 md:grid-cols-4 pb-12 border-b border-[#edf2ee]">
             
