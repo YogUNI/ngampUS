@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Sparkles } from "lucide-react";
+import { ChevronDown, Sparkles, MessageCircle } from "lucide-react";
 
 interface FaqItem {
   question: string;
@@ -39,32 +39,34 @@ export function FaqAccordion() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-3">
+    <div className="w-full space-y-3.5">
       {FAQ_ITEMS.map((item, index) => {
         const isOpen = openIndex === index;
         return (
           <div
             key={index}
-            className={`overflow-hidden rounded-2xl border transition-all duration-200 ${
+            className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
               isOpen
-                ? "border-[#c3ddcb] bg-white shadow-xs"
-                : "border-[#dce5dd] bg-white/80 hover:border-[#b4d2bd] hover:bg-white"
+                ? "border-[#C6F432]/40 bg-[#12332a] shadow-lg shadow-black/20"
+                : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.05]"
             }`}
           >
             <button
               onClick={() => toggleFaq(index)}
-              className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#0f6849] focus-visible:outline-hidden"
+              className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#C6F432] focus-visible:outline-hidden"
               aria-expanded={isOpen}
               aria-controls={`faq-answer-${index}`}
             >
-              <span className="font-display text-base sm:text-lg font-bold tracking-tight text-[#10261b]">
+              <span className={`font-display text-base sm:text-lg font-bold tracking-tight transition-colors ${
+                isOpen ? "text-[#C6F432]" : "text-white"
+              }`}>
                 {item.question}
               </span>
               <span
-                className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-transform duration-200 ${
+                className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-transform duration-300 ${
                   isOpen
-                    ? "bg-[#0f6849] text-white rotate-180 shadow-xs"
-                    : "bg-[#f4f7f4] text-[#708075]"
+                    ? "bg-[#C6F432] text-[#0a1f16] rotate-180 shadow-xs"
+                    : "bg-white/10 text-white/70"
                 }`}
               >
                 <ChevronDown size={18} />
@@ -75,12 +77,12 @@ export function FaqAccordion() {
               id={`faq-answer-${index}`}
               role="region"
               aria-labelledby={`faq-question-${index}`}
-              className={`grid transition-all duration-200 ease-in-out ${
+              className={`grid transition-all duration-300 ease-in-out ${
                 isOpen ? "grid-rows-[1fr] opacity-100 pb-5 px-5" : "grid-rows-[0fr] opacity-0 px-5"
               }`}
             >
               <div className="overflow-hidden">
-                <p className="text-sm leading-relaxed text-[#55675b] border-t border-[#edf2ee] pt-3">
+                <p className="text-sm leading-relaxed text-[#F4F1EA]/75 border-t border-white/10 pt-3.5 font-normal">
                   {item.answer}
                 </p>
               </div>
@@ -90,22 +92,20 @@ export function FaqAccordion() {
       })}
 
       {/* Still have questions banner */}
-      <div className="mt-8 rounded-2xl border border-dashed border-[#c3ddcb] bg-[#dff3e5]/30 p-4 text-center">
-        <p className="text-xs font-semibold text-[#10261b] flex items-center justify-center gap-1.5">
-          <Sparkles size={14} className="text-[#0f6849]" />
-          Punya pertanyaan lain seputar sistem nGampUS?
-        </p>
-        <p className="mt-1 text-xs text-[#708075]">
-          DM langsung kreator di Instagram{" "}
-          <a
-            href="https://www.instagram.com/gusrchmd_/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-bold text-[#0f6849] hover:underline"
-          >
-            @gusrchmd_
-          </a>
-        </p>
+      <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 text-xs text-[#F4F1EA]/80 font-mono">
+          <Sparkles size={14} className="text-[#C6F432]" />
+          <span>Punya pertanyaan spesifik seputar kampusmu?</span>
+        </div>
+        <a
+          href="https://www.instagram.com/gusrchmd_/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-xs font-bold text-[#C6F432] hover:bg-[#C6F432] hover:text-[#0a1f16] transition"
+        >
+          <MessageCircle size={13} />
+          <span>DM @gusrchmd_</span>
+        </a>
       </div>
     </div>
   );
