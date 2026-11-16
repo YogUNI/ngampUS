@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import './splash.css';
 // @ts-ignore
 import { initSplash } from './splashEngine';
@@ -61,12 +62,18 @@ const MARKUP = `<div id="loader" role="status" aria-live="polite" hidden>
 `;
 
 export function SplashScreen() {
+  const pathname = usePathname();
+  const isLanding = pathname === "/";
+
   useEffect(() => {
+    if (!isLanding) return;
     const cleanup = initSplash();
     return () => {
       if (typeof cleanup === 'function') cleanup();
     };
-  }, []);
+  }, [isLanding]);
+
+  if (!isLanding) return null;
 
   return <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: MARKUP }} />;
 }

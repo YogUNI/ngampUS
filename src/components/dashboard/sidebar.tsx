@@ -4,28 +4,44 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import {
-  ArrowUpRight, BarChart3, BookOpen, CalendarDays, ChevronDown, ChevronLeft, ChevronRight,
-  CircleHelp, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Menu, Plus,
-  Settings, ShieldAlert, Sparkles, User, UsersRound, X,
+  ArrowUpRight,
+  BarChart3,
+  BookOpen,
+  CalendarDays,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  CircleHelp,
+  FolderOpen,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Plus,
+  Settings,
+  ShieldAlert,
+  Sparkles,
+  User,
+  UsersRound,
+  X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { performSignOut } from "@/lib/auth-logout";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { PwaInstallButton } from "@/components/pwa/pwa-install-button";
 
 const nav = [
-  { href: "/dashboard",   label: "Dashboard",     note: "Peta fokus",       icon: LayoutDashboard },
-  { href: "/kegiatan",    label: "Kegiatan",      note: "Semua komitmen",    icon: CalendarDays    },
+  { href: "/dashboard",   label: "Dashboard",     note: "Ringkasan fokus",  icon: LayoutDashboard },
   { href: "/jadwal",      label: "Jadwal Kuliah", note: "Kelas mingguan",   icon: BookOpen        },
-  { href: "/modul",       label: "Modul Kuliah",  note: "Materi & arsip",   icon: FolderOpen      },
-  { href: "/organisasi",  label: "Organisasi",    note: "Ruang kontribusi",  icon: UsersRound      },
-  { href: "/semester",    label: "Semester",      note: "Konteks akademik",  icon: GraduationCap   },
-  { href: "/rekap",       label: "Rekap",         note: "Jejak progres",     icon: BarChart3       },
+  { href: "/kegiatan",    label: "Kegiatan & Tugas", note: "Radar deadline",icon: CalendarDays    },
+  { href: "/modul",       label: "Modul Kuliah",  note: "Materi & AI",      icon: FolderOpen      },
+  { href: "/organisasi",  label: "Organisasi",    note: "Ormawa & proker",  icon: UsersRound      },
+  { href: "/semester",    label: "Semester",      note: "Konteks akademik", icon: GraduationCap   },
+  { href: "/rekap",       label: "Rekap & Karir", note: "Portofolio & ATS", icon: BarChart3       },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DESKTOP SIDEBAR (Well-proportioned, comfortably filled height, zero scrolling)
+// DESKTOP SIDEBAR (Clean, Professional Linear/Vercel Style)
 // ─────────────────────────────────────────────────────────────────────────────
 export function Sidebar({ 
   name, 
@@ -38,7 +54,6 @@ export function Sidebar({
   activeSemester?: string; 
   role?: string; 
 }) {
-  const router   = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -52,99 +67,126 @@ export function Sidebar({
 
   return (
     <aside
-      className={`dashboard-sidebar sticky top-0 flex h-screen shrink-0 flex-col overflow-hidden border-r border-[#d8e2da] ${
-        collapsed ? "w-[76px] px-2.5 py-3.5 items-center" : "w-72 px-3.5 py-3.5"
-      } transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]`}
+      className={`dashboard-sidebar sticky top-0 flex h-screen shrink-0 flex-col overflow-hidden border-r border-slate-200 dark:border-[#1c2d22] bg-white dark:bg-[#0c1611] ${
+        collapsed ? "w-[74px] px-2.5 py-4 items-center" : "w-68 px-3.5 py-4"
+      } transition-all duration-300 ease-out`}
     >
-      {/* ── TOP & MIDDLE SCROLLABLE SECTION: Logo, Semester, Nav, CTA ── */}
+      {/* ── TOP SECTION: Brand Logo & Semester ── */}
       <div className={`flex flex-1 flex-col min-h-0 min-w-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${collapsed ? "w-full items-center" : ""}`}>
         
-        {/* Logo & Header */}
+        {/* Brand Header */}
         {!collapsed ? (
-          <div className="flex items-center justify-between px-1 shrink-0">
+          <div className="flex items-center justify-between px-1.5 shrink-0">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2.5 min-w-0"
+              className="flex items-center gap-2.5 min-w-0 group"
             >
               <Image
                 src="/logo_ngampUS.png"
                 alt="ngampUS Logo"
-                width={34}
-                height={34}
-                className="h-8.5 w-8.5 shrink-0 object-contain drop-shadow-xs"
+                width={32}
+                height={32}
+                className="h-8 w-8 shrink-0 object-contain transition-transform group-hover:scale-105"
                 priority
               />
               <span className="min-w-0">
-                <span className="font-display block text-[21px] font-black tracking-[-.04em] leading-tight whitespace-nowrap">
-                  ngamp<span className="text-[var(--brand)]">US</span>
+                <span className="font-display block text-lg font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+                  ngamp<span className="text-emerald-600 dark:text-[#C6F432]">US</span>
                 </span>
-                <span className="block text-[8.5px] font-black tracking-[.18em] text-[var(--muted)] leading-none mt-0.5 whitespace-nowrap">
-                  CAMPUS CONSOLE
+                <span className="block text-[9px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase leading-none mt-0.5">
+                  WORKSPACE
                 </span>
               </span>
             </Link>
 
             <button
+              type="button"
               onClick={() => setCollapsed(true)}
-              title="Ciutkan sidebar"
-              className="rounded-lg p-1.5 text-[var(--muted)] transition hover:bg-[#eaf5eb] hover:text-[#103626]"
+              title="Ciutkan menu"
+              className="rounded-lg p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-white/[0.06] transition cursor-pointer"
             >
               <ChevronLeft size={16} />
             </button>
           </div>
         ) : (
-          /* Collapsed Header: Large Logo on Top + Expand Button */
-          <div className="flex flex-col items-center gap-2 pb-1 shrink-0">
-            <Link href="/dashboard" title="ngampUS Dashboard">
+          <div className="flex flex-col items-center gap-2 shrink-0">
+            <Link href="/dashboard" title="ngampUS Workspace">
               <Image
                 src="/logo_ngampUS.png"
                 alt="ngampUS Logo"
-                width={34}
-                height={34}
-                className="h-8.5 w-8.5 shrink-0 object-contain drop-shadow-xs transition hover:scale-105"
+                width={32}
+                height={32}
+                className="h-8 w-8 shrink-0 object-contain transition hover:scale-105"
                 priority
               />
             </Link>
             <button
+              type="button"
               onClick={() => setCollapsed(false)}
-              title="Perluas sidebar"
-              className="grid h-6 w-6 place-items-center rounded-lg bg-[#eaf5eb] text-[#103626] transition hover:bg-[#d6ebd9]"
+              title="Perluas menu"
+              className="grid h-6 w-6 place-items-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/[0.08] dark:text-slate-300 dark:hover:bg-white/[0.12] transition cursor-pointer"
             >
               <ChevronRight size={14} />
             </button>
           </div>
         )}
 
-        {/* Active Semester Card */}
+        {/* Active Semester Selector Card */}
         {!collapsed ? (
           <Link
             href="/semester"
-            className="mt-2.5 rounded-2xl border border-[#d7e3d9] bg-white/90 p-2.5 text-left shadow-xs transition hover:border-[#a9cdb2] shrink-0"
+            className="mt-3.5 flex items-center justify-between gap-2 rounded-xl border border-slate-200 dark:border-[#1d3527] bg-slate-50/70 dark:bg-[#122219] p-2.5 text-left transition hover:border-emerald-500/50 hover:bg-slate-100/80 dark:hover:border-emerald-500/50 shrink-0 group"
           >
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0">
-                <span className="block text-[8.5px] font-black tracking-[.14em] text-[var(--muted)]">AKTIF SEKARANG</span>
-                <b className="mt-0.5 block truncate text-[13px] font-extrabold text-[var(--ink)]">{activeSemester || "Pilih semester"}</b>
-              </div>
-              <ChevronDown className="shrink-0 text-[var(--brand)]" size={14} />
+            <div className="min-w-0 flex-1">
+              <span className="block text-[8.5px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                SEMESTER AKTIF
+              </span>
+              <p className="mt-0.5 truncate text-xs font-bold text-slate-900 dark:text-slate-100">
+                {activeSemester || "Atur semester"}
+              </p>
             </div>
-            <div className="mt-1 flex items-center gap-1.5 text-[9.5px] font-bold text-[var(--brand)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#c8ef70] shadow-[0_0_0_2px_#dff3e5]" />
-              Semester control
-            </div>
+            <span className="flex items-center gap-1 shrink-0 rounded-md bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300/60 dark:border-emerald-800/60 px-1.5 py-0.5 text-[9px] font-bold text-emerald-800 dark:text-emerald-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Aktif
+            </span>
           </Link>
         ) : (
           <Link
             href="/semester"
             title={activeSemester || "Pilih semester"}
-            className="mt-2.5 grid h-9 w-9 place-items-center rounded-xl border border-[#d7e3d9] bg-white text-[var(--brand)] shadow-xs transition hover:border-[#a9cdb2] hover:bg-[#f4faf6] shrink-0"
+            className="mt-3 grid h-9 w-9 place-items-center rounded-xl border border-slate-200 dark:border-[#1d3527] bg-slate-50 dark:bg-[#122219] text-emerald-600 dark:text-[#C6F432] transition hover:border-emerald-500 shrink-0"
           >
             <GraduationCap size={17} />
           </Link>
         )}
 
-        {/* Main Navigation Links */}
-        <nav className={`mt-2.5 space-y-1 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
+        {/* Quick Action Button */}
+        <div className="mt-3.5 shrink-0 w-full">
+          {!collapsed ? (
+            <Link
+              data-tour="nav-catat"
+              href="/kegiatan?new=1"
+              prefetch={true}
+              className="flex items-center justify-center gap-1.5 w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-3 py-2.5 text-xs font-bold shadow-xs transition active:scale-98"
+            >
+              <Plus size={15} strokeWidth={2.5} />
+              <span>Catat Kegiatan</span>
+            </Link>
+          ) : (
+            <Link
+              data-tour="nav-catat"
+              href="/kegiatan?new=1"
+              prefetch={true}
+              title="Catat kegiatan baru"
+              className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:text-black shadow-xs transition active:scale-98"
+            >
+              <Plus size={16} strokeWidth={2.5} />
+            </Link>
+          )}
+        </div>
+
+        {/* Main Navigation Items */}
+        <nav className={`mt-3.5 space-y-1 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
           {nav.map(({ href, label, note, icon: Icon }) => {
             const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
             const tourId =
@@ -168,130 +210,98 @@ export function Sidebar({
                 data-tour={tourId}
                 prefetch={true}
                 title={collapsed ? label : undefined}
-                className={`group flex items-center rounded-xl transition ${
+                className={`group flex items-center rounded-xl transition duration-150 ${
                   collapsed
                     ? "h-9 w-9 justify-center p-0"
-                    : "gap-2.5 px-2.5 py-2"
+                    : "gap-2.5 px-3 py-2"
                 } ${
                   active
-                    ? "bg-[#103626] text-white shadow-md shadow-[#103626]/15 dark:bg-[#153e2c] dark:shadow-black/40"
-                    : "text-[var(--muted)] hover:bg-white hover:text-[#103626] dark:hover:bg-[#142b1f] dark:hover:text-[#f0f7f2]"
+                    ? "bg-emerald-50 text-emerald-900 border-l-3 border-emerald-600 dark:bg-emerald-950/70 dark:text-[#C6F432] dark:border-[#C6F432] font-bold"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-white/[0.04]"
                 }`}
                 href={href}
               >
-                <span
-                  className={`grid shrink-0 place-items-center rounded-lg ${
-                    collapsed ? "h-8 w-8" : "h-7.5 w-7.5"
-                  } ${
-                    active
-                      ? "bg-[#c8ef70] text-[#103626] dark:bg-[#c8ef70] dark:text-[#0a2318]"
-                      : "bg-[#e7eee7] text-[#50705e] group-hover:bg-[#dff3e5] group-hover:text-[#0f6849] dark:bg-[#12271c] dark:text-[#8ca393] dark:group-hover:bg-[#183a28] dark:group-hover:text-[#4ade80]"
-                  }`}
-                >
-                  <Icon size={16} />
-                </span>
+                <Icon 
+                  size={17} 
+                  className={`shrink-0 transition-colors ${
+                    active 
+                      ? "text-emerald-700 dark:text-[#C6F432]" 
+                      : "text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
+                  }`} 
+                />
                 {!collapsed && (
-                  <>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[12.5px] font-extrabold leading-tight">{label}</span>
-                      <span className={`block truncate text-[10px] ${active ? "text-[#bdd0c2] dark:text-[#9fc0a9]" : "text-[#829187] dark:text-[#6c8575]"}`}>
-                        {note}
-                      </span>
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-xs font-semibold leading-tight truncate">{label}</span>
+                    <span className={`block truncate text-[10px] mt-0.5 ${
+                      active ? "text-emerald-700/80 dark:text-emerald-400/80" : "text-slate-400 dark:text-slate-500"
+                    }`}>
+                      {note}
                     </span>
-                    {active && <ArrowUpRight size={13} className="text-[#c8ef70]" />}
-                  </>
+                  </div>
                 )}
               </Link>
             );
           })}
         </nav>
 
-        {/* CTA Catat Kegiatan */}
-        {!collapsed ? (
-          <Link
-            data-tour="nav-catat"
-            className="my-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-[#c8ef70] px-3 py-2.5 text-xs font-black text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[0_1px_0_#84a839] dark:bg-[#1a5c39] dark:text-[#c8ef70] dark:shadow-[0_2px_0_#0f3a24] dark:hover:bg-[#206e44] dark:active:shadow-[0_1px_0_#0f3a24] shrink-0"
-            href="/kegiatan?new=1"
-            prefetch={true}
-          >
-            <Plus size={15} strokeWidth={3} /> Catat kegiatan
-          </Link>
-        ) : (
-          <Link
-            data-tour="nav-catat"
-            href="/kegiatan?new=1"
-            prefetch={true}
-            title="Catat kegiatan"
-            className="my-2.5 grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] shadow-[0_2px_0_#84a839] transition hover:-translate-y-0.5 dark:bg-[#1a5c39] dark:text-[#c8ef70] dark:shadow-[0_2px_0_#0f3a24] dark:hover:bg-[#206e44] shrink-0"
-          >
-            <Plus size={16} strokeWidth={3} />
-          </Link>
-        )}
-
-        {/* Superadmin Console Direct Access */}
+        {/* Superadmin Console Link */}
         {role === "superadmin" && (
-          !collapsed ? (
-            <Link
-              href="/admin"
-              className="mb-2 flex items-center justify-center gap-2 rounded-xl border border-[#c8ef70]/30 bg-[#0c2419] px-3 py-2 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#103626] hover:border-[#c8ef70]/60 transition shrink-0"
-            >
-              <ShieldAlert size={14} className="text-[#c8ef70]" />
-              <span>Admin Console</span>
-            </Link>
-          ) : (
-            <Link
-              href="/admin"
-              title="Superadmin Console"
-              className="mb-2 grid h-9 w-9 place-items-center rounded-xl border border-[#c8ef70]/40 bg-[#0c2419] text-[#c8ef70] hover:bg-[#103626] transition shrink-0"
-            >
-              <ShieldAlert size={16} />
-            </Link>
-          )
+          <div className="mt-2 shrink-0 w-full">
+            {!collapsed ? (
+              <Link
+                href="/admin"
+                className="flex items-center gap-2 rounded-xl border border-amber-300 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 text-xs font-bold text-amber-900 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-950/50 transition"
+              >
+                <ShieldAlert size={14} className="text-amber-600 dark:text-amber-400" />
+                <span>Admin Console</span>
+              </Link>
+            ) : (
+              <Link
+                href="/admin"
+                title="Superadmin Console"
+                className="grid h-9 w-9 place-items-center rounded-xl border border-amber-300 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 transition"
+              >
+                <ShieldAlert size={16} />
+              </Link>
+            )}
+          </div>
         )}
       </div>
 
-      {/* ── BOTTOM SECTION: User Card Footer (Always pinned at bottom, never clipped) ── */}
-      <div className={`shrink-0 pt-2 border-t border-[#d8e2da]/70 ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
-        {!collapsed && (
-          <div className="mb-2">
-            <PwaInstallButton variant="sidebar" />
-          </div>
-        )}
+      {/* ── BOTTOM USER FOOTER & UTILITIES ── */}
+      <div className={`shrink-0 pt-3 border-t border-slate-200 dark:border-[#1c2d22] ${collapsed ? "w-full flex flex-col items-center" : ""}`}>
         {!collapsed ? (
-          <div className="rounded-2xl border border-[#d8e2da] bg-white/95 p-2.5 shadow-xs">
-            <div className="flex items-center gap-2">
+          <div className="rounded-xl border border-slate-200 dark:border-[#1d3527] bg-slate-50/60 dark:bg-[#111e17] p-2.5">
+            <div className="flex items-center gap-2.5">
               {avatarUrl ? (
                 <Image
                   src={avatarUrl}
                   alt={name}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-[var(--line)] shadow-xs"
+                  width={34}
+                  height={34}
+                  className="h-8.5 w-8.5 shrink-0 rounded-full object-cover ring-1 ring-slate-300 dark:ring-slate-700"
                 />
               ) : (
-                <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
+                <div className="grid h-8.5 w-8.5 shrink-0 place-items-center rounded-full bg-emerald-600 text-xs font-black text-white">
                   {name.slice(0, 1).toUpperCase()}
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-extrabold text-[var(--ink)] leading-snug">{name}</p>
-                <p className="text-[9.5px] font-bold text-[var(--muted)] leading-none mt-0.5">Personal workspace</p>
+                <p className="truncate text-xs font-bold text-slate-900 dark:text-slate-100 leading-snug">{name}</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Mahasiswa</p>
               </div>
-              <button
-                onClick={signOut}
-                title="Keluar"
-                className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21] transition"
-              >
-                <LogOut size={15} />
-              </button>
             </div>
-            <div className="mt-2 flex items-center gap-1 border-t border-[#e3ebe4] pt-1.5">
+
+            {/* Quick Action Toolbar */}
+            <div className="mt-2.5 flex items-center justify-between border-t border-slate-200 dark:border-[#1c3024] pt-2">
               <Link
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition"
                 href="/settings"
+                title="Pengaturan Profil"
+                className="rounded-lg p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-white/[0.08] transition"
               >
-                <Settings size={12.5} /> Profil
+                <Settings size={15} />
               </Link>
+
               <button
                 type="button"
                 onClick={() => {
@@ -299,40 +309,51 @@ export function Sidebar({
                     window.dispatchEvent(new CustomEvent("start-ngampus-tour"));
                   }
                 }}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1 text-xs font-bold text-[var(--muted)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition cursor-pointer"
-                title="Mulai Tur Panduan Fitur"
+                title="Mulai Panduan"
+                className="rounded-lg p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-white/[0.08] transition cursor-pointer"
               >
-                <CircleHelp size={12.5} /> Panduan
+                <CircleHelp size={15} />
               </button>
-              <ThemeToggle variant="icon" />
+
+              <ThemeToggle variant="icon" className="h-7 w-7" />
+
+              <button
+                type="button"
+                onClick={signOut}
+                title="Keluar"
+                className="rounded-lg p-1.5 text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition cursor-pointer"
+              >
+                <LogOut size={15} />
+              </button>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-1.5 pt-1">
-            <ThemeToggle variant="icon" />
+          <div className="flex flex-col items-center gap-2">
+            <ThemeToggle variant="icon" className="h-8 w-8" />
             <Link
               href="/settings"
               title={`Profil: ${name}`}
-              className="grid h-10 w-10 place-items-center rounded-full ring-2 ring-transparent hover:ring-[#c8ef70]/50 transition overflow-hidden"
+              className="grid h-9 w-9 place-items-center rounded-full overflow-hidden ring-1 ring-slate-300 dark:ring-slate-700 hover:ring-emerald-500 transition"
             >
               {avatarUrl ? (
                 <Image
                   src={avatarUrl}
                   alt={name}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 rounded-full object-cover shadow-xs"
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 rounded-full object-cover"
                 />
               ) : (
-                <div className="grid h-10 w-10 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70]">
+                <div className="grid h-9 w-9 place-items-center rounded-full bg-emerald-600 text-xs font-black text-white">
                   {name.slice(0, 1).toUpperCase()}
                 </div>
               )}
             </Link>
             <button
+              type="button"
               onClick={signOut}
               title="Keluar"
-              className="grid h-8 w-8 place-items-center rounded-xl text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21] transition"
+              className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition cursor-pointer"
             >
               <LogOut size={16} />
             </button>
@@ -344,7 +365,7 @@ export function Sidebar({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOBILE TOPBAR + DRAWER
+// MOBILE TOPBAR + DRAWER (Clean, High Contrast, Responsive)
 // ─────────────────────────────────────────────────────────────────────────────
 export function MobileTopbar({ 
   name, 
@@ -358,13 +379,10 @@ export function MobileTopbar({
   role?: string; 
 }) {
   const [open, setOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const router   = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     setOpen(false);
-    setProfileOpen(false);
   }, [pathname]);
 
   async function signOut() {
@@ -377,13 +395,14 @@ export function MobileTopbar({
 
   return (
     <>
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#d8e2da] bg-white/90 px-4 py-3 backdrop-blur-md md:hidden">
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 dark:border-[#1c2d22] bg-white/95 dark:bg-[#0c1611]/95 px-4 py-2.5 backdrop-blur-md md:hidden">
         <div className="flex items-center gap-2.5">
           <button
+            type="button"
             onClick={() => setOpen(true)}
             data-tour="mobile-menu-trigger"
-            className="grid h-9 w-9 place-items-center rounded-xl border border-[var(--line)] bg-[#f7f8f5] text-[var(--ink)] active:scale-95 transition"
-            aria-label="Buka menu"
+            className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 dark:border-[#1c2d22] bg-slate-100/80 dark:bg-[#122219] text-slate-700 dark:text-slate-200 active:scale-95 transition cursor-pointer"
+            aria-label="Buka navigasi"
           >
             <Menu size={18} />
           </button>
@@ -393,140 +412,78 @@ export function MobileTopbar({
               alt="ngampUS Logo"
               width={26}
               height={26}
-              className="h-6 w-6 object-contain"
+              className="h-6.5 w-6.5 object-contain"
             />
-            <span className="font-display text-lg font-black tracking-tight leading-none">
-              ngamp<span className="text-[var(--brand)]">US</span>
+            <span className="font-display text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
+              ngamp<span className="text-emerald-600 dark:text-[#C6F432]">US</span>
             </span>
           </Link>
         </div>
 
         <div className="flex items-center gap-2">
-          <PwaInstallButton variant="mobile-icon" />
-          <ThemeToggle variant="icon" />
+          <ThemeToggle variant="icon" className="h-8 w-8" />
           
-          {/* Avatar with Quick Dropdown Menu */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setProfileOpen(!profileOpen)}
-              title={`Menu Profil: ${name}`}
-              className="group flex items-center gap-1.5 rounded-full p-0.5 transition active:scale-95 cursor-pointer"
-              aria-label="Buka menu akun"
-              aria-expanded={profileOpen}
-            >
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  alt={name}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 rounded-full object-cover ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]"
-                />
-              ) : (
-                <div className="grid h-8 w-8 place-items-center rounded-full bg-[#103626] text-xs font-black text-[#c8ef70] ring-2 ring-[var(--line)] shadow-xs transition group-hover:ring-[var(--brand)]">
-                  {name.slice(0, 1).toUpperCase()}
-                </div>
-              )}
-            </button>
-
-            {/* Quick Dropdown Menu */}
-            {profileOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40 bg-black/10 backdrop-blur-[1px]"
-                  onClick={() => setProfileOpen(false)}
-                />
-                <div className="absolute right-0 top-full mt-2 z-50 w-52 rounded-2xl border border-[var(--line)] bg-white p-2 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-3 py-2 border-b border-[var(--line)]/60">
-                    <p className="truncate text-xs font-extrabold text-[var(--ink)] leading-snug">{name}</p>
-                    <p className="text-[10px] font-bold text-[var(--muted)]">Personal workspace</p>
-                  </div>
-
-                  <div className="py-1 space-y-0.5">
-                    {role === "superadmin" && (
-                      <Link
-                        href="/admin"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[#103626] bg-[#c8ef70]/20 hover:bg-[#c8ef70]/30 transition active:scale-95 border border-[#c8ef70]/40"
-                      >
-                        <ShieldAlert size={15} className="text-[#103626]" />
-                        <span>Admin Console</span>
-                      </Link>
-                    )}
-
-                    <Link
-                      href="/settings"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition active:scale-95"
-                    >
-                      <User size={15} className="text-[var(--brand)]" />
-                      <span>Lihat Profil</span>
-                    </Link>
-
-                    <div className="pt-1 pb-1">
-                      <PwaInstallButton variant="sidebar" />
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileOpen(false);
-                        signOut();
-                      }}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[#b93c21] hover:bg-[#fff0ec] transition active:scale-95 text-left cursor-pointer"
-                    >
-                      <LogOut size={15} />
-                      <span>Keluar</span>
-                    </button>
-                  </div>
-                </div>
-              </>
+          <Link
+            href="/settings"
+            title={`Profil: ${name}`}
+            className="rounded-full ring-1 ring-slate-300 dark:ring-slate-700"
+          >
+            {avatarUrl ? (
+              <Image
+                src={avatarUrl}
+                alt={name}
+                width={30}
+                height={30}
+                className="h-7.5 w-7.5 rounded-full object-cover"
+              />
+            ) : (
+              <div className="grid h-7.5 w-7.5 place-items-center rounded-full bg-emerald-600 text-xs font-black text-white">
+                {name.slice(0, 1).toUpperCase()}
+              </div>
             )}
-          </div>
+          </Link>
         </div>
       </header>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Drawer */}
       {open && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
             onClick={() => setOpen(false)}
           />
-          <div className="relative z-10 flex h-full w-[280px] flex-col justify-between bg-white p-5 shadow-2xl animate-in slide-in-from-left duration-200">
+          <div className="relative z-10 flex h-full w-[280px] flex-col justify-between bg-white dark:bg-[#0c1611] p-5 shadow-2xl border-r border-slate-200 dark:border-[#1c2d22] animate-in slide-in-from-left duration-200">
             <div>
-              <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1c2d22] pb-3.5">
                 <Link href="/dashboard" className="flex items-center gap-2">
                   <Image
                     src="/logo_ngampUS.png"
                     alt="ngampUS Logo"
-                    width={30}
-                    height={30}
+                    width={28}
+                    height={28}
                     className="h-7 w-7 object-contain"
                   />
-                  <span className="font-display text-xl font-black">
-                    ngamp<span className="text-[var(--brand)]">US</span>
+                  <span className="font-display text-xl font-black text-slate-900 dark:text-white">
+                    ngamp<span className="text-emerald-600 dark:text-[#C6F432]">US</span>
                   </span>
                 </Link>
                 <button
+                  type="button"
                   onClick={() => setOpen(false)}
-                  className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[#f7f8f5]"
+                  className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/[0.08]"
                 >
                   <X size={18} />
                 </button>
               </div>
 
-              {/* Active semester mobile badge */}
               {activeSemester && (
-                <div className="mt-3 flex items-center justify-between rounded-xl bg-[#dff3e5] px-3 py-2 text-xs font-bold text-[#0f6849]">
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/50 px-3 py-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
                   <span className="truncate">{activeSemester}</span>
-                  <span className="rounded-full bg-[#0f6849] px-1.5 py-0.5 text-[9px] text-white">Aktif</span>
+                  <span className="rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] text-white font-mono">Aktif</span>
                 </div>
               )}
 
-              {/* Mobile Nav */}
-              <nav className="mt-4 space-y-1.5">
+              <nav className="mt-4 space-y-1">
                 {nav.map(({ href, label, icon: Icon }) => {
                   const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`));
                   return (
@@ -535,74 +492,32 @@ export function MobileTopbar({
                       href={href}
                       prefetch={true}
                       onClick={() => setOpen(false)}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition ${
                         active
-                          ? "bg-[#103626] text-white shadow-sm"
-                          : "text-[var(--muted)] hover:bg-[#f7f8f5] hover:text-[var(--ink)]"
+                          ? "bg-emerald-50 text-emerald-900 dark:bg-emerald-950/70 dark:text-[#C6F432] border-l-3 border-emerald-600 dark:border-[#C6F432]"
+                          : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05]"
                       }`}
                     >
-                      <Icon size={18} className={active ? "text-[#c8ef70]" : ""} />
-                      {label}
+                      <Icon size={17} className={active ? "text-emerald-600 dark:text-[#C6F432]" : "text-slate-400"} />
+                      <span>{label}</span>
                     </Link>
                   );
                 })}
-
-                {role === "superadmin" && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 rounded-xl border border-[#c8ef70]/40 bg-[#0c2419] px-3 py-2.5 text-sm font-bold text-[#c8ef70] shadow-xs mt-3 transition hover:bg-[#103626]"
-                  >
-                    <ShieldAlert size={18} className="text-[#c8ef70]" />
-                    <span>Admin Console</span>
-                  </Link>
-                )}
               </nav>
             </div>
 
-            {/* Bottom user footer drawer */}
-            <div className="border-t border-[var(--line)] pt-4">
+            {/* Bottom User Info & Logout */}
+            <div className="border-t border-slate-200 dark:border-[#1c2d22] pt-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 min-w-0">
-                  {avatarUrl ? (
-                    <Image
-                      src={avatarUrl}
-                      alt={name}
-                      width={32}
-                      height={32}
-                      className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-[var(--line)] shadow-xs"
-                    />
-                  ) : (
-                    <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#103626] text-xs font-bold text-[#c8ef70]">
-                      {name.slice(0, 1).toUpperCase()}
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-bold">{name}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <Link href="/settings" className="text-[10px] font-bold text-[var(--brand)] hover:underline">
-                        Profil
-                      </Link>
-                      <span className="text-[10px] text-[var(--muted)]">•</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOpen(false);
-                          if (typeof window !== "undefined") {
-                            window.dispatchEvent(new CustomEvent("start-ngampus-tour"));
-                          }
-                        }}
-                        className="text-[10px] font-bold text-[var(--brand)] hover:underline"
-                      >
-                        Panduan
-                      </button>
-                    </div>
-                  </div>
+                <div className="min-w-0 flex-1 mr-2">
+                  <p className="truncate text-xs font-bold text-slate-900 dark:text-white">{name}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">Mahasiswa</p>
                 </div>
                 <button
+                  type="button"
                   onClick={signOut}
                   title="Keluar"
-                  className="rounded-lg p-2 text-[var(--muted)] hover:bg-[#fff0ec] hover:text-[#b93c21]"
+                  className="rounded-lg p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition cursor-pointer"
                 >
                   <LogOut size={16} />
                 </button>
@@ -616,116 +531,70 @@ export function MobileTopbar({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOBILE BOTTOM NAVIGATION (App-like 5 items with central CTA and tour tags)
-// ─────────────────────────────────────────────────────────────────────────────
-// ─────────────────────────────────────────────────────────────────────────────
-// MOBILE BOTTOM NAVIGATION (App-like Dock with Center FAB + modal trigger)
+// MOBILE BOTTOM NAVIGATION (Dock with High Contrast)
 // ─────────────────────────────────────────────────────────────────────────────
 export function MobileBottomNav() {
   const pathname = usePathname();
 
   return (
     <nav
-      className="dashboard-mobile-nav fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between border-t border-[#d8e2da] bg-white/95 px-3 py-1.5 backdrop-blur-xl md:hidden shadow-[0_-4px_24px_rgba(0,0,0,0.06)]"
+      className="dashboard-mobile-nav fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between border-t border-slate-200 dark:border-[#1c2d22] bg-white/95 dark:bg-[#0c1611]/95 px-3 py-1.5 backdrop-blur-xl md:hidden shadow-[0_-4px_24px_rgba(0,0,0,0.06)]"
       style={{ paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))" }}
     >
-      {/* 1. Beranda */}
       <Link
         href="/dashboard"
         prefetch={true}
-        data-tour="mob-nav-dashboard"
-        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
-          pathname === "/dashboard" ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition select-none ${
+          pathname === "/dashboard" ? "text-emerald-700 dark:text-[#C6F432] font-bold" : "text-slate-500 dark:text-slate-400"
         }`}
       >
-        <span
-          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
-            pathname === "/dashboard" ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
-          }`}
-        >
-          <LayoutDashboard size={18} strokeWidth={pathname === "/dashboard" ? 2.5 : 2} />
-        </span>
-        <span className={`text-[10px] leading-tight ${pathname === "/dashboard" ? "font-black text-[#0f6849]" : "font-semibold"}`}>
-          Beranda
-        </span>
+        <LayoutDashboard size={18} strokeWidth={pathname === "/dashboard" ? 2.5 : 2} />
+        <span className="text-[10px]">Beranda</span>
       </Link>
 
-      {/* 2. Jadwal */}
       <Link
         href="/jadwal"
         prefetch={true}
-        data-tour="mob-nav-jadwal"
-        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
-          pathname.startsWith("/jadwal") ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition select-none ${
+          pathname.startsWith("/jadwal") ? "text-emerald-700 dark:text-[#C6F432] font-bold" : "text-slate-500 dark:text-slate-400"
         }`}
       >
-        <span
-          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
-            pathname.startsWith("/jadwal") ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
-          }`}
-        >
-          <BookOpen size={18} strokeWidth={pathname.startsWith("/jadwal") ? 2.5 : 2} />
-        </span>
-        <span className={`text-[10px] leading-tight ${pathname.startsWith("/jadwal") ? "font-black text-[#0f6849]" : "font-semibold"}`}>
-          Jadwal
-        </span>
+        <BookOpen size={18} strokeWidth={pathname.startsWith("/jadwal") ? 2.5 : 2} />
+        <span className="text-[10px]">Jadwal</span>
       </Link>
 
-      {/* 3. CENTER FAB (+) Catat Kegiatan/Tugas */}
-      <div className="relative -top-4 flex flex-1 items-center justify-center">
+      {/* Center Action Button (+) */}
+      <div className="relative -top-3.5 flex flex-1 items-center justify-center">
         <Link
           href="/kegiatan?new=1"
           prefetch={true}
           title="Catat Kegiatan Baru"
-          data-tour="mob-nav-fab"
-          aria-label="Tambah kegiatan baru"
-          className="group relative flex h-13 w-13 items-center justify-center rounded-full bg-gradient-to-tr from-[#0f6849] to-[#147a56] text-[#c8ef70] shadow-[0_8px_20px_rgba(15,104,73,0.35)] ring-4 ring-white transition-all duration-200 hover:scale-105 active:scale-95 active:shadow-md"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:text-black shadow-lg shadow-emerald-600/30 ring-4 ring-white dark:ring-[#0c1611] transition-transform active:scale-95"
         >
-          <Plus size={24} strokeWidth={3} className="transition-transform group-hover:rotate-90 duration-300" />
-          <span className="sr-only">Tambah Kegiatan</span>
+          <Plus size={22} strokeWidth={3} />
         </Link>
       </div>
 
-      {/* 4. Kegiatan / Modul */}
       <Link
         href="/kegiatan"
         prefetch={true}
-        data-tour="mob-nav-kegiatan"
-        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
-          pathname.startsWith("/kegiatan") ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition select-none ${
+          pathname.startsWith("/kegiatan") ? "text-emerald-700 dark:text-[#C6F432] font-bold" : "text-slate-500 dark:text-slate-400"
         }`}
       >
-        <span
-          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
-            pathname.startsWith("/kegiatan") ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
-          }`}
-        >
-          <CalendarDays size={18} strokeWidth={pathname.startsWith("/kegiatan") ? 2.5 : 2} />
-        </span>
-        <span className={`text-[10px] leading-tight ${pathname.startsWith("/kegiatan") ? "font-black text-[#0f6849]" : "font-semibold"}`}>
-          Kegiatan
-        </span>
+        <CalendarDays size={18} strokeWidth={pathname.startsWith("/kegiatan") ? 2.5 : 2} />
+        <span className="text-[10px]">Tugas</span>
       </Link>
 
-      {/* 5. Rekap / Modul */}
       <Link
         href="/rekap"
         prefetch={true}
-        data-tour="mob-nav-rekap"
-        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95 select-none ${
-          pathname.startsWith("/rekap") ? "text-[#0f6849]" : "text-[var(--muted)] opacity-70 hover:opacity-100"
+        className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition select-none ${
+          pathname.startsWith("/rekap") ? "text-emerald-700 dark:text-[#C6F432] font-bold" : "text-slate-500 dark:text-slate-400"
         }`}
       >
-        <span
-          className={`grid h-7 w-7 place-items-center rounded-xl transition-all ${
-            pathname.startsWith("/rekap") ? "bg-[#dff3e5] text-[#0f6849]" : "text-[#50705e]"
-          }`}
-        >
-          <BarChart3 size={18} strokeWidth={pathname.startsWith("/rekap") ? 2.5 : 2} />
-        </span>
-        <span className={`text-[10px] leading-tight ${pathname.startsWith("/rekap") ? "font-black text-[#0f6849]" : "font-semibold"}`}>
-          Rekap
-        </span>
+        <BarChart3 size={18} strokeWidth={pathname.startsWith("/rekap") ? 2.5 : 2} />
+        <span className="text-[10px]">Rekap</span>
       </Link>
     </nav>
   );

@@ -99,19 +99,19 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#0f6849]">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               MANAJEMEN TUGAS & AGENDA
             </span>
             {activeSemester && (
-              <span className="inline-flex rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[10.5px] font-bold text-[#0f6849] border border-[#b9ddc6]">
+              <span className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
                 {activeSemester.nama_semester}
               </span>
             )}
           </div>
-          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b]">
+          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
             Daftar Kegiatan
           </h1>
-          <p className="mt-0.5 text-xs text-[#697c6f]">
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
             Kelola tugas kuliah, organisasi, lomba, dan komitmen semester dalam satu tempat.
           </p>
         </div>
@@ -122,7 +122,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
             organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))}
             programs={mappedPrograms}
             courses={mappedCourses}
-            triggerClass="inline-flex items-center gap-1.5 rounded-2xl bg-[#103626] px-4 py-2.5 text-xs sm:text-sm font-black text-[#c8ef70] shadow-md hover:bg-[#1a4a34] transition active:scale-95"
+            triggerClass="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-4 py-2 text-xs sm:text-sm font-bold shadow-xs transition active:scale-95 cursor-pointer"
             triggerText="+ Buat Kegiatan Baru"
           />
         </div>
@@ -150,17 +150,17 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
             programs={mappedPrograms}
           />
         ) : (
-          <div className="rounded-3xl border border-[#d8e3da] bg-white p-4 sm:p-6 shadow-xs">
-            <div className="flex items-center justify-between border-b border-[#f0f4f0] pb-3.5">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 sm:p-6 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#1c2d22] pb-3.5">
               <div>
-                <h2 className="font-display text-base sm:text-lg font-black text-[#10261b]">
+                <h2 className="font-display text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                   Daftar Tugas & Komitmen
                 </h2>
-                <p className="mt-0.5 text-xs text-[#697c6f]">
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                   Klik lingkaran centang untuk menyelesaikan tugas secara instan.
                 </p>
               </div>
-              <span className="rounded-full bg-[#f4f7f4] border border-[#d8e3da] px-3 py-1 text-xs font-black text-[#33463a]">
+              <span className="rounded-full bg-slate-100 dark:bg-[#16221a] border border-slate-200/80 dark:border-[#1c2d22] px-3 py-1 text-xs font-bold text-slate-700 dark:text-slate-300">
                 {activities?.length || 0} Item
               </span>
             </div>
@@ -177,25 +177,25 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                     const daysDiff = differenceInCalendarDays(parseISO(activity.deadline), new Date());
                     if (daysDiff < 0) {
                       urgencyBadge = (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#feece7] px-2 py-0.5 text-[10px] font-black text-[#c53e1c]">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200/60 dark:border-rose-900/50 px-2 py-0.5 text-[10px] font-bold">
                           ⚠️ Lewat {Math.abs(daysDiff)} Hari
                         </span>
                       );
                     } else if (daysDiff === 0) {
                       urgencyBadge = (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#feece7] px-2 py-0.5 text-[10px] font-black text-[#c53e1c] animate-pulse">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200/60 dark:border-rose-900/50 px-2 py-0.5 text-[10px] font-bold animate-pulse">
                           🔥 Hari Ini!
                         </span>
                       );
                     } else if (daysDiff === 1) {
                       urgencyBadge = (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#fffbe6] px-2 py-0.5 text-[10px] font-black text-[#8a5d00]">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/50 px-2 py-0.5 text-[10px] font-bold">
                           ⏳ Besok
                         </span>
                       );
                     } else if (daysDiff <= 3) {
                       urgencyBadge = (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#f4fbe8] px-2 py-0.5 text-[10px] font-black text-[#456a1e]">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/50 px-2 py-0.5 text-[10px] font-bold">
                           {daysDiff} Hari Lagi
                         </span>
                       );
@@ -209,10 +209,10 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                       key={activity.id}
                       className={`group flex items-start sm:items-center justify-between gap-3.5 rounded-2xl border p-3.5 sm:p-4 transition-all duration-200 ${
                         isSelesai
-                          ? "border-[#e5ebe5] bg-[#fafbfa] opacity-75"
+                          ? "border-slate-200/50 dark:border-[#1c2d22]/50 bg-slate-50/50 dark:bg-[#16221a]/30 opacity-70"
                           : isOnProgress
-                          ? "border-[#a9cdb2] bg-[#f7fcf9] shadow-xs hover:border-[#0f6849]"
-                          : "border-[#e5ebe5] bg-white hover:border-[#a9cdb2] hover:shadow-xs"
+                          ? "border-emerald-500/40 dark:border-emerald-600/40 bg-emerald-50/20 dark:bg-[#14231b] shadow-xs"
+                          : "border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#16221a]/60 hover:border-emerald-500/40 dark:hover:border-emerald-700/60 hover:shadow-xs"
                       }`}
                     >
                       {/* Left: Quick Completion Checkbox & Info */}
@@ -222,12 +222,12 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                           <button
                             type="submit"
                             title={isSelesai ? "Tandai belum selesai" : "Tandai selesai"}
-                            className="transition transform active:scale-90 text-[#8b9e91] hover:text-[#0f6849] p-0.5"
+                            className="transition transform active:scale-90 text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 p-0.5 cursor-pointer"
                           >
                             {isSelesai ? (
-                              <CheckCircle2 className="text-[#0f6849] fill-[#dff3e5]" size={24} strokeWidth={2.2} />
+                              <CheckCircle2 className="text-emerald-600 dark:text-emerald-400 fill-emerald-100 dark:fill-emerald-950" size={24} strokeWidth={2.2} />
                             ) : (
-                              <Circle size={24} strokeWidth={1.8} className="group-hover:text-[#0f6849] transition" />
+                              <Circle size={24} strokeWidth={1.8} className="group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition" />
                             )}
                           </button>
                         </form>
@@ -236,7 +236,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3
                               className={`font-display text-sm sm:text-base font-bold leading-snug break-words ${
-                                isSelesai ? "text-[#7d9284] line-through" : "text-[#10261b]"
+                                isSelesai ? "text-slate-400 dark:text-slate-500 line-through" : "text-slate-900 dark:text-white"
                               }`}
                             >
                               {activity.judul}
@@ -247,17 +247,17 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
 
                             {/* Status Sedang Berjalan Badge */}
                             {isOnProgress && (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#dff3e5] px-2 py-0.5 text-[10px] font-black text-[#0f6849]">
-                                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0f6849]" />
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/50">
+                                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-600 dark:bg-emerald-400" />
                                 Berjalan
                               </span>
                             )}
                           </div>
 
                           {/* Subtitle Details: Matkul / Kategori / Tanggal Deadline */}
-                          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-[#697c6f]">
+                          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                             {matchedCourse && (
-                              <span className="inline-flex items-center gap-1 rounded-md bg-[#eef2ff] px-2 py-0.5 text-[10.5px] font-bold text-[#4338ca]">
+                              <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 text-[10.5px] font-bold text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/50">
                                 📚 {matchedCourse.nama_matkul}
                               </span>
                             )}
@@ -267,16 +267,16 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                             </span>
 
                             {activity.deadline ? (
-                              <span className="font-medium text-[#55675b] flex items-center gap-1">
+                              <span className="font-medium text-slate-600 dark:text-slate-400 flex items-center gap-1">
                                 📅 {format(parseISO(activity.deadline), "d MMM yyyy", { locale: id })}
                                 {activity.jam_deadline ? ` (${activity.jam_deadline.slice(0, 5)})` : ""}
                               </span>
                             ) : (
-                              <span className="text-[#8b9e91] italic text-[11px]">Tanpa tenggat waktu</span>
+                              <span className="text-slate-400 dark:text-slate-500 italic text-[11px]">Tanpa tenggat waktu</span>
                             )}
 
                             {activity.is_portfolio && (
-                              <span className="inline-flex items-center rounded-md bg-[#f4fbe8] px-1.5 py-0.5 text-[10px] font-black text-[#456a1e] border border-[#c8ef70]">
+                              <span className="inline-flex items-center rounded-md bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/50">
                                 ⭐ Portofolio
                               </span>
                             )}
@@ -307,8 +307,8 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                             }
                             className={`rounded-xl p-2 transition cursor-pointer ${
                               activity.is_portfolio
-                                ? "text-amber-500 bg-amber-50 hover:bg-amber-100"
-                                : "text-[#8b9e91] hover:text-amber-500 hover:bg-[#f7f8f5]"
+                                ? "text-amber-500 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/40"
+                                : "text-slate-400 dark:text-slate-500 hover:text-amber-500 hover:bg-slate-100 dark:hover:bg-[#1f3024]"
                             }`}
                           >
                             <Star
@@ -340,14 +340,14 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                   );
                 })
               ) : (
-                <div className="py-14 px-4 text-center rounded-2xl bg-[#fafbfa] border border-dashed border-[#c5d8cb] my-2">
-                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
+                <div className="py-14 px-4 text-center rounded-2xl bg-slate-50/60 dark:bg-[#16221a]/40 border border-dashed border-slate-200 dark:border-[#1c2d22] my-2">
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
                     <ListTodo size={28} />
                   </div>
-                  <h3 className="mt-3.5 font-display text-base sm:text-lg font-black text-[#10261b]">
+                  <h3 className="mt-3.5 font-display text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                     Belum Ada Kegiatan atau Tugas
                   </h3>
-                  <p className="mt-1 text-xs text-[#697c6f] max-w-sm mx-auto leading-relaxed">
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
                     Catat tugas kuliah, jadwal kuis, agenda rapat organisasi, atau pengingat lainnya agar progres semestermu terpantau rapi.
                   </p>
                   <div className="mt-5 flex justify-center">
@@ -356,7 +356,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: P
                       organizations={(organizations ?? []).map((organization) => ({ id: organization.id, name: organization.nama_organisasi }))}
                       programs={mappedPrograms}
                       courses={mappedCourses}
-                      triggerClass="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-4 py-2 text-xs font-black text-[#c8ef70] shadow-sm hover:bg-[#1a4a34] transition active:scale-95 cursor-pointer"
+                      triggerClass="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-4 py-2 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
                       triggerText="Catat Kegiatan / Tugas Pertama"
                     />
                   </div>

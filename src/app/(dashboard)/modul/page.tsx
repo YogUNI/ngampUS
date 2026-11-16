@@ -59,94 +59,65 @@ export default async function ModulPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-5 sm:px-8 sm:py-7 lg:px-10">
-      {/* ── 00 // HERO BANNER: CAMPUS CODEX & ARCHIVAL STUDY DECK ── */}
-      <section 
-        className="dashboard-atelier-hero relative overflow-hidden rounded-[2rem] p-5 sm:p-7 md:p-8 text-white shadow-xl"
-        style={{ backgroundColor: "#0c2419", color: "#ffffff" }}
-      >
-        {/* Archival Texture & Millimeter Blueprint Grid */}
-        <div 
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: "linear-gradient(#c8ef70 1px, transparent 1px), linear-gradient(90deg, #c8ef70 1px, transparent 1px)",
-            backgroundSize: "32px 32px"
-          }}
-        />
-
-        {/* Ambient Radial Glowing Orbs */}
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full opacity-25 blur-3xl"
-          style={{ background: "radial-gradient(circle, #c8ef70 0%, transparent 70%)" }}
-        />
-        <div
-          className="pointer-events-none absolute -left-12 bottom-0 h-48 w-48 rounded-full opacity-15 blur-2xl"
-          style={{ background: "radial-gradient(circle, #22c55e 0%, transparent 70%)" }}
-        />
-
-        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span 
-                className="stamp-badge border-[#c8ef70]/40 text-[#c8ef70]"
-                style={{ backgroundColor: "rgba(200, 239, 112, 0.15)", color: "#d6f792" }}
-              >
-                CAMPUS CODEX // 04
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
+      {/* ── Executive Header for Modul & Arsip Materi ── */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+              ARSIP & RUANG BELAJAR
+            </span>
+            {currentSemester && (
+              <span className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
+                {currentSemester.nama_semester}
               </span>
-              <span className="tag-mono text-[10px] text-[#9dc5aa]">
-                // {currentSemester ? currentSemester.nama_semester : "ARSIP SEMESTER"}
-              </span>
-            </div>
-            
-            <h1 className="font-display mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-xs">
-              Modul & Arsip Materi
-            </h1>
-            <p className="mt-1 text-xs sm:text-sm text-[#b3d3bd] max-w-xl leading-relaxed">
-              Pusat berkas kuliah, slide presentasi dosen, resume catatan, serta tutor AI pendamping belajar ujian.
-            </p>
+            )}
           </div>
-
-          {/* Archival Semester Ticket Selector Form */}
-          <form className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
-            <label className="sr-only" htmlFor="semester-selector">
-              Pilih Semester
-            </label>
-            <div 
-              className="flex items-center rounded-2xl border border-white/20 p-1.5 sm:px-3 sm:py-1.5 shadow-inner"
-              style={{ backgroundColor: "rgba(10, 30, 20, 0.75)" }}
-            >
-              <span className="tag-mono mr-2 text-[10px] font-black tracking-wider text-[#9dc5aa] hidden xs:inline-block">
-                SEMESTER:
-              </span>
-              <div className="relative inline-block">
-                <select
-                  id="semester-selector"
-                  name="semester_id"
-                  defaultValue={targetSemesterId ?? ""}
-                  aria-label="Pilih semester akademik"
-                  className="appearance-none rounded-xl border border-white/10 bg-[#071d13] py-1.5 pl-3 pr-8 text-xs font-black text-[#c8ef70] focus:outline-none focus:ring-1 focus:ring-[#c8ef70] cursor-pointer"
-                >
-                  {semesters?.map((s) => (
-                    <option key={s.id} value={s.id} className="bg-[#0c2419] text-white">
-                      {s.nama_semester} {s.is_active ? "★ (Aktif)" : ""}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-[#9dc5aa]">
-                  ▼
-                </span>
-              </div>
-              <button
-                type="submit"
-                className="ml-2 rounded-xl bg-[#c8ef70] px-3.5 py-1.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 shadow-sm cursor-pointer"
-                title="Pindah semester"
-              >
-                PILIH
-              </button>
-            </div>
-          </form>
+          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+            Modul & Arsip Materi
+          </h1>
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+            Pusat berkas kuliah, slide presentasi dosen, resume catatan, serta tutor AI pendamping belajar.
+          </p>
         </div>
-      </section>
+
+        {/* Archival Semester Selector Form */}
+        <form className="flex items-center gap-2 shrink-0">
+          <label className="sr-only" htmlFor="semester-selector">
+            Pilih Semester
+          </label>
+          <div className="flex items-center rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-1.5 shadow-xs">
+            <span className="text-[10.5px] font-bold tracking-wider text-slate-500 dark:text-slate-400 px-2 hidden xs:inline-block">
+              SEMESTER:
+            </span>
+            <div className="relative inline-block">
+              <select
+                id="semester-selector"
+                name="semester_id"
+                defaultValue={targetSemesterId ?? ""}
+                aria-label="Pilih semester akademik"
+                className="appearance-none rounded-lg border border-slate-200/80 dark:border-[#1c2d22] bg-slate-50/70 dark:bg-[#16221a] py-1 pl-2.5 pr-7 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                {semesters?.map((s) => (
+                  <option key={s.id} value={s.id} className="bg-white dark:bg-[#111914] text-slate-900 dark:text-white">
+                    {s.nama_semester} {s.is_active ? "★ (Aktif)" : ""}
+                  </option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-slate-400">
+                ▼
+              </span>
+            </div>
+            <button
+              type="submit"
+              className="ml-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-3 py-1 text-xs font-bold transition active:scale-95 cursor-pointer shadow-xs"
+              title="Pindah semester"
+            >
+              PILIH
+            </button>
+          </div>
+        </form>
+      </header>
 
       {/* ── Main Module List with Modern Codex Aesthetics ── */}
       <ModuleList

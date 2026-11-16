@@ -94,32 +94,32 @@ export function RecapAnalyticsCharts({
   return (
     <div className="space-y-6">
       {/* ── Visual Analytics Card ── */}
-      <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-xs">
+      <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs">
         
         {/* Header with Dimension & Mode Selector */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)]/70 pb-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#1c2d22] pb-5">
           <div>
             <div className="flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dff3e5] text-[#0f6849]">
+              <span className="grid h-8 w-8 place-items-center rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
                 <Activity size={17} strokeWidth={2.5} />
               </span>
               <div>
-                <span className="block text-[10px] font-black uppercase tracking-[.18em] text-[#0f6849]">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
                   VISUAL PERFORMANCE & WORKLOAD
                 </span>
-                <h2 className="font-display text-xl sm:text-2xl font-black tracking-tight text-[var(--ink)]">
+                <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Komposisi & Distribusi Beban
                 </h2>
               </div>
             </div>
-            <p className="mt-1 text-xs text-[var(--muted)]">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Pola distribusi komitmen akademik dan organisasi semester ini.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Dimension Pills (Kategori / Status / Prioritas) */}
-            <div className="flex rounded-xl bg-[#f0f4f1] p-1 text-xs font-black">
+            <div className="flex rounded-xl bg-slate-100 dark:bg-[#16221a] p-1 text-xs font-bold border border-slate-200/80 dark:border-[#1c2d22]">
               {(
                 [
                   { id: "kategori", label: "Kategori" },
@@ -134,10 +134,10 @@ export function RecapAnalyticsCharts({
                     setActiveDimension(tab.id);
                     setHoveredIndex(null);
                   }}
-                  className={`rounded-lg px-3 py-1.5 transition text-xs font-black ${
+                  className={`rounded-lg px-3 py-1.5 transition text-xs font-bold cursor-pointer ${
                     activeDimension === tab.id
-                      ? "bg-white text-[#0f6849] shadow-xs"
-                      : "text-[var(--muted)] hover:text-[#10261b]"
+                      ? "bg-white dark:bg-[#203227] text-emerald-700 dark:text-emerald-300 shadow-2xs"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   {tab.label}
@@ -146,15 +146,15 @@ export function RecapAnalyticsCharts({
             </div>
 
             {/* Chart Mode Switcher: Bar vs Donut */}
-            <div className="flex rounded-xl border border-[var(--line)] bg-white p-1 text-xs font-bold">
+            <div className="flex rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#16221a] p-1 text-xs font-bold">
               <button
                 type="button"
                 onClick={() => setChartMode("bar")}
                 title="Diagram Batang Komparasi"
-                className={`grid h-7 w-8 place-items-center rounded-lg transition ${
+                className={`grid h-7 w-8 place-items-center rounded-lg transition cursor-pointer ${
                   chartMode === "bar"
-                    ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                    ? "bg-slate-900 text-white dark:bg-emerald-500 dark:text-black shadow-2xs"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <BarChart3 size={15} />
@@ -163,10 +163,10 @@ export function RecapAnalyticsCharts({
                 type="button"
                 onClick={() => setChartMode("donut")}
                 title="Diagram Lingkaran Donut"
-                className={`grid h-7 w-8 place-items-center rounded-lg transition ${
+                className={`grid h-7 w-8 place-items-center rounded-lg transition cursor-pointer ${
                   chartMode === "donut"
-                    ? "bg-[#103626] text-[#c8ef70] shadow-2xs"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]"
+                    ? "bg-slate-900 text-white dark:bg-emerald-500 dark:text-black shadow-2xs"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <PieChart size={15} />
@@ -359,19 +359,19 @@ export function RecapAnalyticsCharts({
       {/* ── 3 SMART INSIGHT CARDS (Health & Workload Metrics) ── */}
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Insight 1: Tingkat Kelulusan / Selesai */}
-        <div className="rounded-2xl border border-[#b9ddc6] bg-gradient-to-br from-[#f2faf4] to-[#e4f5ea] p-4 sm:p-5 shadow-2xs">
+        <div className="rounded-2xl border border-emerald-200/80 dark:border-emerald-800/60 bg-emerald-50/50 dark:bg-[#14231b] p-4 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[10.5px] font-black uppercase tracking-[.14em] text-[#0f6849]">
+            <span className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               <Target size={14} /> TINGKAT SELESAI
             </span>
-            <span className="rounded-full bg-[#0f6849] px-2 py-0.5 text-[10px] font-black text-white">
+            <span className="rounded-full bg-emerald-600 dark:bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white dark:text-black">
               {completionRate}%
             </span>
           </div>
-          <p className="font-display mt-2 text-2xl sm:text-3xl font-black text-[#103626]">
-            {doneCount} <span className="text-sm font-bold text-[#355b46]">/ {totalItems} Beres</span>
+          <p className="font-display mt-2 text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+            {doneCount} <span className="text-sm font-bold text-slate-500 dark:text-slate-400">/ {totalItems} Beres</span>
           </p>
-          <p className="mt-1 text-xs text-[#416952] leading-relaxed">
+          <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             {completionRate >= 75
               ? "Ritme kerja luar biasa! Mayoritas target semester ini telah terpenuhi."
               : completionRate >= 40
@@ -381,43 +381,43 @@ export function RecapAnalyticsCharts({
         </div>
 
         {/* Insight 2: Fokus Utama */}
-        <div className="rounded-2xl border border-[#d8e2da] bg-white p-4 sm:p-5 shadow-2xs">
+        <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[10.5px] font-black uppercase tracking-[.14em] text-[var(--muted)]">
-              <Flame size={14} className="text-[#d99a20]" /> FOKUS UTAMA
+            <span className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <Flame size={14} className="text-amber-500" /> FOKUS UTAMA
             </span>
-            <span className="rounded-full bg-[#fdf5e2] px-2 py-0.5 text-[10px] font-black text-[#8a5d00] border border-[#fae5a8]">
+            <span className="rounded-full bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-900/50">
               {topCategoryPercent}% Porsi
             </span>
           </div>
-          <p className="font-display mt-2 text-2xl sm:text-3xl font-black text-[var(--ink)] truncate">
+          <p className="font-display mt-2 text-2xl sm:text-3xl font-black text-slate-900 dark:text-white truncate">
             {topCategory?.label || "Belum ada"}
           </p>
-          <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
             Bidang {topCategory?.label?.toLowerCase() || "-"} mendominasi aktivitas semester ini dengan {topCategory?.count || 0} total komitmen.
           </p>
         </div>
 
         {/* Insight 3: Beban Prioritas Tinggi */}
-        <div className="rounded-2xl border border-[#d8e2da] bg-white p-4 sm:p-5 shadow-2xs">
+        <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 sm:p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[10.5px] font-black uppercase tracking-[.14em] text-[var(--muted)]">
-              <ShieldCheck size={14} className="text-[#3b82c4]" /> STATUS BEBAN KERJA
+            <span className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <ShieldCheck size={14} className="text-blue-500" /> STATUS BEBAN KERJA
             </span>
             <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
+              className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                 highPriorityCount > 5
-                  ? "bg-[#fff0ec] text-[#b93c21] border border-[#f5b8a9]"
-                  : "bg-[#e4efff] text-[#245a9a] border border-[#c3daf9]"
+                  ? "bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200/80 dark:border-rose-900/50"
+                  : "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/80 dark:border-blue-900/50"
               }`}
             >
               {highPriorityCount > 5 ? "Padat" : "Terkendali"}
             </span>
           </div>
-          <p className="font-display mt-2 text-2xl sm:text-3xl font-black text-[var(--ink)]">
-            {highPriorityCount} <span className="text-sm font-bold text-[var(--muted)]">Prioritas Tinggi</span>
+          <p className="font-display mt-2 text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+            {highPriorityCount} <span className="text-sm font-bold text-slate-500 dark:text-slate-400">Prioritas Tinggi</span>
           </p>
-          <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
             {highPriorityCount > 0
               ? `${highPriorityCount} aktivitas butuh perhatian ekstra dan tenggat waktu ketat.`
               : "Tidak ada tugas berisiko tinggi saat ini. Ritme kerja stabil."}
@@ -427,27 +427,27 @@ export function RecapAnalyticsCharts({
 
       {/* ── RECENT HIGHLIGHT ACTIVITIES (Breakdown Ringkas) ── */}
       {recentItems.length > 0 && (
-        <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-6 shadow-xs">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[var(--line)]/60">
+        <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-[#1c2d22]">
             <div className="flex items-center gap-2">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#f0f4f1] text-[#103626]">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
                 <CalendarDays size={15} />
               </span>
               <div>
-                <h3 className="font-display text-base font-black text-[var(--ink)]">
+                <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">
                   Highlight Aktivitas Semester Ini
                 </h3>
-                <p className="text-[11px] text-[var(--muted)]">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
                   Daftar komitmen terakhir yang dicatat dalam sistem
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold text-[var(--muted)]">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
               5 Terbaru
             </span>
           </div>
 
-          <div className="divide-y divide-[var(--line)]/50">
+          <div className="divide-y divide-slate-100 dark:divide-[#1c2d22]">
             {recentItems.map((item, i) => (
               <div
                 key={i}

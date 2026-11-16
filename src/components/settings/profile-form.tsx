@@ -322,11 +322,13 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
 
       {/* ── Page Header ── */}
       <header className="mb-6">
-        <p className="text-xs font-black uppercase tracking-widest text-[var(--brand)]">PERSONAL WORKSPACE</p>
-        <h1 className="font-display mt-1 text-3xl sm:text-4xl font-black tracking-tight text-[var(--ink)]">
+        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+          PERSONAL WORKSPACE
+        </span>
+        <h1 className="font-display mt-1 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
           Profil & Identitas Mahasiswa
         </h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">
+        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
           Klik tombol edit pada data yang ingin diubah, simpan, dan data akan otomatis terupdate secara instan.
         </p>
       </header>
@@ -338,16 +340,16 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         <aside className="order-1 lg:order-2 lg:sticky lg:top-6 space-y-5 min-w-0">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#dff3e5] text-[var(--brand)]">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
                 <IdCard size={15} strokeWidth={2.5}/>
               </span>
-              <p className="text-xs font-black uppercase tracking-wider text-[var(--brand)]">KARTU MAHASISWA DIGITAL (KTM)</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">KARTU MAHASISWA DIGITAL (KTM)</p>
             </div>
-            <span className="rounded-full bg-[#d9ee72]/30 px-2 py-0.5 text-[10px] font-black text-[#103626]">LIVE PREVIEW</span>
+            <span className="rounded-full bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">LIVE PREVIEW</span>
           </div>
 
           {/* Premium Digital ID Card / KTM */}
-          <div className="relative overflow-hidden rounded-[2rem] border border-[#0f6849]/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-5 sm:p-6 text-white shadow-2xl shadow-[#0c2e20]/40">
+          <div className="relative overflow-hidden rounded-[2rem] border border-emerald-700/40 bg-gradient-to-br from-[#0c2e20] via-[#12422f] to-[#071f15] p-5 sm:p-6 text-white shadow-2xl shadow-[#0c2e20]/40">
             {/* Holographic / Metallic background glow */}
             <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-[#d9ee72]/15 blur-2xl" />
             <div className="pointer-events-none absolute -bottom-8 -left-8 h-36 w-36 rounded-full bg-[#0f6849]/40 blur-xl" />
@@ -481,11 +483,11 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Theme Preference Card */}
-          <div className="rounded-3xl border border-[var(--line)] bg-white p-4 sm:p-5 shadow-xs">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 sm:p-5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-[var(--ink)]">Tampilan Tema</h4>
-                <p className="mt-0.5 text-xs text-[var(--muted)]">Pilih mode terang atau gelap.</p>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Tampilan Tema</h4>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Pilih mode terang atau gelap.</p>
               </div>
               <ThemeToggle variant="pill" />
             </div>
@@ -496,14 +498,14 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
         <div className="order-2 lg:order-1 space-y-6 min-w-0">
 
           {/* Section: Identitas */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)] shrink-0">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs">
+            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-[#1c2d22] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 shrink-0">
                 <UserRound size={18} />
               </span>
               <div>
-                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Identitas Mahasiswa</h2>
-                <p className="text-xs text-[var(--muted)]">
+                <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">Identitas Mahasiswa</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Data utama yang tercantum di kartu kampus.
                 </p>
               </div>
@@ -715,14 +717,14 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Section: Upload & Edit Foto Profil */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#dcefe4] text-[var(--brand)] shrink-0">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs">
+            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-[#1c2d22] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 shrink-0">
                 <Camera size={18} />
               </span>
               <div>
-                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Foto Profil</h2>
-                <p className="text-xs text-[var(--muted)]">
+                <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">Foto Profil</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Sesuaikan posisi, zoom, dan rotasi agar pas di kartu KTM.
                 </p>
               </div>
@@ -731,7 +733,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             <div className="mt-5 flex flex-wrap items-center gap-5">
               {/* Photo Preview Thumbnail */}
               <div className="relative group shrink-0">
-                <div className="relative h-20 w-20 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#103626] to-[#246145] ring-2 ring-[var(--brand)]/30 shadow-inner flex items-center justify-center">
+                <div className="relative h-20 w-20 overflow-hidden rounded-2xl bg-gradient-to-tr from-[#103626] to-[#246145] ring-2 ring-emerald-500/30 shadow-inner flex items-center justify-center">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
@@ -739,7 +741,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-2xl font-black text-[#d9ee72]">
+                    <span className="text-2xl font-black text-emerald-300">
                       {initial}
                     </span>
                   )}
@@ -752,7 +754,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={!!activeEditingField || isPending}
-                  className="flex items-center gap-2 rounded-xl sm:rounded-2xl bg-[var(--brand)] px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-4 py-2.5 text-xs font-bold shadow-xs transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <Camera size={14} />
                   {avatarUrl ? "Ganti & Edit Foto" : "Upload Foto Baru"}
@@ -763,7 +765,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                     type="button"
                     onClick={handleRemovePhoto}
                     disabled={!!activeEditingField || isPending}
-                    className="flex items-center gap-1.5 rounded-xl sm:rounded-2xl border border-[#f5c6cb] bg-[#fff5f5] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs font-bold text-[#b93c21] hover:bg-[#ffebee] transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1.5 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 px-3.5 py-2.5 text-xs font-bold text-rose-700 dark:text-rose-300 hover:bg-rose-100 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <Trash2 size={14} />
                     Hapus Foto
@@ -771,20 +773,20 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 )}
               </div>
             </div>
-            <p className="mt-3 text-[11px] text-[var(--muted)]">
+            <p className="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
               Format: JPG, PNG, atau WebP (maks. 5MB). Foto yang diubah akan otomatis tersimpan langsung ke cloud.
             </p>
           </div>
 
           {/* Section: Social Links */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-4">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#e8e1fa] text-[#5c3a9c] shrink-0">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs">
+            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-[#1c2d22] pb-4">
+              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0">
                 <ExternalLink size={18} />
               </span>
               <div>
-                <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Tautan & Jejaring</h2>
-                <p className="text-xs text-[var(--muted)]">
+                <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">Tautan & Jejaring</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Tautan profil profesional dan portofolio.
                 </p>
               </div>
@@ -808,7 +810,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                     value={linkedin}
                     onChange={(e) => setLinkedin(e.target.value)}
                     placeholder="https://linkedin.com/in/username"
-                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                    className="w-full rounded-xl border border-emerald-500 bg-white dark:bg-[#16221a] text-slate-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20"
                   />
                 )}
               />
@@ -830,7 +832,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                     value={github}
                     onChange={(e) => setGithub(e.target.value)}
                     placeholder="https://github.com/username"
-                    className="w-full rounded-xl border border-[var(--brand)] bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+                    className="w-full rounded-xl border border-emerald-500 bg-white dark:bg-[#16221a] text-slate-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20"
                   />
                 )}
               />
@@ -838,14 +840,14 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Section: Keamanan Akun / Ganti Password */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
-            <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#1c2d22] pb-4">
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#feece7] text-[#c53e1c] shrink-0">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 shrink-0">
                   <KeyRound size={18} />
                 </span>
                 <div>
-                  <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">Keamanan Akun</h2>
+                  <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">Keamanan Akun</h2>
                   <p className="text-xs text-[var(--muted)]">
                     Kelola kata sandi untuk melindungi akses workspace kamu.
                   </p>
@@ -856,7 +858,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 <button
                   type="button"
                   onClick={() => setIsChangingPassword(true)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[#f7f8f5] px-3.5 py-2 text-xs font-bold text-[var(--ink)] hover:bg-[#eaf5eb] hover:text-[var(--brand)] transition active:scale-95"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-slate-50 dark:bg-[#16221a] px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-[#1d2d23] transition active:scale-95 cursor-pointer"
                 >
                   <Pencil size={12} /> Ubah Password
                 </button>
@@ -864,16 +866,16 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             </div>
 
             {!isChangingPassword ? (
-              <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#fafbf9] px-4 py-3 border border-[var(--line)]">
+              <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50/70 dark:bg-[#16221a] px-4 py-3 border border-slate-200/80 dark:border-[#1c2d22]">
                 <div className="flex items-center gap-2">
-                  <Lock size={15} className="text-[var(--muted)]" />
-                  <span className="text-xs font-semibold text-[var(--muted)]">
+                  <Lock size={15} className="text-slate-400 dark:text-slate-500" />
+                  <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
                     Kata sandi aktif terlindungi enkripsi end-to-end.
                   </span>
                 </div>
                 <Link
                   href="/forgot-password"
-                  className="text-xs font-bold text-[var(--brand)] hover:underline"
+                  className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
                 >
                   Lupa password?
                 </Link>
@@ -881,7 +883,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
             ) : (
               <form onSubmit={handlePasswordUpdate} className="mt-5 space-y-4 animate-in fade-in zoom-in-[0.98] duration-200">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-bold text-[var(--ink)]">
+                  <label className="block text-xs font-bold text-slate-900 dark:text-white">
                     <span className="mb-1.5 block">Password Baru</span>
                     <div className="relative">
                       <input
@@ -891,19 +893,19 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="Minimal 8 karakter"
                         minLength={8}
-                        className="w-full rounded-xl border border-[var(--line)] bg-[#fcfdfb] px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--brand)] focus:bg-white focus:ring-2 focus:ring-[var(--brand)]/10"
+                        className="w-full rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#16221a] px-3.5 py-2.5 text-sm text-slate-900 dark:text-white outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 cursor-pointer"
                       >
                         {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
                   </label>
 
-                  <label className="block text-xs font-bold text-[var(--ink)]">
+                  <label className="block text-xs font-bold text-slate-900 dark:text-white">
                     <span className="mb-1.5 block">Konfirmasi Password Baru</span>
                     <div className="relative">
                       <input
@@ -913,7 +915,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Ulangi password baru"
                         minLength={8}
-                        className="w-full rounded-xl border border-[var(--line)] bg-[#fcfdfb] px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--brand)] focus:bg-white focus:ring-2 focus:ring-[var(--brand)]/10"
+                        className="w-full rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#16221a] px-3.5 py-2.5 text-sm text-slate-900 dark:text-white outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10"
                       />
                     </div>
                   </label>
@@ -927,14 +929,14 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                       setNewPassword("");
                       setConfirmPassword("");
                     }}
-                    className="rounded-xl px-3.5 py-2 text-xs font-bold text-[var(--muted)] hover:bg-[#f7f8f5] transition"
+                    className="rounded-xl px-3.5 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#16221a] transition cursor-pointer"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
                     disabled={passwordLoading}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand)] px-4 py-2 text-xs font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-95 disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-4 py-2 text-xs font-bold shadow-xs transition active:scale-95 disabled:opacity-60 cursor-pointer"
                   >
                     {passwordLoading ? "Menyimpan..." : "Perbarui Password"}
                   </button>
@@ -944,31 +946,31 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Section: Otomatis Logout Saat Tidak Aktif (Inactivity Timeout) */}
-          <div className="surface-lift rounded-3xl border border-[var(--line)] bg-white p-5 sm:p-7 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#1c2d22] pb-4">
               <div className="flex items-center gap-3">
                 <span className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-500/10 text-amber-600 shrink-0">
                   <Clock size={18} />
                 </span>
                 <div>
-                  <h2 className="font-display text-lg font-extrabold text-[var(--ink)]">
+                  <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">
                     Kunci Otomatis Sesi (Idle Timeout)
                   </h2>
-                  <p className="text-xs text-[var(--muted)]">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     Keluar otomatis saat perangkat ditinggal tanpa interaksi demi melindungi privasi nilai & jadwalmu.
                   </p>
                 </div>
               </div>
 
               {/* Status pill */}
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 self-start sm:self-auto">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 self-start sm:self-auto">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 Proteksi Aktif
               </span>
             </div>
 
             <div className="mt-5">
-              <label className="block text-xs font-bold text-[var(--ink)] mb-2">
+              <label className="block text-xs font-bold text-slate-900 dark:text-white mb-2">
                 Pilih Durasi Idle Sebelum Otomatis Keluar
               </label>
 
@@ -985,21 +987,21 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                       key={item.value}
                       type="button"
                       onClick={() => handleIdleTimeoutChange(item.value)}
-                      className={`flex flex-col items-start p-3 rounded-2xl border text-left transition cursor-pointer ${
+                      className={`flex flex-col items-start p-3 rounded-xl border text-left transition cursor-pointer ${
                         isSelected
-                          ? "border-[var(--brand)] bg-[var(--brand)]/10 ring-1 ring-[var(--brand)]"
-                          : "border-[var(--line)] bg-[#fafbf9] hover:bg-[#f3f5f1]"
+                          ? "border-emerald-500 bg-emerald-50/50 dark:bg-[#14231b] ring-1 ring-emerald-500"
+                          : "border-slate-200/80 dark:border-[#1c2d22] bg-slate-50/50 dark:bg-[#16221a] hover:bg-slate-100 dark:hover:bg-[#1d2d23]"
                       }`}
                     >
                       <div className="flex items-center justify-between w-full">
-                        <span className={`text-xs font-black ${isSelected ? "text-[var(--brand)]" : "text-[var(--ink)]"}`}>
+                        <span className={`text-xs font-bold ${isSelected ? "text-emerald-700 dark:text-emerald-300" : "text-slate-900 dark:text-white"}`}>
                           {item.label}
                         </span>
                         {isSelected && (
-                          <span className="h-2 w-2 rounded-full bg-[var(--brand)]" />
+                          <span className="h-2 w-2 rounded-full bg-emerald-600 dark:bg-emerald-400" />
                         )}
                       </div>
-                      <span className="text-[10px] text-[var(--muted)] mt-1 font-medium">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
                         {item.note}
                       </span>
                     </button>
@@ -1007,8 +1009,8 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 })}
               </div>
 
-              <p className="mt-3.5 text-[11px] text-[var(--muted)] flex items-center gap-1.5">
-                <Shield size={12} className="text-[var(--brand)] shrink-0" />
+              <p className="mt-3.5 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <Shield size={12} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span>
                   Sistem akan menampilkan dialog peringatan 60 detik sebelum sesi kedaluwarsa sehingga kamu punya kesempatan memperpanjang sesi jika masih menggunakan aplikasi.
                 </span>
@@ -1017,17 +1019,17 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
           </div>
 
           {/* Sesi Akun & Keluar (Danger Zone) */}
-          <div className="rounded-3xl border border-[#f5b8a9]/60 bg-white p-6 shadow-xs">
+          <div className="rounded-2xl border border-rose-200/80 dark:border-rose-950/60 bg-white dark:bg-[#111914] p-6 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="font-display text-base font-black text-[#10261b] flex items-center gap-2">
-                  <LogOut size={16} className="text-[#b93c21]" />
+                <h3 className="font-display text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <LogOut size={16} className="text-rose-600" />
                   <span>Sesi Akun</span>
                 </h3>
-                <p className="mt-1 text-xs text-[var(--muted)]">
-                  Akun aktif: <strong className="text-[var(--ink)] font-bold">{email}</strong>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  Akun aktif: <strong className="text-slate-900 dark:text-white font-bold">{email}</strong>
                 </p>
-                <p className="mt-0.5 text-[11px] text-[var(--muted)]">
+                <p className="mt-0.5 text-[11px] text-slate-400 dark:text-slate-500">
                   Keluar dari perangkat ini untuk mengakhiri sesi kerjamu di ngampUS.
                 </p>
               </div>
@@ -1036,7 +1038,7 @@ export function ProfileForm({ profile, email }: { profile: Profile | null; email
                 type="button"
                 onClick={handleSignOut}
                 disabled={isLoggingOut}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#f5b8a9] bg-[#fff5f2] px-4 py-2.5 text-xs font-black text-[#b93c21] shadow-2xs hover:bg-[#ffebe5] hover:border-[#ea8a75] transition active:scale-95 disabled:opacity-60 shrink-0 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 px-4 py-2.5 text-xs font-bold text-rose-700 dark:text-rose-300 shadow-2xs hover:bg-rose-100 transition active:scale-95 disabled:opacity-60 shrink-0 cursor-pointer"
               >
                 <LogOut size={14} />
                 <span>{isLoggingOut ? "Mengeluarkan..." : "Keluar dari Akun"}</span>
@@ -1100,14 +1102,14 @@ function SingleEditableField({
 
   return (
     <div
-      className={`block text-sm font-bold text-[var(--ink)] transition-opacity duration-200 ${
+      className={`block text-sm font-bold text-slate-900 dark:text-white transition-opacity duration-200 ${
         isBlockedByOther || (isSaving && !isEditing) ? "opacity-45" : "opacity-100"
       } ${className}`}
     >
       {/* Label and Action Header */}
       <div className="flex items-center justify-between gap-1.5 mb-1.5">
         <span className="flex items-center gap-1.5">
-          {icon && <span className="text-[var(--muted)]">{icon}</span>}
+          {icon && <span className="text-slate-400 dark:text-slate-500">{icon}</span>}
           {label}
         </span>
 
@@ -1117,14 +1119,14 @@ function SingleEditableField({
             type="button"
             onClick={handleEditClick}
             disabled={isBlockedByOther || isSaving}
-            className={`flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold transition ${
+            className={`flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold transition cursor-pointer ${
               isBlockedByOther || isSaving
-                ? "text-[var(--muted)] cursor-not-allowed"
-                : "text-[var(--muted)] hover:bg-[#dcefe4] hover:text-[var(--brand)] active:scale-90"
+                ? "text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                : "text-slate-500 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-300 active:scale-90"
             }`}
             title={isBlockedByOther ? "Selesaikan field yang sedang diedit dahulu" : `Edit ${label}`}
           >
-            <Pencil size={11} className={isBlockedByOther ? "text-[var(--muted)]" : "text-[var(--brand)]"} />
+            <Pencil size={11} className={isBlockedByOther ? "text-slate-400 dark:text-slate-500" : "text-emerald-600 dark:text-emerald-400"} />
             <span>Edit</span>
           </button>
         ) : (
@@ -1133,7 +1135,7 @@ function SingleEditableField({
               type="button"
               onClick={() => onCancel(fieldKey)}
               disabled={isSaving}
-              className="flex items-center gap-1 rounded-lg border border-[#f0c8c8] bg-[#fff5f5] px-2 py-0.5 text-[11px] font-black text-[#b93c21] hover:bg-[#ffebee] transition active:scale-90 disabled:opacity-50"
+              className="flex items-center gap-1 rounded-lg border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 text-[11px] font-bold text-rose-700 dark:text-rose-300 hover:bg-rose-100 transition active:scale-90 disabled:opacity-50 cursor-pointer"
               title="Batal ubah data"
             >
               <X size={12} /> Batal
@@ -1142,7 +1144,7 @@ function SingleEditableField({
               type="button"
               onClick={() => onConfirm(fieldKey)}
               disabled={isSaving}
-              className="flex items-center gap-1 rounded-lg bg-[var(--brand)] px-2.5 py-0.5 text-[11px] font-black text-white shadow-xs hover:bg-[var(--brand-dark)] transition active:scale-90 disabled:opacity-50"
+              className="flex items-center gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-2.5 py-0.5 text-[11px] font-bold shadow-xs transition active:scale-90 disabled:opacity-50 cursor-pointer"
               title="Simpan perubahan langsung ke database"
             >
               {isSaving ? (
@@ -1171,14 +1173,14 @@ function SingleEditableField({
           className={`min-h-[42px] flex items-center justify-between rounded-xl border border-transparent px-3.5 py-2 transition-all overflow-hidden ${
             isBlockedByOther || isSaving
               ? "cursor-not-allowed"
-              : "cursor-pointer hover:border-[var(--brand)]/40 hover:bg-[#f2f7f3]/60 group"
+              : "cursor-pointer hover:border-emerald-500/40 hover:bg-slate-50/80 dark:hover:bg-[#16221a] group"
           }`}
         >
-          <span className={`text-sm font-semibold break-words min-w-0 ${value ? "text-[var(--ink)]" : "text-[var(--muted)]/60 italic"}`}>
+          <span className={`text-sm font-medium break-words min-w-0 ${value ? "text-slate-900 dark:text-white" : "text-slate-400 dark:text-slate-500 italic"}`}>
             {value || placeholder || "Belum diisi"}
           </span>
           {!isBlockedByOther && !isSaving && (
-            <span className="text-[10px] font-bold text-[var(--muted)] opacity-0 group-hover:opacity-80 transition shrink-0 ml-2">
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 opacity-0 group-hover:opacity-100 transition shrink-0 ml-2">
               Klik untuk edit
             </span>
           )}

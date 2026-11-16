@@ -11,31 +11,35 @@ import {
   ArrowUpRight,
   Sparkles,
   AlertTriangle,
-  Zap,
   MapPin,
   Video,
   FileText,
   Clock3,
   Calendar,
   Layers,
-  Megaphone,
   CheckCircle2,
-  Wrench,
-  Info,
+  BookOpen,
+  CalendarDays,
+  GraduationCap,
+  UsersRound,
+  Plus,
+  ArrowRight,
+  ExternalLink,
+  Award,
+  ChevronRight,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { syncActivityProgressStatuses } from "@/lib/activity-status-sync";
 import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
-import { ScrollEntrance } from "@/components/dashboard/scroll-entrance";
 import { DismissableAnnouncements, BroadcastItem } from "@/components/dashboard/dismissable-announcements";
 import { QuickCompleteButton } from "@/components/dashboard/quick-complete-button";
 
 function deadlineLabel(deadline: string) {
   const days = differenceInCalendarDays(parseISO(deadline), new Date());
-  if (days < 0) return `${Math.abs(days)}d lewat`;
-  if (days === 0) return "Hari Ini!";
+  if (days < 0) return `${Math.abs(days)} hari lewat`;
+  if (days === 0) return "Hari Ini";
   if (days === 1) return "Besok";
-  return `${days} hari`;
+  return `${days} hari lagi`;
 }
 
 function greetingByHour(hour: number) {
@@ -58,16 +62,14 @@ export default async function DashboardPage() {
     { data: activeSemester },
     { data: allSemesters },
     { data: organizations },
-    { data: programs },
     { data: broadcastAnnouncements },
   ] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from("profiles").select("full_name,avatar_url,university").single(),
     supabase.from("semesters").select("id,nama_semester,tanggal_mulai,tanggal_selesai").eq("is_active", true).maybeSingle(),
     supabase.from("semesters").select("id").order("created_at", { ascending: false }),
-    supabase.from("organizations").select("id,nama_organisasi,tipe").order("created_at", { ascending: false }).limit(3),
-    supabase.from("programs").select("organization_id,status").order("created_at", { ascending: false }),
-    supabase.from("broadcast_announcements").select("*").eq("is_active", true).order("created_at", { ascending: false }).limit(5),
+    supabase.from("organizations").select("id,nama_organisasi,tipe,jabatan").order("created_at", { ascending: false }).limit(2),
+    supabase.from("broadcast_announcements").select("*").eq("is_active", true).order("created_at", { ascending: false }).limit(3),
   ]);
 
   if (user) {
@@ -89,7 +91,7 @@ export default async function DashboardPage() {
     .eq("deadline_status", "terjadwal")
     .lte("deadline", threeDaysFromNow)
     .order("deadline", { ascending: true })
-    .limit(4);
+    .limit(5);
 
   let activeCountQuery = supabase
     .from("activities")
@@ -114,17 +116,6 @@ export default async function DashboardPage() {
     overdueCountQuery = overdueCountQuery.eq("semester_id", semesterId);
   }
 
-  // Today's schedule
-  let todayQuery = supabase
-    .from("activities")
-    .select("id,judul,kategori,jenis_item,jam_deadline,deadline,prioritas")
-    .neq("status", "selesai")
-    .or(`deadline.eq.${today},tanggal_mulai.eq.${today}`)
-    .order("jam_deadline", { ascending: true })
-    .limit(4);
-
-  if (semesterId) todayQuery = todayQuery.eq("semester_id", semesterId);
-
   // Day of week calculation (UTC+7)
   const nowUtc = new Date();
   const jktTime = new Date(nowUtc.getTime() + 7 * 60 * 60 * 1000);
@@ -141,14 +132,12 @@ export default async function DashboardPage() {
 
   const [
     { data: upcomingActivities },
-    { data: todayActivities },
     { data: todayCourses },
     { count: activeCount },
     { count: completeCount },
     { count: overdueCount },
   ] = await Promise.all([
     upcomingQuery,
-    todayQuery,
     todayCoursesQuery,
     activeCountQuery,
     completeCountQuery,
@@ -156,7 +145,6 @@ export default async function DashboardPage() {
   ]);
 
   const upcomingItems = upcomingActivities ?? [];
-  const todaySchedule = todayActivities ?? [];
   const todayClasses = todayCourses ?? [];
   const totalItems = (activeCount ?? 0) + (completeCount ?? 0);
   const completionRate = totalItems > 0 ? Math.round(((completeCount ?? 0) / totalItems) * 100) : 0;
@@ -172,14 +160,11 @@ export default async function DashboardPage() {
   }
 
   const dateHeading = format(new Date(), "EEEE, d MMMM yyyy", { locale: id });
-  const dayNameShort = format(new Date(), "EEE", { locale: id }).toUpperCase();
-  const dayNumber = format(new Date(), "dd");
-  const monthYearShort = format(new Date(), "MMM yyyy", { locale: id }).toUpperCase();
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-8 lg:px-10">
+    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-8 lg:px-10">
 
-      {/* ── BROADCAST ANNOUNCEMENTS (SUPERADMIN TARGETED SYSTEM BANNER) ── */}
+      {/* ── BROADCAST ANNOUNCEMENTS ── */}
       {broadcastAnnouncements && broadcastAnnouncements.length > 0 && (
         <DismissableAnnouncements
           announcements={broadcastAnnouncements as unknown as BroadcastItem[]}
@@ -187,853 +172,521 @@ export default async function DashboardPage() {
         />
       )}
 
-      {/* ── 00 // HERO BANNER: CAMPUS ATELIER & COMMAND DECK ── */}
-      <section 
-        className="dashboard-atelier-hero relative overflow-hidden rounded-[2rem] p-5 sm:p-7 md:p-8 text-white shadow-xl"
-        style={{ backgroundColor: "#0c2419", color: "#ffffff" }}
-      >
-        {/* Archival Texture & Subtle Ledger Grid Lines */}
-        <div 
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: "linear-gradient(#c8ef70 1px, transparent 1px), linear-gradient(90deg, #c8ef70 1px, transparent 1px)",
-            backgroundSize: "32px 32px"
-          }}
-        />
-
-        {/* Ambient Radial Accent Orbs */}
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full opacity-25 blur-3xl"
-          style={{ background: "radial-gradient(circle, #c8ef70 0%, transparent 70%)" }}
-        />
-        <div
-          className="pointer-events-none absolute -left-12 bottom-0 h-48 w-48 rounded-full opacity-15 blur-2xl"
-          style={{ background: "radial-gradient(circle, #22c55e 0%, transparent 70%)" }}
-        />
-
-        {/* Top Header Row */}
-        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      {/* ── 01 // WELCOME & COCKPIT HEADER ── */}
+      <section className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-7 shadow-xs transition-colors">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           
-          {/* User Profile & Identity */}
-          <div className="flex items-center gap-3.5 sm:gap-4.5 min-w-0">
+          {/* Identity & Status */}
+          <div className="flex items-center gap-4 min-w-0">
             {profile?.avatar_url ? (
               <div className="relative shrink-0">
                 <Image
                   src={profile.avatar_url}
                   alt={profile.full_name || firstName}
-                  width={58}
-                  height={58}
-                  className="h-13 w-13 sm:h-14 sm:w-14 rounded-2xl object-cover ring-2 ring-[#c8ef70]/40 shadow-lg"
+                  width={56}
+                  height={56}
+                  className="h-14 w-14 rounded-2xl object-cover ring-2 ring-emerald-500/30 dark:ring-emerald-400/30 shadow-xs"
                 />
-                <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#103626] ring-2 ring-[#0c2419]">
-                  <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
+                <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white dark:bg-[#111914] ring-2 ring-emerald-500">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
               </div>
             ) : (
-              <div className="relative grid h-13 w-13 sm:h-14 sm:w-14 shrink-0 place-items-center rounded-2xl bg-white/10 text-xl font-black text-[#c8ef70] ring-1 ring-white/20 shadow-inner">
+              <div className="relative grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-emerald-600 text-xl font-black text-white shadow-xs">
                 {firstName.slice(0, 1).toUpperCase()}
-                <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#103626] ring-2 ring-[#0c2419]">
-                  <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
+                <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white dark:bg-[#111914] ring-2 ring-emerald-500">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
               </div>
             )}
 
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span 
-                  className="stamp-badge border-[#c8ef70]/40 text-[#c8ef70]"
-                  style={{ backgroundColor: "rgba(200, 239, 112, 0.15)", color: "#d6f792" }}
-                >
-                  {greeting}
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/60 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+                  <span>{greeting}</span>
                 </span>
-                <span className="tag-mono text-[10px] text-[#9dc5aa]">
-                  // {activeSemester ? activeSemester.nama_semester : "WORKSPACE"}
+                <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
+                  {dateHeading}
                 </span>
               </div>
-              <h1 className="font-display mt-1 text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight truncate drop-shadow-xs">
+              <h1 className="font-display mt-1 text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight truncate">
                 {profile?.full_name || firstName}
               </h1>
-              <p className="tag-mono text-[11px] text-[#b3d3bd] mt-0.5 flex items-center gap-1.5">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#4ade80]" />
-                {activeSemester ? "Academic Terminal Active" : "Setup Semester Anda"}
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5 truncate">
+                <span>{profile?.university || "Mahasiswa Indonesia"}</span>
+                <span>•</span>
+                <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                  {activeSemester ? activeSemester.nama_semester : "Semester Belum Diatur"}
+                </span>
               </p>
             </div>
           </div>
 
-          {/* Date Stamp Block (Physical Ledger Ticket Style) */}
-          <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto">
-            <div 
-              className="flex items-center rounded-2xl border border-white/15 p-2.5 sm:px-4 sm:py-2.5 shadow-inner"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-            >
-              <div className="border-r border-white/20 pr-3 text-center">
-                <span className="tag-mono block text-[9px] font-black text-[#a6cbb2]">{dayNameShort}</span>
-                <span className="font-display block text-2xl font-black text-[#c8ef70] leading-none mt-0.5">{dayNumber}</span>
-              </div>
-              <div className="pl-3">
-                <span className="tag-mono block text-[9px] font-bold text-[#9dc5aa]">{monthYearShort}</span>
-                <span className="block text-xs font-bold text-white">
-                  {todayClasses.length > 0 ? `${todayClasses.length} Kuliah Hari Ini` : "Bebas Kuliah 🎉"}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Hero Bottom Focus Strip */}
-        <div className="relative z-10 mt-6 pt-5 border-t border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          
-          {/* Tile 1: Fokus Kuliah Hari Ini */}
-          <div 
-            className="flex items-center justify-between rounded-xl border border-white/15 px-3.5 py-2.5"
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-          >
-            <div className="min-w-0">
-              <span className="tag-mono text-[9px] font-bold uppercase text-[#a6cbb2] block">KULIAH HARI INI</span>
-              <span className="font-display text-sm font-bold text-white truncate block">
-                {todayClasses.length > 0 ? todayClasses[0].nama_matkul : "Tidak ada jadwal kelas"}
-              </span>
-            </div>
+          {/* Quick Action Button Group */}
+          <div className="flex items-center gap-2.5 shrink-0">
             <Link
               href={`/jadwal${semesterFilter}`}
-              className="shrink-0 ml-2 rounded-lg bg-white/15 p-1.5 text-[#c8ef70] hover:bg-white/25 transition"
-              title="Buka Jadwal"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-[#1d3527] bg-slate-50 hover:bg-slate-100 dark:bg-[#15231c] dark:hover:bg-[#1b2e25] px-3.5 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 transition"
             >
-              <ArrowUpRight size={14} />
+              <BookOpen size={14} className="text-slate-500 dark:text-slate-400" />
+              <span>Jadwal Kuliah</span>
             </Link>
-          </div>
 
-          {/* Tile 2: Deadline Terdekat */}
-          <div 
-            className="flex items-center justify-between rounded-xl border border-white/15 px-3.5 py-2.5"
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-          >
-            <div className="min-w-0">
-              <span className="tag-mono text-[9px] font-bold uppercase text-[#fba18d] block">TENGGAT TERDEKAT</span>
-              <span className="font-display text-sm font-bold text-white truncate block">
-                {upcomingItems.length > 0 ? upcomingItems[0].judul : "Semua tugas beres ✨"}
-              </span>
-            </div>
             <Link
-              href={`/kegiatan${semesterFilter}`}
-              className="shrink-0 ml-2 rounded-lg bg-white/15 p-1.5 text-[#f87171] hover:bg-white/25 transition"
-              title="Buka Kegiatan"
+              href="/kegiatan?new=1"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-4 py-2 text-xs font-bold shadow-xs transition active:scale-95"
             >
-              <ArrowUpRight size={14} />
+              <Plus size={15} strokeWidth={2.5} />
+              <span>Catat Tugas</span>
             </Link>
           </div>
-
-          {/* Tile 3: Progress Capaian */}
-          <div 
-            className="flex items-center justify-between rounded-xl border border-white/15 px-3.5 py-2.5"
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-          >
-            <div className="min-w-0 flex-1 mr-2">
-              <div className="flex justify-between items-center text-[9px] font-bold text-[#a6cbb2]">
-                <span className="tag-mono uppercase">SELESAI</span>
-                <span className="text-[#c8ef70] font-black">{completionRate}%</span>
-              </div>
-              <div className="mt-1 h-1.5 w-full rounded-full bg-white/20 overflow-hidden">
-                <div className="h-full bg-[#c8ef70] rounded-full transition-all duration-500" style={{ width: `${completionRate}%` }} />
-              </div>
-            </div>
-            <Link
-              href={`/rekap${semesterFilter}`}
-              className="shrink-0 rounded-lg bg-white/15 p-1.5 text-[#c8ef70] hover:bg-white/25 transition"
-              title="Buka Rekap"
-            >
-              <ArrowUpRight size={14} />
-            </Link>
-          </div>
-
         </div>
       </section>
 
-      {/* ── 01 // METRIC DISK / ARCHIVAL STAT DOCKET ── */}
-      <div className="relative z-20 -mt-3 sm:-mt-4 px-2 sm:px-4">
-        <div className="grid grid-cols-3 gap-2 sm:gap-4">
-          
-          {/* Card 1: Komitmen Aktif */}
-          <Link
-            href={`/kegiatan${semesterFilter}`}
-            prefetch={true}
-            className="group flex flex-col justify-between rounded-2xl border border-[#d6e2d8] bg-white p-3 sm:p-4 shadow-sm transition-all duration-200 hover:border-[#0f6849] hover:shadow-md active:scale-98"
-          >
-            <div className="flex items-center justify-between">
-              <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
-                [ACT-01]
-              </span>
-              <span className="tag-mono text-[10px] font-bold text-[#697c6f] group-hover:text-[#0f6849] transition">
-                TUGAS ↗
-              </span>
-            </div>
-            <div className="mt-2.5 sm:mt-3">
-              <span className="font-display text-2xl sm:text-4xl font-black text-[#10261b] tracking-tight group-hover:text-[#0f6849] transition leading-none">
-                {activeCount ?? 0}
-              </span>
-              <p className="tag-mono text-[10px] sm:text-xs font-bold text-[#455c4e] mt-1 truncate">
-                Komitmen Aktif
-              </p>
-            </div>
-          </Link>
+      {/* ── 02 // KEY METRIC PILLARS (4 Crisp Cards) ── */}
+      <section className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        
+        {/* Card 1: Jadwal Kuliah Hari Ini */}
+        <Link
+          href={`/jadwal${semesterFilter}`}
+          className="group rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 shadow-xs hover:border-emerald-500/50 hover:shadow-sm transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Kuliah Hari Ini
+            </span>
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+              <BookOpen size={15} />
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+              {todayClasses.length} Kelas
+            </span>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 truncate">
+              {todayClasses.length > 0 ? todayClasses[0].nama_matkul : "Tidak ada kelas hari ini"}
+            </p>
+          </div>
+        </Link>
 
-          {/* Card 2: Tenggat Kritis */}
-          <Link
-            href={`/kegiatan${semesterFilter}`}
-            prefetch={true}
-            className={`group flex flex-col justify-between rounded-2xl border p-3 sm:p-4 shadow-sm transition-all duration-200 active:scale-98 ${
-              (overdueCount ?? 0) > 0 
-                ? "border-[#f7c5ba] bg-[#fffbfb] hover:border-[#c53e1c] hover:shadow-md" 
-                : "border-[#d6e2d8] bg-white hover:border-[#d97706] hover:shadow-md"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className={`stamp-badge ${
-                (overdueCount ?? 0) > 0
-                  ? "border-[#f7c5ba] bg-[#feece7] text-[#c53e1c]"
-                  : "border-[#fde68a] bg-[#fffbeb] text-[#92400e]"
-              }`}>
-                {(overdueCount ?? 0) > 0 ? "! ALERT" : "[DLN-02]"}
-              </span>
-              <span className={`tag-mono text-[10px] font-bold transition ${
-                (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#697c6f] group-hover:text-[#92400e]"
-              }`}>
-                URGEN ↗
-              </span>
-            </div>
-            <div className="mt-2.5 sm:mt-3">
-              <span className={`font-display text-2xl sm:text-4xl font-black tracking-tight leading-none ${
-                (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#10261b] group-hover:text-[#92400e]"
-              }`}>
-                {(overdueCount ?? 0) > 0 ? overdueCount : upcomingItems.length}
-              </span>
-              <p className={`tag-mono text-[10px] sm:text-xs font-bold mt-1 truncate ${
-                (overdueCount ?? 0) > 0 ? "text-[#c53e1c]" : "text-[#78350f]"
-              }`}>
-                {(overdueCount ?? 0) > 0 ? "Perlu Ditinjau" : "Deadline Dekat"}
-              </p>
-            </div>
-          </Link>
+        {/* Card 2: Tugas & Deadline */}
+        <Link
+          href={`/kegiatan${semesterFilter}`}
+          className="group rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 shadow-xs hover:border-emerald-500/50 hover:shadow-sm transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Tugas & Deadline
+            </span>
+            <span className={`grid h-7 w-7 place-items-center rounded-lg ${
+              (overdueCount ?? 0) > 0
+                ? "bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400"
+                : "bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400"
+            }`}>
+              <CalendarDays size={15} />
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+              {activeCount ?? 0} Aktif
+            </span>
+            <p className="text-xs mt-1 truncate">
+              {(overdueCount ?? 0) > 0 ? (
+                <span className="font-semibold text-rose-600 dark:text-rose-400">
+                  {overdueCount} perlu ditinjau
+                </span>
+              ) : (
+                <span className="text-slate-500 dark:text-slate-400">
+                  {upcomingItems.length > 0 ? "Deadline terdekat aman" : "Semua tugas tuntas ✨"}
+                </span>
+              )}
+            </p>
+          </div>
+        </Link>
 
-          {/* Card 3: Penyelesaian */}
-          <Link
-            href={`/rekap${semesterFilter}`}
-            prefetch={true}
-            className="group flex flex-col justify-between rounded-2xl border border-[#d6e2d8] bg-white p-3 sm:p-4 shadow-sm transition-all duration-200 hover:border-[#5c3a9c] hover:shadow-md active:scale-98"
-          >
-            <div className="flex items-center justify-between">
-              <span className="stamp-badge border-[#d8b4fe] bg-[#f3e8ff] text-[#6b21a8]">
-                [RKP-03]
-              </span>
-              <span className="tag-mono text-[10px] font-bold text-[#697c6f] group-hover:text-[#6b21a8] transition">
-                REKAP ↗
-              </span>
+        {/* Card 3: Progres Semester */}
+        <Link
+          href="/semester"
+          className="group rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 shadow-xs hover:border-emerald-500/50 hover:shadow-sm transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Progres Semester
+            </span>
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+              <GraduationCap size={15} />
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+              {semesterProgress}%
+            </span>
+            <div className="mt-2 h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div 
+                className="h-full bg-emerald-600 dark:bg-emerald-500 rounded-full transition-all duration-500" 
+                style={{ width: `${semesterProgress}%` }} 
+              />
             </div>
-            <div className="mt-2.5 sm:mt-3">
-              <span className="font-display text-2xl sm:text-4xl font-black text-[#10261b] tracking-tight group-hover:text-[#6b21a8] transition leading-none">
-                {completeCount ?? 0}
-              </span>
-              <p className="tag-mono text-[10px] sm:text-xs font-bold text-[#5c3a9c] mt-1 truncate">
-                Target Terpenuhi
-              </p>
-            </div>
-          </Link>
+          </div>
+        </Link>
 
-        </div>
-      </div>
+        {/* Card 4: Kesiapan Portofolio */}
+        <Link
+          href={`/rekap/portfolio${semesterFilter}`}
+          className="group rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 shadow-xs hover:border-emerald-500/50 hover:shadow-sm transition"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Portofolio & ATS
+            </span>
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
+              <Award size={15} />
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+              Skor 96/100
+            </span>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 truncate">
+              {completeCount ?? 0} Proyek terverifikasi
+            </p>
+          </div>
+        </Link>
 
-      {/* ── Onboarding Modal & Guided Tour ── */}
+      </section>
+
+      {/* ── Onboarding Wizard (Modal Tour) ── */}
       <OnboardingWizard
         hasSemesters={(allSemesters?.length ?? 0) > 0}
         userId={user?.id || ""}
         userName={firstName}
       />
 
-      {/* ── No Active Semester Alert ── */}
-      {!activeSemester && (
-        <Link
-          href="/semester"
-          className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-[#ebdcb2] bg-[#fffaf0] p-3.5 sm:p-4 text-xs sm:text-sm text-[#7a5b03] shadow-xs transition hover:border-[#dfc98c]"
-        >
-          <span className="flex items-center gap-2">
-            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#faedd0] text-[#7a5b03] shrink-0 font-black text-xs">!</span>
-            <span><b>Belum ada semester aktif.</b> Hubungkan semester agar agenda dan mata kuliah terfokus rapi.</span>
-          </span>
-          <span className="tag-mono shrink-0 font-bold underline text-xs">SET TANGGAL →</span>
-        </Link>
-      )}
-
-      {/* ── Overdue Banner Alert ── */}
+      {/* ── Overdue Warning Banner ── */}
       {(overdueCount ?? 0) > 0 && (
-        <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-[#f7c8be] bg-[#fff6f4] px-4 py-3 shadow-2xs">
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/80 dark:bg-rose-950/30 px-4 py-3 text-xs text-rose-900 dark:text-rose-200">
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#feece7] text-[#c53e1c]">
-              <AlertTriangle size={13} strokeWidth={2.5} />
-            </span>
-            <p className="min-w-0 text-xs font-semibold text-[#a33218] leading-tight truncate">
-              <b>{overdueCount} kegiatan</b> melewati batas deadline yang ditentukan
+            <AlertTriangle size={16} className="text-rose-600 dark:text-rose-400 shrink-0" />
+            <p className="font-medium truncate">
+              Ada <b>{overdueCount} kegiatan</b> yang melewati batas tenggat.
             </p>
           </div>
-          <Link 
-            href={`/kegiatan${semesterFilter}`} 
-            className="tag-mono shrink-0 rounded-xl bg-[#c53e1c] px-3 py-1.5 text-[11px] font-black text-white shadow-2xs hover:bg-[#a93012] transition"
+          <Link
+            href={`/kegiatan${semesterFilter}`}
+            className="shrink-0 font-bold text-rose-700 dark:text-rose-300 hover:underline inline-flex items-center gap-1"
           >
-            TINJAU SEKARANG →
+            <span>Tinjau Sekarang</span>
+            <ArrowRight size={13} />
           </Link>
         </div>
       )}
 
-      {/* ── 02 // PUSAT AKSI & PINTASAN TERMINAL (Physical Index Card Switchboard) ── */}
-      <section className="mt-6 rounded-3xl border border-[#d6e1d8] bg-white p-4 sm:p-6 shadow-sm">
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#edf2ee]">
-          <div className="flex items-center gap-2">
-            <span className="tag-mono text-xs font-black text-[#0f6849]">02 //</span>
-            <h2 className="font-display text-sm sm:text-base font-black uppercase tracking-wider text-[#10261b]">
-              Pusat Aksi & Layanan Mahasiswa
-            </h2>
-          </div>
-          <span className="tag-mono text-[10px] font-bold text-[#697c6f]">CAMPUS DOCKET</span>
-        </div>
+      {/* ── 03 // PRIMARY WORKSPACE COCKPIT (2 COLUMNS: 65% / 35%) ── */}
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_.6fr]">
 
-        <div className="grid grid-cols-4 md:grid-cols-8 gap-2 sm:gap-3">
-          {[
-            {
-              id: "jadwal",
-              tourId: "action-card-jadwal",
-              label: "Jadwal",
-              sub: "Kelas",
-              href: `/jadwal${semesterFilter}`,
-              badge: todayClasses.length > 0 ? `${todayClasses.length}` : null,
-              badgeColor: "bg-[#0f6849] text-[#c8ef70]",
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              )
-            },
-            {
-              id: "catat",
-              tourId: "action-card-catat",
-              label: "Catat",
-              sub: "+ Baru",
-              href: "/kegiatan?new=1",
-              badge: null,
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                </svg>
-              )
-            },
-            {
-              id: "kegiatan",
-              tourId: "action-card-kegiatan",
-              label: "Kegiatan",
-              sub: "Tugas",
-              href: `/kegiatan${semesterFilter}`,
-              badge: (overdueCount ?? 0) > 0 ? "!" : null,
-              badgeColor: "bg-[#c53e1c] text-white",
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
-                </svg>
-              )
-            },
-            {
-              id: "modul",
-              tourId: "action-card-modul",
-              label: "Modul",
-              sub: "Materi",
-              href: `/modul${semesterFilter}`,
-              badge: null,
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                </svg>
-              )
-            },
-            {
-              id: "organisasi",
-              tourId: "action-card-organisasi",
-              label: "Organisasi",
-              sub: "Ormawa",
-              href: "/organisasi",
-              badge: organizations?.length ? `${organizations.length}` : null,
-              badgeColor: "bg-[#5c3a9c] text-white",
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                </svg>
-              )
-            },
-            {
-              id: "semester",
-              tourId: "action-card-semester",
-              label: "Semester",
-              sub: "Kurikulum",
-              href: "/semester",
-              badge: null,
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
-                </svg>
-              )
-            },
-            {
-              id: "portofolio",
-              tourId: "action-card-portofolio",
-              label: "Portofolio",
-              sub: "Karier & CV",
-              href: `/rekap/portfolio${semesterFilter}`,
-              badge: null,
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
-                </svg>
-              )
-            },
-            {
-              id: "rekap",
-              tourId: "action-card-rekap",
-              label: "Rekap AI",
-              sub: "Analitik",
-              href: `/rekap${semesterFilter}`,
-              badge: "PRO",
-              badgeColor: "bg-[#c8ef70] text-[#0f3524]",
-              customSvg: (
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.143 2.143L15 7.5" />
-                </svg>
-              )
-            },
-          ].map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              prefetch={true}
-              data-tour={item.tourId}
-              className="group flex flex-col items-center justify-center rounded-2xl border border-[#e2eae3] bg-[#fafbfa] p-2.5 sm:p-3 text-center transition-all duration-200 hover:bg-white hover:border-[#0f6849]/40 hover:shadow-xs active:scale-95"
-            >
-              <div className="relative grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl bg-white border border-[#d6e1d8] text-[#0f6849] transition-all duration-200 group-hover:bg-[#103626] group-hover:text-[#c8ef70] group-hover:border-[#103626] shadow-2xs">
-                {item.customSvg}
-                {item.badge && (
-                  <span
-                    className={`absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[8.5px] font-black shadow-xs ${
-                      item.badgeColor || "bg-[#0f6849] text-white"
-                    }`}
+        {/* ── LEFT COLUMN: JADWAL KULIAH & RADAR DEADLINE ── */}
+        <div className="flex flex-col gap-6 min-w-0">
+          
+          {/* Section: Jadwal Kuliah Hari Ini */}
+          <section className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-6 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#18271e] pb-3 mb-4">
+              <div>
+                <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
+                  Jadwal Kuliah Hari Ini
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Daftar kelas dan tautan ruang kuliah yang sinkron
+                </p>
+              </div>
+              <Link
+                href={`/jadwal${semesterFilter}`}
+                className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-1"
+              >
+                <span>Lihat Semua</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            <div className="space-y-3">
+              {todayClasses.length > 0 ? (
+                todayClasses.map((c) => (
+                  <article
+                    key={c.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/50 dark:bg-[#15221a] p-3.5 transition hover:border-emerald-500/40"
                   >
-                    {item.badge}
-                  </span>
-                )}
-              </div>
-              <span className="mt-2 block text-[11px] sm:text-xs font-black tracking-tight text-[#10261b] group-hover:text-[#0f6849] dark:text-[#f0f7f2] dark:group-hover:text-[#4ade80] transition leading-tight">
-                {item.label}
-              </span>
-              <span className="tag-mono block text-[9px] text-[#3d5045] dark:text-[#9ab3a2] truncate mt-0.5">
-                {item.sub}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 03 // WORKSPACE MAIN COLUMNS: ATELIER SCHEDULE & RADAR ── */}
-      <section className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[1.38fr_.62fr]">
-
-        {/* Left Column: Lecture Hall & Daily Commitments */}
-        <div className="flex flex-col min-w-0 gap-6">
-
-          {/* Today's Classes: Lecture Timetable */}
-          <ScrollEntrance delay={120} direction="up">
-            <div className="rounded-3xl border border-[#d6e1d8] bg-white p-5 sm:p-6 shadow-sm">
-              <div className="flex items-center justify-between gap-2 border-b border-[#edf2ee] pb-3.5">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="tag-mono text-xs font-black text-[#0f6849]">03 //</span>
-                    <span className="stamp-badge border-[#0f6849]/20 bg-[#dff3e5] text-[#0f6849]">
-                      TIMETABLE HARI INI
-                    </span>
-                  </div>
-                  <h2 className="font-display mt-1 text-base sm:text-xl font-black text-[#10261b] tracking-tight truncate">
-                    Jadwal Kuliah & Tatap Muka
-                  </h2>
-                </div>
-                <Link
-                  href={`/jadwal${semesterFilter}`}
-                  className="tag-mono inline-flex shrink-0 items-center gap-1 rounded-xl bg-[#f0f4f0] px-3 py-1.5 text-xs font-black text-[#0f6849] hover:bg-[#dff3e5] transition"
-                >
-                  SELEKSI HARI <ArrowUpRight size={13} />
-                </Link>
-              </div>
-
-              <div className="mt-4 space-y-3">
-                {todayClasses.length ? (
-                  todayClasses.map((c, idx) => (
-                    <article
-                      key={c.id}
-                      className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 rounded-2xl border border-[#e1eae2] bg-[#fcfdfc] p-4 transition-all duration-200 hover:bg-white hover:border-[#0f6849]/40 hover:shadow-xs"
-                      style={{ borderLeftColor: c.warna_label || "#0f6849", borderLeftWidth: "4px" }}
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="tag-mono text-[10px] font-black uppercase text-[#526a5b]">
-                            [KUL-0{idx + 1}] {c.kode_matkul ? `${c.kode_matkul} · ` : ""}{c.sks} SKS
-                          </span>
-                          <span
-                            className={`stamp-badge ${
-                              c.tipe_pertemuan === "online"
-                                ? "border-[#c7d2fe] bg-[#e0e7ff] text-[#3730a3]"
-                                : c.tipe_pertemuan === "hybrid"
-                                ? "border-[#fde68a] bg-[#fef3c7] text-[#92400e]"
-                                : "border-[#bbf7d0] bg-[#dcfce7] text-[#166534]"
-                            }`}
-                          >
-                            {c.tipe_pertemuan}
-                          </span>
-                        </div>
-                        <h3 className="font-display mt-1 font-black text-sm sm:text-base text-[#10261b] truncate group-hover:text-[#0f6849] transition">
-                          {c.nama_matkul}
-                        </h3>
-                        <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-[#697c6f]">
-                          <span className="tag-mono font-bold text-[#0f6849] flex items-center gap-1">
-                            <Clock3 size={13} /> {c.jam_mulai.slice(0, 5)} - {c.jam_selesai.slice(0, 5)} WIB
-                          </span>
-                          {c.ruangan && (
-                            <span className="flex items-center gap-1 font-medium text-[#465c4e]">
-                              <MapPin size={13} /> {c.ruangan}
-                            </span>
-                          )}
-                          {c.dosen_pengampu && (
-                            <span className="tag-mono text-[11px] text-[#718778]">
-                              · {c.dosen_pengampu}
-                            </span>
-                          )}
-                        </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                          {c.kode_matkul ? `${c.kode_matkul} • ` : ""}{c.sks} SKS
+                        </span>
+                        <span className="rounded-md bg-slate-200/70 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-700 dark:text-slate-300 uppercase">
+                          {c.tipe_pertemuan || "Tatap Muka"}
+                        </span>
                       </div>
-
-                      {/* Action buttons (Zoom / Classroom / Drive) */}
-                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t border-[#edf2ee] sm:border-t-0">
-                        {c.link_pertemuan && (
-                          <a
-                            href={c.link_pertemuan}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="tag-mono inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-3.5 py-2 text-xs font-black text-[#c8ef70] shadow-xs hover:bg-[#1a4a34] transition active:scale-95"
-                          >
-                            <Video size={13} /> MASUK KELAS
-                          </a>
+                      <h3 className="font-display mt-1 text-sm font-bold text-slate-900 dark:text-white truncate">
+                        {c.nama_matkul}
+                      </h3>
+                      <div className="mt-1 flex flex-wrap items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+                        <span className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
+                          <Clock3 size={13} className="text-emerald-600 dark:text-emerald-400" />
+                          {c.jam_mulai.slice(0, 5)} - {c.jam_selesai.slice(0, 5)} WIB
+                        </span>
+                        {c.ruangan && (
+                          <span className="flex items-center gap-1">
+                            <MapPin size={13} /> {c.ruangan}
+                          </span>
                         )}
-                        {c.link_materi && (
-                          <a
-                            href={c.link_materi}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="tag-mono inline-flex items-center gap-1.5 rounded-xl border border-[#d8e3da] bg-white px-3 py-2 text-xs font-bold text-[#10261b] hover:bg-[#f4faf6] transition"
-                          >
-                            <FileText size={13} /> MATERI
-                          </a>
+                        {c.dosen_pengampu && (
+                          <span className="truncate">· {c.dosen_pengampu}</span>
                         )}
                       </div>
-                    </article>
-                  ))
-                ) : (
-                  <div className="rounded-2xl bg-[#fafbfa] px-4 py-8 text-center border border-dashed border-[#c5d8cb]">
-                    <div className="mx-auto grid h-10 w-10 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849]">
-                      <Sparkles size={20} />
                     </div>
-                    <p className="font-display mt-2.5 text-sm font-black text-[#10261b]">Bebas dari jadwal perkuliahan hari ini</p>
-                    <p className="tag-mono mt-1 text-xs text-[#697c6f]">Gunakan waktu luang untuk mencicil modul kuliah atau agenda organisasi.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </ScrollEntrance>
 
-          {/* Today's Agenda & Commitments */}
-          <ScrollEntrance delay={160} direction="up">
-            <div className="rounded-3xl border border-[#d6e1d8] bg-white p-5 sm:p-6 shadow-sm">
-              <div className="flex items-center justify-between gap-2 border-b border-[#edf2ee] pb-3.5">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="tag-mono text-xs font-black text-[#0f6849]">04 //</span>
-                    <span className="stamp-badge border-[#d6e2d8] bg-[#f4f7f4] text-[#425a4c]">
-                      AGENDA & DEADLINE HARI INI
-                    </span>
+                    {/* Class Action Links */}
+                    <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t border-slate-200/50 dark:border-slate-800 sm:border-t-0">
+                      {c.link_pertemuan && (
+                        <a
+                          href={c.link_pertemuan}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:text-black px-3 py-1.5 text-xs font-bold transition"
+                        >
+                          <Video size={13} />
+                          <span>Masuk Kelas</span>
+                        </a>
+                      )}
+                      {c.link_materi && (
+                        <a
+                          href={c.link_materi}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 transition"
+                        >
+                          <FileText size={13} />
+                          <span>Materi</span>
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="rounded-xl border border-dashed border-slate-200 dark:border-[#1d3527] p-6 text-center">
+                  <div className="mx-auto grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+                    <Sparkles size={20} />
                   </div>
-                  <h2 className="font-display mt-1 text-base sm:text-xl font-black text-[#10261b] tracking-tight truncate">
-                    Buku Log Kegiatan Harian
-                  </h2>
+                  <p className="mt-2 text-sm font-bold text-slate-800 dark:text-slate-200">
+                    Bebas dari jadwal perkuliahan hari ini
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Gunakan waktu untuk mencicil modul praktikum atau agenda organisasi.
+                  </p>
                 </div>
-                <Link 
-                  href={`/kegiatan?view=calendar${semesterId ? `&semester_id=${semesterId}` : ""}`} 
-                  className="tag-mono inline-flex shrink-0 items-center gap-1 rounded-xl bg-[#f0f4f0] px-3 py-1.5 text-xs font-black text-[#0f6849] hover:bg-[#dff3e5] transition"
-                >
-                  KALENDER <ArrowUpRight size={13} />
-                </Link>
-              </div>
+              )}
+            </div>
+          </section>
 
-              <div className="mt-4 space-y-2.5">
-                {todaySchedule.length ? (
-                  todaySchedule.map((item) => (
-                    <article 
-                      key={item.id} 
-                      className="flex items-center gap-3.5 rounded-2xl border border-[#e5ece5] bg-[#fafbfa] p-3.5 transition-all duration-200 hover:bg-white hover:border-[#0f6849]/30 hover:shadow-xs"
+          {/* Section: Radar Deadline & Prioritas Tugas */}
+          <section className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 sm:p-6 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#18271e] pb-3 mb-4">
+              <div>
+                <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
+                  Radar Deadline & Prioritas
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Tugas mendesak dalam 3 hari ke depan
+                </p>
+              </div>
+              <Link
+                href={`/kegiatan${semesterFilter}`}
+                className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-1"
+              >
+                <span>Lihat Semua Tugas</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            <div className="space-y-2.5">
+              {upcomingItems.length > 0 ? (
+                upcomingItems.map((item) => {
+                  const days = differenceInCalendarDays(parseISO(item.deadline!), new Date());
+                  const isOverdue = days < 0;
+                  const isUrgent = days <= 1;
+
+                  return (
+                    <article
+                      key={item.id}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/40 dark:bg-[#15221a] p-3 transition hover:border-emerald-500/40"
                     >
-                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white border border-[#d8e3da] text-[#0f6849] shadow-2xs">
-                        <Calendar size={18} />
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <QuickCompleteButton activityId={item.id} activityTitle={item.judul} />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                            {item.judul}
+                          </h3>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                            <span className="font-medium text-emerald-700 dark:text-emerald-400 uppercase">
+                              {item.kategori}
+                            </span>
+                            {item.jam_deadline ? ` • Pukul ${item.jam_deadline.slice(0, 5)} WIB` : ""}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-display truncate text-xs sm:text-sm font-black text-[#10261b]">{item.judul}</h3>
-                        <p className="tag-mono text-[11px] text-[#697c6f] truncate mt-0.5">
-                          {item.jam_deadline ? `🕐 ${item.jam_deadline.slice(0, 5)} WIB` : "Sepanjang hari"} · <span className="uppercase">{item.kategori}</span>
-                        </p>
-                      </div>
-                      <span className="stamp-badge border-[#d8e3da] bg-white text-[#425a4c]">
-                        {item.jenis_item}
-                      </span>
-                    </article>
-                  ))
-                ) : (
-                  <div className="rounded-2xl bg-[#fafbfa] px-4 py-7 text-center border border-dashed border-[#c5d8cb]">
-                    <p className="tag-mono text-xs font-bold text-[#10261b]">Tidak ada agenda tercatat hari ini</p>
-                    <p className="text-[11px] text-[#697c6f] mt-0.5">Jaga fokusmu tetap prima atau istirahat sejenak.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </ScrollEntrance>
 
-          {/* Urgent Deadline Radar */}
-          <ScrollEntrance delay={200} direction="up">
-            <div className="rounded-3xl border border-[#d6e1d8] bg-white p-5 sm:p-6 shadow-sm">
-              <div className="flex items-center justify-between gap-2 border-b border-[#edf2ee] pb-3.5">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="tag-mono text-xs font-black text-[#c53e1c]">05 //</span>
-                    <span className="stamp-badge border-[#f8c6b9] bg-[#fff8f7] text-[#c53e1c]">
-                      RADAR TENGGAT
-                    </span>
-                  </div>
-                  <h2 className="font-display mt-1 text-base sm:text-xl font-black text-[#10261b] tracking-tight truncate">
-                    Deadline 3 Hari Mendatang
-                  </h2>
-                </div>
-                <Link 
-                  href={`/kegiatan${semesterFilter}`} 
-                  className="tag-mono inline-flex shrink-0 items-center gap-1 rounded-xl bg-[#f0f4f0] px-3 py-1.5 text-xs font-black text-[#0f6849] hover:bg-[#dff3e5] transition"
-                >
-                  SEMUA TUGAS <ArrowUpRight size={13} />
-                </Link>
-              </div>
-
-              <div className="mt-4 space-y-2.5">
-                {upcomingItems.length ? (
-                  upcomingItems.map((item) => {
-                    const days = differenceInCalendarDays(parseISO(item.deadline!), new Date());
-                    const isOverdue = days < 0;
-                    const isUrgent = days <= 1;
-                    return (
-                      <article
-                        key={item.id}
-                        className={`flex items-center gap-3.5 rounded-2xl border p-3.5 transition-all duration-200 ${
+                      <span
+                        className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold ${
                           isOverdue
-                            ? "border-[#f8c6b9] bg-[#fff8f7]"
+                            ? "bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300"
                             : isUrgent
-                            ? "border-[#fde8b3] bg-[#fffdf6]"
-                            : "border-[#e5ece5] bg-[#fafbfa] hover:bg-white hover:border-[#a9cdb2]"
+                            ? "bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300"
+                            : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                         }`}
                       >
-                        <span
-                          className={`h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white shadow-xs ${
-                            isOverdue ? "bg-[#e87152]" : days === 0 ? "bg-[#e87152] animate-ping" : days === 1 ? "bg-[#f3c84b]" : "bg-[#0f6849]"
-                          }`}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-display truncate text-xs sm:text-sm font-black text-[#10261b]">{item.judul}</h3>
-                          <p className="tag-mono mt-0.5 text-[11px] text-[#697c6f] truncate">
-                            {item.kategori.toUpperCase()} · {item.deadline}
-                            {item.jam_deadline ? ` @ ${item.jam_deadline}` : ""}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span
-                            className={`stamp-badge ${
-                              isOverdue
-                                ? "border-[#f8c6b9] bg-[#feece7] text-[#b93c21]"
-                                : days === 0
-                                ? "border-[#f8c6b9] bg-[#feece7] text-[#b93c21]"
-                                : days === 1
-                                ? "border-[#fed7aa] bg-[#fff7ed] text-[#c2410c]"
-                                : "border-[#d8e3da] bg-white text-[#10261b]"
-                            }`}
-                          >
-                            {deadlineLabel(item.deadline!)}
-                          </span>
-                          <QuickCompleteButton activityId={item.id} activityTitle={item.judul} />
-                        </div>
-                      </article>
-                    );
-                  })
-                ) : (
-                  <div className="rounded-2xl bg-[#fafbfa] px-4 py-7 text-center border border-dashed border-[#c5d8cb]">
-                    <p className="tag-mono text-xs font-bold text-[#10261b]">Radar bersih ✨</p>
-                    <p className="text-[11px] text-[#697c6f] mt-0.5">Tidak ada deadline yang menanti dalam 3 hari ke depan.</p>
-                  </div>
-                )}
-              </div>
+                        {deadlineLabel(item.deadline!)}
+                      </span>
+                    </article>
+                  );
+                })
+              ) : (
+                <div className="rounded-xl border border-dashed border-slate-200 dark:border-[#1d3527] p-6 text-center">
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                    Radar tugas bersih! ✨
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Tidak ada deadline menumpuk dalam 3 hari ke depan.
+                  </p>
+                </div>
+              )}
             </div>
-          </ScrollEntrance>
+          </section>
+
         </div>
 
-        {/* Right Column: Weekly Insight, Semester Arc, & Ormawa */}
-        <div className="flex flex-col min-w-0 gap-6">
+        {/* ── RIGHT COLUMN: PINTASAN, ORGANISASI & PORTOFOLIO ── */}
+        <div className="flex flex-col gap-6 min-w-0">
 
-          {/* Weekly Pulse Atelier Card */}
-          <ScrollEntrance delay={140} direction="scale">
-            <aside className="relative overflow-hidden rounded-3xl bg-[#0e2c1e] p-6 text-white shadow-md border border-[#1d4734]">
-              <div 
-                className="pointer-events-none absolute -right-10 -bottom-10 h-44 w-44 rounded-full opacity-20 blur-xl"
-                style={{ background: "radial-gradient(circle, #c8ef70, transparent 70%)" }}
-              />
+          {/* Card: Pintasan Aksi Cepat */}
+          <section className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 shadow-xs">
+            <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+              Pusat Aksi Cepat
+            </h2>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <Link
+                href={`/jadwal${semesterFilter}`}
+                className="flex flex-col gap-1 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/60 dark:bg-[#15221a] p-3 hover:bg-slate-100 dark:hover:bg-[#1a2b20] transition"
+              >
+                <BookOpen size={16} className="text-emerald-600 dark:text-emerald-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Jadwal</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">Atur kelas</span>
+              </Link>
 
-              <div className="relative z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="grid h-7 w-7 place-items-center rounded-xl bg-white/10 text-[#c8ef70]">
-                      <Zap size={15} />
-                    </span>
-                    <span className="tag-mono text-[10px] font-black uppercase text-[#b4d8c1]">WEEKLY PULSE</span>
-                  </div>
-                  <span className="h-2 w-2 rounded-full bg-[#c8ef70] animate-pulse" />
-                </div>
+              <Link
+                href={`/modul${semesterFilter}`}
+                className="flex flex-col gap-1 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/60 dark:bg-[#15221a] p-3 hover:bg-slate-100 dark:hover:bg-[#1a2b20] transition"
+              >
+                <FileText size={16} className="text-purple-600 dark:text-purple-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Modul AI</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">Rangkum PDF</span>
+              </Link>
 
-                <h3 className="font-display mt-4 text-base sm:text-lg font-black leading-snug tracking-tight text-white">
-                  {(overdueCount ?? 0) > 0
-                    ? `${overdueCount} tugas melewati deadline.`
-                    : (activeCount ?? 0) > 0
-                    ? "Ritme perkuliahanmu berjalan solid. Pertahankan fokus! 🔥"
-                    : "Ruang kerja rapi. Siap memulai komitmen baru."}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-[#bad1c2]">
-                  {(overdueCount ?? 0) > 0
-                    ? "Segera tuntaskan atau jadwalkan ulang agar beban tugas tidak menumpuk."
-                    : "Fokus pada 1 tugas prioritas utama hari ini untuk hasil maksimal."}
-                </p>
+              <Link
+                href="/organisasi"
+                className="flex flex-col gap-1 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/60 dark:bg-[#15221a] p-3 hover:bg-slate-100 dark:hover:bg-[#1a2b20] transition"
+              >
+                <UsersRound size={16} className="text-blue-600 dark:text-blue-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Organisasi</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">Proker kampus</span>
+              </Link>
 
-                {totalItems > 0 && (
-                  <div className="mt-5 pt-3.5 border-t border-white/15">
-                    <div className="flex justify-between tag-mono text-[11px] font-bold text-[#b4d8c1]">
-                      <span>SEMESTER PROGRES</span>
-                      <span className="text-[#c8ef70] font-black">{completionRate}% TUNTAS</span>
-                    </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/15">
-                      <div
-                        className="h-full rounded-full bg-[#c8ef70] transition-all duration-700"
-                        style={{ width: `${completionRate}%` }}
-                      />
-                    </div>
-                    <p className="tag-mono mt-1.5 text-[10px] text-white/60">{completeCount} dari {totalItems} target akademik tercapai</p>
-                  </div>
-                )}
+              <Link
+                href={`/rekap/portfolio${semesterFilter}`}
+                className="flex flex-col gap-1 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/60 dark:bg-[#15221a] p-3 hover:bg-slate-100 dark:hover:bg-[#1a2b20] transition"
+              >
+                <Award size={16} className="text-amber-600 dark:text-amber-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Resume ATS</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">Ekspor 1-klik</span>
+              </Link>
+            </div>
+          </section>
 
-                <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
-                  <span className="tag-mono text-[10px] text-white/50">FOKUS PRIORITAS:</span>
+          {/* Card: Organisasi & Kontribusi Kampus */}
+          <section className="rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-5 shadow-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#18271e] pb-2.5 mb-3">
+              <h2 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+                Organisasi Aktif
+              </h2>
+              <Link
+                href="/organisasi"
+                className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+              >
+                Kelola
+              </Link>
+            </div>
+
+            {organizations && organizations.length > 0 ? (
+              <div className="space-y-2.5">
+                {organizations.map((org) => (
                   <Link
-                    href={`/kegiatan${semesterFilter}`}
-                    className="tag-mono inline-flex items-center gap-1 text-xs font-black text-[#c8ef70] hover:underline"
+                    key={org.id}
+                    href={`/organisasi/${org.id}`}
+                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200/70 dark:border-[#1c2d22] bg-slate-50/40 dark:bg-[#15221a] p-3 hover:border-emerald-500/40 transition"
                   >
-                    ATUR TUGAS <ArrowUpRight size={13} />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        {org.nama_organisasi}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                        {org.jabatan || org.tipe || "Anggota"}
+                      </p>
+                    </div>
+                    <ArrowUpRight size={14} className="text-slate-400 shrink-0" />
                   </Link>
-                </div>
+                ))}
               </div>
-            </aside>
-          </ScrollEntrance>
-
-          {/* Semester Progress Card */}
-          {activeSemester && (
-            <ScrollEntrance delay={180} direction="scale">
-              <div className="rounded-3xl border border-[#d6e1d8] bg-white p-5 sm:p-6 shadow-sm">
-                <div className="flex items-center gap-3 border-b border-[#edf2ee] pb-3.5">
-                  <span className="grid h-9 w-9 place-items-center rounded-2xl bg-[#dff3e5] text-[#0f6849] shrink-0 font-black tag-mono text-xs">
-                    06
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <span className="tag-mono block text-[10px] font-black uppercase text-[#697c6f]">SEMESTER AKTIF</span>
-                    <p className="font-display text-sm sm:text-base font-black text-[#10261b] truncate">{activeSemester.nama_semester}</p>
-                  </div>
-                </div>
-
-                {activeSemester.tanggal_mulai && activeSemester.tanggal_selesai && (
-                  <div className="mt-4">
-                    <div className="flex justify-between tag-mono text-xs font-bold text-[#55675b]">
-                      <span>Jejak Kalender</span>
-                      <span className="font-black text-[#0f6849]">{semesterProgress}%</span>
-                    </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#eff4ef]">
-                      <div
-                        className="h-full rounded-full bg-[#0f6849] transition-all duration-700"
-                        style={{ width: `${semesterProgress}%` }}
-                      />
-                    </div>
-                    <p className="tag-mono mt-2 text-[10.5px] text-[#697c6f] truncate">
-                      {format(parseISO(activeSemester.tanggal_mulai), "d MMM", { locale: id })} –{" "}
-                      {format(parseISO(activeSemester.tanggal_selesai), "d MMM yyyy", { locale: id })}
-                    </p>
-                  </div>
-                )}
+            ) : (
+              <div className="rounded-xl border border-dashed border-slate-200 dark:border-[#1d3527] p-4 text-center">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Belum ada organisasi tercatat.
+                </p>
+                <Link
+                  href="/organisasi"
+                  className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+                >
+                  <Plus size={12} />
+                  <span>Tambah Organisasi</span>
+                </Link>
               </div>
-            </ScrollEntrance>
-          )}
+            )}
+          </section>
 
-          {/* Ormawa Snapshot */}
-          {(organizations?.length ?? 0) > 0 && (
-            <ScrollEntrance delay={220} direction="scale">
-              <div className="rounded-3xl border border-[#d6e1d8] bg-white p-5 sm:p-6 shadow-sm">
-                <div className="flex items-center justify-between border-b border-[#edf2ee] pb-3.5">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="grid h-9 w-9 place-items-center rounded-2xl bg-[#f3e8ff] text-[#7e22ce] shrink-0 font-black tag-mono text-xs">
-                      07
-                    </span>
-                    <div className="min-w-0">
-                      <span className="tag-mono block text-[10px] font-black uppercase text-[#697c6f]">ORMAWA & PROKER</span>
-                      <p className="font-display text-sm sm:text-base font-black text-[#10261b] truncate">Kepanitiaan & Tim</p>
-                    </div>
-                  </div>
-                  <Link 
-                    href="/organisasi" 
-                    className="tag-mono inline-flex items-center gap-1 rounded-xl bg-[#f0f4f0] px-2.5 py-1 text-xs font-bold text-[#0f6849] hover:bg-[#dff3e5] transition"
-                  >
-                    SEMUA <ArrowUpRight size={12} />
-                  </Link>
-                </div>
-
-                <div className="mt-4 space-y-2.5">
-                  {organizations!.map((org) => {
-                    const activeProker = (programs ?? []).filter(
-                      (p) => p.organization_id === org.id && p.status === "berjalan"
-                    ).length;
-                    return (
-                      <Link
-                        key={org.id}
-                        href={`/organisasi/${org.id}`}
-                        className="group flex items-center justify-between gap-3 rounded-2xl border border-[#e5ece5] bg-[#fafbfa] p-3 transition-all duration-200 hover:bg-white hover:border-[#7e22ce]/30 hover:shadow-xs"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="font-display truncate text-xs sm:text-sm font-black text-[#10261b] group-hover:text-[#7e22ce] transition">{org.nama_organisasi}</p>
-                          <p className="tag-mono text-[10px] text-[#697c6f] truncate mt-0.5">
-                            {activeProker > 0 ? `${activeProker} proker aktif` : org.tipe.toUpperCase()}
-                          </p>
-                        </div>
-                        <ArrowUpRight size={14} className="shrink-0 text-[#8ba091] group-hover:text-[#7e22ce] transition" />
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            </ScrollEntrance>
-          )}
+          {/* Card: Standar Harvard ATS Portofolio Banner */}
+          <section className="rounded-2xl border border-emerald-200/80 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/20 p-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase text-emerald-800 dark:text-emerald-300">
+                KESIAPAN MAGANG
+              </span>
+              <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[9px] font-bold text-white">
+                ATS SCORE 96
+              </span>
+            </div>
+            <h3 className="font-display mt-2 text-sm font-bold text-slate-900 dark:text-white leading-snug">
+              Semua tugas & proker terekam otomatis jadi poin resume Harvard.
+            </h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Siap dikirim ke pendaftaran Kampus Merdeka & magang industri.
+            </p>
+            <Link
+              href={`/rekap/portfolio${semesterFilter}`}
+              className="mt-3.5 inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:text-black px-3.5 py-2 text-xs font-bold transition active:scale-95 shadow-xs"
+            >
+              <span>Lihat Portofolio</span>
+              <ArrowRight size={13} />
+            </Link>
+          </section>
 
         </div>
-      </section>
+
+      </div>
+
     </div>
   );
 }

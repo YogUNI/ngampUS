@@ -83,22 +83,22 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
   const portfolioHref = `/rekap/portfolio${filters.semester_id ? `?semester_id=${filters.semester_id}` : ""}`;
 
   return (
-    <div className="mx-auto max-w-6xl px-3.5 py-6 sm:px-8 sm:py-8 lg:px-10">
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
       {/* ── Page Header ── */}
-      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#dff3e5] text-[#0f6849]">
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
               <BarChart3 size={14} />
             </span>
-            <p className="text-[10px] sm:text-xs font-black uppercase tracking-[.18em] text-[var(--brand)]">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               REFLEKSI & WORKLOAD ANALYTICS
-            </p>
+            </span>
           </div>
-          <h1 className="font-display mt-1 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
+          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
             Rekap Aktivitas & Evaluasi
           </h1>
-          <p className="mt-1 text-xs text-[var(--muted)] max-w-xl leading-relaxed">
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
             Pantau sebaran tugas kuliah, proker organisasi, dan komitmen aktifmu. Data siap diekspor ke CV & evaluasi semester.
           </p>
         </div>
@@ -107,9 +107,9 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href={portfolioHref}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#103626] px-3.5 py-2 text-xs font-black text-white shadow-xs hover:bg-[#1d5034] transition active:scale-95"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-4 py-2 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
           >
-            <Sparkles size={13} className="text-[#c8ef70]" /> Portofolio CV
+            <Sparkles size={13} className="text-white dark:text-black" /> Portofolio CV
           </Link>
           <ExportCsv
             activities={items}
@@ -119,18 +119,18 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
       </header>
 
       {/* ── Filter Semester Bar (Modernized) ── */}
-      <section className="surface-lift mt-5 rounded-2xl border border-[var(--line)] bg-white p-3 sm:p-4 shadow-2xs">
+      <section className="mt-5 rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-3 sm:p-4 shadow-xs">
         <form className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-xs font-black text-[var(--ink)]">
-              <SlidersHorizontal size={14} className="text-[var(--brand)]" />
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+              <SlidersHorizontal size={14} className="text-emerald-600 dark:text-emerald-400" />
               <span>Filter Semester:</span>
             </div>
 
             <select
               name="semester_id"
               defaultValue={filters.semester_id || ""}
-              className="rounded-xl border border-[var(--line)] bg-[#f9faf8] px-3 py-1.5 text-xs font-bold text-[var(--ink)] focus:border-[var(--brand)] focus:bg-white focus:outline-none transition"
+              className="rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-slate-50/70 dark:bg-[#16221a] px-3 py-1.5 text-xs font-bold text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none transition"
             >
               <option value="">Semua Semester (Global)</option>
               {semesters?.map((semester) => (
@@ -143,7 +143,7 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
 
             <button
               type="submit"
-              className="rounded-xl bg-[#103626] px-3.5 py-1.5 text-xs font-black text-white transition hover:bg-[#184834] active:scale-95 cursor-pointer shadow-2xs"
+              className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:text-black px-3.5 py-1.5 text-xs font-bold transition active:scale-95 cursor-pointer shadow-xs"
             >
               Terapkan
             </button>
@@ -151,7 +151,7 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
             {filters.semester_id && (
               <Link
                 href="/rekap"
-                className="rounded-xl bg-[#f0f4f1] px-3 py-1.5 text-xs font-bold text-[var(--muted)] hover:bg-[#e2eae4] hover:text-[var(--ink)] transition"
+                className="rounded-xl bg-slate-100 dark:bg-[#16221a] px-3 py-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-[#1f3024] hover:text-slate-900 dark:hover:text-white transition"
               >
                 Reset Filter
               </Link>
@@ -159,9 +159,9 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
           </div>
 
           {/* Active indicator summary badge */}
-          <div className="flex items-center gap-2 text-xs font-bold text-[var(--muted)]">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
             <span>Menampilkan:</span>
-            <span className="rounded-lg bg-[#eff5ef] px-2 py-0.5 text-[11px] font-black text-[#0f6849]">
+            <span className="rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/60 px-2 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
               {selectedSemester ? selectedSemester.nama_semester : "Semua Aktivitas"} ({items.length} item)
             </span>
           </div>
@@ -175,32 +175,32 @@ export default async function RecapPage({ searchParams }: { searchParams: Promis
           label="Total Komitmen"
           value={items.length}
           subtext="Semua item terdaftar"
-          iconClass="bg-[#e4efff] text-[#245a9a]"
-          borderAccent="hover:border-[#9bc1f5]"
+          iconClass="bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/50"
+          borderAccent="hover:border-blue-500/40"
         />
         <Metric
           icon={<CheckCircle2 size={18} />}
           label="Terselesaikan"
           value={done}
           subtext={`${completionRate}% target tercapai`}
-          iconClass="bg-[#dff3e5] text-[#0f6849]"
-          borderAccent="hover:border-[#b9ddc6]"
+          iconClass="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/50"
+          borderAccent="hover:border-emerald-500/40"
         />
         <Metric
           icon={<CircleDashed size={18} />}
           label="Dalam Proses"
           value={inProgress}
           subtext="Aktivitas sedang jalan"
-          iconClass="bg-[#fff0cc] text-[#8a5d00]"
-          borderAccent="hover:border-[#fcd98e]"
+          iconClass="bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/50"
+          borderAccent="hover:border-amber-500/40"
         />
         <Metric
           icon={<CalendarClock size={18} />}
           label="Belum Selesai / Fleksibel"
           value={notStarted + withoutDeadline}
           subtext="Belum mulai / bebas deadline"
-          iconClass="bg-[#eef1ee] text-[#5e6b63]"
-          borderAccent="hover:border-[#d0dbd3]"
+          iconClass="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/50"
+          borderAccent="hover:border-slate-400/40"
         />
       </section>
 
@@ -236,21 +236,21 @@ function Metric({
 }) {
   return (
     <article
-      className={`surface-lift group rounded-2xl border border-[var(--line)] bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 ${borderAccent}`}
+      className={`group rounded-2xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] p-4 sm:p-5 shadow-xs transition-all duration-200 ${borderAccent}`}
     >
       <div className="flex items-center justify-between">
         <div className={`grid h-9 w-9 place-items-center rounded-xl transition group-hover:scale-105 ${iconClass}`}>
           {icon}
         </div>
-        <span className="font-display text-2xl sm:text-3xl font-black text-[var(--ink)]">
+        <span className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
           {value.toString().padStart(2, "0")}
         </span>
       </div>
-      <p className="mt-3 text-xs sm:text-sm font-extrabold text-[var(--ink)] truncate">
+      <p className="mt-3 text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
         {label}
       </p>
       {subtext && (
-        <p className="mt-0.5 text-[10.5px] font-semibold text-[var(--muted)] truncate">
+        <p className="mt-0.5 text-[10.5px] font-medium text-slate-500 dark:text-slate-400 truncate">
           {subtext}
         </p>
       )}

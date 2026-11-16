@@ -50,19 +50,19 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#0f6849]">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               AKADEMIK & PERKULIAHAN
             </span>
             {currentSemester && (
-              <span className="inline-flex rounded-full bg-[#dff3e5] px-2.5 py-0.5 text-[10.5px] font-bold text-[#0f6849] border border-[#b9ddc6]">
+              <span className="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
                 {currentSemester.nama_semester}
               </span>
             )}
           </div>
-          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-[#10261b]">
+          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
             Jadwal Kuliah
           </h1>
-          <p className="mt-0.5 text-xs text-[#697c6f]">
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
             Atur mata kuliah mingguan, pantau ruang kelas, dan akses link kuliah virtual dengan cepat.
           </p>
         </div>
@@ -78,21 +78,21 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
               name="semester_id"
               defaultValue={targetSemesterId ?? ""}
               aria-label="Pilih semester akademik"
-              className="appearance-none rounded-2xl border border-[#d8e3da] bg-white py-2 pl-3.5 pr-8 text-xs font-bold text-[#10261b] focus:border-[#0f6849] focus:outline-none transition shadow-2xs"
+              className="appearance-none rounded-xl border border-slate-200/80 dark:border-[#1c2d22] bg-white dark:bg-[#111914] py-2 pl-3.5 pr-8 text-xs font-bold text-slate-900 dark:text-slate-100 focus:border-emerald-500 focus:outline-none transition shadow-2xs"
             >
               {semesters?.map((s) => (
-                <option key={s.id} value={s.id}>
+                <option key={s.id} value={s.id} className="bg-white dark:bg-[#111914] text-slate-900 dark:text-slate-100">
                   {s.nama_semester} {s.is_active ? " (Aktif)" : ""}
                 </option>
               ))}
             </select>
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[#697c6f]">
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">
               ▼
             </span>
           </div>
           <button
             type="submit"
-            className="rounded-2xl bg-[#f0f4f0] px-3.5 py-2 text-xs font-black text-[#0f6849] border border-[#d8e3da] hover:bg-[#dff3e5] transition active:scale-95"
+            className="rounded-xl bg-slate-100 dark:bg-[#15231c] px-3.5 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-[#1c2d22] hover:bg-slate-200 dark:hover:bg-[#1c3026] transition active:scale-95 cursor-pointer"
           >
             Terapkan
           </button>
