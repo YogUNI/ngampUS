@@ -9,6 +9,7 @@ import {
 import { Reveal } from "@/components/ui/reveal";
 import { HeroRemotionPlayer } from "@/components/landing/hero-remotion-player";
 import { ProofStrip } from "@/components/landing/proof-strip";
+import { MediaCoverage } from "@/components/landing/media-coverage";
 import { BeforeAfter } from "@/components/landing/before-after";
 import { BentoFeatures } from "@/components/landing/bento-features";
 import { FaqAccordion } from "@/components/landing/faq-accordion";
@@ -99,6 +100,9 @@ export default function Home() {
 
       {/* ── PROOF STRIP ─────────────────────────────────────────── */}
       <ProofStrip />
+
+      {/* ── SOROTAN MEDIA & FAKTA LAPANGAN ──────────────────────── */}
+      <MediaCoverage />
 
       {/* ── BEFORE / AFTER ──────────────────────────────────────── */}
       <BeforeAfter />
