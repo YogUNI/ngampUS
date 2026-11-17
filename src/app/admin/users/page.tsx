@@ -2,11 +2,9 @@ import Link from "next/link";
 import { 
   Users, 
   Search, 
-  ShieldCheck, 
-  ShieldAlert, 
+  GraduationCap, 
   Building2, 
-  Calendar,
-  GraduationCap
+  RotateCcw
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AdminUserTableClient } from "./admin-user-table-client";
@@ -68,56 +66,55 @@ export default async function AdminUsersPage({
 
   return (
     <div className="space-y-6">
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+      {/* ── Executive Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] font-black uppercase tracking-widest text-[#c8ef70]">
-              [DIRECTORY // STUDENT ACCOUNTS]
-            </span>
-            <span className="rounded-full bg-[#1b4332] px-2 py-0.5 text-[10px] font-bold text-[#c8ef70]">
-              {totalCount} Total Terdaftar
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              Direktori Mahasiswa
+            </h1>
+            <span className="inline-flex items-center rounded-full border border-slate-700 bg-slate-800/80 px-2.5 py-0.5 text-xs font-mono font-medium text-slate-300">
+              {totalCount} Akun
             </span>
           </div>
-          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Direktori Mahasiswa
-          </h1>
-          <p className="mt-1 text-xs text-[#9dc5aa]">
-            Daftar seluruh akun mahasiswa yang terdaftar di platform ngampUS beserta metadata universitas (tanpa mengakses tugas atau catatan privat).
+          <p className="mt-1 text-sm text-slate-400">
+            Daftar seluruh akun mahasiswa dan metadata akademik tanpa mengakses berkas tugas privat mahasiswa.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="rounded-2xl border border-white/10 bg-[#0c2419] px-4 py-2 text-right">
-            <span className="block font-mono text-[9px] font-bold text-[#789a84]">KAMPUS TERJANGKAU</span>
-            <span className="font-display text-sm font-black text-[#c8ef70]">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2 text-right">
+            <span className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+              Jangkauan Kampus
+            </span>
+            <span className="font-mono text-sm font-bold text-emerald-400">
               {uniqueCampuses.length} Universitas
             </span>
           </div>
         </div>
       </div>
 
-      {/* ── Search & Filter Bar ── */}
-      <form className="rounded-2xl border border-[#183929] bg-[#0c2419]/80 p-3 sm:p-4 shadow-xs flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[220px]">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#789a84]" />
+      {/* ── Search & Filter Controls ── */}
+      <form className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 shadow-xs flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[240px]">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             name="q"
             defaultValue={q || ""}
             placeholder="Cari nama mahasiswa, email, atau NIM..."
-            className="w-full rounded-xl border border-white/10 bg-[#071710] py-2 pl-10 pr-4 text-xs font-bold text-white placeholder:text-[#557763] focus:border-[#c8ef70] focus:outline-none transition"
+            className="w-full rounded-xl border border-slate-800 bg-slate-950/80 py-2 pl-9 pr-4 text-xs font-medium text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none transition"
           />
         </div>
 
         <select
           name="campus"
           defaultValue={campus || ""}
-          className="rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs font-bold text-[#b3d3bd] focus:border-[#c8ef70] focus:outline-none transition"
+          className="rounded-xl border border-slate-800 bg-slate-950/80 px-3 py-2 text-xs font-medium text-slate-200 focus:border-emerald-500 focus:outline-none transition max-w-[240px]"
         >
-          <option value="">Semua Universitas / Kampus</option>
+          <option value="">Semua Perguruan Tinggi</option>
           {uniqueCampuses.map((cName, idx) => (
-            <option key={idx} value={cName} className="bg-[#0c2419] text-white">
+            <option key={idx} value={cName} className="bg-slate-900 text-white">
               {cName}
             </option>
           ))}
@@ -125,7 +122,7 @@ export default async function AdminUsersPage({
 
         <button
           type="submit"
-          className="rounded-xl bg-[#c8ef70] px-4 py-2 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 cursor-pointer shadow-xs"
+          className="rounded-xl bg-emerald-500 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-emerald-400 transition active:scale-[0.98] cursor-pointer"
         >
           Terapkan
         </button>
@@ -133,14 +130,15 @@ export default async function AdminUsersPage({
         {(q || campus) && (
           <Link
             href="/admin/users"
-            className="rounded-xl bg-white/10 px-3 py-2 text-xs font-bold text-[#b4d8c1] hover:bg-white/15 transition"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-800/60 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800 transition"
           >
-            Reset
+            <RotateCcw size={13} />
+            <span>Reset</span>
           </Link>
         )}
       </form>
 
-      {/* ── Users Table with Role Switcher & Server Pagination ── */}
+      {/* ── Users Table with Role Management & Pagination ── */}
       <AdminUserTableClient 
         initialUsers={users || []} 
         pagination={{

@@ -3,14 +3,11 @@ import {
   Users, 
   GraduationCap, 
   BookOpen, 
-  CalendarDays, 
   CheckCircle2, 
   Building2, 
-  ShieldAlert, 
   Sparkles, 
   ArrowRight,
   TrendingUp,
-  Server,
   Lock,
   EyeOff,
   ShieldCheck,
@@ -19,8 +16,9 @@ import {
   Database,
   Bot,
   Zap,
-  Gauge,
-  Globe
+  Globe,
+  Radio,
+  Server
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getWebAnalyticsData } from "@/lib/web-telemetry";
@@ -42,7 +40,11 @@ export default async function AdminOverviewPage() {
     { count: totalAnnouncements },
   ] = await Promise.all([
     supabase.from("profiles").select("*", { count: "exact", head: true }),
-    supabase.from("profiles").select("id, full_name, email, university, major, angkatan, created_at, role").order("created_at", { ascending: false }).limit(8),
+    supabase
+      .from("profiles")
+      .select("id, full_name, email, university, major, angkatan, created_at, role")
+      .order("created_at", { ascending: false })
+      .limit(8),
     supabase.from("courses").select("*", { count: "exact", head: true }),
     supabase.from("course_modules").select("*", { count: "exact", head: true }),
     supabase.from("activities").select("*", { count: "exact", head: true }),
@@ -108,168 +110,194 @@ export default async function AdminOverviewPage() {
 
   return (
     <div className="space-y-6">
-      {/* ── Header Banner ── */}
-      <div className="rounded-3xl border border-[#1b4332] bg-gradient-to-r from-[#0c2419] to-[#123827] p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div 
-          className="pointer-events-none absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: "linear-gradient(#c8ef70 1px, transparent 1px), linear-gradient(90deg, #c8ef70 1px, transparent 1px)",
-            backgroundSize: "28px 28px"
-          }}
-        />
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[11px] font-black uppercase tracking-widest text-[#c8ef70]">
-                [COMMAND DECK // PLATFORM HEALTH]
-              </span>
-              <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-ping" />
-            </div>
-            <h1 className="font-display mt-2 text-2xl sm:text-4xl font-black text-white tracking-tight">
-              Ringkasan Ekosistem ngampUS
+      {/* ── Executive Page Header ── */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              Platform Overview
             </h1>
-            <p className="mt-1.5 text-xs sm:text-sm text-[#b3d3bd] max-w-2xl leading-relaxed">
-              Memantau pertumbuhan mahasiswa, kampus mitra, dan volume data perkuliahan yang aktif dikelola secara real-time.
-            </p>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Operational
+            </span>
           </div>
+          <p className="mt-1 text-sm text-slate-400">
+            Pusat monitoring ekosistem ngampUS, pertumbuhan mahasiswa, dan integritas infrastruktur secara real-time.
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
-            <Link
-              href="/admin/announcements"
-              className="inline-flex items-center gap-2 rounded-2xl bg-[#c8ef70] px-4 py-2.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 shadow-sm"
-            >
-              <Sparkles size={14} /> Buat Broadcast Pengumuman
-            </Link>
-          </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <Link
+            href="/admin/web-analytics"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900/80 px-3.5 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition shadow-xs"
+          >
+            <Globe size={14} className="text-emerald-400" />
+            <span>Web Traffic</span>
+          </Link>
+          <Link
+            href="/admin/announcements"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-emerald-400 transition shadow-xs active:scale-[0.98]"
+          >
+            <Sparkles size={14} />
+            <span>Buat Broadcast</span>
+          </Link>
         </div>
       </div>
 
-      {/* ── 5 Core Platform Metrics ── */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-        {/* Metric 1 */}
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/80 p-5 shadow-xs">
+      {/* ── 4 Key Performance Metrics ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* KPI 1: Students */}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 backdrop-blur-xs transition hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
-              <Users size={20} />
-            </span>
-            <span className="font-mono text-[10px] text-[#789a84] font-bold">TOTAL USER</span>
+            <span className="text-xs font-medium text-slate-400">Total Mahasiswa</span>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-emerald-500/10 text-emerald-400">
+              <Users size={16} />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-black text-white">{totalStudents ?? 0}</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Mahasiswa Terdaftar</p>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="font-mono text-3xl font-bold tracking-tight text-white">
+              {totalStudents ?? 0}
+            </span>
+            <span className="text-xs text-slate-400 font-medium">Akun</span>
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            Terverifikasi di PostgreSQL database
+          </p>
         </div>
 
-        {/* Metric 2 */}
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/80 p-5 shadow-xs">
+        {/* KPI 2: Universities */}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 backdrop-blur-xs transition hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
-              <GraduationCap size={20} />
-            </span>
-            <span className="font-mono text-[10px] text-[#789a84] font-bold">DISTRIBUSI</span>
+            <span className="text-xs font-medium text-slate-400">Jangkauan Kampus</span>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-blue-500/10 text-blue-400">
+              <GraduationCap size={16} />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-black text-white">{totalDistinctUniversities}</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Kampus & Universitas</p>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="font-mono text-3xl font-bold tracking-tight text-white">
+              {totalDistinctUniversities}
+            </span>
+            <span className="text-xs text-slate-400 font-medium">Perguruan Tinggi</span>
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            Sebaran kampus mahasiswa aktif
+          </p>
         </div>
 
-        {/* Metric 3 */}
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/80 p-5 shadow-xs">
+        {/* KPI 3: Courses & Modules */}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 backdrop-blur-xs transition hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
-              <BookOpen size={20} />
-            </span>
-            <span className="font-mono text-[10px] text-[#789a84] font-bold">MODUL & MATKUL</span>
+            <span className="text-xs font-medium text-slate-400">Modul Pembelajaran</span>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-purple-500/10 text-purple-400">
+              <BookOpen size={16} />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-black text-white">{totalModules ?? 0}</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Modul dari {totalCourses ?? 0} Matkul</p>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="font-mono text-3xl font-bold tracking-tight text-white">
+              {totalModules ?? 0}
+            </span>
+            <span className="text-xs text-slate-400 font-medium">dari {totalCourses ?? 0} Matkul</span>
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            Materi dan silabus terkelola
+          </p>
         </div>
 
-        {/* Metric 4 */}
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/80 p-5 shadow-xs">
+        {/* KPI 4: Tasks & Activities */}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 backdrop-blur-xs transition hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#1b4332] text-[#c8ef70]">
-              <CheckCircle2 size={20} />
-            </span>
-            <span className="font-mono text-[10px] text-[#789a84] font-bold">TUGAS & PROKER</span>
+            <span className="text-xs font-medium text-slate-400">Komitmen & Tugas</span>
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-amber-500/10 text-amber-400">
+              <CheckCircle2 size={16} />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-black text-white">{totalActivities ?? 0}</p>
-          <p className="text-xs text-[#9dc5aa] font-medium mt-0.5">Komitmen & {totalOrganizations ?? 0} Org</p>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="font-mono text-3xl font-bold tracking-tight text-white">
+              {totalActivities ?? 0}
+            </span>
+            <span className="text-xs text-slate-400 font-medium">Item ({totalOrganizations ?? 0} Org)</span>
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            Aktivitas akademik dan organisasi
+          </p>
         </div>
       </div>
 
-      {/* ── Live Web Traffic & Hosting Quick Radar Deck ── */}
-      <div className="rounded-3xl border border-[#1b4332] bg-gradient-to-r from-[#0c2419] via-[#0e2a1d] to-[#071710] p-5 sm:p-6 shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+      {/* ── Live Web Traffic Quick Glance ── */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition hover:border-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/10 border border-[#c8ef70]/30 text-[#c8ef70]">
-              <Globe size={20} />
-            </span>
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-emerald-400">
+              <Globe size={18} />
+            </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-[#c8ef70]">
-                  [LIVE TRAFFIC // NGAMPUS.SITE RADAR]
+                <h3 className="text-sm font-semibold text-white">
+                  Live Web Traffic & Edge Telemetry
+                </h3>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-mono text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  ngampus.site
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-ping" />
               </div>
-              <h3 className="font-display text-base sm:text-lg font-black text-white mt-0.5">
-                Kunjungan Web & Kesehatan Hosting
-              </h3>
-              <p className="text-xs text-[#9dc5aa]">
-                Statistik real-time pengunjung domain ngampus.site hari ini dan rute teramai.
+              <p className="text-xs text-slate-400 mt-0.5">
+                Statistik real-time kunjungan website hari ini dan status konektivitas database.
               </p>
             </div>
           </div>
 
           <Link
             href="/admin/web-analytics"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#c8ef70] px-3.5 py-1.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition shadow-xs self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition"
           >
-            <span>Buka Web Analytics Lengkap</span>
+            <span>Buka Laporan Penuh</span>
             <ArrowRight size={13} />
           </Link>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              PAGEVIEWS HARI INI
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-3.5">
+            <span className="text-[11px] font-medium text-slate-400 block">
+              Pageviews Hari Ini
             </span>
-            <p className="mt-1 text-2xl font-black text-white">
+            <p className="font-mono text-xl sm:text-2xl font-bold text-white mt-1">
               {webTrafficSummary.today.totalViews.toLocaleString("id-ID")}
             </p>
-            <span className="text-[11px] text-[#9dc5aa]">Total Tayangan</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">Total tayangan halaman</span>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              PENGUNJUNG UNIK (UV)
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-3.5">
+            <span className="text-[11px] font-medium text-slate-400 block">
+              Pengunjung Unik (UV)
             </span>
-            <p className="mt-1 text-2xl font-black text-[#c8ef70]">
+            <p className="font-mono text-xl sm:text-2xl font-bold text-emerald-400 mt-1">
               {webTrafficSummary.today.uniqueVisitors.toLocaleString("id-ID")}
             </p>
-            <span className="text-[11px] text-[#9dc5aa]">Visitor Berbeda</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">User/perangkat unik</span>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              ACTIVE USERS (5 MIN)
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-3.5">
+            <span className="text-[11px] font-medium text-slate-400 block">
+              Sesi Aktif (5 Menit)
             </span>
             <div className="flex items-center gap-2 mt-1">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <p className="text-2xl font-black text-white">
+              <p className="font-mono text-xl sm:text-2xl font-bold text-white">
                 {webTrafficSummary.today.activeLast5Min}
               </p>
             </div>
-            <span className="text-[11px] text-[#9dc5aa]">Sedang Browsing</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">Sedang aktif browsing</span>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-3.5 sm:p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              DATABASE LATENCY
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-3.5">
+            <span className="text-[11px] font-medium text-slate-400 block">
+              Database Latency
             </span>
-            <p className="mt-1 text-2xl font-black text-[#c8ef70]">
-              {webTrafficSummary.serverHealth.dbPingMs} ms
+            <p className="font-mono text-xl sm:text-2xl font-bold text-slate-200 mt-1">
+              {webTrafficSummary.serverHealth.dbPingMs} <span className="text-xs font-normal text-slate-400">ms</span>
             </p>
-            <span className="text-[11px] text-[#9dc5aa]">PostgreSQL Latency</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">Supabase PostgreSQL</span>
           </div>
         </div>
       </div>
@@ -286,135 +314,116 @@ export default async function AdminOverviewPage() {
         topCampuses={topCampusesFormatted}
       />
 
-      {/* ── AI Engine & Token Limit Telemetry Deck ── */}
-      <div className="rounded-3xl border border-[#1b4332] bg-gradient-to-r from-[#0c2419] via-[#0f2d20] to-[#091f15] p-5 sm:p-7 shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+      {/* ── AI Engine Infrastructure Card ── */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition hover:border-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/10 border border-[#c8ef70]/30 text-[#c8ef70]">
-              <Bot size={20} />
-            </span>
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-emerald-400">
+              <Bot size={18} />
+            </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-black uppercase tracking-widest text-[#c8ef70]">
-                  [INTELLIGENCE // GEMINI AI TELEMETRY]
+                <h3 className="text-sm font-semibold text-white">
+                  AI Engine & Token Capacity
+                </h3>
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
+                  <Zap size={11} />
+                  Gemini Active
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-ping" />
               </div>
-              <h3 className="font-display text-base sm:text-lg font-black text-white mt-0.5">
-                AI Engine & Token Quota Monitor
-              </h3>
-              <p className="text-xs text-[#9dc5aa]">
-                Status operasional dan limitasi kapasitas token model Google Gemini AI yang menggerakkan fitur asisten cerdas ngampUS.
+              <p className="text-xs text-slate-400 mt-0.5">
+                Spesifikasi router model Google Gemini yang mentenagai asisten akademik dan ringkasan modul.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
-              <Zap size={14} className="text-[#c8ef70]" />
-              <span>Multi-Model Fallback Active</span>
-            </span>
-            <Link
-              href="/admin/ai-gateway"
-              className="inline-flex items-center gap-1 rounded-xl bg-[#1b4332] px-3 py-1.5 text-xs font-bold text-[#c8ef70] hover:bg-[#235841] transition"
-            >
-              <span>Router Gateway</span>
-              <ArrowRight size={13} />
-            </Link>
-          </div>
+          <Link
+            href="/admin/ai-gateway"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition"
+          >
+            <span>Router Gateway</span>
+            <ArrowRight size={13} />
+          </Link>
         </div>
 
-        {/* 4 Cards: Primary Model, Input Token Limit, Output Token Limit, Rate Limits */}
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Active Model */}
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              PRIMARY ENGINE
-            </span>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-lg font-black text-white">Gemini 2.5 Flash</span>
-            </div>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Google DeepMind Multimodal Engine dengan dukungan auto-failover ke Flash 3.5 & Lite.
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <span className="text-[11px] font-medium text-slate-400 block">Model Utama</span>
+            <p className="text-base font-bold text-white mt-1">Gemini 2.5 Flash</p>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Google DeepMind Multimodal Engine dengan auto-failover ke Flash 3.5 & Lite.
             </p>
           </div>
 
-          {/* Input Token Limit */}
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              MAX INPUT CONTEXT
-            </span>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-lg font-black text-[#c8ef70]">1,048,576</span>
-              <span className="font-mono text-[10px] text-[#789a84]">Tokens / Req</span>
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <span className="text-[11px] font-medium text-slate-400 block">Konteks Input Maksimal</span>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <span className="font-mono text-base font-bold text-emerald-400">1,048,576</span>
+              <span className="text-xs text-slate-500 font-mono">Tokens</span>
             </div>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Mampu memproses hingga ~750.000 kata materi PDF, slide kuliah, atau rangkuman semester sekaligus.
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Kapasitas memproses ~750.000 kata PDF, slide kuliah, dan silabus semester.
             </p>
           </div>
 
-          {/* Output Token Limit */}
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              MAX OUTPUT RESPONSE
-            </span>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-lg font-black text-[#c8ef70]">65,536</span>
-              <span className="font-mono text-[10px] text-[#789a84]">Tokens / Res</span>
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <span className="text-[11px] font-medium text-slate-400 block">Output Response Maksimal</span>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <span className="font-mono text-base font-bold text-emerald-400">65,536</span>
+              <span className="text-xs text-slate-500 font-mono">Tokens</span>
             </div>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Batas jawaban hasil generasi penjelasan modul, kuis interaktif, dan jawaban tutor akademik.
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Batas generasi teks untuk penjabaran modul dan kuis evaluasi.
             </p>
           </div>
 
-          {/* Free Tier Quota & Rate Limit */}
-          <div className="rounded-2xl border border-white/5 bg-[#071710]/80 p-4">
-            <span className="font-mono text-[9px] font-black text-[#789a84] uppercase tracking-wider block">
-              RATE LIMIT BUDGET
-            </span>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-lg font-black text-white">15 RPM</span>
-              <span className="font-mono text-[10px] text-[#789a84]">/ 1,500 RPD</span>
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <span className="text-[11px] font-medium text-slate-400 block">Batas Frekuensi (Rate Limit)</span>
+            <div className="flex items-baseline gap-1.5 mt-1">
+              <span className="font-mono text-base font-bold text-white">15 RPM</span>
+              <span className="text-xs text-slate-500 font-mono">/ 1,500 RPD</span>
             </div>
-            <p className="text-[11px] text-[#9dc5aa] mt-1">
-              Batas 15 request per menit dan 1.500 per hari dengan proteksi 429 backoff otomatis.
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Batas 15 req/menit & 1.500 req/hari dengan automated exponential backoff.
             </p>
           </div>
         </div>
       </div>
 
-      {/* ── Middle Grid: Top Campuses Leaderboard & Recent Users ── */}
-      <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
+      {/* ── Two-Column Grid: Campuses Leaderboard & Recent Users ── */}
+      <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
         {/* Top Campuses */}
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/80 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition hover:border-slate-700 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-white/10 pb-3.5">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3.5">
               <div className="flex items-center gap-2">
-                <Building2 size={18} className="text-[#c8ef70]" />
-                <h3 className="font-display text-base font-black text-white">
+                <Building2 size={16} className="text-emerald-400" />
+                <h3 className="text-sm font-semibold text-white">
                   Sebaran Kampus Teratas
                 </h3>
               </div>
-              <span className="tag-mono text-[10px] text-[#789a84]">REAL-TIME</span>
+              <span className="rounded-md border border-slate-800 bg-slate-800/60 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-400">
+                Top 5
+              </span>
             </div>
 
-            <div className="mt-4 space-y-3">
+            <div className="mt-4 space-y-3.5">
               {sortedCampuses.length > 0 ? (
                 sortedCampuses.map(([uniName, count], idx) => {
                   const percentage = totalStudents ? Math.round((count / totalStudents) * 100) : 0;
                   return (
-                    <div key={idx} className="space-y-1">
+                    <div key={idx} className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-white truncate max-w-[200px] sm:max-w-xs">
+                        <span className="font-medium text-slate-200 truncate max-w-[220px]">
                           {idx + 1}. {uniName}
                         </span>
-                        <span className="font-mono font-bold text-[#c8ef70] shrink-0">
-                          {count} Mahasiswa ({percentage}%)
+                        <span className="font-mono text-slate-400 shrink-0">
+                          <strong className="text-emerald-400 font-semibold">{count}</strong> ({percentage}%)
                         </span>
                       </div>
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#1b4332]">
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
                         <div
-                          className="h-full rounded-full bg-[#c8ef70]"
+                          className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                           style={{ width: `${Math.max(percentage, 5)}%` }}
                         />
                       </div>
@@ -422,116 +431,117 @@ export default async function AdminOverviewPage() {
                   );
                 })
               ) : (
-                <p className="text-xs text-[#789a84] italic py-4 text-center">Belum ada data kampus mahasiswa.</p>
+                <p className="text-xs text-slate-500 italic py-6 text-center">Belum ada data kampus mahasiswa.</p>
               )}
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-[#9dc5aa]">
-            <span>Total Kampus Terpetakan:</span>
-            <span className="font-black text-white">{totalDistinctUniversities} Universitas</span>
+          <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+            <span>Total Kampus Terdaftar:</span>
+            <span className="font-mono font-semibold text-white">{totalDistinctUniversities} Kampus</span>
           </div>
         </div>
 
         {/* Recently Registered Students */}
-        <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/80 p-5 sm:p-6 shadow-xs">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3.5">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition hover:border-slate-700">
+          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3.5">
             <div className="flex items-center gap-2">
-              <Users size={18} className="text-[#c8ef70]" />
-              <h3 className="font-display text-base font-black text-white">
-                Mahasiswa Terdaftar Baru
+              <Users size={16} className="text-emerald-400" />
+              <h3 className="text-sm font-semibold text-white">
+                Mahasiswa Baru Terdaftar
               </h3>
             </div>
             <Link
               href="/admin/users"
-              className="inline-flex items-center gap-1 text-xs font-bold text-[#c8ef70] hover:underline"
+              className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition"
             >
-              Lihat Semua →
+              <span>Lihat Semua</span>
+              <ArrowRight size={12} />
             </Link>
           </div>
 
-          <div className="mt-4 divide-y divide-white/10 overflow-x-auto">
+          <div className="mt-2 divide-y divide-slate-800/60 overflow-x-auto">
             {profilesData && profilesData.length > 0 ? (
               profilesData.map((p) => (
-                <div key={p.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                <div key={p.id} className="py-2.5 flex items-center justify-between gap-3 text-xs hover:bg-slate-800/20 px-2 rounded-lg transition">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-white truncate">{p.full_name || "Tanpa Nama"}</p>
+                      <p className="font-semibold text-slate-200 truncate">{p.full_name || "Tanpa Nama"}</p>
                       {p.role === "superadmin" && (
-                        <span className="rounded bg-[#c8ef70] px-1.5 py-0.2 text-[9px] font-black text-[#103626]">
-                          ADMIN
+                        <span className="rounded border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.2 text-[9px] font-mono font-semibold text-emerald-400 uppercase">
+                          Admin
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#789a84] truncate">
+                    <p className="text-[11px] text-slate-400 truncate mt-0.5">
                       {p.email} • {p.university || "Universitas belum diisi"}
                     </p>
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className="font-mono text-[10px] text-[#9dc5aa]">
-                      {p.created_at ? new Date(p.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) : "-"}
+                    <span className="font-mono text-[11px] text-slate-500">
+                      {p.created_at ? new Date(p.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "-"}
                     </span>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-xs text-[#789a84] italic py-6 text-center">Belum ada akun mahasiswa yang terdaftar.</p>
+              <p className="text-xs text-slate-500 italic py-6 text-center">Belum ada akun mahasiswa terdaftar.</p>
             )}
           </div>
         </div>
       </div>
 
       {/* ── Privacy & Security Architecture Status ── */}
-      <div className="rounded-3xl border border-[#1b4332] bg-[#0c2419]/90 p-5 sm:p-7 shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition hover:border-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/10 border border-[#c8ef70]/30 text-[#c8ef70]">
-              <Lock size={20} />
-            </span>
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-emerald-400">
+              <Lock size={18} />
+            </div>
             <div>
-              <h3 className="font-display text-base sm:text-lg font-black text-white">
-                Student Data Privacy & Security Guardrails
+              <h3 className="text-sm font-semibold text-white">
+                Data Privacy & Security Guardrails
               </h3>
-              <p className="text-xs text-[#9dc5aa] mt-0.5">
-                Standar privasi data mahasiswa zero-knowledge architecture.
+              <p className="text-xs text-slate-400 mt-0.5">
+                Arsitektur zero-knowledge untuk perlindungan privasi data akademik mahasiswa.
               </p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400 self-start sm:self-auto">
             <ShieldCheck size={14} />
-            <span>RLS Enforced (Zero-Knowledge)</span>
+            <span>RLS Active</span>
           </span>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-2xl border border-white/5 bg-[#071710] p-4">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#c8ef70]">
-              <EyeOff size={16} />
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
+              <EyeOff size={15} className="text-emerald-400" />
               <span>Privasi Catatan & Tugas</span>
             </div>
-            <p className="mt-2 text-xs text-[#9dc5aa] leading-relaxed">
+            <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
               Superadmin hanya melihat jumlah agregat (counter). Isi catatan pribadi, deskripsi tugas, dan berkas tugas mahasiswa terisolasi mutlak di level PostgreSQL RLS.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#071710] p-4">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#c8ef70]">
-              <Database size={16} />
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
+              <Database size={15} className="text-emerald-400" />
               <span>Proteksi Jadwal & Modul</span>
             </div>
-            <p className="mt-2 text-xs text-[#9dc5aa] leading-relaxed">
+            <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
               Tautan materi perkuliahan, ruangan kelas, dan link meeting mahasiswa tidak diekspos ke publik ataupun command deck admin untuk menjamin kenyamanan akademik.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#071710] p-4">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#c8ef70]">
-              <Cpu size={16} />
-              <span>Security Definer RLS</span>
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
+              <Cpu size={15} className="text-emerald-400" />
+              <span>Security Definer Functions</span>
             </div>
-            <p className="mt-2 text-xs text-[#9dc5aa] leading-relaxed">
-              Fungsi <code className="font-mono text-[#c8ef70]">is_superadmin()</code> terverifikasi di server Supabase tanpa celah SQL injection atau manipulasi client-side cookies.
+            <p className="mt-1.5 text-xs text-slate-400 leading-relaxed">
+              Fungsi <code className="font-mono text-emerald-400 text-[11px]">is_superadmin()</code> terverifikasi di server Supabase tanpa celah SQL injection atau manipulasi client cookies.
             </p>
           </div>
         </div>

@@ -13,12 +13,13 @@ import {
   CheckCircle2, 
   AlertCircle,
   Loader2,
-  ChevronDown,
   Download,
   Ban,
   UserCheck,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Shield,
+  X
 } from "lucide-react";
 import { updateUserRole, toggleUserSuspension } from "../actions";
 
@@ -112,7 +113,7 @@ export function AdminUserTableClient({
         );
         setActionSuccess(
           `Akun ${user.full_name || user.email} berhasil ${
-            suspend ? "DITANGGUHKAN (SUSPEND)" : "DIAKTIFKAN KEMBALI"
+            suspend ? "DITANGGUHKAN" : "DIAKTIFKAN KEMBALI"
           }.`
         );
       } catch (err: any) {
@@ -175,8 +176,8 @@ export function AdminUserTableClient({
 
   if (users.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#183929] bg-[#0c2419]/40 p-12 text-center">
-        <p className="text-sm font-bold text-[#789a84]">
+      <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center">
+        <p className="text-sm font-medium text-slate-400">
           Tidak ada data mahasiswa yang cocok dengan kriteria pencarian.
         </p>
       </div>
@@ -192,51 +193,50 @@ export function AdminUserTableClient({
 
   return (
     <div className="space-y-4">
-      {/* Toast feedback */}
+      {/* Toast Feedback */}
       {actionSuccess && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/50 p-3 text-xs font-bold text-emerald-400">
-          <CheckCircle2 size={16} className="shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-3 text-xs font-medium text-emerald-400 animate-in fade-in">
+          <CheckCircle2 size={15} className="shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
       {actionError && (
-        <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-950/50 p-3 text-xs font-bold text-rose-400">
-          <AlertCircle size={16} className="shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-950/40 p-3 text-xs font-medium text-rose-400 animate-in fade-in">
+          <AlertCircle size={15} className="shrink-0" />
           <span>{actionError}</span>
         </div>
       )}
 
       {/* Table Header Bar with CSV Export */}
       <div className="flex items-center justify-between gap-3 px-1">
-        <div className="text-xs text-[#9dc5aa] font-bold">
-          Menampilkan <span className="text-white font-black">{startRecord} - {endRecord}</span> dari{" "}
-          <span className="text-[#c8ef70] font-black">{pagination?.totalCount ?? users.length}</span> akun mahasiswa
+        <div className="text-xs text-slate-400">
+          Menampilkan <span className="text-white font-medium">{startRecord} - {endRecord}</span> dari{" "}
+          <span className="text-emerald-400 font-mono font-medium">{pagination?.totalCount ?? users.length}</span> akun
         </div>
         <button
           onClick={handleExportCsv}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-[#0c2419] px-3 py-2 text-xs font-bold text-[#c8ef70] hover:bg-[#143d2b] transition active:scale-95 cursor-pointer shadow-xs"
-          title="Download data mahasiswa halaman ini dalam format CSV"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition active:scale-[0.98] cursor-pointer shadow-xs"
         >
-          <Download size={14} />
+          <Download size={13} />
           <span>Export CSV</span>
         </button>
       </div>
 
-      {/* Desktop & Tablet Table */}
-      <div className="overflow-hidden rounded-2xl border border-[#183929] bg-[#0c2419]/90 shadow-sm">
+      {/* Main Table */}
+      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-white/10 bg-[#071710] font-mono text-[10px] font-black uppercase tracking-wider text-[#789a84]">
+            <thead className="border-b border-slate-800 bg-slate-950/60 font-medium text-[11px] text-slate-400">
               <tr>
-                <th className="px-4 py-3.5">Mahasiswa</th>
-                <th className="px-4 py-3.5">Kampus & Prodi</th>
-                <th className="px-4 py-3.5">NIM & Angkatan</th>
-                <th className="px-4 py-3.5">Terdaftar</th>
-                <th className="px-4 py-3.5">Status Role</th>
-                <th className="px-4 py-3.5 text-right">Opsi Akses</th>
+                <th className="px-4 py-3">Mahasiswa</th>
+                <th className="px-4 py-3">Kampus & Prodi</th>
+                <th className="px-4 py-3">NIM & Angkatan</th>
+                <th className="px-4 py-3">Terdaftar</th>
+                <th className="px-4 py-3">Role</th>
+                <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-sans">
+            <tbody className="divide-y divide-slate-800/60 font-sans">
               {users.map((u) => {
                 const isSuper = u.role === "superadmin";
                 const isSuspended = u.role === "suspended";
@@ -248,24 +248,24 @@ export function AdminUserTableClient({
                 });
 
                 return (
-                  <tr key={u.id} className="hover:bg-white/[0.02] transition">
+                  <tr key={u.id} className="hover:bg-slate-800/20 transition">
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <div className="font-bold text-white text-sm">
+                        <div className="font-semibold text-slate-100 text-sm">
                           {u.full_name || "Tanpa Nama"}
                         </div>
                         {isSuspended && (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 text-[9px] font-black uppercase text-rose-400">
+                          <span className="rounded-full bg-rose-500/10 border border-rose-500/20 px-2 py-0.2 text-[9px] font-mono text-rose-400 uppercase">
                             Suspended
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 text-[11px] text-[#8cb197] mt-0.5">
-                        <Mail size={12} className="shrink-0" />
-                        <span className="truncate max-w-[180px]">{u.email || "-"}</span>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-0.5">
+                        <Mail size={12} className="shrink-0 text-slate-500" />
+                        <span className="truncate max-w-[200px]">{u.email || "-"}</span>
                       </div>
                       {u.phone && (
-                        <div className="flex items-center gap-1.5 text-[10px] text-[#557763] mt-0.5">
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5">
                           <Phone size={10} className="shrink-0" />
                           <span>{u.phone}</span>
                         </div>
@@ -273,41 +273,41 @@ export function AdminUserTableClient({
                     </td>
 
                     <td className="px-4 py-3.5">
-                      <div className="flex items-center gap-1.5 font-bold text-[#b4d8c1]">
-                        <Building2 size={13} className="shrink-0 text-[#c8ef70]" />
-                        <span>{u.university || "Belum Mengatur"}</span>
+                      <div className="flex items-center gap-1.5 font-medium text-slate-200">
+                        <Building2 size={13} className="shrink-0 text-emerald-400" />
+                        <span>{u.university || "Belum Diatur"}</span>
                       </div>
-                      <div className="text-[11px] text-[#789a84] mt-0.5 pl-4">
+                      <div className="text-[11px] text-slate-400 mt-0.5 pl-4">
                         {u.major || "-"}
                       </div>
                     </td>
 
                     <td className="px-4 py-3.5">
-                      <div className="font-mono font-bold text-white">
+                      <div className="font-mono text-slate-200">
                         {u.student_id || "-"}
                       </div>
-                      <div className="flex items-center gap-1 text-[11px] text-[#789a84] mt-0.5">
-                        <GraduationCap size={12} className="shrink-0" />
+                      <div className="flex items-center gap-1 text-[11px] text-slate-400 mt-0.5">
+                        <GraduationCap size={12} className="shrink-0 text-slate-500" />
                         <span>{u.angkatan ? `Angkatan ${u.angkatan}` : "-"}</span>
                       </div>
                     </td>
 
-                    <td className="px-4 py-3.5 text-[#8cb197]">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar size={13} className="shrink-0 text-[#557763]" />
+                    <td className="px-4 py-3.5 text-slate-400">
+                      <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                        <Calendar size={12} className="shrink-0 text-slate-500" />
                         <span>{regDate}</span>
                       </div>
                     </td>
 
                     <td className="px-4 py-3.5">
                       {isSuper ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-[#c8ef70]/40 bg-[#c8ef70]/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#c8ef70]">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-[10px] font-mono font-medium text-purple-300">
                           <ShieldAlert size={11} />
                           Superadmin
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold text-[#8cb197]">
-                          <ShieldCheck size={11} />
+                        <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800/60 px-2.5 py-0.5 text-[10px] font-mono text-slate-300">
+                          <ShieldCheck size={11} className="text-slate-400" />
                           Student
                         </span>
                       )}
@@ -315,7 +315,7 @@ export function AdminUserTableClient({
 
                     <td className="px-4 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {/* Suspend / Unsuspend button (only for non-superadmin accounts) */}
+                        {/* Suspend / Unsuspend button */}
                         {!isSuper && (
                           <button
                             type="button"
@@ -327,14 +327,14 @@ export function AdminUserTableClient({
                               })
                             }
                             disabled={isProcessing}
-                            title={isSuspended ? "Aktifkan kembali akun ini" : "Tangguhkan (suspend) akun ini"}
-                            className={`inline-flex items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-bold transition active:scale-95 cursor-pointer border ${
+                            title={isSuspended ? "Aktifkan kembali akun ini" : "Tangguhkan akun ini"}
+                            className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition active:scale-[0.98] cursor-pointer border ${
                               isSuspended
-                                ? "bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border-emerald-500/30"
+                                ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border-emerald-500/30"
                                 : "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border-rose-500/20"
                             } disabled:opacity-50`}
                           >
-                            {isSuspended ? <UserCheck size={13} /> : <Ban size={13} />}
+                            {isSuspended ? <UserCheck size={12} /> : <Ban size={12} />}
                             <span className="hidden sm:inline">
                               {isSuspended ? "Unsuspend" : "Suspend"}
                             </span>
@@ -352,21 +352,21 @@ export function AdminUserTableClient({
                             })
                           }
                           disabled={isProcessing}
-                          className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition active:scale-95 cursor-pointer ${
+                          className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-medium transition active:scale-[0.98] cursor-pointer border ${
                             isSuper
-                              ? "bg-rose-500/15 text-rose-300 hover:bg-rose-500/25 border border-rose-500/30"
-                              : "bg-[#183929] text-[#c8ef70] hover:bg-[#204c37] border border-[#2b5d44]"
+                              ? "bg-slate-800 text-slate-300 hover:bg-slate-700 border-slate-700"
+                              : "bg-slate-800 text-slate-200 hover:bg-slate-700 border-slate-700 hover:text-white"
                           } disabled:opacity-50 disabled:cursor-not-allowed`}
                         >
                           {isProcessing ? (
                             <>
                               <Loader2 size={12} className="animate-spin" />
-                              <span>Memproses...</span>
+                              <span>Proses...</span>
                             </>
                           ) : isSuper ? (
-                            <span>Turunkan ke Student</span>
+                            <span>Set Student</span>
                           ) : (
-                            <span>Promote Superadmin</span>
+                            <span>Set Admin</span>
                           )}
                         </button>
                       </div>
@@ -382,9 +382,9 @@ export function AdminUserTableClient({
       {/* ── Server-Side Pagination Bar ── */}
       {pagination && pagination.totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          <div className="text-xs font-bold text-[#789a84]">
-            Halaman <span className="text-white font-black">{pagination.currentPage}</span> dari{" "}
-            <span className="text-[#c8ef70] font-black">{pagination.totalPages}</span>
+          <div className="text-xs text-slate-400">
+            Halaman <span className="text-white font-medium">{pagination.currentPage}</span> dari{" "}
+            <span className="text-slate-300 font-medium">{pagination.totalPages}</span>
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -392,10 +392,10 @@ export function AdminUserTableClient({
             <Link
               href={buildPageHref(Math.max(1, pagination.currentPage - 1))}
               aria-disabled={pagination.currentPage <= 1}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border transition ${
                 pagination.currentPage <= 1
-                  ? "pointer-events-none opacity-40 border-white/5 bg-transparent text-[#789a84]"
-                  : "border-white/10 bg-[#0c2419] text-[#b4d8c1] hover:bg-[#143d2b] active:scale-95"
+                  ? "pointer-events-none opacity-40 border-slate-800 bg-transparent text-slate-500"
+                  : "border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 active:scale-[0.98]"
               }`}
             >
               <ChevronLeft size={14} />
@@ -403,7 +403,7 @@ export function AdminUserTableClient({
             </Link>
 
             {/* Quick Page Indicator pills */}
-            <div className="flex items-center gap-1 px-2">
+            <div className="flex items-center gap-1 px-1">
               {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                 let p = i + 1;
                 if (pagination.totalPages > 5 && pagination.currentPage > 3) {
@@ -415,10 +415,10 @@ export function AdminUserTableClient({
                   <Link
                     key={p}
                     href={buildPageHref(p)}
-                    className={`grid h-7 w-7 place-items-center rounded-lg text-xs font-black transition ${
+                    className={`grid h-7 w-7 place-items-center rounded-lg text-xs font-mono font-medium transition ${
                       isActive
-                        ? "bg-[#c8ef70] text-[#103626] shadow-xs"
-                        : "bg-white/5 text-[#8cb197] hover:bg-white/10 hover:text-white"
+                        ? "bg-emerald-500 text-slate-950 font-bold shadow-xs"
+                        : "bg-slate-800/60 text-slate-400 hover:bg-slate-800 hover:text-white"
                     }`}
                   >
                     {p}
@@ -431,10 +431,10 @@ export function AdminUserTableClient({
             <Link
               href={buildPageHref(Math.min(pagination.totalPages, pagination.currentPage + 1))}
               aria-disabled={pagination.currentPage >= pagination.totalPages}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium border transition ${
                 pagination.currentPage >= pagination.totalPages
-                  ? "pointer-events-none opacity-40 border-white/5 bg-transparent text-[#789a84]"
-                  : "border-white/10 bg-[#0c2419] text-[#b4d8c1] hover:bg-[#143d2b] active:scale-95"
+                  ? "pointer-events-none opacity-40 border-slate-800 bg-transparent text-slate-500"
+                  : "border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 active:scale-[0.98]"
               }`}
             >
               <span>Selanjutnya</span>
@@ -444,199 +444,164 @@ export function AdminUserTableClient({
         </div>
       )}
 
-      {/* ── Custom Animated Role Confirmation Modal ── */}
+      {/* ── Role Confirmation Modal ── */}
       {roleModal && roleModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
           <div 
-            className="relative w-full max-w-md rounded-3xl border border-white/15 bg-[#091e14] p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.7)] animate-in zoom-in-95 duration-200 space-y-5"
+            className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl animate-in zoom-in-95 duration-150 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div 
-              className={`absolute top-0 inset-x-8 h-1 rounded-full ${
-                roleModal.nextRole === "superadmin"
-                  ? "bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent"
-                  : "bg-gradient-to-r from-transparent via-amber-500 to-transparent"
-              }`} 
-            />
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div 
+                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border ${
+                    roleModal.nextRole === "superadmin"
+                      ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                      : "bg-slate-800 text-slate-300 border-slate-700"
+                  }`}
+                >
+                  {roleModal.nextRole === "superadmin" ? (
+                    <ShieldAlert size={20} />
+                  ) : (
+                    <GraduationCap size={20} />
+                  )}
+                </div>
 
-            <div className="flex items-start gap-4">
-              <div 
-                className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border ${
-                  roleModal.nextRole === "superadmin"
-                    ? "bg-[#c8ef70]/15 text-[#c8ef70] border-[#c8ef70]/30"
-                    : "bg-amber-500/15 text-amber-400 border-amber-500/30"
-                }`}
+                <div>
+                  <h3 className="text-base font-semibold text-white">
+                    {roleModal.nextRole === "superadmin"
+                      ? "Promosikan ke Superadmin?"
+                      : "Turunkan ke Mahasiswa?"}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Konfirmasi perubahan otorisasi akun
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setRoleModal(null)}
+                className="text-slate-400 hover:text-white transition"
               >
-                {roleModal.nextRole === "superadmin" ? (
-                  <ShieldAlert size={24} className="animate-pulse" />
-                ) : (
-                  <GraduationCap size={24} />
-                )}
-              </div>
-
-              <div className="space-y-1">
-                <span className="font-mono text-[10px] font-black uppercase tracking-wider text-[#c8ef70]">
-                  MANAJEMEN HAK AKSES SISTEM
-                </span>
-                <h3 className="font-display text-lg sm:text-xl font-black text-white">
-                  {roleModal.nextRole === "superadmin"
-                    ? "Promosikan ke Superadmin?"
-                    : "Turunkan ke Mahasiswa?"}
-                </h3>
-              </div>
+                <X size={16} />
+              </button>
             </div>
 
-            <div className="text-xs text-[#9dc5aa] space-y-2 leading-relaxed">
+            <div className="text-xs text-slate-300 space-y-2 leading-relaxed">
               <p>
-                Anda akan mengubah role akun milik:{" "}
+                Anda akan mengubah role akun:{" "}
                 <strong className="text-white">{roleModal.user.full_name || roleModal.user.email}</strong>.
               </p>
               {roleModal.nextRole === "superadmin" ? (
-                <div className="rounded-2xl border border-[#c8ef70]/20 bg-[#c8ef70]/5 p-3 text-[11px] text-[#b4d8c1] space-y-1">
-                  <span className="font-bold text-[#c8ef70]">⚠️ Peringatan Akses Root:</span>
-                  <p>User ini akan memiliki akses penuh ke pusat kontrol sistem, AI gateway, broadcast pengumuman, dan data seluruh mahasiswa.</p>
+                <div className="rounded-xl border border-purple-500/20 bg-purple-500/5 p-3 text-xs text-purple-200">
+                  User akan mendapatkan akses ke seluruh panel Superadmin termasuk System Controls dan Audit Trail.
                 </div>
               ) : (
-                <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-3 text-[11px] text-amber-200 space-y-1">
-                  <span className="font-bold text-amber-300">ℹ️ Pencabutan Hak Akses:</span>
-                  <p>User ini akan kehilangan seluruh akses ke console Superadmin dan hanya dapat mengakses dashboard mahasiswa biasa.</p>
+                <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-400">
+                  User akan kembali menjadi akun mahasiswa biasa dan tidak dapat lagi membuka portal admin ini.
                 </div>
               )}
             </div>
 
-            {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
+            <div className="flex items-center justify-end gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => setRoleModal(null)}
-                disabled={isPending}
-                className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50 cursor-pointer"
+                className="rounded-xl border border-slate-800 bg-slate-800/60 px-4 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800 transition"
               >
-                Batalkan
+                Batal
               </button>
-
               <button
                 type="button"
                 onClick={() => executeRoleChange(roleModal.user, roleModal.nextRole)}
                 disabled={isPending}
-                className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black transition active:scale-95 cursor-pointer shadow-lg disabled:opacity-50 ${
+                className={`rounded-xl px-4 py-2 text-xs font-semibold text-white transition active:scale-[0.98] ${
                   roleModal.nextRole === "superadmin"
-                    ? "bg-[#c8ef70] text-[#103626] hover:bg-[#d8faa1] shadow-[#c8ef70]/20"
-                    : "bg-amber-500 text-[#10261b] hover:bg-amber-400 shadow-amber-500/20"
+                    ? "bg-purple-600 hover:bg-purple-500"
+                    : "bg-emerald-600 hover:bg-emerald-500"
                 }`}
               >
-                {isPending ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" />
-                    <span>Mengeksekusi...</span>
-                  </>
-                ) : (
-                  <span>Konfirmasi & Terapkan</span>
-                )}
+                {isPending ? "Memproses..." : "Konfirmasi Perubahan"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Custom Animated Suspend/Unsuspend Confirmation Modal ── */}
+      {/* ── Suspend Confirmation Modal ── */}
       {suspendModal && suspendModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
           <div 
-            className="relative w-full max-w-md rounded-3xl border border-white/15 bg-[#091e14] p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.7)] animate-in zoom-in-95 duration-200 space-y-5"
+            className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl animate-in zoom-in-95 duration-150 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div 
-              className={`absolute top-0 inset-x-8 h-1 rounded-full ${
-                suspendModal.nextSuspendState
-                  ? "bg-gradient-to-r from-transparent via-rose-500 to-transparent"
-                  : "bg-gradient-to-r from-transparent via-emerald-500 to-transparent"
-              }`} 
-            />
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div 
+                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border ${
+                    suspendModal.nextSuspendState
+                      ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                      : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                  }`}
+                >
+                  {suspendModal.nextSuspendState ? <Ban size={20} /> : <UserCheck size={20} />}
+                </div>
 
-            <div className="flex items-start gap-4">
-              <div 
-                className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border ${
-                  suspendModal.nextSuspendState
-                    ? "bg-rose-500/15 text-rose-400 border-rose-500/30"
-                    : "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
-                }`}
-              >
-                {suspendModal.nextSuspendState ? (
-                  <Ban size={24} className="animate-pulse" />
-                ) : (
-                  <UserCheck size={24} />
-                )}
-              </div>
-
-              <div className="space-y-1">
-                <span className="font-mono text-[10px] font-black uppercase tracking-wider text-[#c8ef70]">
-                  MODERASI INTEGRITAS PENGGUNA
-                </span>
-                <h3 className="font-display text-lg sm:text-xl font-black text-white">
-                  {suspendModal.nextSuspendState
-                    ? "Tangguhkan (Suspend) Akun?"
-                    : "Aktifkan Kembali Akun?"}
-                </h3>
-              </div>
-            </div>
-
-            <div className="text-xs text-[#9dc5aa] space-y-2 leading-relaxed">
-              <p>
-                Target akun:{" "}
-                <strong className="text-white">
-                  {suspendModal.user.full_name || suspendModal.user.email}
-                </strong>
-                .
-              </p>
-              {suspendModal.nextSuspendState ? (
-                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-3 text-[11px] text-rose-200 space-y-1">
-                  <span className="font-bold text-rose-400">⛔ Dampak Penangguhan:</span>
-                  <p>
-                    Mahasiswa ini tidak akan dapat login ke dashboard ngampUS dan seluruh sesi aktifnya akan langsung dicegat oleh sistem keamanan.
+                <div>
+                  <h3 className="text-base font-semibold text-white">
+                    {suspendModal.nextSuspendState
+                      ? "Tangguhkan Akun Mahasiswa?"
+                      : "Aktifkan Kembali Akun?"}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Status keamanan akun platform
                   </p>
                 </div>
+              </div>
+
+              <button
+                onClick={() => setSuspendModal(null)}
+                className="text-slate-400 hover:text-white transition"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="text-xs text-slate-300 space-y-2 leading-relaxed">
+              <p>
+                Target akun:{" "}
+                <strong className="text-white">{suspendModal.user.full_name || suspendModal.user.email}</strong>.
+              </p>
+              {suspendModal.nextSuspendState ? (
+                <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-3 text-xs text-rose-200">
+                  Akun yang ditangguhkan tidak akan dapat login atau mengakses seluruh layanan ngampUS hingga diaktifkan kembali.
+                </div>
               ) : (
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-[11px] text-emerald-200 space-y-1">
-                  <span className="font-bold text-emerald-300">✅ Pemulihan Akses:</span>
-                  <p>
-                    Mahasiswa dapat kembali login dan menggunakan fitur akademik ngampUS seperti biasa.
-                  </p>
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-emerald-200">
+                  Akun akan dipulihkan ke role mahasiswa normal dan dapat login kembali secara normal.
                 </div>
               )}
             </div>
 
-            {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
+            <div className="flex items-center justify-end gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => setSuspendModal(null)}
-                disabled={isPending}
-                className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50 cursor-pointer"
+                className="rounded-xl border border-slate-800 bg-slate-800/60 px-4 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800 transition"
               >
-                Batalkan
+                Batal
               </button>
-
               <button
                 type="button"
                 onClick={() => executeSuspensionChange(suspendModal.user, suspendModal.nextSuspendState)}
                 disabled={isPending}
-                className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black transition active:scale-95 cursor-pointer shadow-lg disabled:opacity-50 ${
+                className={`rounded-xl px-4 py-2 text-xs font-semibold text-white transition active:scale-[0.98] ${
                   suspendModal.nextSuspendState
-                    ? "bg-rose-500 text-white hover:bg-rose-400 shadow-rose-500/20"
-                    : "bg-emerald-500 text-[#071710] hover:bg-emerald-400 shadow-emerald-500/20 font-black"
+                    ? "bg-rose-600 hover:bg-rose-500"
+                    : "bg-emerald-600 hover:bg-emerald-500"
                 }`}
               >
-                {isPending ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" />
-                    <span>Mengeksekusi...</span>
-                  </>
-                ) : (
-                  <span>
-                    {suspendModal.nextSuspendState ? "Ya, Tangguhkan Akun" : "Ya, Aktifkan Akun"}
-                  </span>
-                )}
+                {isPending ? "Memproses..." : suspendModal.nextSuspendState ? "Tangguhkan Akun" : "Aktifkan Akun"}
               </button>
             </div>
           </div>

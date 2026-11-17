@@ -58,7 +58,7 @@ export function AnnouncementClientManager({
         setAnnouncements((prev) =>
           prev.map((a) => (a.id === id ? { ...a, is_active: !currentStatus } : a))
         );
-        setSuccessMessage("Status publikasi pengumuman berhasil diubah.");
+        setSuccessMessage("Status publikasi siaran berhasil diperbarui.");
       } catch (err: any) {
         setErrorMessage(err.message || "Gagal mengubah status pengumuman.");
       }
@@ -93,108 +93,105 @@ export function AnnouncementClientManager({
         setSuccessMessage("Pengumuman berhasil disiarkan ke seluruh platform!");
         window.location.reload();
       } catch (err: any) {
-        setErrorMessage(err.message || "Gagal membuat pengumuman.");
+        setErrorMessage(err.message || "Gagal membuat siaran pengumuman.");
       }
     });
   };
 
   return (
     <div className="space-y-6">
-      {/* Top Banner Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+      {/* ── Executive Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] font-black uppercase tracking-widest text-[#c8ef70]">
-              [BROADCAST SYSTEM // GLOBAL BANNERS]
-            </span>
-            <span className="rounded-full bg-[#1b4332] px-2 py-0.5 text-[10px] font-bold text-[#c8ef70]">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              Pengumuman & Siaran Sistem
+            </h1>
+            <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800/80 px-2.5 py-0.5 text-xs font-mono font-medium text-slate-300">
               {announcements.filter((a) => a.is_active).length} Aktif
             </span>
           </div>
-          <h1 className="font-display mt-1 text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Pengumuman & Siaran Sistem
-          </h1>
-          <p className="mt-1 text-xs text-[#9dc5aa]">
-            Kirim pemberitahuan penting, info pembaruan versi, atau peringatan maintenance ke dashboard mahasiswa.
+          <p className="mt-1 text-sm text-slate-400">
+            Kirim pemberitahuan penting, info pembaruan versi, atau peringatan pemeliharaan ke dashboard mahasiswa.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#c8ef70] px-4 py-2.5 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 shadow-xs cursor-pointer"
+          className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-emerald-400 transition active:scale-[0.98] shadow-xs cursor-pointer self-start sm:self-auto"
         >
-          <Plus size={16} />
+          <Plus size={15} />
           <span>Buat Pengumuman Baru</span>
         </button>
       </div>
 
       {/* Notifications */}
       {successMessage && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/50 p-3 text-xs font-bold text-emerald-400">
-          <CheckCircle2 size={16} className="shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-3 text-xs font-medium text-emerald-400 animate-in fade-in">
+          <CheckCircle2 size={15} className="shrink-0" />
           <span>{successMessage}</span>
         </div>
       )}
       {errorMessage && (
-        <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-950/50 p-3 text-xs font-bold text-rose-400">
-          <AlertTriangle size={16} className="shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-950/40 p-3 text-xs font-medium text-rose-400 animate-in fade-in">
+          <AlertTriangle size={15} className="shrink-0" />
           <span>{errorMessage}</span>
         </div>
       )}
 
-      {/* List */}
+      {/* Announcements List */}
       {announcements.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#183929] bg-[#0c2419]/40 p-12 text-center">
-          <Megaphone size={36} className="mx-auto text-[#4d705c] mb-3" />
-          <p className="text-sm font-bold text-[#789a84]">
-            Belum ada siaran pengumuman. Buat pengumuman pertama Anda untuk ditampilkan ke seluruh mahasiswa.
+        <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center">
+          <Megaphone size={32} className="mx-auto text-slate-500 mb-3" />
+          <p className="text-sm font-medium text-slate-400">
+            Belum ada siaran pengumuman. Buat pengumuman pertama Anda untuk disiarkan ke mahasiswa.
           </p>
         </div>
       ) : (
         <div className="grid gap-4">
           {announcements.map((a) => {
             const badgeMeta = {
-              info: { bg: "bg-sky-500/15", text: "text-sky-300", border: "border-sky-500/30", icon: Info },
-              update: { bg: "bg-emerald-500/15", text: "text-emerald-300", border: "border-emerald-500/30", icon: CheckCircle2 },
-              warning: { bg: "bg-amber-500/15", text: "text-amber-300", border: "border-amber-500/30", icon: AlertTriangle },
-              maintenance: { bg: "bg-rose-500/15", text: "text-rose-300", border: "border-rose-500/30", icon: Wrench },
-            }[a.tipe] || { bg: "bg-white/10", text: "text-white", border: "border-white/20", icon: Info };
+              info: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20", icon: Info },
+              update: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/20", icon: CheckCircle2 },
+              warning: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", icon: AlertTriangle },
+              maintenance: { bg: "bg-rose-500/10", text: "text-rose-400", border: "border-rose-500/20", icon: Wrench },
+            }[a.tipe] || { bg: "bg-slate-800", text: "text-slate-300", border: "border-slate-700", icon: Info };
 
             const IconComponent = badgeMeta.icon;
 
             return (
               <div
                 key={a.id}
-                className={`rounded-2xl border p-4 sm:p-5 transition ${
+                className={`rounded-2xl border p-5 transition ${
                   a.is_active
-                    ? "border-[#204c37] bg-[#0c2419]/90 shadow-sm"
-                    : "border-white/5 bg-[#081811]/40 opacity-70"
+                    ? "border-slate-800 bg-slate-900/50 shadow-xs hover:border-slate-700"
+                    : "border-slate-800/60 bg-slate-950/40 opacity-60"
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                  <div className="space-y-1.5 flex-1">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${badgeMeta.bg} ${badgeMeta.text} ${badgeMeta.border}`}
+                        className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-mono font-medium uppercase ${badgeMeta.bg} ${badgeMeta.text} ${badgeMeta.border}`}
                       >
-                        <IconComponent size={12} />
+                        <IconComponent size={11} />
                         {a.tipe}
                       </span>
                       {a.is_emergency_sticky && (
-                        <span className="rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide">
-                          🚨 Sticky Darurat
+                        <span className="rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 text-[10px] font-mono font-medium uppercase">
+                          Sticky Darurat
                         </span>
                       )}
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-mono ${
                           a.is_active
-                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                            : "bg-white/10 text-white/60"
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            : "bg-slate-800 text-slate-400 border border-slate-700"
                         }`}
                       >
                         {a.is_active ? "Tayang Aktif" : "Nonaktif"}
                       </span>
-                      <span className="text-[11px] text-[#557763]">
+                      <span className="text-[11px] font-mono text-slate-500">
                         {new Date(a.created_at).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "short",
@@ -204,26 +201,26 @@ export function AnnouncementClientManager({
                         })}
                       </span>
                       {a.target_university ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#c8ef70]/15 border border-[#c8ef70]/30 px-2 py-0.5 text-[10px] font-extrabold text-[#c8ef70]">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-800 border border-slate-700 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
                           <Building2 size={10} />
                           <span>{a.target_university}</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 border border-white/15 px-2 py-0.5 text-[10px] font-bold text-white/80">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-800/60 border border-slate-700 px-2 py-0.5 text-[10px] font-medium text-slate-300">
                           <Globe size={10} />
                           <span>Semua Kampus (Global)</span>
                         </span>
                       )}
                       {a.expires_at && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-400 font-mono">
                           <Calendar size={10} />
-                          <span>Hingga {new Date(a.expires_at).toLocaleDateString("id-ID")}</span>
+                          <span>Exp: {new Date(a.expires_at).toLocaleDateString("id-ID")}</span>
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-base font-bold text-white">{a.judul}</h3>
-                    <p className="text-xs text-[#9dc5aa] leading-relaxed whitespace-pre-line">
+                    <h3 className="text-base font-semibold text-white">{a.judul}</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed whitespace-pre-line">
                       {a.pesan}
                     </p>
 
@@ -232,7 +229,7 @@ export function AnnouncementClientManager({
                         href={a.tautan}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-bold text-[#c8ef70] hover:underline pt-1"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 hover:underline pt-0.5"
                       >
                         <ExternalLink size={12} />
                         <span>{a.tautan}</span>
@@ -244,10 +241,10 @@ export function AnnouncementClientManager({
                     <button
                       onClick={() => handleToggle(a.id, a.is_active)}
                       disabled={isPending}
-                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition cursor-pointer active:scale-[0.98] ${
                         a.is_active
-                          ? "border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
-                          : "border-[#2b5d44] bg-[#183929] text-[#c8ef70] hover:bg-[#204c37]"
+                          ? "border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
+                          : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
                       }`}
                     >
                       <Power size={13} />
@@ -257,10 +254,10 @@ export function AnnouncementClientManager({
                     <button
                       onClick={() => handleDelete(a.id, a.judul)}
                       disabled={isPending}
-                      className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-2 text-rose-400 hover:bg-rose-500/20 transition cursor-pointer"
+                      className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-2 text-rose-400 hover:bg-rose-500/20 transition cursor-pointer"
                       title="Hapus Pengumuman"
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
@@ -270,48 +267,47 @@ export function AnnouncementClientManager({
         </div>
       )}
 
-      {/* Modal Form */}
+      {/* ── Modal Form ── */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-lg rounded-2xl border border-[#204c37] bg-[#0c2419] p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl animate-in zoom-in-95 duration-150">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute right-4 top-4 rounded-lg p-1 text-[#789a84] hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition"
             >
-              <X size={18} />
+              <X size={16} />
             </button>
 
-            <div className="flex items-center gap-2 text-xs font-mono font-black text-[#c8ef70] uppercase">
-              <Megaphone size={16} />
-              <span>[NEW BROADCAST]</span>
+            <div className="flex items-center gap-2">
+              <Megaphone size={18} className="text-emerald-400" />
+              <h2 className="text-lg font-bold text-white">Buat Siaran Pengumuman Baru</h2>
             </div>
-            <h2 className="mt-1 text-xl font-black text-white">Buat Siaran Pengumuman Baru</h2>
-            <p className="text-xs text-[#9dc5aa] mt-1">
-              Pengumuman yang aktif akan langsung muncul di bar paling atas Dashboard Mahasiswa.
+            <p className="text-xs text-slate-400 mt-1">
+              Pengumuman yang aktif akan langsung muncul di bar atas dashboard mahasiswa.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
+                <label className="block text-xs font-medium text-slate-300 mb-1">
                   Judul Siaran <span className="text-rose-400">*</span>
                 </label>
                 <input
                   type="text"
                   name="judul"
                   required
-                  placeholder="Misal: Maintenance Terjadwal Server ngampUS"
-                  className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs font-bold text-white focus:border-[#c8ef70] focus:outline-none transition"
+                  placeholder="Misal: Pemeliharaan Server Terjadwal ngampUS"
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
-                  Tipe Informasi
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Kategori Informasi
                 </label>
                 <select
                   name="tipe"
                   defaultValue="info"
-                  className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs font-bold text-white focus:border-[#c8ef70] focus:outline-none transition"
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-200 focus:border-emerald-500 focus:outline-none transition"
                 >
                   <option value="info">Info Umum (Biru / Netral)</option>
                   <option value="update">Update Fitur Baru (Hijau)</option>
@@ -321,20 +317,20 @@ export function AnnouncementClientManager({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
+                <label className="block text-xs font-medium text-slate-300 mb-1">
                   Isi Pesan Detail <span className="text-rose-400">*</span>
                 </label>
                 <textarea
                   name="pesan"
                   required
                   rows={4}
-                  placeholder="Jelaskan pesan atau instruksi untuk mahasiswa..."
-                  className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs text-white placeholder:text-[#557763] focus:border-[#c8ef70] focus:outline-none transition"
+                  placeholder="Tuliskan isi pesan atau informasi detail untuk mahasiswa..."
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
+                <label className="block text-xs font-medium text-slate-300 mb-1">
                   Target Kampus Penerima
                 </label>
                 <div className="space-y-1">
@@ -342,51 +338,51 @@ export function AnnouncementClientManager({
                     value={targetUniversity}
                     onChange={(val) => setTargetUniversity(val)}
                     placeholder="Semua Kampus (Kosongkan jika siaran global)"
-                    inputClassName="w-full rounded-xl border border-white/15 bg-[#071710] py-2 px-3 text-xs font-bold text-white placeholder:text-[#557763] focus:border-[#c8ef70] focus:outline-none"
+                    inputClassName="w-full rounded-xl border border-slate-800 bg-slate-950 py-2 px-3 text-xs font-medium text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none"
                   />
                   <input type="hidden" name="target_university" value={targetUniversity} />
-                  <p className="text-[10px] text-[#7da88c]">
-                    Pilih nama kampus jika pengumuman ini khusus mahasiswa kampus tertentu. Kosongkan untuk siaran ke semua mahasiswa.
+                  <p className="text-[11px] text-slate-400">
+                    Kosongkan untuk menyiarkan ke semua mahasiswa di seluruh kampus.
                   </p>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
-                  Tanggal Kedaluwarsa (Opsional)
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Batas Waktu Tayang (Opsional)
                 </label>
                 <input
                   type="datetime-local"
                   name="expires_at"
-                  className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs font-bold text-white focus:border-[#c8ef70] focus:outline-none transition"
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-white focus:border-emerald-500 focus:outline-none transition"
                 />
-                <p className="text-[10px] text-[#7da88c] mt-1">
-                  Pengumuman otomatis berhenti tayang setelah melewati waktu ini.
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Pengumuman otomatis berhenti tayang setelah melewati batas waktu ini.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white mb-1">
-                  Tautan Tambahan (Opsional)
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Tautan Eksternal (Opsional)
                 </label>
                 <input
                   type="url"
                   name="tautan"
                   placeholder="https://..."
-                  className="w-full rounded-xl border border-white/10 bg-[#071710] px-3 py-2 text-xs font-bold text-white placeholder:text-[#557763] focus:border-[#c8ef70] focus:outline-none transition"
+                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none transition"
                 />
               </div>
 
-              <div className="space-y-2 pt-1 border-t border-white/5">
+              <div className="space-y-2 pt-2 border-t border-slate-800/80">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="is_active"
                     name="is_active"
                     defaultChecked
-                    className="h-4 w-4 rounded accent-[#c8ef70]"
+                    className="h-4 w-4 rounded accent-emerald-500"
                   />
-                  <label htmlFor="is_active" className="text-xs font-bold text-white cursor-pointer">
+                  <label htmlFor="is_active" className="text-xs font-medium text-slate-200 cursor-pointer">
                     Langsung publikasikan sekarang (Status Aktif)
                   </label>
                 </div>
@@ -399,28 +395,28 @@ export function AnnouncementClientManager({
                     className="h-4 w-4 rounded accent-rose-500 mt-0.5"
                   />
                   <div>
-                    <label htmlFor="is_emergency_sticky" className="text-xs font-bold text-rose-300 cursor-pointer flex items-center gap-1">
-                      <span>🚨 Jadikan Banner Darurat Menempel (Emergency Sticky)</span>
+                    <label htmlFor="is_emergency_sticky" className="text-xs font-medium text-rose-300 cursor-pointer flex items-center gap-1">
+                      <span>Jadikan Banner Darurat Menempel (Emergency Sticky)</span>
                     </label>
-                    <p className="text-[10px] text-[#7da88c] mt-0.5">
-                      Banner akan terus menempel di bagian paling atas layar dan tidak dapat ditutup (un-dismissable) oleh mahasiswa sampai statusnya dinonaktifkan superadmin.
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Banner akan menempel di bagian paling atas layar mahasiswa dan tidak dapat di-dismiss hingga dinonaktifkan.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800/80">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white hover:bg-white/15 transition"
+                  className="rounded-xl border border-slate-800 bg-slate-800/60 px-4 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800 transition"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#c8ef70] px-5 py-2 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition disabled:opacity-50 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2 text-xs font-semibold text-slate-950 hover:bg-emerald-400 transition disabled:opacity-50 cursor-pointer active:scale-[0.98]"
                 >
                   {isPending && <Loader2 size={13} className="animate-spin" />}
                   <span>Siarkan Sekarang</span>

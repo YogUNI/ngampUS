@@ -2,21 +2,16 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { 
-  ShieldAlert, 
-  LayoutDashboard, 
-  Users, 
-  Megaphone, 
-  Cpu,
-  SlidersHorizontal,
-  Activity,
-  Globe
+  ShieldCheck, 
+  ExternalLink
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AdminLogoutButton } from "./admin-logout-button";
+import { AdminNav } from "./admin-nav";
 
 export const metadata = {
-  title: "Superadmin Command Console | ngampUS",
-  description: "Pusat komando dan pemantauan platform ngampUS.",
+  title: "Superadmin Portal | ngampUS",
+  description: "Pusat kontrol dan pemantauan platform ngampUS.",
 };
 
 export default async function AdminLayout({
@@ -45,114 +40,84 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#071710] text-[#edf4ef] flex flex-col selection:bg-[#c8ef70] selection:text-[#103626]">
-      {/* ── Top Command Bar ── */}
-      <header className="sticky top-0 z-50 border-b border-[#183929] bg-[#0c2419]/90 backdrop-blur-md px-4 sm:px-6 py-3">
-        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-3">
-          {/* Brand & Mode Tag */}
-          <div className="flex items-center gap-3">
-            <Link href="/admin" className="flex items-center gap-2.5">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#c8ef70] text-[#103626] font-black shadow-xs">
-                <ShieldAlert size={20} strokeWidth={2.5} />
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-display text-base sm:text-lg font-black tracking-tight text-white">
-                    ngamp<span className="text-[#c8ef70]">US</span> Admin
-                  </span>
-                  <span className="rounded-md border border-[#c8ef70]/40 bg-[#c8ef70]/15 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#d6f792]">
-                    ROOT CONSOLE
-                  </span>
+    <div className="min-h-screen bg-[#0B0F17] text-slate-100 flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+      {/* ── Top Executive Header ── */}
+      <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-[#0B0F17]/95 backdrop-blur-md px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex h-16 items-center justify-between gap-4">
+            
+            {/* Left: Brand Identity & Environment Tag */}
+            <div className="flex items-center gap-4">
+              <Link href="/admin" className="flex items-center gap-2.5 group">
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/20 transition">
+                  <ShieldCheck size={20} strokeWidth={2.2} />
                 </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-display text-base font-black tracking-tight text-white">
+                      ngamp<span className="text-emerald-400">US</span>
+                    </span>
+                    <span className="rounded-md border border-slate-700 bg-slate-800/60 px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase text-slate-300">
+                      Admin
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Middle: Primary Navigation Tabs */}
+            <div className="hidden lg:flex items-center">
+              <AdminNav />
+            </div>
+
+            {/* Right: Quick Status & User Profile */}
+            <div className="flex items-center gap-3">
+              {/* System Health Indicator */}
+              <div className="hidden sm:flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1 text-[11px] font-mono text-emerald-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Production</span>
               </div>
-            </Link>
+
+              {/* User Dropdown / Meta */}
+              <div className="flex items-center gap-2.5 border-l border-slate-800 pl-3">
+                <div className="text-right hidden md:block">
+                  <p className="text-xs font-bold text-white leading-tight">
+                    {profile?.full_name || "Super Administrator"}
+                  </p>
+                  <p className="text-[10px] text-slate-400 font-mono truncate max-w-[150px]">
+                    {user.email}
+                  </p>
+                </div>
+                <div className="grid h-8 w-8 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-emerald-400">
+                  {profile?.full_name ? profile.full_name[0].toUpperCase() : "A"}
+                </div>
+                <AdminLogoutButton />
+              </div>
+
+            </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-1 sm:gap-2">
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <LayoutDashboard size={15} className="text-[#c8ef70]" />
-              <span>Overview</span>
-            </Link>
-            <Link
-              href="/admin/web-analytics"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <Globe size={15} className="text-[#c8ef70]" />
-              <span>Web Traffic</span>
-            </Link>
-            <Link
-              href="/admin/users"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <Users size={15} className="text-[#c8ef70]" />
-              <span>Mahasiswa</span>
-            </Link>
-            <Link
-              href="/admin/ai-gateway"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <Cpu size={15} className="text-[#c8ef70]" />
-              <span>AI Engine</span>
-            </Link>
-            <Link
-              href="/admin/announcements"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <Megaphone size={15} className="text-[#c8ef70]" />
-              <span>Broadcast</span>
-            </Link>
-            <Link
-              href="/admin/system-controls"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <SlidersHorizontal size={15} className="text-[#c8ef70]" />
-              <span>Controls</span>
-            </Link>
-            <Link
-              href="/admin/audit-logs"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition"
-            >
-              <Activity size={15} className="text-[#c8ef70]" />
-              <span>Audit Log</span>
-            </Link>
-          </nav>
-
-          {/* User Profile Badge */}
-          <div className="flex items-center gap-2 border-l border-white/15 pl-3">
-            <div className="text-right hidden md:block">
-              <p className="text-xs font-extrabold text-white leading-tight">
-                {profile?.full_name || "Super Administrator"}
-              </p>
-              <p className="text-[10px] text-[#9dc5aa] font-mono">
-                {user.email}
-              </p>
-            </div>
-            <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#1b4332] text-xs font-black text-[#c8ef70] ring-1 ring-white/20">
-              {profile?.full_name ? profile.full_name[0].toUpperCase() : "A"}
-            </div>
-            <AdminLogoutButton />
+          {/* Mobile Navigation Row */}
+          <div className="lg:hidden border-t border-slate-800/60 py-2">
+            <AdminNav />
           </div>
         </div>
       </header>
 
-      {/* ── Main Content Shell ── */}
+      {/* ── Main Dashboard Canvas ── */}
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {children}
       </main>
 
-      {/* ── Footer ── */}
-      <footer className="border-t border-[#183929] bg-[#091b13] px-4 py-4 text-center text-xs text-[#789a84]">
-        <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-2">
+      {/* ── Executive Footer ── */}
+      <footer className="border-t border-slate-800/80 bg-[#070A0F] px-4 py-4 text-xs text-slate-500">
+        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#22c55e] animate-pulse" />
-            <span className="font-mono text-[11px]">System Status: All Engines Operational</span>
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="font-mono text-[11px] text-slate-400">PostgreSQL RLS Protected • Zero-Student-Access Enforced</span>
           </div>
-          <p className="text-[11px]">
-            ngampUS Platform Control Center • Internal Use Only
+          <p className="font-mono text-[11px] text-slate-500">
+            ngampUS Executive Control Center • v1.0 Production
           </p>
         </div>
       </footer>

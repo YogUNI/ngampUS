@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo, useTransition } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { 
   Activity, 
   ShieldAlert, 
-  Clock, 
   Search, 
   SlidersHorizontal, 
   UserCheck, 
@@ -14,14 +13,12 @@ import {
   Download,
   Pause,
   Play,
-  RotateCcw,
-  Sparkles,
-  Shield,
   ArrowRight,
-  Filter,
   CheckCircle2,
   XCircle,
-  Hash
+  Hash,
+  Shield,
+  RotateCcw
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -45,37 +42,37 @@ const ACTION_META: Record<string, { label: string; icon: any; bg: string; text: 
   TOGGLE_SYSTEM_SETTING: { 
     label: "Saklar Sistem",
     icon: SlidersHorizontal, 
-    bg: "bg-amber-500/15", 
+    bg: "bg-amber-500/10", 
     text: "text-amber-400", 
-    border: "border-amber-500/30" 
+    border: "border-amber-500/20" 
   },
   UPDATE_USER_ROLE: { 
-    label: "Hak Akses Role",
+    label: "Manajemen Role",
     icon: UserCheck, 
-    bg: "bg-purple-500/15", 
+    bg: "bg-purple-500/10", 
     text: "text-purple-300", 
-    border: "border-purple-500/30" 
+    border: "border-purple-500/20" 
   },
   CREATE_ANNOUNCEMENT: { 
     label: "Buat Broadcast",
     icon: Megaphone, 
-    bg: "bg-emerald-500/15", 
+    bg: "bg-emerald-500/10", 
     text: "text-emerald-400", 
-    border: "border-emerald-500/30" 
+    border: "border-emerald-500/20" 
   },
   TOGGLE_ANNOUNCEMENT: { 
     label: "Status Broadcast",
     icon: Layers, 
-    bg: "bg-sky-500/15", 
-    text: "text-sky-300", 
-    border: "border-sky-500/30" 
+    bg: "bg-blue-500/10", 
+    text: "text-blue-300", 
+    border: "border-blue-500/20" 
   },
   DELETE_ANNOUNCEMENT: { 
     label: "Hapus Broadcast",
     icon: ShieldAlert, 
-    bg: "bg-rose-500/15", 
+    bg: "bg-rose-500/10", 
     text: "text-rose-400", 
-    border: "border-rose-500/30" 
+    border: "border-rose-500/20" 
   },
 };
 
@@ -115,7 +112,7 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
             return [newLog, ...prev];
           });
 
-          // Mark as recently added for pulse glow animation
+          // Mark as recently added for highlight
           setRecentNewIds((prev) => {
             const next = new Set(prev);
             next.add(newLog.id);
@@ -218,21 +215,21 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
     if ("next_value" in details && "setting_key" in details) {
       const isTrue = details.next_value === true;
       return (
-        <div className="flex items-center gap-2 pt-1.5 flex-wrap">
-          <span className="font-mono text-[10px] text-[#789a84]">Pengaturan:</span>
-          <code className="text-[10px] font-mono bg-black/40 text-white px-2 py-0.5 rounded border border-white/5 font-bold">
+        <div className="flex items-center gap-2 pt-1 flex-wrap">
+          <span className="font-mono text-[10px] text-slate-500">Kunci:</span>
+          <code className="text-[10px] font-mono bg-slate-950 text-slate-300 px-2 py-0.5 rounded border border-slate-800">
             {details.setting_key}
           </code>
-          <ArrowRight size={12} className="text-[#557763]" />
+          <ArrowRight size={11} className="text-slate-600" />
           <span
-            className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border ${
+            className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-mono font-medium border ${
               isTrue
-                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                : "bg-rose-500/20 text-rose-300 border-rose-500/30"
+                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                : "bg-rose-500/10 text-rose-400 border-rose-500/20"
             }`}
           >
-            {isTrue ? <CheckCircle2 size={11} /> : <XCircle size={11} />}
-            <span>{isTrue ? "AKTIF (TRUE)" : "NONAKTIF (FALSE)"}</span>
+            {isTrue ? <CheckCircle2 size={10} /> : <XCircle size={10} />}
+            <span>{isTrue ? "TRUE" : "FALSE"}</span>
           </span>
         </div>
       );
@@ -241,15 +238,15 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
     // Check if role promotion
     if ("new_role" in details) {
       return (
-        <div className="flex items-center gap-2 pt-1.5 flex-wrap">
-          <span className="font-mono text-[10px] text-[#789a84]">Role Baru:</span>
-          <span className="inline-flex items-center gap-1 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 text-[10px] font-mono font-bold uppercase">
-            <Shield size={11} />
+        <div className="flex items-center gap-2 pt-1 flex-wrap">
+          <span className="font-mono text-[10px] text-slate-500">Role:</span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 px-2 py-0.5 text-[10px] font-mono font-medium uppercase">
+            <Shield size={10} />
             <span>{details.new_role}</span>
           </span>
           {details.target_email && (
-            <span className="text-[10px] text-white/70">
-              untuk <strong className="text-white">{details.target_email}</strong>
+            <span className="text-[11px] text-slate-400 font-mono">
+              target: <strong className="text-slate-200">{details.target_email}</strong>
             </span>
           )}
         </div>
@@ -258,8 +255,8 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
 
     // Default JSON preview
     return (
-      <div className="pt-1.5">
-        <code className="text-[10px] font-mono bg-black/40 text-[#c8ef70] px-2.5 py-1 rounded-lg border border-white/5 inline-block">
+      <div className="pt-1">
+        <code className="text-[10px] font-mono bg-slate-950 text-emerald-400 px-2 py-0.5 rounded border border-slate-800 inline-block">
           {JSON.stringify(details)}
         </code>
       </div>
@@ -268,123 +265,99 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
 
   return (
     <div className="space-y-6">
-      {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+      {/* ── Executive Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] font-black uppercase tracking-widest text-[#c8ef70]">
-              [SECURITY LOGS // COMPLIANCE & AUDIT TRAIL]
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              Audit Trail & Log Aktivitas
+            </h1>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/80 px-2.5 py-0.5 text-xs font-mono font-medium text-slate-300">
+              <span className={`h-1.5 w-1.5 rounded-full ${connectionStatus === "connected" ? "bg-emerald-400 animate-pulse" : "bg-slate-500"}`} />
+              {connectionStatus === "connected" ? "Live Realtime" : "Stream Paused"}
             </span>
           </div>
-          <h1 className="mt-1 font-display text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2.5">
-            <Activity className="text-[#c8ef70]" size={28} />
-            <span>Audit Trail & Log Aktivitas Superadmin</span>
-          </h1>
-          <p className="mt-1 text-xs text-[#9dc5aa] max-w-2xl leading-relaxed">
-            Riwayat transparansi setiap aksi operasional: pergantian saklar maintenance, killswitch, promosi hak akses, dan siaran pengumuman.
+          <p className="mt-1 text-sm text-slate-400">
+            Riwayat transparansi setiap aksi operasional: pergantian saklar maintenance, killswitch, promosi role akun, dan siaran pengumuman.
           </p>
         </div>
 
-        {/* Live Socket Status & Controls */}
-        <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto">
-          <div className="flex items-center gap-2 rounded-2xl border border-[#204c37] bg-[#0c2419] px-3.5 py-2 text-xs font-bold shadow-sm">
-            <span className="relative flex h-2.5 w-2.5">
-              {connectionStatus === "connected" && (
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              )}
-              <span
-                className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                  connectionStatus === "connected"
-                    ? "bg-emerald-400"
-                    : connectionStatus === "connecting"
-                    ? "bg-amber-400 animate-pulse"
-                    : "bg-rose-400"
-                }`}
-              ></span>
-            </span>
-            <span className="font-mono text-[11px] font-black text-white">
-              {connectionStatus === "connected"
-                ? "REALTIME LIVE STREAM"
-                : connectionStatus === "connecting"
-                ? "CONNECTING SOCKET..."
-                : "STREAM PAUSED"}
-            </span>
-          </div>
-
+        {/* Live Controls */}
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
           <button
             onClick={() => setIsLiveActive(!isLiveActive)}
             title={isLiveActive ? "Jeda Realtime Stream" : "Lanjutkan Realtime Stream"}
-            className="rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 p-2.5 text-[#c8ef70] transition active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition active:scale-[0.98]"
           >
-            {isLiveActive ? <Pause size={15} /> : <Play size={15} />}
+            {isLiveActive ? <Pause size={13} /> : <Play size={13} />}
+            <span className="hidden sm:inline">{isLiveActive ? "Jeda Stream" : "Mulai Stream"}</span>
           </button>
 
           <button
             onClick={handleExportCSV}
             disabled={filteredLogs.length === 0}
-            title="Download CSV Audit Trail"
-            className="inline-flex items-center gap-1.5 rounded-2xl bg-[#c8ef70] px-3.5 py-2 text-xs font-black text-[#103626] hover:bg-[#d9f788] transition active:scale-95 cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-3.5 py-2 text-xs font-semibold text-slate-950 hover:bg-emerald-400 transition active:scale-[0.98] disabled:opacity-50"
           >
-            <Download size={14} />
+            <Download size={13} />
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
-      {/* ── Summary Metrics Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="rounded-2xl border border-[#1b4332] bg-[#0c2419]/80 p-4 shadow-sm relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#789a84] mb-2">
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider">Total Entri Log</span>
-            <Hash size={16} className="text-[#c8ef70]" />
+      {/* ── Summary KPI Cards ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition hover:border-slate-700">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium">Total Entri Log</span>
+            <Hash size={15} className="text-emerald-400" />
           </div>
-          <div className="text-2xl font-black text-white">{stats.total}</div>
-          <p className="text-[10px] text-[#557763] mt-0.5">Dari {stats.uniqueActors} Superadmin aktif</p>
+          <div className="text-2xl font-bold font-mono text-white">{stats.total}</div>
+          <p className="text-xs text-slate-500 mt-0.5">Dari {stats.uniqueActors} Superadmin aktif</p>
         </div>
 
-        <div className="rounded-2xl border border-[#1b4332] bg-[#0c2419]/80 p-4 shadow-sm relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#789a84] mb-2">
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider">Saklar Sistem</span>
-            <SlidersHorizontal size={16} className="text-amber-400" />
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition hover:border-slate-700">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium">Saklar Sistem</span>
+            <SlidersHorizontal size={15} className="text-amber-400" />
           </div>
-          <div className="text-2xl font-black text-white">{stats.settingsChanges}</div>
-          <p className="text-[10px] text-[#557763] mt-0.5">Maintenance & killswitch</p>
+          <div className="text-2xl font-bold font-mono text-white">{stats.settingsChanges}</div>
+          <p className="text-xs text-slate-500 mt-0.5">Maintenance & killswitch</p>
         </div>
 
-        <div className="rounded-2xl border border-[#1b4332] bg-[#0c2419]/80 p-4 shadow-sm relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#789a84] mb-2">
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider">Eskalasi Role</span>
-            <UserCheck size={16} className="text-purple-400" />
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition hover:border-slate-700">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium">Manajemen Role</span>
+            <UserCheck size={15} className="text-purple-400" />
           </div>
-          <div className="text-2xl font-black text-white">{stats.roleEscalations}</div>
-          <p className="text-[10px] text-[#557763] mt-0.5">Perubahan hak Superadmin</p>
+          <div className="text-2xl font-bold font-mono text-white">{stats.roleEscalations}</div>
+          <p className="text-xs text-slate-500 mt-0.5">Perubahan hak akses user</p>
         </div>
 
-        <div className="rounded-2xl border border-[#1b4332] bg-[#0c2419]/80 p-4 shadow-sm relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#789a84] mb-2">
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider">Broadcast Siaran</span>
-            <Megaphone size={16} className="text-emerald-400" />
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4 transition hover:border-slate-700">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium">Broadcast Siaran</span>
+            <Megaphone size={15} className="text-blue-400" />
           </div>
-          <div className="text-2xl font-black text-white">{stats.broadcasts}</div>
-          <p className="text-[10px] text-[#557763] mt-0.5">Buat, toggle & hapus banner</p>
+          <div className="text-2xl font-bold font-mono text-white">{stats.broadcasts}</div>
+          <p className="text-xs text-slate-500 mt-0.5">Buat, toggle & hapus banner</p>
         </div>
       </div>
 
       {/* ── Filters & Search Bar ── */}
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
         <div className="sm:col-span-8 relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#638870]" size={16} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari berdasarkan email superadmin, deskripsi, atau rincian aksi..."
-            className="w-full rounded-2xl border border-[#1b4332] bg-[#0c2419] py-2.5 pl-10 pr-4 text-xs font-bold text-white placeholder:text-[#52775f] focus:border-[#c8ef70] focus:outline-none"
+            className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pl-9 pr-14 text-xs font-medium text-white placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none transition"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-[#7da88c] hover:text-white"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400 hover:text-white"
             >
               Reset
             </button>
@@ -395,7 +368,7 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="w-full rounded-2xl border border-[#1b4332] bg-[#0c2419] px-3 py-2.5 text-xs font-bold text-white focus:border-[#c8ef70] focus:outline-none cursor-pointer"
+            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs font-medium text-slate-200 focus:border-emerald-500 focus:outline-none transition cursor-pointer"
           >
             <option value="ALL">Semua Tipe Aksi ({logs.length})</option>
             <option value="TOGGLE_SYSTEM_SETTING">Saklar Sistem ({stats.settingsChanges})</option>
@@ -407,49 +380,39 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
         </div>
       </div>
 
-      {/* ── Audit Logs Live Stream Container ── */}
-      <div className="rounded-3xl border border-[#183929] bg-[#0c2419]/90 overflow-hidden shadow-xl">
-        <div className="p-4 border-b border-white/10 bg-black/20 flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-[#8ca393]">
-          <div className="flex items-center gap-2">
-            <span>STREAM AKTIVITAS AUDIT TRAIL</span>
-            {isLiveActive && (
-              <span className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider">
-                Live
-              </span>
-            )}
-          </div>
-          <span className="font-mono text-[11px] text-[#c8ef70]">
-            Menampilkan {filteredLogs.length} dari {logs.length} entri
+      {/* ── Audit Logs Stream Container ── */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 overflow-hidden shadow-xs">
+        <div className="px-4 py-3 border-b border-slate-800/80 bg-slate-950/60 flex items-center justify-between text-xs text-slate-400">
+          <span className="font-medium">
+            Stream Aktivitas Audit Trail
+          </span>
+          <span className="font-mono text-[11px] text-slate-400">
+            Menampilkan <strong className="text-white">{filteredLogs.length}</strong> dari {logs.length} entri
           </span>
         </div>
 
         {filteredLogs.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-white/5 text-[#789a84]">
-              <Database size={24} />
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-slate-800 text-slate-400">
+              <Database size={20} />
             </div>
-            <p className="text-sm font-bold text-[#8ca393]">
+            <p className="text-sm font-medium text-slate-400">
               {dbError
                 ? "Tabel admin_audit_logs belum dibuat di database Supabase."
                 : searchQuery || selectedType !== "ALL"
                 ? "Tidak ada aktivitas yang sesuai dengan filter pencarian."
                 : "Belum ada riwayat aktivitas yang tercatat."}
             </p>
-            {dbError && (
-              <p className="text-xs text-[#5f7d69] max-w-md mx-auto">
-                Silakan jalankan file SQL migrasi <code>20260922_audit_logs_and_security_hardening.sql</code> di Supabase SQL Editor.
-              </p>
-            )}
           </div>
         ) : (
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-slate-800/60 font-sans">
             {filteredLogs.map((log) => {
               const meta = ACTION_META[log.action_type] || {
                 label: log.action_type,
                 icon: Activity,
-                bg: "bg-white/10",
-                text: "text-white",
-                border: "border-white/20",
+                bg: "bg-slate-800",
+                text: "text-slate-300",
+                border: "border-slate-700",
               };
               const Icon = meta.icon;
               const isNewlyAdded = recentNewIds.has(log.id);
@@ -457,37 +420,37 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
               return (
                 <div
                   key={log.id}
-                  className={`p-4 sm:p-5 transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+                  className={`p-4 sm:p-5 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
                     isNewlyAdded
-                      ? "bg-[#c8ef70]/10 ring-1 ring-[#c8ef70]/40"
-                      : "hover:bg-white/[0.02]"
+                      ? "bg-emerald-500/10"
+                      : "hover:bg-slate-800/20"
                   }`}
                 >
                   <div className="flex items-start gap-3.5 flex-1 min-w-0">
                     <div
-                      className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl border ${meta.bg} ${meta.text} ${meta.border}`}
+                      className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl border ${meta.bg} ${meta.text} ${meta.border}`}
                     >
-                      <Icon size={18} />
+                      <Icon size={16} />
                     </div>
 
                     <div className="space-y-1 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs font-black text-white">
+                        <span className="font-mono text-xs font-semibold text-slate-100">
                           {log.actor_email}
                         </span>
                         <span
-                          className={`rounded-md px-2 py-0.5 text-[9px] font-mono font-bold uppercase border ${meta.bg} ${meta.text} ${meta.border}`}
+                          className={`rounded-md px-2 py-0.2 text-[9px] font-mono font-medium uppercase border ${meta.bg} ${meta.text} ${meta.border}`}
                         >
                           {meta.label}
                         </span>
                         {isNewlyAdded && (
-                          <span className="rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.2 text-[9px] font-black uppercase tracking-wider animate-pulse">
-                            BARU SAJA
+                          <span className="rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.2 text-[9px] font-mono font-semibold uppercase animate-pulse">
+                            Baru
                           </span>
                         )}
                       </div>
 
-                      <p className="text-xs text-[#9dc5aa] leading-relaxed">
+                      <p className="text-xs text-slate-300 leading-relaxed">
                         {log.description}
                       </p>
 
@@ -495,8 +458,8 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
                     </div>
                   </div>
 
-                  <div className="shrink-0 text-left sm:text-right font-mono text-[11px] text-[#6e917b] flex items-center gap-1.5 sm:flex-col sm:items-end">
-                    <span className="text-white/90 font-bold">
+                  <div className="shrink-0 text-left sm:text-right font-mono text-[11px] text-slate-400 flex items-center gap-2 sm:flex-col sm:items-end">
+                    <span className="text-slate-200 font-medium">
                       {new Date(log.created_at).toLocaleTimeString("id-ID", {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -504,7 +467,7 @@ export function AuditLogClient({ initialLogs, dbError }: AuditLogClientProps) {
                       })}{" "}
                       WIB
                     </span>
-                    <span>
+                    <span className="text-slate-500">
                       {new Date(log.created_at).toLocaleDateString("id-ID", {
                         day: "numeric",
                         month: "short",

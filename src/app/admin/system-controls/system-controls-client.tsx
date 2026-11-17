@@ -8,13 +8,12 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   Loader2, 
-  RefreshCw,
-  Power,
-  Flame,
-  Lock,
-  Radio,
-  SlidersHorizontal,
-  Info
+  Power, 
+  Flame, 
+  Lock, 
+  SlidersHorizontal, 
+  Info,
+  X
 } from "lucide-react";
 import { updateSystemSetting } from "../actions";
 import { SystemFlags } from "@/lib/system-settings";
@@ -61,7 +60,7 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
         }));
         setFeedback({
           type: "success",
-          message: `Berhasil mengubah ${label} menjadi: ${nextValue ? "AKTIF (ON)" : "NONAKTIF (OFF)"}.`,
+          message: `Berhasil mengubah ${label} menjadi: ${nextValue ? "AKTIF" : "NONAKTIF"}.`,
         });
       } catch (err: any) {
         setFeedback({
@@ -78,7 +77,7 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
   const handleToggle = (key: keyof SystemFlags, currentValue: boolean, label: string) => {
     const nextValue = !currentValue;
     
-    // Trigger custom modal for critical actions instead of ugly window.confirm
+    // Trigger custom modal for critical actions
     if (key === "maintenance_mode") {
       if (nextValue) {
         setConfirmModal({
@@ -87,7 +86,7 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
           nextValue,
           label,
           title: "Aktifkan Mode Pemeliharaan?",
-          description: "Semua mahasiswa yang sedang aktif akan langsung dialihkan ke halaman pemeliharaan (/maintenance). Akun Superadmin tetap memiliki akses penuh tanpa terkunci (Zero-Lockout).",
+          description: "Semua mahasiswa yang sedang aktif akan dialihkan ke halaman pemeliharaan (/maintenance). Akun Superadmin tetap memiliki akses penuh tanpa terkunci (Zero-Lockout).",
         });
       } else {
         setConfirmModal({
@@ -95,8 +94,8 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
           key,
           nextValue,
           label,
-          title: "Nyalakan Kembali Website (Selesai MT)?",
-          description: "Mode pemeliharaan akan dinonaktifkan. Mahasiswa dapat kembali masuk, mengakses jadwal, modul, dan seluruh dashboard secara normal.",
+          title: "Nyalakan Kembali Platform?",
+          description: "Mode pemeliharaan akan dinonaktifkan. Mahasiswa dapat kembali mengakses seluruh dashboard dan materi secara normal.",
         });
       }
       return;
@@ -109,7 +108,7 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
         nextValue,
         label,
         title: "Matikan AI Engine (Killswitch)?",
-        description: "Semua fitur cerdas Gemini (kuis, rangkuman, modul AI) akan dinonaktifkan sementara dan dialihkan ke pesan istirahat server yang sopan bagi mahasiswa.",
+        description: "Seluruh fitur berbasis Gemini (kuis, rangkuman, tutor) akan dinonaktifkan sementara dan dialihkan ke pesan istirahat server yang sopan bagi mahasiswa.",
       });
       return;
     }
@@ -120,112 +119,102 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
 
   return (
     <div className="space-y-6">
-      {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+      {/* ── Executive Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] font-black uppercase tracking-widest text-[#c8ef70]">
-              [SYSTEM CONTROL CENTER // FEATURE SWITCHBOARD]
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              Kendali & Saklar Sistem
+            </h1>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live Controls
             </span>
           </div>
-          <h1 className="mt-1 font-display text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2.5">
-            <SlidersHorizontal className="text-[#c8ef70]" size={28} />
-            <span>Kendali & Saklar Sistem</span>
-          </h1>
-          <p className="mt-1 text-xs text-[#9dc5aa] max-w-2xl leading-relaxed">
-            Pusat kendali operasional platform secara instan tanpa perlu redeploy. Superadmin memiliki jaminan akses tanpa terkunci (Zero-Lockout).
+          <p className="mt-1 text-sm text-slate-400">
+            Pusat kendali operasional platform secara instan tanpa perlu redeploy. Proteksi Zero-Lockout menjamin superadmin tidak akan terblokir.
           </p>
-        </div>
-
-        {/* Global Live Indicator */}
-        <div className="flex items-center gap-2.5 rounded-2xl border border-[#204c37] bg-[#0c2419] px-4 py-2 text-xs font-bold text-[#c8ef70] shadow-sm">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c8ef70] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#c8ef70]" />
-          </span>
-          <span>SWITCHBOARD LIVE</span>
         </div>
       </div>
 
-      {/* ── Feedback Notification ── */}
+      {/* ── Feedback Toast ── */}
       {feedback && (
         <div
-          className={`flex items-center gap-3 rounded-2xl border p-4 text-xs font-bold animate-in fade-in slide-in-from-top-2 duration-200 ${
+          className={`flex items-center gap-3 rounded-xl border p-4 text-xs font-medium animate-in fade-in duration-150 ${
             feedback.type === "success"
-              ? "border-[#c8ef70]/40 bg-[#c8ef70]/10 text-[#d8fbb0]"
-              : "border-rose-500/40 bg-rose-500/10 text-rose-200"
+              ? "border-emerald-500/30 bg-emerald-950/40 text-emerald-300"
+              : "border-rose-500/30 bg-rose-950/40 text-rose-300"
           }`}
         >
           {feedback.type === "success" ? (
-            <CheckCircle2 size={18} className="shrink-0 text-[#c8ef70]" />
+            <CheckCircle2 size={16} className="shrink-0 text-emerald-400" />
           ) : (
-            <AlertTriangle size={18} className="shrink-0 text-rose-400" />
+            <AlertTriangle size={16} className="shrink-0 text-rose-400" />
           )}
           <span className="flex-1">{feedback.message}</span>
           <button
             onClick={() => setFeedback(null)}
-            className="text-white/60 hover:text-white"
+            className="text-slate-400 hover:text-white transition"
           >
-            ✕
+            <X size={14} />
           </button>
         </div>
       )}
 
       {/* ── Grid Switchboard Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
         {/* Card 1: Emergency Maintenance Mode */}
         <div
-          className={`relative overflow-hidden rounded-3xl border p-6 transition-all duration-300 flex flex-col justify-between ${
+          className={`rounded-2xl border p-5 transition flex flex-col justify-between ${
             flags.maintenance_mode
-              ? "border-rose-500/60 bg-gradient-to-b from-rose-950/40 to-[#0c2419] shadow-[0_0_40px_rgba(244,63,94,0.15)]"
-              : "border-[#1e4631] bg-[#0c2419] hover:border-[#2d6849]"
+              ? "border-rose-500/50 bg-rose-950/20 shadow-xs"
+              : "border-slate-800 bg-slate-900/40 hover:border-slate-700"
           }`}
         >
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-rose-500/15 text-rose-400 border border-rose-500/25">
-                <Flame size={20} />
-              </span>
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                <Flame size={18} />
+              </div>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
+                className={`rounded-full px-2 py-0.5 text-[10px] font-mono font-medium uppercase ${
                   flags.maintenance_mode
-                    ? "bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse"
-                    : "bg-[#183929] text-[#9dc5aa] border-white/10"
+                    ? "bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse"
+                    : "bg-slate-800 text-slate-400 border border-slate-700"
                 }`}
               >
-                {flags.maintenance_mode ? "ACTIVE / HALTED" : "STANDBY"}
+                {flags.maintenance_mode ? "Active / Maintenance" : "Standby"}
               </span>
             </div>
 
             <div className="mt-4">
-              <h2 className="text-base font-black text-white">Emergency Maintenance</h2>
-              <p className="mt-1 text-xs text-[#9dc5aa] leading-relaxed">
-                Mengalihkan seluruh akses mahasiswa ke halaman pemeliharaan sementara saat ada migrasi server atau audit database.
+              <h2 className="text-sm font-semibold text-white">Emergency Maintenance</h2>
+              <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                Mengalihkan seluruh akses mahasiswa ke halaman pemeliharaan sementara saat migrasi data atau audit sistem.
               </p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-white/5 bg-black/20 p-3 text-[11px] text-[#7da88c] space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-white">
-                <Lock size={12} className="text-[#c8ef70]" />
+            <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[11px] text-slate-400 space-y-1">
+              <div className="flex items-center gap-1.5 font-medium text-slate-200">
+                <Lock size={12} className="text-emerald-400" />
                 <span>Zero-Lockout Protection</span>
               </div>
               <p>Rute Superadmin (/admin) tetap aktif 100% dan tidak akan pernah terblokir.</p>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-            <span className="text-xs font-bold text-white">Status Saklar:</span>
+          <div className="mt-5 pt-3.5 border-t border-slate-800/80 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-300">Saklar Kendali:</span>
             <button
-              onClick={() => handleToggle("maintenance_mode", flags.maintenance_mode, "Maintenance Mode")}
+              onClick={() => handleToggle("maintenance_mode", flags.maintenance_mode, "Mode Pemeliharaan")}
               disabled={isPending && activeKey === "maintenance_mode"}
-              className={`relative inline-flex h-8 w-16 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                flags.maintenance_mode ? "bg-rose-500" : "bg-[#183929]"
+              className={`relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                flags.maintenance_mode ? "bg-rose-600" : "bg-slate-700"
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                  flags.maintenance_mode ? "translate-x-8" : "translate-x-0"
+                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  flags.maintenance_mode ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </button>
@@ -234,56 +223,56 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
 
         {/* Card 2: AI Engine Killswitch */}
         <div
-          className={`relative overflow-hidden rounded-3xl border p-6 transition-all duration-300 flex flex-col justify-between ${
+          className={`rounded-2xl border p-5 transition flex flex-col justify-between ${
             !flags.ai_service_active
-              ? "border-amber-500/60 bg-gradient-to-b from-amber-950/40 to-[#0c2419] shadow-[0_0_40px_rgba(245,158,11,0.15)]"
-              : "border-[#1e4631] bg-[#0c2419] hover:border-[#2d6849]"
+              ? "border-amber-500/50 bg-amber-950/20 shadow-xs"
+              : "border-slate-800 bg-slate-900/40 hover:border-slate-700"
           }`}
         >
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#c8ef70]/15 text-[#c8ef70] border border-[#c8ef70]/25">
-                <Cpu size={20} />
-              </span>
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-slate-800 border border-slate-700 text-emerald-400">
+                <Cpu size={18} />
+              </div>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
+                className={`rounded-full px-2 py-0.5 text-[10px] font-mono font-medium uppercase ${
                   flags.ai_service_active
-                    ? "bg-[#c8ef70]/20 text-[#c8ef70] border-[#c8ef70]/40"
-                    : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                    : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
                 }`}
               >
-                {flags.ai_service_active ? "RUNNING / OPERATIONAL" : "PAUSED / COOLDOWN"}
+                {flags.ai_service_active ? "Operational" : "Paused"}
               </span>
             </div>
 
             <div className="mt-4">
-              <h2 className="text-base font-black text-white">AI Engine Killswitch</h2>
-              <p className="mt-1 text-xs text-[#9dc5aa] leading-relaxed">
+              <h2 className="text-sm font-semibold text-white">AI Engine Killswitch</h2>
+              <p className="mt-1 text-xs text-slate-400 leading-relaxed">
                 Menonaktifkan pemanggilan Gemini API (kuis, rangkuman, tutor) saat kuota token menipis atau endpoint sedang bermasalah.
               </p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-white/5 bg-black/20 p-3 text-[11px] text-[#7da88c] space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-white">
-                <CheckCircle2 size={12} className="text-[#c8ef70]" />
-                <span>Graceful Experience</span>
+            <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[11px] text-slate-400 space-y-1">
+              <div className="flex items-center gap-1.5 font-medium text-slate-200">
+                <CheckCircle2 size={12} className="text-emerald-400" />
+                <span>Graceful Feedback</span>
               </div>
-              <p>Mahasiswa mendapat pesan istirahat server yang sopan tanpa memicu error merah.</p>
+              <p>Mahasiswa mendapat pesan istirahat server yang sopan tanpa memicu unhandled runtime error.</p>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-            <span className="text-xs font-bold text-white">Status Saklar:</span>
+          <div className="mt-5 pt-3.5 border-t border-slate-800/80 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-300">Saklar Kendali:</span>
             <button
-              onClick={() => handleToggle("ai_service_active", flags.ai_service_active, "AI Engine Service")}
+              onClick={() => handleToggle("ai_service_active", flags.ai_service_active, "Layanan AI")}
               disabled={isPending && activeKey === "ai_service_active"}
-              className={`relative inline-flex h-8 w-16 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                flags.ai_service_active ? "bg-[#0f6849]" : "bg-neutral-700"
+              className={`relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                flags.ai_service_active ? "bg-emerald-600" : "bg-slate-700"
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                  flags.ai_service_active ? "translate-x-8" : "translate-x-0"
+                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  flags.ai_service_active ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </button>
@@ -292,186 +281,153 @@ export function SystemControlsClient({ initialFlags }: SystemControlsClientProps
 
         {/* Card 3: Registration Gatekeeper */}
         <div
-          className={`relative overflow-hidden rounded-3xl border p-6 transition-all duration-300 flex flex-col justify-between ${
+          className={`rounded-2xl border p-5 transition flex flex-col justify-between ${
             !flags.registration_active
-              ? "border-sky-500/60 bg-gradient-to-b from-sky-950/40 to-[#0c2419] shadow-[0_0_40px_rgba(14,165,233,0.15)]"
-              : "border-[#1e4631] bg-[#0c2419] hover:border-[#2d6849]"
+              ? "border-blue-500/50 bg-blue-950/20 shadow-xs"
+              : "border-slate-800 bg-slate-900/40 hover:border-slate-700"
           }`}
         >
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-sky-500/15 text-sky-400 border border-sky-500/25">
-                <UserPlus size={20} />
-              </span>
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                <UserPlus size={18} />
+              </div>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
+                className={`rounded-full px-2 py-0.5 text-[10px] font-mono font-medium uppercase ${
                   flags.registration_active
-                    ? "bg-sky-500/20 text-sky-300 border-sky-500/40"
-                    : "bg-neutral-800 text-neutral-400 border-neutral-700"
+                    ? "bg-blue-500/10 text-blue-300 border border-blue-500/20"
+                    : "bg-slate-800 text-slate-400 border border-slate-700"
                 }`}
               >
-                {flags.registration_active ? "PUBLIC / OPEN" : "RESTRICTED / CLOSED"}
+                {flags.registration_active ? "Open / Public" : "Restricted"}
               </span>
             </div>
 
             <div className="mt-4">
-              <h2 className="text-base font-black text-white">Registration Gatekeeper</h2>
-              <p className="mt-1 text-xs text-[#9dc5aa] leading-relaxed">
-                Membuka atau menutup pendaftaran akun mahasiswa baru. Berguna untuk mencegah serangan bot pendaftaran massal.
+              <h2 className="text-sm font-semibold text-white">Registration Gatekeeper</h2>
+              <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                Membuka atau menutup pendaftaran akun mahasiswa baru untuk mencegah bot registrasi spam massal.
               </p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-white/5 bg-black/20 p-3 text-[11px] text-[#7da88c] space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-white">
-                <Info size={12} className="text-sky-400" />
+            <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-[11px] text-slate-400 space-y-1">
+              <div className="flex items-center gap-1.5 font-medium text-slate-200">
+                <Info size={12} className="text-blue-400" />
                 <span>Existing Users Safe</span>
               </div>
-              <p>Mahasiswa yang sudah memiliki akun tetap bisa login dan menggunakan fitur normal.</p>
+              <p>Mahasiswa yang sudah memiliki akun tetap bisa login dan menggunakan fitur seperti biasa.</p>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-            <span className="text-xs font-bold text-white">Status Saklar:</span>
+          <div className="mt-5 pt-3.5 border-t border-slate-800/80 flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-300">Saklar Kendali:</span>
             <button
               onClick={() => handleToggle("registration_active", flags.registration_active, "Pendaftaran Akun Baru")}
               disabled={isPending && activeKey === "registration_active"}
-              className={`relative inline-flex h-8 w-16 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                flags.registration_active ? "bg-[#0f6849]" : "bg-neutral-700"
+              className={`relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                flags.registration_active ? "bg-emerald-600" : "bg-slate-700"
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                  flags.registration_active ? "translate-x-8" : "translate-x-0"
+                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  flags.registration_active ? "translate-x-6" : "translate-x-0"
                 }`}
               />
             </button>
           </div>
         </div>
-
       </div>
 
       {/* ── System Audit Footer ── */}
-      <div className="rounded-2xl border border-white/10 bg-[#0c2419]/60 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#8ca393]">
+      <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400">
         <div className="flex items-center gap-2">
-          <ShieldAlert size={15} className="text-[#c8ef70]" />
-          <span>Setiap perubahan status tersimpan otomatis dengan audit email Superadmin penanggung jawab.</span>
+          <ShieldAlert size={14} className="text-emerald-400" />
+          <span>Setiap modifikasi saklar sistem terekam otomatis ke dalam audit trail dengan identitas email eksekutor.</span>
         </div>
         {flags.updated_at && (
-          <span className="font-mono text-[11px] text-[#c8ef70]">
-            Pembaruan Terakhir: {new Date(flags.updated_at).toLocaleString("id-ID")} {flags.updated_by_email ? `oleh ${flags.updated_by_email}` : ""}
+          <span className="font-mono text-[11px] text-slate-400">
+            Terakhir diubah: {new Date(flags.updated_at).toLocaleString("id-ID")} {flags.updated_by_email ? `oleh ${flags.updated_by_email}` : ""}
           </span>
         )}
       </div>
 
-      {/* ── Custom Animated Confirmation Modal ── */}
-      {confirmModal && confirmModal.isOpen && (() => {
-        const isTurningOn = confirmModal.key === "maintenance_mode" && !confirmModal.nextValue;
-
-        return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-            <div 
-              className={`relative w-full max-w-md rounded-3xl border bg-[#091e14] p-6 sm:p-7 animate-in zoom-in-95 duration-200 space-y-5 ${
-                isTurningOn
-                  ? "border-[#c8ef70]/40 shadow-[0_25px_70px_rgba(200,239,112,0.15)]"
-                  : "border-rose-500/40 shadow-[0_25px_70px_rgba(244,63,94,0.2)]"
-              }`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Top Accent Warning / Success Bar */}
-              <div 
-                className={`absolute top-0 inset-x-8 h-1 rounded-full ${
-                  isTurningOn
-                    ? "bg-gradient-to-r from-transparent via-[#c8ef70] to-transparent"
-                    : "bg-gradient-to-r from-transparent via-rose-500 to-transparent"
-                }`} 
-              />
-
-              <div className="flex items-start gap-4">
+      {/* ── Custom Modal Confirmation ── */}
+      {confirmModal && confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
+          <div 
+            className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl animate-in zoom-in-95 duration-150 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
                 <div 
-                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl border ${
-                    isTurningOn
-                      ? "bg-[#c8ef70]/15 text-[#c8ef70] border-[#c8ef70]/30"
-                      : "bg-rose-500/15 text-rose-400 border-rose-500/30"
+                  className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border ${
+                    confirmModal.key === "maintenance_mode" && confirmModal.nextValue
+                      ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                      : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                   }`}
                 >
-                  {isTurningOn ? (
-                    <Power size={24} className="animate-pulse" />
+                  {confirmModal.key === "maintenance_mode" && confirmModal.nextValue ? (
+                    <Flame size={20} />
                   ) : (
-                    <Flame size={24} className="animate-pulse" />
+                    <Power size={20} />
                   )}
                 </div>
 
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span 
-                      className={`font-mono text-[10px] font-black uppercase tracking-wider ${
-                        isTurningOn ? "text-[#c8ef70]" : "text-rose-400"
-                      }`}
-                    >
-                      {isTurningOn ? "KONFIRMASI AKTIVASI SISTEM" : "KONFIRMASI AKSI KRITIS"}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-lg sm:text-xl font-black text-white">
+                <div>
+                  <h3 className="text-base font-semibold text-white">
                     {confirmModal.title}
                   </h3>
+                  <p className="text-xs text-slate-400">
+                    Konfirmasi perubahan saklar sistem
+                  </p>
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-[#9dc5aa] leading-relaxed pl-1">
-                {confirmModal.description}
-              </p>
+              <button
+                onClick={() => setConfirmModal(null)}
+                className="text-slate-400 hover:text-white transition"
+              >
+                <X size={16} />
+              </button>
+            </div>
 
-              <div className="rounded-2xl border border-white/5 bg-black/40 p-3.5 flex items-center gap-2.5 text-xs text-[#8ca393]">
-                {isTurningOn ? (
-                  <CheckCircle2 size={15} className="text-[#c8ef70] shrink-0" />
-                ) : (
-                  <Lock size={15} className="text-[#c8ef70] shrink-0" />
-                )}
-                <span>
-                  {isTurningOn 
-                    ? "Sistem siap live: Seluruh endpoint API dan halaman dashboard langsung dapat diakses kembali."
-                    : <>Proteksi <strong>Zero-Lockout</strong> aktif: Akses Superadmin tidak akan pernah terputus.</>}
-                </span>
-              </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {confirmModal.description}
+            </p>
 
-              {/* Modal Actions */}
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setConfirmModal(null)}
-                  disabled={isPending}
-                  className="rounded-xl px-4 py-2.5 text-xs font-bold text-[#edf4ef] hover:bg-white/10 transition disabled:opacity-50"
-                >
-                  Batalkan
-                </button>
+            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3 flex items-center gap-2 text-xs text-slate-400">
+              <Lock size={13} className="text-emerald-400 shrink-0" />
+              <span>Akses Superadmin tidak akan pernah terkunci oleh pengaturan ini.</span>
+            </div>
 
-                <button
-                  type="button"
-                  onClick={() => executeToggle(confirmModal.key, confirmModal.nextValue, confirmModal.label)}
-                  disabled={isPending}
-                  className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-lg active:scale-95 transition cursor-pointer disabled:opacity-50 ${
-                    isTurningOn
-                      ? "bg-[#103626] text-[#c8ef70] border border-[#c8ef70]/40 hover:bg-[#1a4a34] shadow-[#c8ef70]/20"
-                      : "bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 shadow-rose-500/25"
-                  }`}
-                >
-                  {isPending ? (
-                    <>
-                      <Loader2 size={14} className="animate-spin" />
-                      <span>Mengeksekusi...</span>
-                    </>
-                  ) : (
-                    <>
-                      {isTurningOn ? <Power size={14} /> : <Flame size={14} />}
-                      <span>{isTurningOn ? "Ya, Nyalakan Website" : "Lanjutkan & Eksekusi"}</span>
-                    </>
-                  )}
-                </button>
-              </div>
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setConfirmModal(null)}
+                disabled={isPending}
+                className="rounded-xl border border-slate-800 bg-slate-800/60 px-4 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800 transition disabled:opacity-50"
+              >
+                Batalkan
+              </button>
+
+              <button
+                type="button"
+                onClick={() => executeToggle(confirmModal.key, confirmModal.nextValue, confirmModal.label)}
+                disabled={isPending}
+                className={`inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 ${
+                  confirmModal.key === "maintenance_mode" && confirmModal.nextValue
+                    ? "bg-rose-600 hover:bg-rose-500"
+                    : "bg-emerald-600 hover:bg-emerald-500"
+                }`}
+              >
+                {isPending && <Loader2 size={13} className="animate-spin" />}
+                <span>Eksekusi Perubahan</span>
+              </button>
             </div>
           </div>
-        );
-      })()}
+        </div>
+      )}
     </div>
   );
 }
