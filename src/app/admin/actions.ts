@@ -221,16 +221,40 @@ export async function updateUserRole(targetUserId: string, newRole: "student" | 
     throw new Error("Kamu tidak dapat mencabut akses superadmin dari akun kamu sendiri.");
   }
 
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      role: newRole,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", targetUserId);
+  // 1. Try secure RPC function first (bypasses RLS update isolation via security definer)
+  let updatedSuccessfully = false;
+  try {
+    const { error: rpcError } = await supabase.rpc("admin_set_user_role", {
+      target_user_id: targetUserId,
+      target_role: newRole,
+    });
+    if (!rpcError) {
+      updatedSuccessfully = true;
+    }
+  } catch {
+    updatedSuccessfully = false;
+  }
 
-  if (error) {
-    throw new Error(error.message || "Gagal memperbarui role akun.");
+  // 2. Fallback to direct table update with row return verification if RPC is not installed
+  if (!updatedSuccessfully) {
+    const { data: updateData, error } = await supabase
+      .from("profiles")
+      .update({
+        role: newRole,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", targetUserId)
+      .select("id, role");
+
+    if (error) {
+      throw new Error(error.message || "Gagal memperbarui role akun.");
+    }
+
+    if (!updateData || updateData.length === 0) {
+      throw new Error(
+        "Gagal mengubah role akun di database. Kebijakan Row-Level Security (RLS) memblokir pembaruan profil user lain. Silakan jalankan script SQL migrasi '20260924_fix_superadmin_user_role_update_rls.sql' di Supabase SQL Editor."
+      );
+    }
   }
 
   // Record Audit Trail
@@ -256,17 +280,42 @@ export async function toggleUserSuspension(targetUserId: string, suspend: boolea
     throw new Error("Kamu tidak dapat menonaktifkan akun kamu sendiri.");
   }
 
-  // Safely update role to suspended or student
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      role: suspend ? "suspended" : "student",
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", targetUserId);
+  const nextRole = suspend ? "suspended" : "student";
 
-  if (error) {
-    throw new Error(error.message || "Gagal mengubah status penangguhan akun.");
+  // 1. Try secure RPC function first
+  let updatedSuccessfully = false;
+  try {
+    const { error: rpcError } = await supabase.rpc("admin_set_user_role", {
+      target_user_id: targetUserId,
+      target_role: nextRole,
+    });
+    if (!rpcError) {
+      updatedSuccessfully = true;
+    }
+  } catch {
+    updatedSuccessfully = false;
+  }
+
+  // 2. Fallback to direct table update with row return verification
+  if (!updatedSuccessfully) {
+    const { data: updateData, error } = await supabase
+      .from("profiles")
+      .update({
+        role: nextRole,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", targetUserId)
+      .select("id, role");
+
+    if (error) {
+      throw new Error(error.message || "Gagal mengubah status penangguhan akun.");
+    }
+
+    if (!updateData || updateData.length === 0) {
+      throw new Error(
+        "Gagal mengubah status penangguhan di database. Kebijakan Row-Level Security (RLS) memblokir pembaruan profil user lain. Silakan jalankan script SQL migrasi '20260924_fix_superadmin_user_role_update_rls.sql' di Supabase SQL Editor."
+      );
+    }
   }
 
   // Record Audit Trail
